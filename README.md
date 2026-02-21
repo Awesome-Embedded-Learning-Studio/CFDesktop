@@ -47,7 +47,9 @@
 
 +3. 自动化构建脚本
      ✓ Windows PowerShell 构建脚本
+     ✓ Linux Bash 构建脚本
      ✓ 支持多种工具链配置（LLVM/GCC）
+     ✓ 部署（deploy）与开发（develop）双模式构建
      ✓ 为后续开发打下坚实的基础
 
 +4. CMake 基础设施
@@ -109,24 +111,51 @@
 ### 💻 Windows 构建
 
 ```powershell
-# 使用 PowerShell 构建脚本（推荐）
-.\scripts\build_helpers\windows_normal_build.ps1
+# 部署模式构建
+.\scripts\build_helpers\windows_deploy.ps1
+
+# 开发模式构建
+.\scripts\build_helpers\windows_develop_build.ps1
+```
+
+### 🐧 Linux 构建
+
+```bash
+# 部署模式构建
+./scripts/build_helpers/linux_deploy_build.sh
+
+# 开发模式构建
+./scripts/build_helpers/linux_develop_build.sh
 ```
 
 ### ⚙️ 手动构建
 
 ```bash
-# 1. 配置 CMake
+# 1. 配置 CMake（Windows 示例）
 cmake -S . -B out/build -G "Ninja" \
-      -DCMAKE_C_COMPILER=clang \
-      -DCMAKE_CXX_COMPILER=clang++
+      -DUSE_TOOLCHAIN=windows/gcc
+
+# 1. 配置 CMake（Linux 示例）
+cmake -S . -B out/build -G "Unix Makefiles" \
+      -DUSE_TOOLCHAIN=linux/gcc
 
 # 2. 编译
-cmake --build out/build --config Release
+cmake --build out/build
 
 # 3. 运行 boot test
-.\out\build\test\boot_test\boot_test_core.exe
+./out/build/test/boot_test/boot_test_core
 ```
+
+### 🔧 构建配置
+
+构建脚本通过 INI 配置文件管理构建参数：
+
+| 配置文件 | 用途 | 输出目录 |
+|:---|:---|:---|
+| `build_deploy_config.ini` | 部署构建 | `out/build_deploy` |
+| `build_develop_config.ini` | 开发构建 | `out/build_develop` |
+
+可在配置文件中调整 CMake 生成器、工具链等参数。
 
 ---
 
@@ -180,6 +209,7 @@ cmake --build out/build --config Release
 | **CMake** | 3.16+ | 构建系统 |
 | **Qt** | 6.8.3+ | UI 框架 |
 | **LLVM/Clang** | 最新 | 编译器（首选）|
+| **GCC** | 最新 | Linux 编译器 |
 | **Ninja** | - | 构建工具 |
 
 </div>
