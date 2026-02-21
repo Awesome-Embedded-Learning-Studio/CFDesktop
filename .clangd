@@ -1,0 +1,12 @@
+CompileFlags:
+  Add:
+    - -Wno-builtin-declaration-mismatch
+    - -Wno-incompatible-library-redeclaration
+    - -Wno-builtin-requires-header
+
+Diagnostics:
+  Suppress:
+    - builtin-requires-header
+    - incompatible-library-redeclaration
+    - builtin-declaration-mismatch
+    - builtin_definition

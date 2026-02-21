@@ -1,6 +1,6 @@
 # ignores
 .cache
-
+.claude
 # privates
 BLUEPRINT.md
 

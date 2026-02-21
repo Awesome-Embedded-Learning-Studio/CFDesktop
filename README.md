@@ -111,44 +111,30 @@
 ### 💻 Windows 构建
 
 ```powershell
-# 部署模式构建
-.\scripts\build_helpers\windows_deploy.ps1
+# 配置 CMake
+.\scripts\build_helpers\windows_configure.ps1
 
-# 开发模式构建
+# 快速构建（推荐日常开发）
+.\scripts\build_helpers\windows_fast_develop_build.ps1
+.\scripts\build_helpers\windows_fast_deploy_build.ps1
+
+# 完整构建（包含完整清理流程）
 .\scripts\build_helpers\windows_develop_build.ps1
+.\scripts\build_helpers\windows_deploy_build.ps1
 ```
 
 ### 🐧 Linux 构建
 
 ```bash
-# 部署模式构建
-./scripts/build_helpers/linux_deploy_build.sh
+# 配置 CMake
+./scripts/build_helpers/linux_configure.sh
 
-# 开发模式构建
-./scripts/build_helpers/linux_develop_build.sh
+# 快速构建（推荐日常开发）
+./scripts/build_helpers/linux_fast_develop_build.sh
+./scripts/build_helpers/linux_fast_deploy_build.sh
 ```
 
-### ⚙️ 手动构建
-
-```bash
-# 1. 配置 CMake（Windows 示例）
-cmake -S . -B out/build -G "Ninja" \
-      -DUSE_TOOLCHAIN=windows/gcc
-
-# 1. 配置 CMake（Linux 示例）
-cmake -S . -B out/build -G "Unix Makefiles" \
-      -DUSE_TOOLCHAIN=linux/gcc
-
-# 2. 编译
-cmake --build out/build
-
-# 3. 运行 boot test
-./out/build/test/boot_test/boot_test_core
-```
-
-### 🔧 构建配置
-
-构建脚本通过 INI 配置文件管理构建参数：
+### ⚙️ 构建配置
 
 | 配置文件 | 用途 | 输出目录 |
 |:---|:---|:---|
@@ -156,6 +142,14 @@ cmake --build out/build
 | `build_develop_config.ini` | 开发构建 | `out/build_develop` |
 
 可在配置文件中调整 CMake 生成器、工具链等参数。
+
+### 📝 构建脚本说明
+
+| 脚本类型 | 说明 | 适用场景 |
+|:---|:---|:---|
+| `configure` | 仅运行 CMake 配置 | 首次配置或修改 CMakeLists 后 |
+| `fast_*_build` | 增量编译 | 日常开发（跳过清理，更快） |
+| `*_build` | 完整构建 | 需要完全重新编译时 |
 
 ---
 

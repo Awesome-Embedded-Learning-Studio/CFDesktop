@@ -14,7 +14,7 @@ project(CFDesktop VERSION 0.0.1 LANGUAGES CXX)
 
 # ------ Build Settings ------
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -44,10 +44,21 @@ generate_vscode_clangd()
 # Print build configuration
 log_config_summary()
 log_qt_dir()
-# Log boot_test module start
-log_module_start("boot_test")
-add_subdirectory(test/boot_test)
-# Log boot_test module end
-log_module_end("boot_test")
+# Log base module start
+log_module_start("base")
+add_subdirectory(base)
+# Log base module end
+log_module_end("base")
+
+
+log_module_start("example")
+add_subdirectory("example")
+log_module_end("example")
+
+# Log test module start
+log_module_start("test")
+add_subdirectory(test)
+# Log test module end
+log_module_end("test")
 
 log_info("Final" "Configuration Ends! You can try to build now!")

@@ -75,7 +75,7 @@ Write-Log "Project root: $ProjectRoot" "INFO"
 Set-Location $ProjectRoot
 
 # Load configuration from INI file
-$ConfigFile = Join-Path $ScriptDir "build_develop_config.ini"
+$ConfigFile = Join-Path $ScriptDir "build_deploy_config.ini"
 Write-Log "Loading configuration from: $ConfigFile" "INFO"
 
 try {
@@ -132,7 +132,7 @@ Write-Log "========================================" "INFO"
 Write-Log "Step 2: Calling fast build script" "INFO"
 Write-Log "========================================" "INFO"
 
-$FastBuildScript = Join-Path $ScriptDir "windows_fast_develop_build.ps1"
+$FastBuildScript = Join-Path $ScriptDir "windows_fast_deploy_build.ps1"
 Write-Log "Executing: $FastBuildScript" "INFO"
 
 try {
