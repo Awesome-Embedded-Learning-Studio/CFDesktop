@@ -1,12 +1,11 @@
 #include "boot_detect.h"
 #include <QCoreApplication>
-#include <QSysInfo>
-#include <QProcess>
-#include <QLibraryInfo>
 #include <QDebug>
+#include <QLibraryInfo>
+#include <QProcess>
+#include <QSysInfo>
 
-BootCheckResult BootDetect::performChecks()
-{
+BootCheckResult BootDetect::performChecks() {
     QList<BootCheckResult> results;
 
     // 执行所有检测项
@@ -15,14 +14,10 @@ BootCheckResult BootDetect::performChecks()
     results.append(checkCompiler());
     results.append(checkSystemInfo());
 
-    // 统计结果
-    int passCount = 0;
     int failCount = 0;
 
     for (const auto& result : results) {
-        if (result.success) {
-            passCount++;
-        } else {
+        if (!result.success) {
             failCount++;
         }
     }
@@ -31,35 +26,23 @@ BootCheckResult BootDetect::performChecks()
     QString summary = getSummary(results);
     bool allPassed = (failCount == 0);
 
-    return BootCheckResult(
-        allPassed,
-        summary,
-        QString(),
-        allPassed ? 0 : 1
-    );
+    return BootCheckResult(allPassed, summary, QString(), allPassed ? 0 : 1);
 }
 
-BootCheckResult BootDetect::checkQtVersion()
-{
+BootCheckResult BootDetect::checkQtVersion() {
     QString qtVersion = QT_VERSION_STR;
     QVersionNumber currentVersion = QVersionNumber::fromString(qtVersion);
     QVersionNumber minVersion(6, 8, 0);
 
     bool success = currentVersion >= minVersion;
 
-    QString details = QString("Current: %1\nRequired: >= 6.8.0")
-                          .arg(qtVersion);
+    QString details = QString("Current: %1\nRequired: >= 6.8.0").arg(qtVersion);
 
-    return BootCheckResult(
-        success,
-        success ? "Qt version check PASSED" : "Qt version check FAILED",
-        details,
-        success ? 0 : 1
-    );
+    return BootCheckResult(success, success ? "Qt version check PASSED" : "Qt version check FAILED",
+                           details, success ? 0 : 1);
 }
 
-BootCheckResult BootDetect::checkQtModules()
-{
+BootCheckResult BootDetect::checkQtModules() {
     QStringList availableModules;
     QStringList requiredModules = {"Core", "Gui", "Widgets"};
 
@@ -90,37 +73,28 @@ BootCheckResult BootDetect::checkQtModules()
                           .arg(availableModules.join(", "))
                           .arg(missingModules.isEmpty() ? "None" : missingModules.join(", "));
 
-    return BootCheckResult(
-        allAvailable,
-        allAvailable ? "Qt modules check PASSED" : "Qt modules check FAILED",
-        details,
-        allAvailable ? 0 : 1
-    );
+    return BootCheckResult(allAvailable,
+                           allAvailable ? "Qt modules check PASSED" : "Qt modules check FAILED",
+                           details, allAvailable ? 0 : 1);
 }
 
-BootCheckResult BootDetect::checkCompiler()
-{
+BootCheckResult BootDetect::checkCompiler() {
     QString compiler = QSysInfo::buildAbi();
 
-    bool isLLVM = compiler.contains("LLVM") ||
-                  compiler.contains("Clang") ||
-                  compiler.contains("clang");
+    bool isLLVM =
+        compiler.contains("LLVM") || compiler.contains("Clang") || compiler.contains("clang");
 
-    QString details = QString("Compiler ABI: %1\nIs LLVM: %2")
-                          .arg(compiler)
-                          .arg(isLLVM ? "Yes" : "No");
+    QString details =
+        QString("Compiler ABI: %1\nIs LLVM: %2").arg(compiler).arg(isLLVM ? "Yes" : "No");
 
     // 发出警告但不失败
-    return BootCheckResult(
-        true,  // 总是通过，只是警告
-        isLLVM ? "Compiler check PASSED (LLVM detected)" : "Compiler check WARNING (non-LLVM compiler)",
-        details,
-        0
-    );
+    return BootCheckResult(true, // 总是通过，只是警告
+                           isLLVM ? "Compiler check PASSED (LLVM detected)"
+                                  : "Compiler check WARNING (non-LLVM compiler)",
+                           details, 0);
 }
 
-BootCheckResult BootDetect::checkSystemInfo()
-{
+BootCheckResult BootDetect::checkSystemInfo() {
     QString osType = QSysInfo::prettyProductName();
     QString arch = QSysInfo::currentCpuArchitecture();
     QString kernelType = QSysInfo::kernelType();
@@ -132,16 +106,10 @@ BootCheckResult BootDetect::checkSystemInfo()
                           .arg(kernelType)
                           .arg(kernelVersion);
 
-    return BootCheckResult(
-        true,
-        "System info collected",
-        details,
-        0
-    );
+    return BootCheckResult(true, "System info collected", details, 0);
 }
 
-QString BootDetect::getSummary(const QList<BootCheckResult>& results)
-{
+QString BootDetect::getSummary(const QList<BootCheckResult>& results) {
     QString summary;
     summary += "========== Boot Test Results ==========\n";
     summary += "=====================================\n\n";
@@ -151,7 +119,8 @@ QString BootDetect::getSummary(const QList<BootCheckResult>& results)
         summary += QString("%1 %2\n").arg(status, result.message);
 
         if (!result.details.isEmpty()) {
-            summary += "  Details: " + QString(result.details).replace("\n", "\n           ") + "\n";
+            summary +=
+                "  Details: " + QString(result.details).replace("\n", "\n           ") + "\n";
         }
         summary += "\n";
     }
@@ -160,27 +129,22 @@ QString BootDetect::getSummary(const QList<BootCheckResult>& results)
 
     int passCount = 0, failCount = 0;
     for (const auto& result : results) {
-        if (result.success) passCount++;
-        else failCount++;
+        if (result.success)
+            passCount++;
+        else
+            failCount++;
     }
 
-    summary += QString("Total: %1 passed, %2 failed\n")
-                   .arg(passCount)
-                   .arg(failCount);
+    summary += QString("Total: %1 passed, %2 failed\n").arg(passCount).arg(failCount);
 
     return summary;
 }
 
-QString BootDetect::formatResult(const BootCheckResult& result)
-{
-    return QString("%1: %2").arg(
-        result.success ? "PASS" : "FAIL",
-        result.message
-    );
+QString BootDetect::formatResult(const BootCheckResult& result) {
+    return QString("%1: %2").arg(result.success ? "PASS" : "FAIL", result.message);
 }
 
-QString BootDetect::formatDetailedResult(const BootCheckResult& result)
-{
+QString BootDetect::formatDetailedResult(const BootCheckResult& result) {
     QString output = formatResult(result) + "\n";
 
     if (!result.details.isEmpty()) {

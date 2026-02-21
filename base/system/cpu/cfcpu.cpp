@@ -9,12 +9,13 @@
 #endif
 
 namespace {
-static CPUInfoHost infoHost;
+static cf::CPUInfoHost infoHost;
 } // namespace
 
-cf::expected<CPUInfoView, CPUInfoErrorType> getCPUInfo() {
+namespace cf {
+expected<CPUInfoView, CPUInfoErrorType> getCPUInfo() {
     // Query CPU info and fill the static infoHost
-    auto result = query_once_info(infoHost);
+    auto result = query_cpu_info(infoHost);
     if (!result) {
         return cf::unexpected(result.error());
     }
@@ -26,3 +27,5 @@ cf::expected<CPUInfoView, CPUInfoErrorType> getCPUInfo() {
     view.arch = infoHost.arch;
     return view;
 }
+
+} // namespace cf

@@ -10,10 +10,11 @@
  */
 #pragma once
 #include <string>
-
+namespace cf {
 struct CPUInfoHost {
   public:
     std::string model;
     std::string manufest;
     std::string arch;
 };
+} // namespace cf

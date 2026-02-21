@@ -445,8 +445,7 @@ template <typename T, typename E> class expected {
         return !(a == b);
     }
 
-    template <typename T2>
-    friend constexpr bool operator!=(const expected& a, const T2& v) {
+    template <typename T2> friend constexpr bool operator!=(const expected& a, const T2& v) {
         return !(a == v);
     }
 

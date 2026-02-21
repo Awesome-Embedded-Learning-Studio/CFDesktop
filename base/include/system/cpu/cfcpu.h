@@ -10,9 +10,9 @@
  */
 #pragma once
 #include "base/expected/expected.hpp"
-#include <memory>
 #include <string_view>
 
+namespace cf {
 enum class CPUInfoErrorType { CPU_QUERY_GENERAL_FAILED };
 
 struct CPUInfoView {
@@ -21,4 +21,6 @@ struct CPUInfoView {
     std::string_view manufacturer;
 };
 
-cf::expected<CPUInfoView, CPUInfoErrorType> getCPUInfo();
+expected<CPUInfoView, CPUInfoErrorType> getCPUInfo();
+
+} // namespace cf

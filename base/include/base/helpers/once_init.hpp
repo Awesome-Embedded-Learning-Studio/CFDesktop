@@ -10,8 +10,6 @@
  */
 #pragma once
 #include <mutex>
-
-#include <mutex>
 #include <utility>
 
 namespace cf {

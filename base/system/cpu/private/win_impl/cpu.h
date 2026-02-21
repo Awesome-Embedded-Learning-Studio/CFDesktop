@@ -12,6 +12,7 @@
 #include "../cpu_host.h"
 #include "base/expected/expected.hpp"
 #include "system/cpu/cfcpu.h"
+#include "system/cpu/cfcpu_profile.h"
 
 /**
  * @brief Internal Windows Query
@@ -19,4 +20,6 @@
  * @param hostInfo
  * @return cf::expected<void, CPUInfoErrorType>
  */
-cf::expected<void, CPUInfoErrorType> query_once_info(CPUInfoHost& hostInfo);
+cf::expected<void, cf::CPUInfoErrorType> query_cpu_info(cf::CPUInfoHost& hostInfo);
+
+cf::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError> query_cpu_profile_info();

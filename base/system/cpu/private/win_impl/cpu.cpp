@@ -6,13 +6,29 @@
 #include <Wbemidl.h>
 #include <Windows.h>
 #include <comdef.h>
+#include <cstddef>
+#include <cstdint>
+#include <pdh.h>
+#include <powrprof.h>
 #include <sstream>
 #include <string>
 
-#pragma comment(lib, "wbemuuid.lib")
+#ifndef _PROCESSOR_POWER_INFORMATION_DEFINED
+#    define _PROCESSOR_POWER_INFORMATION_DEFINED
+
+typedef struct _PROCESSOR_POWER_INFORMATION {
+    ULONG Number;
+    ULONG MaxMhz;
+    ULONG CurrentMhz;
+    ULONG MhzLimit;
+    ULONG MaxIdleState;
+    ULONG CurrentIdleState;
+} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+
+#endif
 
 namespace {
-
+using namespace cf;
 // Helper function to query a single WMI property
 cf::expected<std::string, CPUInfoErrorType>
 queryWMIProperty(IWbemServices* pSvc, const std::wstring& className, const std::wstring& property) {
@@ -40,7 +56,7 @@ queryWMIProperty(IWbemServices* pSvc, const std::wstring& className, const std::
     IWbemClassObject* pclsObj = nullptr;
     ULONG uReturn = 0;
 
-    hres = pEnumerator->Next(WBEM_INFINITE, 1, &pclsObj, &uReturn);
+    hres = pEnumerator->Next(static_cast<LONG>(WBEM_INFINITE), 1, &pclsObj, &uReturn);
     if (uReturn == 0 || FAILED(hres)) {
         return cf::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
     }
@@ -66,7 +82,7 @@ queryWMIProperty(IWbemServices* pSvc, const std::wstring& className, const std::
             int len =
                 WideCharToMultiByte(CP_UTF8, 0, vtProp.bstrVal, -1, nullptr, 0, nullptr, nullptr);
             if (len > 0) {
-                result.resize(len - 1); // -1 to exclude null terminator
+                result.resize(static_cast<size_t>(len - 1)); // -1 to exclude null terminator
                 WideCharToMultiByte(CP_UTF8, 0, vtProp.bstrVal, -1, &result[0], len, nullptr,
                                     nullptr);
             }
@@ -108,7 +124,7 @@ std::string architectureToString(UINT16 archValue) {
 
 } // namespace
 
-cf::expected<void, CPUInfoErrorType> query_once_info(CPUInfoHost& hostInfo) {
+cf::expected<void, CPUInfoErrorType> query_cpu_info(CPUInfoHost& hostInfo) {
     using CpuInfoQueryExpected = cf::expected<void, CPUInfoErrorType>;
 
     return cf::COMHelper<void, CPUInfoErrorType>::RunComInterfacesMTA(
@@ -176,4 +192,70 @@ cf::expected<void, CPUInfoErrorType> query_once_info(CPUInfoHost& hostInfo) {
             // Success - hostInfo has been filled via reference
             return {};
         });
+}
+
+namespace {
+float getCpuUsage() {
+    PDH_HQUERY query;
+    PDH_HCOUNTER counter;
+
+    PdhOpenQuery(nullptr, 0, &query);
+    PdhAddEnglishCounter(query, L"\\Processor(_Total)\\% Processor Time", 0, &counter);
+    PdhCollectQueryData(query);
+
+    Sleep(100);
+
+    PdhCollectQueryData(query);
+
+    PDH_FMT_COUNTERVALUE value;
+    PdhGetFormattedCounterValue(counter, PDH_FMT_DOUBLE, nullptr, &value);
+
+    PdhCloseQuery(query);
+
+    return static_cast<float>(value.doubleValue);
+}
+} // namespace
+
+cf::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError> query_cpu_profile_info() {
+    cf::CPUProfileInfo profile_info{};
+    // logical cnt
+    SYSTEM_INFO sysInfo;
+    GetSystemInfo(&sysInfo);
+    profile_info.logical_cnt = static_cast<uint8_t>(sysInfo.dwNumberOfProcessors);
+
+    // physical cnt
+    DWORD len = 0;
+    GetLogicalProcessorInformationEx(RelationProcessorCore, nullptr, &len);
+    std::vector<char> buffer(len);
+    PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX info =
+        reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(buffer.data());
+
+    if (!GetLogicalProcessorInformationEx(RelationProcessorCore, info, &len)) {
+        profile_info.physical_cnt = 0;
+    } else {
+        uint8_t count = 0;
+        char* ptr = buffer.data();
+        while (ptr < buffer.data() + len) {
+            PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX entry =
+                reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(ptr);
+
+            if (entry->Relationship == RelationProcessorCore)
+                count++;
+
+            ptr += entry->Size;
+        }
+        profile_info.physical_cnt = count;
+    }
+
+    PROCESSOR_POWER_INFORMATION power_info[64];
+
+    ULONG retLen;
+    CallNtPowerInformation(ProcessorInformation, nullptr, 0, power_info, sizeof(power_info));
+
+    profile_info.current_frequecy = power_info[0].CurrentMhz * 1'000'000;
+    profile_info.max_frequency = power_info[0].MaxMhz * 1'000'000;
+
+    profile_info.cpu_usage_percentage = getCpuUsage();
+
+    return profile_info;
 }

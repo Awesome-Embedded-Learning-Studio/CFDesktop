@@ -20,17 +20,17 @@
 ### 1.1 基础信息
 - [ ] **CPU 型号名称** (Model Name)
   - Linux: `/proc/cpuinfo` 中的 `model name` / `Hardware` 字段
-  - Windows: WMIC `Win32_Processor.Name`
+  - [x] Windows: WMIC `Win32_Processor.Name`
   - 用途: 识别 SoC 型号 (IMX6ULL, RK3568, RK3588 等)
 
 - [ ] **CPU 制造商** (Vendor)
   - Linux: `/proc/cpuinfo` 中的 `vendor_id` / `CPU implementer`
-  - Windows: WMIC `Win32_Processor.Manufacturer`
+  - [x]  Windows: WMIC `Win32_Processor.Manufacturer`
   - 用途: 区分 ARM/Intel/AMD 等架构
 
 - [ ] **CPU 架构** (Architecture)
   - Linux: `uname -m` (armv7l, aarch64, x86_64, riscv64)
-  - Windows: PROCESSOR_ARCHITECTURE 环境变量
+  - [x]  Windows: PROCESSOR_ARCHITECTURE 环境变量
   - 用途: 决定编译指令集优化
 
 ### 1.2 性能信息
