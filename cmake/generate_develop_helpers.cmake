@@ -22,33 +22,23 @@
         generate_vscode_clangd()
 #]]
 function(generate_vscode_clangd)
-    # Determine the tools directory based on CMAKE_CXX_COMPILER path
-    # Expected pattern: D:/QT/Qt6.6.0/Tools/llvm-mingw1706_64/bin/g++.exe
-    #                or: D:/QT/Qt6.6.0/Tools/mingw1310_64/bin/g++.exe
-
-    # COMPILER_BIN_DIR = .../llvm-mingw1706_64/bin  or  .../mingw1310_64/bin
     get_filename_component(COMPILER_BIN_DIR "${CMAKE_CXX_COMPILER}" DIRECTORY)
+    get_filename_component(TOOLCHAIN_ROOT   "${COMPILER_BIN_DIR}"   DIRECTORY)
+    get_filename_component(TOOLS_DIR        "${TOOLCHAIN_ROOT}"     DIRECTORY)
 
-    # TOOLCHAIN_ROOT   = .../llvm-mingw1706_64       or  .../mingw1310_64
-    get_filename_component(TOOLCHAIN_ROOT "${COMPILER_BIN_DIR}" DIRECTORY)
-
-    # TOOLS_DIR        = .../Qt6.6.0/Tools
-    get_filename_component(TOOLS_DIR "${TOOLCHAIN_ROOT}" DIRECTORY)
-
-    # Detect compiler type from toolchain root path
     string(TOLOWER "${TOOLCHAIN_ROOT}" TOOLCHAIN_ROOT_LOWER)
 
-    # --- Locate clangd -------------------------------------------------
-    # clangd lives in llvm-mingw regardless of active toolchain.
-    # When using LLVM-MinGW directly, clangd is in the same bin/.
-    # When using MinGW-GCC, we search for llvm-mingw alongside it.
     set(CLANGD_PATH "")
+    set(QUERY_DRIVER_GLOB "")
 
+    # ------------------------------------------------------------------ #
+    #  Windows Qt toolchain                                                #
+    # ------------------------------------------------------------------ #
     if("${TOOLCHAIN_ROOT_LOWER}" MATCHES "llvm-mingw")
-        # LLVM-MinGW toolchain: clangd is right here
-        set(CLANGD_PATH "${COMPILER_BIN_DIR}/clangd.exe")
+        set(CLANGD_PATH       "${COMPILER_BIN_DIR}/clangd.exe")
+        set(QUERY_DRIVER_GLOB "${TOOLS_DIR}/*/bin/g++.exe")
+
     elseif("${TOOLCHAIN_ROOT_LOWER}" MATCHES "mingw")
-        # MinGW-GCC toolchain: find clangd from a sibling llvm-mingw install
         file(GLOB CLANGD_CANDIDATES "${TOOLS_DIR}/llvm-mingw*/bin/clangd.exe")
         if(NOT CLANGD_CANDIDATES)
             message(WARNING
@@ -56,8 +46,44 @@ function(generate_vscode_clangd)
                 "${TOOLS_DIR}/llvm-mingw*/bin/ — skipping VSCode config generation.")
             return()
         endif()
-        list(SORT    CLANGD_CANDIDATES)
-        list(GET     CLANGD_CANDIDATES -1 CLANGD_PATH)  # pick newest version
+        list(SORT CLANGD_CANDIDATES)
+        list(GET  CLANGD_CANDIDATES -1 CLANGD_PATH)
+        set(QUERY_DRIVER_GLOB "${TOOLS_DIR}/*/bin/g++.exe")
+
+    # ------------------------------------------------------------------ #
+    #  Linux / macOS system toolchain                                      #
+    #  Compiler typically at /usr/bin/g++ or /usr/local/bin/g++           #
+    #  or a distro clang at /usr/bin/clang++                              #
+    # ------------------------------------------------------------------ #
+    elseif("${TOOLCHAIN_ROOT_LOWER}" MATCHES "^/usr" OR
+           "${TOOLCHAIN_ROOT_LOWER}" MATCHES "^/opt" OR
+           "${TOOLCHAIN_ROOT_LOWER}" MATCHES "^/home")
+
+        # Use `which` to locate clangd — avoids find_program cache pitfalls.
+        # Try versioned binaries first (clangd-17, clangd-16 …) then bare clangd.
+        set(CLANGD_PATH "")
+        foreach(_candidate clangd-17 clangd-16 clangd-15 clangd-14 clangd)
+            execute_process(
+                COMMAND which ${_candidate}
+                OUTPUT_VARIABLE _WHICH_OUT
+                ERROR_QUIET
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+            if(_WHICH_OUT)
+                set(CLANGD_PATH "${_WHICH_OUT}")
+                break()
+            endif()
+        endforeach()
+
+        if(NOT CLANGD_PATH)
+            message(WARNING
+                "generate_vscode_clangd: clangd not found in PATH — "
+                "install it with: sudo apt install clangd  /  brew install llvm")
+            return()
+        endif()
+
+        set(QUERY_DRIVER_GLOB
+            "/usr/bin/g++,/usr/bin/g++-*,/usr/bin/clang++,/usr/local/bin/g++,/usr/local/bin/clang++")
     else()
         message(WARNING
             "generate_vscode_clangd: unrecognised toolchain root '${TOOLCHAIN_ROOT}' "
@@ -65,19 +91,15 @@ function(generate_vscode_clangd)
         return()
     endif()
 
-    # --- query-driver glob ---------------------------------------------
-    # Use a glob that matches both mingw and llvm-mingw so the generated
-    # settings.json stays valid when the active toolchain is switched.
-    set(QUERY_DRIVER_GLOB "${TOOLS_DIR}/*/bin/g++.exe")
-
-    # --- Normalise paths to forward slashes for JSON -------------------
-    cmake_path(CONVERT "${CLANGD_PATH}"       TO_CMAKE_PATH_LIST CLANGD_PATH_JSON      NORMALIZE)
+    # --- Normalise paths -----------------------------------------------
+    cmake_path(CONVERT "${CLANGD_PATH}"       TO_CMAKE_PATH_LIST CLANGD_PATH_JSON       NORMALIZE)
     cmake_path(CONVERT "${QUERY_DRIVER_GLOB}" TO_CMAKE_PATH_LIST QUERY_DRIVER_GLOB_JSON NORMALIZE)
     cmake_path(CONVERT "${CMAKE_BINARY_DIR}"  TO_CMAKE_PATH_LIST CMAKE_BINARY_DIR_JSON  NORMALIZE)
 
     # --- Write settings.json -------------------------------------------
-    set(VSCODE_DIR   "${CMAKE_BINARY_DIR}/.vscode")
+    set(VSCODE_DIR    "${CMAKE_BINARY_DIR}/.vscode")
     set(SETTINGS_JSON "${VSCODE_DIR}/settings.json")
+    set(EXTENSION_JSON "${VSCODE_DIR}/extensions.json")
     file(MAKE_DIRECTORY "${VSCODE_DIR}")
 
     configure_file(
@@ -89,6 +111,14 @@ function(generate_vscode_clangd)
     message(STATUS "Generated VSCode clangd configuration: ${SETTINGS_JSON}")
     message(STATUS "  clangd.path:  ${CLANGD_PATH_JSON}")
     message(STATUS "  query-driver: ${QUERY_DRIVER_GLOB_JSON}")
+
+    configure_file(
+        "${CMAKE_CURRENT_LIST_DIR}/cmake/generate_develop_helpers/templates/extensions.json.in"
+        "${EXTENSION_JSON}"
+        @ONLY
+    )
+
+    message(STATUS "Also Extensions OK")
 endfunction()
 
 

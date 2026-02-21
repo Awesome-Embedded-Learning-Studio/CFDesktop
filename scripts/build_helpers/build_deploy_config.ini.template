@@ -19,3 +19,4 @@ build_dir=out/build_deploy
 [options]
 # Additional CMake options (optional, can be left empty)
 # Additional options can be added here as key=value pairs
+# Eg: jobs=16, to indicate makefile run 16 threads, if using Makefile lol

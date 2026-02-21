@@ -98,6 +98,7 @@ GENERATOR="$config_cmake_generator"
 TOOLCHAIN="$config_cmake_toolchain"
 SOURCE_DIR="$config_paths_source"
 BUILD_DIR="$config_paths_build_dir"
+JOBS="${config_options_jobs:-}"
 
 # Resolve source directory: if relative, make it relative to project root
 if [[ "$SOURCE_DIR" = /* ]]; then
@@ -112,6 +113,7 @@ log "Generator: $GENERATOR" "INFO"
 log "Toolchain: $TOOLCHAIN" "INFO"
 log "Source directory: $SOURCE_DIR (resolved: $RESOLVED_SOURCE_DIR)" "INFO"
 log "Build directory: $BUILD_DIR" "INFO"
+log "Parallel jobs: ${JOBS:-auto}" "INFO"
 
 # Step 0: Clean build directory
 log "========================================" "INFO"
@@ -151,10 +153,18 @@ fi
 # Step 2: Build with CMake
 log "========================================" "INFO"
 log "Step 2: Building project" "INFO"
-log "Command: cmake --build $BUILD_DIR" "INFO"
+
+# Prepare build command with parallel jobs if specified
+BUILD_CMD="cmake --build \"$BUILD_DIR\""
+if [[ -n "$JOBS" ]]; then
+    BUILD_CMD="$BUILD_CMD --parallel \"$JOBS\""
+    log "Command: cmake --build $BUILD_DIR --parallel $JOBS" "INFO"
+else
+    log "Command: cmake --build $BUILD_DIR" "INFO"
+fi
 log "========================================" "INFO"
 
-if cmake --build "$BUILD_DIR"; then
+if eval "$BUILD_CMD"; then
     log "Build completed successfully!" "SUCCESS"
 else
     exit_code=$?

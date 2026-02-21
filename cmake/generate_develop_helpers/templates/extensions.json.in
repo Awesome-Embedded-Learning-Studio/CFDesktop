@@ -1,0 +1,9 @@
+// .vscode/extensions.json
+{
+    "recommendations": [
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "qt-labs.qt-all"
+    ]
+}
