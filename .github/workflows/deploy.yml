@@ -1,0 +1,78 @@
+# 工作流名称
+name: 自动部署 MkDocs
+
+# 触发条件：推送到 main 分支
+on:
+  push:
+    branches:
+      - main
+  
+  # 允许手动触发
+  workflow_dispatch:
+
+# 设置权限
+permissions:
+  contents: write  # 允许推送到 gh-pages 分支
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 检出代码
+      - name: 检出仓库
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整历史，显示文章修改时间
+      
+      # 2. 设置 Python
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          # cache: 'pip'  # 缓存依赖，加速构建
+      
+      # 3. 安装依赖
+      - name: 安装依赖
+        run: |
+          pip install mkdocs-material
+          pip install mkdocs-awesome-pages-plugin
+          pip install mkdocs-git-revision-date-localized-plugin
+      
+      # 4. 安装 Doxygen
+      - name: 安装 Doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen
+
+      # 5. 安装 doxybook2
+      - name: 安装 doxybook2
+        run: |
+          # 下载最新版本的 doxybook2
+          DOXYBOOK2_VERSION="1.5.0"
+          wget https://github.com/matusnovak/doxybook2/releases/download/v${DOXYBOOK2_VERSION}/doxybook2-linux-amd64-v${DOXYBOOK2_VERSION}.zip
+          unzip doxybook2-linux-amd64-v${DOXYBOOK2_VERSION}.zip
+          sudo mv bin/doxybook2 /usr/local/bin/
+          sudo chmod +x /usr/local/bin/doxybook2
+          doxybook2 --version
+
+      # 6. 生成 API 文档(Doxygen → Markdown)
+      - name: 生成 API 文档
+        run: |
+          doxygen Doxyfile
+          rm -rf documentation/api
+          mkdir -p documentation/api
+          doxybook2 --input ./xml \
+                    --output ./documentation/api \
+                    --config doxybook.json
+
+      # 7. 构建网站
+      - name: 构建网站
+        run: mkdocs build --clean
+      
+      # 8. 自动部署到 gh-pages 分支（这一步会自动触发 GitHub Pages）
+      - name: 部署到 GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动提供的 token
+          publish_dir: ./site  # MkDocs 构建输出目录
