@@ -38,8 +38,14 @@ if(WIN32)
     # Link Windows WMI libraries for CPU info
     target_link_libraries(cfbase_cpu PUBLIC wbemuuid PowrProf pdh)
 elseif(UNIX)
-    # Linux/Unix specific implementations will be added here
-    # target_sources(cfbase_cpu PRIVATE system/implements/linux_impl/...)
+    # Linux/Unix specific implementations
+    target_sources(cfbase_cpu PRIVATE
+        system/cpu/private/linux_impl/cpu_profile.cpp
+        system/cpu/private/linux_impl/cpu_bonus.cpp
+        system/cpu/private/linux_impl/cpu_features.cpp
+        system/cpu/private/linux_impl/cpu_info.cpp
+        utils/linux/proc_parser.cpp
+    )
 endif()
 
 # Alias for convenience

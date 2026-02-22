@@ -18,8 +18,8 @@ namespace cf {
 enum class CPUProfileInfoError { CPUProfileInfoGeneralError };
 
 struct CPUProfileInfo {
-    uint8_t logical_cnt;
-    uint8_t physical_cnt;
+    uint16_t logical_cnt;
+    uint16_t physical_cnt;
     uint32_t current_frequecy;
     uint32_t max_frequency;
     float cpu_usage_percentage;

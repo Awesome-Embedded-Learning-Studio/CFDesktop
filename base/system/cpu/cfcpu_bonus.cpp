@@ -9,8 +9,8 @@
 
 #ifdef CFDESKTOP_OS_WINDOWS
 #    include "private/win_impl/cpu_bonus.h"
-#elif CFDESKTOP_OS_LINUX
-#    include "private/linux_impl/cpu.h"
+#elif defined(CFDESKTOP_OS_LINUX)
+#include "private/linux_impl/cpu_bonus.h"
 #endif
 
 namespace {

@@ -10,12 +10,6 @@
 #    define CFDESKTOP_OS_LINUX
 #endif
 
-// Unix-like 平台判定（包含 Linux、macOS、BSD）
-#if defined(Q_OS_UNIX) && !defined(Q_OS_ANDROID)
-#    error \
-        "Current OS May failed to compiled the CFDesktop, If you have successed, fork and patch the repo! PR are welcomed!"
-#endif
-
 #ifdef Q_PROCESSOR_X86_64
 #    define CFDESKTOP_ARCH_X86_64
 #endif

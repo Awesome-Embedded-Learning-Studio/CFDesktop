@@ -3,7 +3,7 @@
 
 #ifdef CFDESKTOP_OS_WINDOWS
 #    include "private/win_impl/cpu_profile.h"
-#elif CFDESKTOP_OS_LINUX
+#elif defined(CFDESKTOP_OS_LINUX)
 #    include "private/linux_impl/cpu_profile.h"
 #endif
 namespace cf {
