@@ -1,0 +1,21 @@
+{
+  "input": "xml",
+  "output": "documentation/api",
+  "format": "md",
+
+  "structure": {
+    "readme": "API Reference",
+    "summary": "API Summary"
+  },
+
+  "folders": {
+    "files": "files",
+    "classes": "classes",
+    "namespaces": "namespaces"
+  },
+
+  "markdown": {
+    "includeIndex": true,
+    "indexFileName": "index"
+  }
+}
