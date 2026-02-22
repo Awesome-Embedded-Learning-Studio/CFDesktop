@@ -1,4 +1,5 @@
 #include "system/cpu/cfcpu.h"
+#include "system/cpu/cfcpu_bonus.h"
 #include "system/cpu/cfcpu_profile.h"
 #include <gtest/gtest.h>
 using namespace cf;
@@ -10,6 +11,11 @@ TEST(cpu_query, cpu_query_successable) {
 
 TEST(cpu_performace_query, cpu_query_successable) {
     auto cpuInfoQuery = getCPUProfileInfo();
+    EXPECT_TRUE(cpuInfoQuery.has_value());
+}
+
+TEST(cpu_bonus_query, cpu_query_successable) {
+    auto cpuInfoQuery = getCPUBonusInfo();
     EXPECT_TRUE(cpuInfoQuery.has_value());
 }
 

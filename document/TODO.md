@@ -36,23 +36,23 @@
 ### 1.2 性能信息
 - [ ] **逻辑核心数** (Logical Cores)
   - Linux: `/proc/cpuinfo` 处理器数量
-  - Windows: `Win32_Processor.NumberOfLogicalProcessors`
+  - [x] Windows: `Win32_Processor.NumberOfLogicalProcessors`
   - 用途: 任务调度与线程池配置
 
 - [ ] **物理核心数** (Physical Cores)
   - Linux: `/proc/cpuinfo` 中的 `cpu cores`
-  - Windows: `Win32_Processor.NumberOfCores`
+  - [x] Windows: `Win32_Processor.NumberOfCores`
   - 用途: 性能评估
 
 - [ ] **CPU 主频** (Frequency)
   - Linux: `/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq` (当前频率)
   - Linux: `/proc/cpuinfo` 中的 `BogoMIPS` (估算)
-  - Windows: `Win32_Processor.MaxClockSpeed`
+  - [x] Windows: `Win32_Processor.MaxClockSpeed`
   - 用途: 性能评分
 
 - [ ] **CPU 使用率** (Current Usage)
   - Linux: `/proc/stat` 计算
-  - Windows: 性能计数器
+  - [x] Windows: 性能计数器
   - 用途: 实时性能监控
 
 ### 1.3 特性与指令集

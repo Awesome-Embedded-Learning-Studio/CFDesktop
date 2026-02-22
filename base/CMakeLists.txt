@@ -8,6 +8,7 @@ add_library(cfbase_interface INTERFACE)
 add_library(cfbase_cpu STATIC
     system/cpu/cfcpu.cpp
     system/cpu/cfcpu_profile.cpp
+    system/cpu/cfcpu_bonus.cpp
 )
 
 target_include_directories(cfbase_cpu
@@ -26,7 +27,10 @@ target_link_libraries(cfbase_cpu
 if(WIN32)
     # Windows specific implementations
     target_sources(cfbase_cpu PRIVATE
-        system/cpu/private/win_impl/cpu.cpp
+        system/cpu/private/win_impl/cpu_profile.cpp
+        system/cpu/private/win_impl/cpu_bonus.cpp
+        system/cpu/private/win_impl/cpu_features.cpp
+        system/cpu/private/win_impl/cpu_info.cpp
     )
     target_include_directories(cfbase_cpu PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/base/windows

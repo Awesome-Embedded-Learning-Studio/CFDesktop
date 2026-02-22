@@ -9,7 +9,9 @@
  *
  */
 #pragma once
+#include <optional>
 #include <string>
+#include <vector>
 namespace cf {
 struct CPUInfoHost {
   public:
@@ -17,4 +19,16 @@ struct CPUInfoHost {
     std::string manufest;
     std::string arch;
 };
+
+struct CPUBonusInfoHost {
+    std::vector<std::string> features;
+    std::vector<uint32_t> cache_size;
+
+    bool has_big_little = false;
+    uint32_t big_core_count = 0;
+    uint32_t little_core_count = 0;
+
+    std::optional<uint16_t> temperature;
+};
+
 } // namespace cf

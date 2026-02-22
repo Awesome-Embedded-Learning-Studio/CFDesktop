@@ -13,7 +13,7 @@
 #include <string_view>
 
 namespace cf {
-enum class CPUInfoErrorType { CPU_QUERY_GENERAL_FAILED };
+enum class CPUInfoErrorType { CPU_QUERY_NOERROR, CPU_QUERY_GENERAL_FAILED };
 
 struct CPUInfoView {
     std::string_view model;
@@ -21,6 +21,6 @@ struct CPUInfoView {
     std::string_view manufacturer;
 };
 
-expected<CPUInfoView, CPUInfoErrorType> getCPUInfo();
+expected<CPUInfoView, CPUInfoErrorType> getCPUInfo(bool force_refresh = false);
 
 } // namespace cf
