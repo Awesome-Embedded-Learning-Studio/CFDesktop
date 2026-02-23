@@ -35,7 +35,7 @@ float getCpuUsage() {
     PDH_HCOUNTER counter;
 
     PdhOpenQuery(nullptr, 0, &query);
-    PdhAddEnglishCounter(query, L"\\Processor(_Total)\\% Processor Time", 0, &counter);
+    PdhAddEnglishCounterW(query, L"\\Processor(_Total)\\% Processor Time", 0, &counter);
     PdhCollectQueryData(query);
 
     Sleep(100);

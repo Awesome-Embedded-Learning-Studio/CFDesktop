@@ -1,5 +1,5 @@
 #include "cpu_bonus.h"
-#include "cpu/private/cpu_host.h"
+#include "cpu_host.h"
 #include "cpu_features.h"
 #include <windows.h>
 

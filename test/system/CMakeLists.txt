@@ -1,23 +1,22 @@
 # =============================================================================
-# Base library unit tests - expected_test
+# Base library unit tests - system
 # =============================================================================
-add_executable(test_cpu_info_query
-   test_cpu_info_query.cpp
+include(add_gtest_executable)
+
+log_info("base_system" "Configured base system unit tests:")
+
+add_gtest_executable(
+    TEST_NAME      test_cpu_info_query
+    SOURCE_FILE    test_cpu_info_query.cpp
+    LINK_LIBRARIES cfbase_cpu;GTest::gtest;GTest::gtest_main
+    LABELS         "base;system"
+    LOG_MODULE     base_system
 )
 
-target_link_libraries(test_cpu_info_query
-    PRIVATE cfbase_cpu
-            GTest::gtest
-            GTest::gtest_main
+add_gtest_executable(
+    TEST_NAME      test_memory_info_query
+    SOURCE_FILE    test_memory_info_query.cpp
+    LINK_LIBRARIES cfbase_memory;GTest::gtest;GTest::gtest_main
+    LABELS         "base;system"
+    LOG_MODULE     base_system
 )
-
-# Register with CTest
-add_test(NAME test_cpu_info_query COMMAND test_cpu_info_query)
-
-# Set test properties
-set_tests_properties(test_cpu_info_query PROPERTIES
-    LABELS "base;system"
-)
-
-log_info("base_system" "Configured base unit tests:")
-log_info("base_system" "  - test_cpu_info_query")

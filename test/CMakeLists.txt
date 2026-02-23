@@ -1,3 +1,6 @@
+# Include custom CMake helper functions
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 # GoogleTest for unit testing
 include(FetchContent)
 

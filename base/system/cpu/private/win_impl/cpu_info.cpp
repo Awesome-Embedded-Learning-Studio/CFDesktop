@@ -10,8 +10,8 @@
  */
 #include "base/scope_guard/scope_guard.hpp"
 #include "base/windows/co_helper.hpp"
-#include "cpu/private/cpu_host.h"
 #include "system/cpu/cfcpu.h"
+#include "system/cpu/private/cpu_host.h"
 #include <Wbemidl.h>
 #include <Windows.h>
 #include <comdef.h>

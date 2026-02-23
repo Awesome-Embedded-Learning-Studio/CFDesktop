@@ -12,24 +12,32 @@
  * @ingroup base_macros
  */
 #pragma once
-#include <QtGlobal>
 
-#ifdef Q_OS_WIN
+/* ==================== Operating System Detection ==================== */
+
+// Windows platform detection
+#if defined(_WIN32) || defined(_WIN64)
 #    define CFDESKTOP_OS_WINDOWS
 #endif
 
 // Linux platform detection
-#ifdef Q_OS_LINUX
+#if defined(__linux__)
 #    define CFDESKTOP_OS_LINUX
 #endif
 
-#ifdef Q_PROCESSOR_X86_64
+/* ==================== Architecture Detection ==================== */
+
+// x86_64 (AMD64) detection
+#if defined(__x86_64__) || defined(_M_X64) || defined(__amd64__)
 #    define CFDESKTOP_ARCH_X86_64
 #endif
-#ifdef Q_PROCESSOR_ARM_64
+
+// ARM64 detection
+#if defined(__aarch64__) || defined(_M_ARM64)
 #    define CFDESKTOP_ARCH_ARM64
 #endif
 
-#ifdef Q_PROCESSOR_ARM_32
+// ARM32 detection
+#if defined(__arm__) || defined(_M_ARM)
 #    define CFDESKTOP_ARCH_ARM32
 #endif
