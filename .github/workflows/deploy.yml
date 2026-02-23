@@ -60,10 +60,10 @@ jobs:
       - name: 生成 API 文档
         run: |
           doxygen Doxyfile
-          rm -rf documentation/api
-          mkdir -p documentation/api
+          rm -rf document/api
+          mkdir -p document/api
           doxybook2 --input ./xml \
-                    --output ./documentation/api \
+                    --output ./document/api \
                     --config doxybook.json
 
       # 7. 构建网站
