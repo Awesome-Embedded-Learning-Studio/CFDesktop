@@ -1,6 +1,6 @@
 {
   "input": "xml",
-  "output": "documentation/api",
+  "output": "document/api",
   "format": "md",
 
   "structure": {
