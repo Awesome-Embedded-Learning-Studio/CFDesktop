@@ -35,6 +35,7 @@ namespace cf::ui::core {
 // Forward Declarations
 // =============================================================================
 class TokenRegistry;
+/// @brief Compile-time type-safe token with zero runtime overhead.
 template <typename T, uint64_t Hash> class StaticToken;
 
 // =============================================================================
@@ -126,11 +127,19 @@ struct TokenError {
  */
 template <typename T, uint64_t Hash> class StaticToken {
   public:
+    /// @brief Value type stored in this token.
     using value_type = T;
+
+    /// @brief Compile-time hash of the token name.
     static constexpr uint64_t hash_value = Hash;
 
+    /// @brief Default constructor is deleted.
     StaticToken() = delete;
+
+    /// @brief Copy constructor is deleted.
     StaticToken(const StaticToken&) = delete;
+
+    /// @brief Copy assignment operator is deleted.
     StaticToken& operator=(const StaticToken&) = delete;
 
     /**
@@ -302,7 +311,7 @@ class TokenRegistry {
      *
      * @tparam T Value type to store.
      * @param  name Token name.
-     * @param  value Value to store (will be copied).
+     * @param  value Value to store (copied).
      *
      * @return     Result containing void or TokenError.
      *
@@ -315,7 +324,7 @@ class TokenRegistry {
      *
      * @tparam T Value type to store.
      * @param  name Token name.
-     * @param  value Value to store (will be moved).
+     * @param  value Value to store (moved).
      *
      * @return     Result containing void or TokenError.
      *
@@ -448,11 +457,25 @@ class TokenRegistry {
 // Inline Implementations - StaticToken
 // =============================================================================
 
+/**
+ * @brief  Type-safe value accessor for registry.
+ *
+ * @return     cf::expected containing pointer to the token's value or TokenError.
+ *
+ * @since      0.1
+ */
 template <typename T, uint64_t Hash> auto StaticToken<T, Hash>::get()
     -> cf::expected<T*, TokenError> {
     return TokenRegistry::get().get<StaticToken<T, Hash>>();
 }
 
+/**
+ * @brief  Const version of value accessor.
+ *
+ * @return     cf::expected containing const pointer to the token's value or TokenError.
+ *
+ * @since      0.1
+ */
 template <typename T, uint64_t Hash> auto StaticToken<T, Hash>::get_const()
     -> cf::expected<const T*, TokenError> {
     return TokenRegistry::get().get_const<StaticToken<T, Hash>>();
@@ -826,7 +849,7 @@ class EmbeddedTokenRegistry {
      *
      * @tparam T Value type to store.
      * @param  name Token name.
-     * @param  value Value to store (will be copied).
+     * @param  value Value to store (copied).
      *
      * @return     Result containing void or TokenError.
      *
@@ -839,7 +862,7 @@ class EmbeddedTokenRegistry {
      *
      * @tparam T Value type to store.
      * @param  name Token name.
-     * @param  value Value to store (will be moved).
+     * @param  value Value to store (moved).
      *
      * @return     Result containing void or TokenError.
      *
@@ -1005,7 +1028,8 @@ inline const detail::TokenSlot* EmbeddedTokenRegistry::find_slot_const(uint64_t 
 }
 
 template <typename T, typename... Args>
-auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, Args&&... args) -> Result<void> {
+auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, Args&&... args)
+    -> Result<void> {
     uint64_t hash = cf::hash::fnv1a64(name);
 
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
@@ -1027,7 +1051,8 @@ auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, Args&&... ar
 }
 
 template <typename T>
-auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, const T& value) -> Result<void> {
+auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, const T& value)
+    -> Result<void> {
     uint64_t hash = cf::hash::fnv1a64(name);
 
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);

@@ -61,8 +61,8 @@ inline constexpr uint32_t fnv1a32_prime = 16777619U;
  * The FNV-1a algorithm provides excellent distribution and
  * minimal collisions for string identifiers.
  *
- * @param  str Null-terminated string to hash.
- * @param  seed Starting hash value (default: FNV offset basis).
+ * @param[in]  str Null-terminated string to hash.
+ * @param[in]  seed Starting hash value (default: FNV offset basis).
  *
  * @return     64-bit hash value.
  *
@@ -91,8 +91,8 @@ constexpr uint64_t fnv1a64(const char* str, uint64_t seed = fnv1a64_offset_basis
 /**
  * @brief  FNV-1a 64-bit hash for std::string_view (runtime/constexpr).
  *
- * @param  sv String view to hash.
- * @param  seed Starting hash value (default: FNV offset basis).
+ * @param[in]  sv String view to hash.
+ * @param[in]  seed Starting hash value (default: FNV offset basis).
  *
  * @return    64-bit hash value.
  *
@@ -110,8 +110,8 @@ constexpr uint64_t fnv1a64(std::string_view sv, uint64_t seed = fnv1a64_offset_b
 /**
  * @brief  FNV-1a 32-bit hash constexpr implementation.
  *
- * @param  str Null-terminated string to hash.
- * @param  seed Starting hash value (default: FNV offset basis).
+ * @param[in]  str Null-terminated string to hash.
+ * @param[in]  seed Starting hash value (default: FNV offset basis).
  *
  * @return     32-bit hash value.
  *
@@ -127,8 +127,8 @@ constexpr uint32_t fnv1a32(const char* str, uint32_t seed = fnv1a32_offset_basis
 /**
  * @brief  FNV-1a 32-bit hash for std::string_view.
  *
- * @param  sv String view to hash.
- * @param  seed Starting hash value (default: FNV offset basis).
+ * @param[in]  sv String view to hash.
+ * @param[in]  seed Starting hash value (default: FNV offset basis).
  *
  * @return    32-bit hash value.
  *

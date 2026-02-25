@@ -219,7 +219,7 @@ class CF_UI_EXPORT MaterialColorScheme : public ICFColorScheme {
     /**
      * @brief Query a color by name.
      *
-     * @param name Color token name (e.g., "md.primary").
+     * @param[in] name Color token name (e.g., "md.primary").
      * @return Reference to the QColor.
      *
      * @since 0.1
@@ -229,7 +229,7 @@ class CF_UI_EXPORT MaterialColorScheme : public ICFColorScheme {
     /**
      * @brief Query a color by name (const overload).
      *
-     * @param name Color token name.
+     * @param[in] name Color token name.
      * @return Copy of the QColor.
      *
      * @since 0.1
