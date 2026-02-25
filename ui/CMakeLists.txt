@@ -19,21 +19,28 @@ add_subdirectory(models)
 
 add_library(cfui SHARED)
 
-# Merge all object files from sub-modules
-target_sources(cfui PRIVATE
-    $<TARGET_OBJECTS:cf_ui_base>
+# CMake automatically defines CFUI_EXPORTS when building this SHARED library.
+# This is used by export.h to control __declspec(dllexport/dllimport) on Windows.
+# No manual compile_definitions needed - this is CMake's standard behavior.
+
+# Link against STATIC libraries from sub-modules
+target_link_libraries(cfui PUBLIC
+    cf_ui_base
+    cf_ui_core
 )
 
 # Set include directories
 target_include_directories(cfui PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/core
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-# Link Qt libraries
+# Link Qt libraries and base library (SHARED cfbase.dll)
 target_link_libraries(cfui PUBLIC
     Qt6::Core
     Qt6::Gui
+    CFDesktop::base
 )
 
 # Add alias for consistent naming

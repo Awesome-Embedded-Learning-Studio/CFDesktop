@@ -55,6 +55,34 @@ set_tests_properties(scope_guard_test PROPERTIES
     LABELS "base;unit;scope_guard"
 )
 
+# =============================================================================
+# Base library unit tests - constexpr_fnv1a_test
+# =============================================================================
+add_executable(constexpr_fnv1a_test
+    hash/constexpr_fnv1a_test.cpp
+)
+
+target_include_directories(constexpr_fnv1a_test
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/base/include
+)
+
+target_link_libraries(constexpr_fnv1a_test
+    PRIVATE
+        Qt6::Core
+        GTest::gtest
+        GTest::gtest_main
+)
+
+# Register with CTest
+add_test(NAME constexpr_fnv1a_test COMMAND constexpr_fnv1a_test)
+
+# Set test properties
+set_tests_properties(constexpr_fnv1a_test PROPERTIES
+    LABELS "base;unit;hash"
+)
+
 message(STATUS "Configured base unit tests:")
 message(STATUS "  - expected_test")
 message(STATUS "  - scope_guard_test")
+message(STATUS "  - constexpr_fnv1a_test")

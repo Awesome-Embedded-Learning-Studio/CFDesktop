@@ -1,6 +1,15 @@
 # Base library - fundamental utilities and platform abstractions
 cmake_minimum_required(VERSION 3.16)
 
+# ============================================================
+# Header-only library for base/include (utilities, hash, expected, etc.)
+# ============================================================
+add_library(cfbase_headers INTERFACE)
+target_include_directories(cfbase_headers INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+add_library(CFDesktop::base_headers ALIAS cfbase_headers)
+
 # Include subdirectory CMakeLists (OBJECT libraries)
 add_subdirectory(system/cpu)
 add_subdirectory(system/memory)

@@ -1,7 +1,7 @@
 log_info("UI_Base" "Start Configure the UI Base")
 
-# OBJECT library for merging into cfui.dll
-add_library(cf_ui_base OBJECT
+# STATIC library for linking into cfui.dll
+add_library(cf_ui_base STATIC
     math_helper.cpp
     color_helper.cpp
     color.cpp
@@ -9,6 +9,9 @@ add_library(cf_ui_base OBJECT
     geometry_helper.cpp
     easing.cpp
 )
+
+# Define CFUI_EXPORTS so symbols are marked as dllexport when compiling for the DLL
+target_compile_definitions(cf_ui_base PUBLIC CFUI_EXPORTS)
 
 # Add include directories so headers can be found with ui/base/ prefix
 # We need to add the ui parent directory so that ui/base/math_helper.h works
@@ -19,7 +22,6 @@ target_include_directories(cf_ui_base PUBLIC
 )
 
 # Link Qt for compile dependencies (headers, etc.)
-# OBJECT libraries can have link dependencies for compile requirements
 target_link_libraries(cf_ui_base PUBLIC Qt6::Core Qt6::Gui)
 
 log_info("UI_Base" "the UI Base Configuration Done")
