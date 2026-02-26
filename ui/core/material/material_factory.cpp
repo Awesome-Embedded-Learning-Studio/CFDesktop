@@ -18,6 +18,9 @@
 #include "base/color.h"
 #include "base/color_helper.h"
 #include "token/material_scheme/cfmaterial_token_literals.h"
+#include "cfmaterial_fonttype.h"
+#include "cfmaterial_radius_scale.h"
+#include "cfmaterial_motion.h"
 
 // Type aliases to avoid namespace lookup issues
 using CFColor = ::cf::ui::base::CFColor;
@@ -440,4 +443,29 @@ QByteArray toJson(const MaterialColorScheme& scheme) {
     QJsonDocument doc(root);
     return doc.toJson(QJsonDocument::Indented);
 }
+
+// =============================================================================
+// Typography Factory Functions
+// =============================================================================
+
+MaterialTypography defaultTypography() {
+    return MaterialTypography();
+}
+
+// =============================================================================
+// Radius Scale Factory Functions
+// =============================================================================
+
+MaterialRadiusScale defaultRadiusScale() {
+    return MaterialRadiusScale();
+}
+
+// =============================================================================
+// Motion Factory Functions
+// =============================================================================
+
+MaterialMotionScheme motion() {
+    return MaterialMotionScheme();
+}
+
 } // namespace cf::ui::core::material

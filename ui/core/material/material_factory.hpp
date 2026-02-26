@@ -15,6 +15,9 @@
 
 #include "base/expected/expected.hpp"
 #include "cfmaterial_scheme.h"
+#include "cfmaterial_fonttype.h"
+#include "cfmaterial_radius_scale.h"
+#include "cfmaterial_motion.h"
 #include "../../export.h"
 
 namespace cf::ui::core::material {
@@ -172,5 +175,69 @@ CF_UI_EXPORT MaterialColorScheme fromKeyColor(cf::ui::base::CFColor keyColor, bo
  * @ingroup    ui_core
  */
 CF_UI_EXPORT QByteArray toJson(const MaterialColorScheme& scheme);
+
+// =============================================================================
+// Typography Factory Functions
+// =============================================================================
+
+/**
+ * @brief  Creates default Material Design 3 typography scale.
+ *
+ * Uses system default sans-serif font with MD3 specified sizes and weights.
+ *
+ * @return     MaterialTypography with default configuration.
+ *
+ * @since      0.1
+ * @ingroup    ui_core
+ *
+ * @code
+ * auto typography = cf::ui::core::material::defaultTypography();
+ * QFont titleFont = typography.queryTargetFont("md.typography.titleLarge");
+ * @endcode
+ */
+CF_UI_EXPORT MaterialTypography defaultTypography();
+
+// =============================================================================
+// Radius Scale Factory Functions
+// =============================================================================
+
+/**
+ * @brief Creates default Material Design 3 radius scale.
+ *
+ * Uses Material Design 3 specified corner radius values.
+ *
+ * @return     MaterialRadiusScale with default configuration.
+ *
+ * @since      0.1
+ * @ingroup    ui_core
+ *
+ * @code
+ * auto radiusScale = cf::ui::core::material::defaultRadiusScale();
+ * float smallRadius = radiusScale.queryRadiusScale("md.shape.cornerSmall"); // 8.0f
+ * @endcode
+ */
+CF_UI_EXPORT MaterialRadiusScale defaultRadiusScale();
+
+// =============================================================================
+// Motion Factory Functions
+// =============================================================================
+
+/**
+ * @brief Creates default Material Design 3 motion scheme.
+ *
+ * Uses Material Design 3 specified duration and easing values for animations.
+ *
+ * @return     MaterialMotionScheme with default configuration.
+ *
+ * @since      0.1
+ * @ingroup    ui_core
+ *
+ * @code
+ * auto motionScheme = cf::ui::core::material::motion();
+ * int duration = motionScheme.queryDuration("shortEnter"); // 200
+ * auto spec = motionScheme.getMotionSpec("mediumExit");
+ * @endcode
+ */
+CF_UI_EXPORT MaterialMotionScheme motion();
 
 } // namespace cf::ui::core::material

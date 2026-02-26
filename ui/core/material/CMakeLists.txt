@@ -3,6 +3,9 @@ log_info("UI_Core_Material" "Start Configure the UI Core Material")
 # STATIC library for linking into cfui.dll
 add_library(cf_ui_core_material STATIC
     cfmaterial_scheme.cpp
+    cfmaterial_fonttype.cpp
+    cfmaterial_radius_scale.cpp
+    cfmaterial_motion.cpp
     material_factory.cpp
 )
 

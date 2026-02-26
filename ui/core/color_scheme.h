@@ -9,9 +9,11 @@
  *
  */
 #pragma once
+#include "export.h"
 #include <QColor>
+
 namespace cf::ui::core {
-struct ICFColorScheme {
+struct CF_UI_EXPORT ICFColorScheme {
     virtual ~ICFColorScheme() = default;
     virtual QColor& queryExpectedColor(const char* name) = 0;
 };
