@@ -2,6 +2,9 @@
 cmake_minimum_required(VERSION 3.16)
 
 add_library(cfbase_memory OBJECT)
+set_target_properties(cfbase_memory PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+)
 target_include_directories(cfbase_memory
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/../../include
@@ -23,5 +26,10 @@ if(WIN32)
 elseif(UNIX)
     target_sources(cfbase_memory PRIVATE
         private/linux_impl/memory_info.cpp
+        private/linux_impl/physical_memory.cpp
+        private/linux_impl/swap_memory.cpp
+        private/linux_impl/process_memory.cpp
+        private/linux_impl/cached_memory.cpp
+        private/linux_impl/dimm_info.cpp
     )
 endif()

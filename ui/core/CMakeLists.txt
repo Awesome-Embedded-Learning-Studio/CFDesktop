@@ -14,9 +14,10 @@ add_library(cf_ui_core STATIC)
 # Define CFUI_EXPORTS so symbols are marked as dllexport when compiling for the DLL
 target_compile_definitions(cf_ui_core PUBLIC CFUI_EXPORTS)
 
-# Link against material sub-module
+# Link against material sub-module and base
 target_link_libraries(cf_ui_core PUBLIC
     cf_ui_core_material
+    cf_ui_base
 )
 
 # Add include directories for header-only files

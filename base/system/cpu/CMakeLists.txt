@@ -2,6 +2,9 @@
 cmake_minimum_required(VERSION 3.16)
 
 add_library(cfbase_cpu OBJECT)
+set_target_properties(cfbase_cpu PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+)
 target_include_directories(cfbase_cpu
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/../../include

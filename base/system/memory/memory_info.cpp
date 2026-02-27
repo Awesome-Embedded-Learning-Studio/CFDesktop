@@ -13,7 +13,7 @@ void getSystemMemoryInfo(MemoryInfo& info) {
 #ifdef CFDESKTOP_OS_WINDOWS
     win_impl::getSystemMemoryInfo(info);
 #elif defined(CFDESKTOP_OS_LINUX)
-#    error "Waiting Implemented..."
+    linux_impl::getSystemMemoryInfo(info);
 #endif
 }
 

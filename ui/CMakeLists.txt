@@ -24,9 +24,10 @@ add_library(cfui SHARED)
 # No manual compile_definitions needed - this is CMake's standard behavior.
 
 # Link against STATIC libraries from sub-modules
+# Order: dependent libraries first, then their dependencies
 target_link_libraries(cfui PUBLIC
-    cf_ui_base
     cf_ui_core
+    cf_ui_base
 )
 
 # Set include directories
