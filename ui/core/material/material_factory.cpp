@@ -469,3 +469,91 @@ MaterialMotionScheme motion() {
 }
 
 } // namespace cf::ui::core::material
+
+// =============================================================================
+// MaterialFactory Class Implementation
+// =============================================================================
+
+#include "material_factory_class.h"
+#include "cfmaterial_theme.h"
+#include "../token/theme_name/material_theme_name.h"
+
+namespace cf::ui::core {
+
+std::unique_ptr<ICFTheme> MaterialFactory::fromName(const char* name) {
+    using namespace token::literals;
+
+    // Check for light theme
+    if (std::strcmp(name, MATERIAL_THEME_LIGHT) == 0) {
+        auto color_scheme = std::make_unique<MaterialColorScheme>(material::light());
+        auto font_type = std::make_unique<MaterialTypography>(material::defaultTypography());
+        auto radius_scale = std::make_unique<MaterialRadiusScale>(material::defaultRadiusScale());
+        auto motion_spec = std::make_unique<MaterialMotionScheme>(material::motion());
+
+        return std::unique_ptr<ICFTheme>(new MaterialTheme(std::move(color_scheme), std::move(font_type),
+                                                            std::move(radius_scale), std::move(motion_spec)));
+    }
+
+    // Check for dark theme
+    if (std::strcmp(name, MATERIAL_THEME_DARK) == 0) {
+        auto color_scheme = std::make_unique<MaterialColorScheme>(material::dark());
+        auto font_type = std::make_unique<MaterialTypography>(material::defaultTypography());
+        auto radius_scale = std::make_unique<MaterialRadiusScale>(material::defaultRadiusScale());
+        auto motion_spec = std::make_unique<MaterialMotionScheme>(material::motion());
+
+        return std::unique_ptr<ICFTheme>(new MaterialTheme(std::move(color_scheme), std::move(font_type),
+                                                            std::move(radius_scale), std::move(motion_spec)));
+    }
+
+    // Unknown theme name
+    return nullptr;
+}
+
+std::unique_ptr<ICFTheme> MaterialFactory::fromJson(const QByteArray& json) {
+    // Try to parse as light theme first, then dark if needed
+    auto lightResult = material::fromJson(json, false);
+    if (lightResult) {
+        auto color_scheme = std::make_unique<MaterialColorScheme>(std::move(*lightResult));
+        auto font_type = std::make_unique<MaterialTypography>(material::defaultTypography());
+        auto radius_scale = std::make_unique<MaterialRadiusScale>(material::defaultRadiusScale());
+        auto motion_spec = std::make_unique<MaterialMotionScheme>(material::motion());
+
+        return std::unique_ptr<ICFTheme>(new MaterialTheme(std::move(color_scheme), std::move(font_type),
+                                                            std::move(radius_scale), std::move(motion_spec)));
+    }
+
+    // If light parsing failed, try dark
+    auto darkResult = material::fromJson(json, true);
+    if (darkResult) {
+        auto color_scheme = std::make_unique<MaterialColorScheme>(std::move(*darkResult));
+        auto font_type = std::make_unique<MaterialTypography>(material::defaultTypography());
+        auto radius_scale = std::make_unique<MaterialRadiusScale>(material::defaultRadiusScale());
+        auto motion_spec = std::make_unique<MaterialMotionScheme>(material::motion());
+
+        return std::unique_ptr<ICFTheme>(new MaterialTheme(std::move(color_scheme), std::move(font_type),
+                                                            std::move(radius_scale), std::move(motion_spec)));
+    }
+
+    // Parsing failed for both light and dark
+    return nullptr;
+}
+
+QByteArray MaterialFactory::toJson(ICFTheme* raw_theme) {
+    if (!raw_theme) {
+        return QByteArray();
+    }
+
+    // Get the color scheme from the theme
+    auto& color_scheme = raw_theme->color_scheme();
+
+    // Try to cast to MaterialColorScheme
+    auto* material_scheme = dynamic_cast<MaterialColorScheme*>(&color_scheme);
+    if (material_scheme) {
+        return material::toJson(*material_scheme);
+    }
+
+    // Not a MaterialColorScheme, return empty JSON
+    return QByteArray();
+}
+
+} // namespace cf::ui::core

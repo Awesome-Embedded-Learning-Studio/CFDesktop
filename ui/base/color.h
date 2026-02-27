@@ -48,8 +48,6 @@ class CFColor {
      *
      * Creates a black color with HCT values (0, 0, 0).
      *
-     * @return     None (constructor).
-     *
      * @throws     None.
      *
      * @note       None.
@@ -71,8 +69,6 @@ class CFColor {
      * @param[in] g  Green component (0-255).
      * @param[in] b  Blue component (0-255).
      *
-     * @return     None (constructor).
-     *
      * @throws     None.
      *
      * @note       None.
@@ -91,8 +87,6 @@ class CFColor {
      * and caching the HCT values.
      *
      * @param[in] native  Source QColor.
-     *
-     * @return     None (constructor).
      *
      * @throws     None.
      *
@@ -113,8 +107,6 @@ class CFColor {
      *
      * @param[in] hex  Hex color string. Valid formats: "#RRGGBB", "#AARRGGBB".
      *
-     * @return     None (constructor).
-     *
      * @throws     None.
      *
      * @note       Explicit to avoid ambiguity with QColor(const char*).
@@ -132,8 +124,6 @@ class CFColor {
      * Parses a hex string in "#RRGGBB" or "#AARRGGBB" format.
      *
      * @param[in] hex  Hex color string. Valid formats: "#RRGGBB", "#AARRGGBB".
-     *
-     * @return     None (constructor).
      *
      * @throws     None.
      *
@@ -155,8 +145,6 @@ class CFColor {
      * @param[in] hue    Hue component in degrees. Valid range: [0.0, 360.0].
      * @param[in] chroma Chroma component (color intensity). Valid range: [0.0, 150.0].
      * @param[in] tone   Tone component (lightness). Valid range: [0.0, 100.0].
-     *
-     * @return     None (constructor).
      *
      * @throws     None.
      *

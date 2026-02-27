@@ -13,6 +13,7 @@
  */
 
 #pragma once
+#include "export.h"
 
 namespace cf::ui::core {
 
@@ -29,7 +30,7 @@ namespace cf::ui::core {
  * float radius = radiusScale->queryRadiusScale("cornerSmall");
  * @endcode
  */
-struct IRadiusScale {
+struct CF_UI_EXPORT IRadiusScale {
     /// @brief Virtual destructor.
     virtual ~IRadiusScale() = default;
 

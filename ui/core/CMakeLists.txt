@@ -9,7 +9,9 @@ add_subdirectory(material)
 
 # STATIC library for linking into cfui.dll
 # Note: token.hpp and color_scheme.h are header-only files
-add_library(cf_ui_core STATIC)
+add_library(cf_ui_core STATIC
+    theme_manager.cpp
+)
 
 # Define CFUI_EXPORTS so symbols are marked as dllexport when compiling for the DLL
 target_compile_definitions(cf_ui_core PUBLIC CFUI_EXPORTS)

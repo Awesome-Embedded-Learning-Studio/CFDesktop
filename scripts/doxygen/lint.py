@@ -884,6 +884,13 @@ def check_function_blocks(content: str, file: Path) -> List[Violation]:
             # This is likely a constructor (ClassName ClassName(...))
             normalized_return_type = "void"
 
+        # Handle constructors where return_type is just a keyword (constexpr, explicit, etc.)
+        # This happens when a constructor has only keywords before the class name
+        # e.g., constexpr WeakPtr() -> return_type="constexpr", name="WeakPtr"
+        cvr_keywords = {'constexpr', 'consteval', 'constinit', 'inline', 'explicit', 'static'}
+        if normalized_return_type in cvr_keywords:
+            normalized_return_type = "void"
+
         # Skip @return check for void functions that have explanatory @return
         # (e.g., "Returns void if in success state" - this is documentation, not a type error)
         # Only warn if @return describes an actual type (not just "void" or descriptive text)

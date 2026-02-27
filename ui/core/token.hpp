@@ -141,18 +141,26 @@ template <typename T, uint64_t Hash> class StaticToken {
     /**
      * @brief  Type-safe value accessor for registry.
      *
+     * @tparam  T Value type stored in this token.
      * @return     cf::expected containing pointer to the token's value or TokenError.
-     *
+     * @throws     None
+     * @note       Thread-safe for concurrent reads.
+     * @warning    None
      * @since      0.1
+     * @ingroup    ui_core
      */
     static cf::expected<T*, TokenError> get();
 
     /**
      * @brief  Const version of value accessor.
      *
+     * @tparam     T Value type stored in this token.
      * @return     cf::expected containing const pointer to the token's value or TokenError.
-     *
+     * @throws     None
+     * @note       Thread-safe for concurrent reads.
+     * @warning    None
      * @since      0.1
+     * @ingroup    ui_core
      */
     static cf::expected<const T*, TokenError> get_const();
 };
@@ -226,6 +234,13 @@ class TokenRegistry {
 
     /**
      * @brief  Gets the singleton registry instance.
+     *
+     * @return Reference to the singleton registry instance.
+     * @throws None
+     * @note   Thread-safe singleton initialization.
+     * @warning None
+     * @since  0.1
+     * @ingroup ui_core
      */
     static TokenRegistry& get();
 
@@ -263,42 +278,50 @@ class TokenRegistry {
 
     /**
      * @brief  Registers a dynamic token (forwarding constructor).
+     * @return Result containing void or TokenError::AlreadyRegistered.
      */
     template <typename T, typename... Args>
     Result<void> register_dynamic(std::string_view name, Args&&... args);
 
     /**
      * @brief  Registers a dynamic token (copy).
+     * @return Result containing void or TokenError::AlreadyRegistered.
      */
     template <typename T> Result<void> register_dynamic(std::string_view name, const T& value);
 
     /**
      * @brief  Registers a dynamic token (move).
+     * @return Result containing void or TokenError::AlreadyRegistered.
      */
     template <typename T> Result<void> register_dynamic(std::string_view name, T&& value);
 
     /**
      * @brief  Gets a dynamic token's value.
+     * @return Result containing pointer to the token's value or TokenError.
      */
     template <typename T> Result<T*> get_dynamic(std::string_view name);
 
     /**
      * @brief  Gets a dynamic token's value by hash.
+     * @return Result containing pointer to the token's value or TokenError.
      */
     template <typename T> Result<T*> get_dynamic_by_hash(uint64_t hash);
 
     /**
      * @brief  Gets a dynamic token's value (const).
+     * @return Result containing const pointer to the token's value or TokenError.
      */
     template <typename T> Result<const T*> get_dynamic_const(std::string_view name) const;
 
     /**
      * @brief  Checks if a token exists by hash.
+     * @return true if the token exists, false otherwise.
      */
     bool contains(uint64_t hash) const noexcept;
 
     /**
      * @brief  Checks if a dynamic token exists by name.
+     * @return true if the token exists, false otherwise.
      */
     bool contains(std::string_view name) const noexcept;
 
@@ -316,6 +339,7 @@ class TokenRegistry {
 
     /**
      * @brief  Gets the number of registered tokens.
+     * @return Number of tokens in the registry.
      */
     size_t size() const noexcept;
 
@@ -343,11 +367,35 @@ class TokenRegistry {
 // Inline Implementations - StaticToken
 // =============================================================================
 
+/**
+ * @brief  Type-safe value accessor for registry (implementation).
+ *
+ * @tparam  T Value type stored in this token.
+ * @tparam  Hash Compile-time hash of the token name.
+ * @return     cf::expected containing pointer to the token's value or TokenError.
+ * @throws     None
+ * @note       Delegates to TokenRegistry::get().
+ * @warning    None
+ * @since      0.1
+ * @ingroup    ui_core
+ */
 template <typename T, uint64_t Hash>
 auto StaticToken<T, Hash>::get() -> cf::expected<T*, TokenError> {
     return TokenRegistry::get().get<StaticToken<T, Hash>>();
 }
 
+/**
+ * @brief  Const version of value accessor (implementation).
+ *
+ * @tparam     T Value type stored in this token.
+ * @tparam     Hash Compile-time hash of the token name.
+ * @return     cf::expected containing const pointer to the token's value or TokenError.
+ * @throws     None
+ * @note       Delegates to TokenRegistry::get_const().
+ * @warning    None
+ * @since      0.1
+ * @ingroup    ui_core
+ */
 template <typename T, uint64_t Hash>
 auto StaticToken<T, Hash>::get_const() -> cf::expected<const T*, TokenError> {
     return TokenRegistry::get().get_const<StaticToken<T, Hash>>();
@@ -357,30 +405,94 @@ auto StaticToken<T, Hash>::get_const() -> cf::expected<const T*, TokenError> {
 // Inline Implementations - TokenRegistry
 // =============================================================================
 
+/**
+ * @brief  Gets the singleton TokenRegistry instance.
+ *
+ * @return Reference to the singleton registry instance.
+ * @throws None
+ * @note   Thread-safe singleton initialization.
+ * @warning None
+ * @since  0.1
+ * @ingroup ui_core
+ */
 inline TokenRegistry& TokenRegistry::get() {
     static TokenRegistry instance;
     return instance;
 }
 
+/**
+ * @brief  Gets the number of registered tokens.
+ *
+ * @return Number of tokens in the registry.
+ * @throws None
+ * @note   Thread-safe for concurrent reads.
+ * @warning None
+ * @since  0.1
+ * @ingroup ui_core
+ */
 inline size_t TokenRegistry::size() const noexcept {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return slot_map_.size();
 }
 
+/**
+ * @brief  Checks if a token exists by hash.
+ *
+ * @param[in] hash Hash value of the token to check.
+ * @return        true if the token exists, false otherwise.
+ * @throws        None
+ * @note          Thread-safe for concurrent reads.
+ * @warning       None
+ * @since         0.1
+ * @ingroup       ui_core
+ */
 inline bool TokenRegistry::contains(uint64_t hash) const noexcept {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return slot_map_.find(hash) != slot_map_.end();
 }
 
+/**
+ * @brief  Checks if a token exists by name.
+ *
+ * @param[in] name Name of the token to check.
+ * @return        true if the token exists, false otherwise.
+ * @throws        None
+ * @note          Thread-safe for concurrent reads.
+ * @warning       None
+ * @since         0.1
+ * @ingroup       ui_core
+ */
 inline bool TokenRegistry::contains(std::string_view name) const noexcept {
     return contains(cf::hash::fnv1a64(name));
 }
 
+/**
+ * @brief  Removes a token from the registry by hash.
+ *
+ * @param[in] hash Hash value of the token to remove.
+ * @return        true if the token was removed, false if not found.
+ * @throws        None
+ * @note          Thread-safe for exclusive access.
+ * @warning       None
+ * @since         0.1
+ * @ingroup       ui_core
+ */
 inline bool TokenRegistry::remove(uint64_t hash) {
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
     return slot_map_.erase(hash) > 0;
 }
 
+/**
+ * @brief  Removes a token from the registry by name.
+ *
+ * @param[in] name Name of the token to remove.
+ * @return        true if the token was removed, false if not found.
+ * @throws        None
+ * @note          Thread-safe for exclusive access.
+ * @warning       None
+ * @since         0.1
+ * @ingroup       ui_core
+ */
 inline bool TokenRegistry::remove(std::string_view name) {
     return remove(cf::hash::fnv1a64(name));
 }
@@ -410,7 +522,7 @@ auto TokenRegistry::register_token(Args&&... args) -> Result<void> {
     if (slot_map_.find(hash) != slot_map_.end()) {
         return cf::unexpected(
             TokenError{TokenError::Kind::AlreadyRegistered,
-                       "Token already registered with hash: " + std::to_string(hash)});
+                       "Token already registered, hash: " + std::to_string(hash)});
     }
 
     detail::TokenSlot slot;
@@ -431,14 +543,14 @@ auto TokenRegistry::get() -> Result<typename TokenToken::value_type*> {
     using T = typename TokenToken::value_type;
     constexpr uint64_t hash = TokenToken::hash_value;
 
-    // Hold shared lock for the entire operation — prevents remove() from
-    // destroying the slot while we are reading from it.
+    // Hold shared lock for the entire operation to prevent remove() from
+    // destroying the slot while reading from it.
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
 
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
         return cf::unexpected(TokenError{TokenError::Kind::NotFound,
-                                         "Token not found with hash: " + std::to_string(hash)});
+                                         "Token not found, hash: " + std::to_string(hash)});
     }
 
     std::any* a = slot->data.get();
@@ -464,7 +576,7 @@ auto TokenRegistry::get_const() const -> Result<const typename TokenToken::value
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
         return cf::unexpected(TokenError{TokenError::Kind::NotFound,
-                                         "Token not found with hash: " + std::to_string(hash)});
+                                         "Token not found, hash: " + std::to_string(hash)});
     }
 
     const std::any* a = slot->data.get();
@@ -492,7 +604,7 @@ auto TokenRegistry::register_dynamic(std::string_view name, Args&&... args) -> R
 
     if (slot_map_.find(hash) != slot_map_.end()) {
         return cf::unexpected(TokenError{TokenError::Kind::AlreadyRegistered,
-                                         "Token already registered: " + std::string(name)});
+                                         "Already registered: " + std::string(name)});
     }
 
     detail::TokenSlot slot;
@@ -512,7 +624,7 @@ auto TokenRegistry::register_dynamic(std::string_view name, const T& value) -> R
 
     if (slot_map_.find(hash) != slot_map_.end()) {
         return cf::unexpected(TokenError{TokenError::Kind::AlreadyRegistered,
-                                         "Token already registered: " + std::string(name)});
+                                         "Already registered: " + std::string(name)});
     }
 
     detail::TokenSlot slot;
@@ -532,7 +644,7 @@ auto TokenRegistry::register_dynamic(std::string_view name, T&& value) -> Result
 
     if (slot_map_.find(hash) != slot_map_.end()) {
         return cf::unexpected(TokenError{TokenError::Kind::AlreadyRegistered,
-                                         "Token already registered: " + std::string(name)});
+                                         "Already registered: " + std::string(name)});
     }
 
     detail::TokenSlot slot;
@@ -572,8 +684,8 @@ auto TokenRegistry::get_by_hash_impl(uint64_t hash, const std::string& name_hint
 }
 
 template <typename T>
-auto TokenRegistry::get_by_hash_impl_const(uint64_t hash,
-                                            const std::string& name_hint) const -> Result<const T*> {
+auto TokenRegistry::get_by_hash_impl_const(
+    uint64_t hash, const std::string& name_hint) const -> Result<const T*> {
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
         return cf::unexpected(TokenError{TokenError::Kind::NotFound,
@@ -659,14 +771,46 @@ class EmbeddedTokenRegistry {
     template <typename T> Result<void> register_dynamic(std::string_view name, const T& value);
     template <typename T> Result<void> register_dynamic(std::string_view name, T&& value);
 
+    /**
+     * @brief  Gets a dynamic token's value by name.
+     * @return Result containing pointer to the token's value or TokenError.
+     */
     template <typename T> Result<T*>        get_dynamic(std::string_view name);
+    /**
+     * @brief  Gets a dynamic token's value by hash.
+     * @return Result containing pointer to the token's value or TokenError.
+     */
     template <typename T> Result<T*>        get_dynamic_by_hash(uint64_t hash);
+    /**
+     * @brief  Gets a dynamic token's value by name (const).
+     * @return Result containing const pointer to the token's value or TokenError.
+     */
     template <typename T> Result<const T*>  get_dynamic_const(std::string_view name) const;
 
+    /**
+     * @brief  Checks if a token exists by hash.
+     * @return true if the token exists, false otherwise.
+     */
     bool contains(uint64_t hash) const noexcept;
+    /**
+     * @brief  Checks if a token exists by name.
+     * @return true if the token exists, false otherwise.
+     */
     bool contains(std::string_view name) const noexcept;
+    /**
+     * @brief  Removes a token from the registry by hash.
+     * @return true if the token was removed, false if not found.
+     */
     bool remove(uint64_t hash);
+    /**
+     * @brief  Removes a token from the registry by name.
+     * @return true if the token was removed, false if not found.
+     */
     bool remove(std::string_view name);
+    /**
+     * @brief  Gets the number of registered tokens.
+     * @return Number of tokens in the registry.
+     */
     size_t size() const noexcept;
 
   private:
@@ -687,25 +831,79 @@ class EmbeddedTokenRegistry {
 // Inline Implementations - EmbeddedTokenRegistry
 // =============================================================================
 
+/**
+ * @brief  Gets the number of registered tokens.
+ *
+ * @return Number of tokens in the registry.
+ * @throws None
+ * @note   Thread-safe for concurrent reads.
+ * @warning None
+ * @since  0.1
+ * @ingroup ui_core
+ */
 inline size_t EmbeddedTokenRegistry::size() const noexcept {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return slot_map_.size();
 }
 
+/**
+ * @brief  Checks if a token exists by hash.
+ *
+ * @param[in] hash Hash value of the token to check.
+ * @return        true if the token exists, false otherwise.
+ * @throws        None
+ * @note          Thread-safe for concurrent reads.
+ * @warning       None
+ * @since         0.1
+ * @ingroup       ui_core
+ */
 inline bool EmbeddedTokenRegistry::contains(uint64_t hash) const noexcept {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return slot_map_.find(hash) != slot_map_.end();
 }
 
+/**
+ * @brief  Checks if a token exists by name.
+ *
+ * @param[in] name Name of the token to check.
+ * @return        true if the token exists, false otherwise.
+ * @throws        None
+ * @note          Thread-safe for concurrent reads.
+ * @warning       None
+ * @since         0.1
+ * @ingroup       ui_core
+ */
 inline bool EmbeddedTokenRegistry::contains(std::string_view name) const noexcept {
     return contains(cf::hash::fnv1a64(name));
 }
 
+/**
+ * @brief  Removes a token from the registry by hash.
+ *
+ * @param[in] hash Hash value of the token to remove.
+ * @return        true if the token was removed, false if not found.
+ * @throws        None
+ * @note          Thread-safe for exclusive access.
+ * @warning       None
+ * @since         0.1
+ * @ingroup       ui_core
+ */
 inline bool EmbeddedTokenRegistry::remove(uint64_t hash) {
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
     return slot_map_.erase(hash) > 0;
 }
 
+/**
+ * @brief  Removes a token from the registry by name.
+ *
+ * @param[in] name Name of the token to remove.
+ * @return        true if the token was removed, false if not found.
+ * @throws        None
+ * @note          Thread-safe for exclusive access.
+ * @warning       None
+ * @since         0.1
+ * @ingroup       ui_core
+ */
 inline bool EmbeddedTokenRegistry::remove(std::string_view name) {
     return remove(cf::hash::fnv1a64(name));
 }
@@ -727,7 +925,7 @@ auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, Args&&... ar
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
     if (slot_map_.find(hash) != slot_map_.end()) {
         return cf::unexpected(TokenError{TokenError::Kind::AlreadyRegistered,
-                                         "Token already registered: " + std::string(name)});
+                                         "Already registered: " + std::string(name)});
     }
     detail::TokenSlot slot;
     slot.data      = std::make_unique<std::any>(T(std::forward<Args>(args)...));
@@ -744,7 +942,7 @@ auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, const T& val
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
     if (slot_map_.find(hash) != slot_map_.end()) {
         return cf::unexpected(TokenError{TokenError::Kind::AlreadyRegistered,
-                                         "Token already registered: " + std::string(name)});
+                                         "Already registered: " + std::string(name)});
     }
     detail::TokenSlot slot;
     slot.data      = std::make_unique<std::any>(value);
@@ -760,7 +958,7 @@ auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, T&& value) -
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
     if (slot_map_.find(hash) != slot_map_.end()) {
         return cf::unexpected(TokenError{TokenError::Kind::AlreadyRegistered,
-                                         "Token already registered: " + std::string(name)});
+                                         "Already registered: " + std::string(name)});
     }
     detail::TokenSlot slot;
     slot.data      = std::make_unique<std::any>(std::forward<T>(value));

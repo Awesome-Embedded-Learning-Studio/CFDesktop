@@ -34,6 +34,7 @@ from test_private_detection import TestIsPrivateType, TestIsPrivateFunction
 from test_member_variables import TestIsMemberVariable
 from test_analyze_file import TestAnalyzeFile
 from test_code_block_detection import TestIsInCodeBlock, TestCodeBlockInFunctionDetection, TestCodeBlockInTypeDetection
+from test_constexpr_constructor import TestConstexprConstructor
 
 
 def create_all_suites() -> list[TestSuite]:
@@ -91,6 +92,11 @@ def create_all_suites() -> list[TestSuite]:
     suite.add_test(TestIsInCodeBlock())
     suite.add_test(TestCodeBlockInFunctionDetection())
     suite.add_test(TestCodeBlockInTypeDetection())
+    suites.append(suite)
+
+    # Suite for constexpr constructor tests
+    suite = TestSuite("Constexpr Constructor Tests")
+    suite.add_test(TestConstexprConstructor())
     suites.append(suite)
 
     return suites

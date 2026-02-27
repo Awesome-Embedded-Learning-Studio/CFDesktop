@@ -6,6 +6,7 @@ add_library(cf_ui_core_material STATIC
     cfmaterial_fonttype.cpp
     cfmaterial_radius_scale.cpp
     cfmaterial_motion.cpp
+    cfmaterial_theme.cpp
     material_factory.cpp
 )
 

@@ -24,7 +24,7 @@ using namespace cf::hash;
 TEST(Fnv1a64Test, CompileTimeHash) {
     constexpr uint64_t h1 = fnv1a64("TokenA");
     constexpr uint64_t h2 = fnv1a64("TokenB");
-    constexpr uint64_t h3 = fnv1a64("TokenA");  // Same as h1
+    constexpr uint64_t h3 = fnv1a64("TokenA"); // Same as h1
 
     EXPECT_NE(h1, h2);
     EXPECT_EQ(h1, h3);
@@ -101,8 +101,8 @@ TEST(Fnv1a64Test, SimilarStringsDifferentHashes) {
     constexpr uint64_t h1 = "test"_hash;
     constexpr uint64_t h2 = "Test"_hash;
     constexpr uint64_t h3 = "TEST"_hash;
-    constexpr uint64_t h4 = "test "_hash;  // trailing space
-    constexpr uint64_t h5 = " test"_hash;  // leading space
+    constexpr uint64_t h4 = "test "_hash; // trailing space
+    constexpr uint64_t h5 = " test"_hash; // leading space
 
     EXPECT_NE(h1, h2);
     EXPECT_NE(h1, h3);
@@ -113,7 +113,7 @@ TEST(Fnv1a64Test, SimilarStringsDifferentHashes) {
 
 TEST(Fnv1a64Test, LongString) {
     // Test with a longer string
-    std::string long_str(1000, 'a');  // 1000 'a' characters
+    std::string long_str(1000, 'a'); // 1000 'a' characters
     uint64_t h = fnv1a64(long_str);
 
     EXPECT_GT(h, 0);
@@ -128,7 +128,7 @@ TEST(Fnv1a64Test, CustomSeed) {
     constexpr uint64_t seed = 12345;
     constexpr uint64_t h1 = fnv1a64("test", seed);
     constexpr uint64_t h2 = fnv1a64("test", seed);
-    constexpr uint64_t h3 = fnv1a64("test");  // default seed
+    constexpr uint64_t h3 = fnv1a64("test"); // default seed
 
     EXPECT_EQ(h1, h2);
     EXPECT_NE(h1, h3);
@@ -171,15 +171,10 @@ TEST(Fnv1a32Test, DifferentFrom64Bit) {
 TEST(HashDistribution, NoCollisionsForCommonTokens) {
     // Test a set of common token-like names
     const char* token_names[] = {
-        "userId", "userName", "userEmail",
-        "settings", "config", "preferences",
-        "token", "session", "cache",
-        "request", "response", "error",
-        "id", "name", "value", "type",
-        "true", "false", "null",
-        "width", "height", "x", "y",
-        "red", "green", "blue", "alpha"
-    };
+        "userId",  "userName", "userEmail", "settings", "config", "preferences", "token",
+        "session", "cache",    "request",   "response", "error",  "id",          "name",
+        "value",   "type",     "true",      "false",    "null",   "width",       "height",
+        "x",       "y",        "red",       "green",    "blue",   "alpha"};
 
     constexpr size_t num_names = sizeof(token_names) / sizeof(token_names[0]);
     uint64_t hashes[num_names];
@@ -192,8 +187,7 @@ TEST(HashDistribution, NoCollisionsForCommonTokens) {
     for (size_t i = 0; i < num_names; ++i) {
         for (size_t j = i + 1; j < num_names; ++j) {
             EXPECT_NE(hashes[i], hashes[j])
-                << "Collision between " << token_names[i]
-                << " and " << token_names[j];
+                << "Collision between " << token_names[i] << " and " << token_names[j];
         }
     }
 }

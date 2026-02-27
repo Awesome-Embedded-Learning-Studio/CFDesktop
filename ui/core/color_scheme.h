@@ -63,6 +63,26 @@ struct CF_UI_EXPORT ICFColorScheme {
      * @ingroup    ui_core
      */
     virtual QColor& queryExpectedColor(const char* name) = 0;
+
+    /**
+     * @brief  Convenience wrapper for queryExpectedColor.
+     *
+     * @param[in] name Color token name (e.g., "md.primary").
+     *
+     * @return     Copy of the QColor associated with the name.
+     *
+     * @throws     None.
+     *
+     * @note       Returns a copy rather than a reference for convenience.
+     *
+     * @warning    None.
+     *
+     * @since      0.1
+     * @ingroup    ui_core
+     */
+    QColor queryColor(const char* name) const {
+        return const_cast<ICFColorScheme*>(this)->queryExpectedColor(name);
+    }
 };
 
 } // namespace cf::ui::core

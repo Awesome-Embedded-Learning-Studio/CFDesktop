@@ -9,6 +9,7 @@
 #       LINK_LIBRARIES <lib1> [<lib2> ...]
 #       LABELS         <label1> [<label2> ...]
 #       LOG_MODULE     <module_name_for_logging>
+#       [INCLUDE_DIRS  <dir1> [<dir2> ...]]
 #   )
 #
 # Parameters:
@@ -17,6 +18,7 @@
 #   LINK_LIBRARIES - List of libraries to link against
 #   LABELS         - Semicolon-separated list of test labels for CTest
 #   LOG_MODULE     - Module name for logging configuration
+#   INCLUDE_DIRS   - (Optional) List of include directories
 #
 # Example:
 #   add_gtest_executable(
@@ -34,7 +36,7 @@ function(add_gtest_executable)
         ARG
         ""                  # No options
         "TEST_NAME;SOURCE_FILE;LOG_MODULE"  # Single-value arguments
-        "LINK_LIBRARIES;LABELS"             # Multi-value arguments
+        "LINK_LIBRARIES;LABELS;INCLUDE_DIRS" # Multi-value arguments
         ${ARGN}
     )
 
@@ -64,6 +66,13 @@ function(add_gtest_executable)
     set_target_properties(${ARG_TEST_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test/bin"
     )
+
+    # Add include directories if provided
+    if(ARG_INCLUDE_DIRS)
+        target_include_directories(${ARG_TEST_NAME}
+            PRIVATE ${ARG_INCLUDE_DIRS}
+        )
+    endif()
 
     # Link libraries
     target_link_libraries(${ARG_TEST_NAME}
