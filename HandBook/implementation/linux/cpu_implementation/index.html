@@ -16,7 +16,7 @@
         <link rel="prev" href="../../../examples/cpu_info_example/">
       
       
-        <link rel="next" href="../../windows/cpu_implementation/">
+        <link rel="next" href="../memory/memory_implementation/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Linux 平台 CPU 信息查询实现 - DocHome For CFDesktop</title>
+        <title>Linux 平台实现细节 - DocHome For CFDesktop</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#linux-平台-cpu-信息查询实现" class="md-skip">
+        <a href="#linux-平台实现细节" class="md-skip">
           跳转至
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Linux 平台 CPU 信息查询实现
+              Linux 平台实现细节
             
           </span>
         </div>
@@ -272,17 +272,8 @@
   
     
     
-      
-  
-  
-  
-    
-  
-  
-    
-    
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../../api/system/cpu/cfcpu/" class="md-tabs__link">
+        <a href="../../../api/system/os_helper/" class="md-tabs__link">
           
   
   
@@ -292,9 +283,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -462,6 +450,8 @@
       
         
       
+        
+      
     
     
     
@@ -582,6 +572,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -635,6 +629,34 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../api/system/os_helper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OS 助手
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
       
@@ -661,10 +683,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1_1_1" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_3_1_1_1" id="__nav_3_1_1_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_1_1_2" id="__nav_3_1_1_2_label" tabindex="0">
             
   
   
@@ -682,8 +704,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_1_1_1">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1_2">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -813,6 +835,100 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1_1_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1_3" id="__nav_3_1_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Memory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/system/memory/memory_info/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory 信息 API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -837,6 +953,18 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
       
         
       
@@ -903,6 +1031,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../base/expected/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    expected - 错误处理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../base/macros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    macros - 宏定义系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../base/once_init/" class="md-nav__link">
         
   
@@ -938,7 +1122,35 @@
   <span class="md-ellipsis">
     
   
-    基础工具类概述
+    基础工具库
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../base/scope_guard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    scope_guard - 作用域守卫
   
 
     
@@ -986,6 +1198,62 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../base/weak_ptr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    weak_ptr - 非拥有弱引用指针
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../base/weak_ptr_factory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    weak_ptr_factory - 弱引用工厂
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
       
@@ -1006,10 +1274,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2_9" >
         
           
-          <label class="md-nav__link" for="__nav_3_2_4" id="__nav_3_2_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_2_9" id="__nav_3_2_9_label" tabindex="0">
             
   
   
@@ -1027,8 +1295,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_2_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1052,7 +1320,131 @@
   <span class="md-ellipsis">
     
   
-    proc_parser - Linux /proc 文件解析工具
+    proc_parser - Linux 文件解析工具
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_10" id="__nav_3_2_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Macro
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Macro
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../base/macro/plain_property/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plain_property - 简单属性宏
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../base/macro/system_judge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    system_judge - 系统判断宏
   
 
     
@@ -1255,6 +1647,8 @@
       
         
       
+        
+      
     
     
     
@@ -1323,7 +1717,7 @@
   <span class="md-ellipsis">
     
   
-    Linux 平台 CPU 信息查询实现
+    Linux 平台实现细节
   
 
     
@@ -1341,7 +1735,7 @@
   <span class="md-ellipsis">
     
   
-    Linux 平台 CPU 信息查询实现
+    Linux 平台实现细节
   
 
     
@@ -1367,10 +1761,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#简介" class="md-nav__link">
+  <a href="#基础信息" class="md-nav__link">
     <span class="md-ellipsis">
       
-        简介
+        基础信息
       
     </span>
   </a>
@@ -1378,10 +1772,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#实现文件" class="md-nav__link">
+  <a href="#性能信息" class="md-nav__link">
     <span class="md-ellipsis">
       
-        实现文件
+        性能信息
       
     </span>
   </a>
@@ -1389,138 +1783,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#基础信息实现-cpu_infocpp" class="md-nav__link">
+  <a href="#扩展信息" class="md-nav__link">
     <span class="md-ellipsis">
       
-        基础信息实现 (cpu_info.cpp)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="基础信息实现 (cpu_info.cpp)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#数据来源" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        数据来源
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#实现要点" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        实现要点
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#性能信息实现-cpu_profilecpp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        性能信息实现 (cpu_profile.cpp)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="性能信息实现 (cpu_profile.cpp)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#数据来源_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        数据来源
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cpu-使用率计算" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CPU 使用率计算
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#扩展信息实现-cpu_bonuscpp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        扩展信息实现 (cpu_bonus.cpp)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="扩展信息实现 (cpu_bonus.cpp)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#数据来源_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        数据来源
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#缓存信息解析" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        缓存信息解析
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#温度信息解析" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        温度信息解析
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#biglittle-架构检测" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        big.LITTLE 架构检测
+        扩展信息
       
     </span>
   </a>
@@ -1528,41 +1794,24 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#平台差异处理" class="md-nav__link">
+  <a href="#biglittle-检测" class="md-nav__link">
     <span class="md-ellipsis">
       
-        平台差异处理
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="平台差异处理">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#arm-vs-x86" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ARM vs x86
+        big.LITTLE 检测
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#arm-实现者-id-转换" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#平台差异" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ARM 实现者 ID 转换
+        平台差异
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1586,6 +1835,100 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_1_2" id="__nav_3_4_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Memory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory/memory_implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux 平台实现细节
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1602,6 +1945,8 @@
   
     
     
+      
+        
       
         
       
@@ -1666,7 +2011,7 @@
   <span class="md-ellipsis">
     
   
-    Windows 平台 CPU 信息查询实现
+    Windows 平台实现细节
   
 
     
@@ -1675,6 +2020,2285 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_2" id="__nav_3_4_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Memory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../windows/memory/memory_implementation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows 平台内存模块实现
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ui
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Ui
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_1" id="__nav_3_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/application/application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application - 应用基础类
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/application/material_application/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MaterialApplication - Material 应用
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_2" id="__nav_3_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/base/color/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    color - HCT 色彩空间
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/base/color_helper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    color_helper - 颜色助手
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/base/device_pixel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    device_pixel - 设备像素 (DPI 缩放)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/base/easing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    easing - 缓动曲线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/base/geometry_helper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    geometry_helper - 几何助手
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/base/math_helper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    math_helper - 数学工具
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_3" id="__nav_3_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Components
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/components/animation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ICFAbstractAnimation - 动画基类
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/components/animation_factory_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ICFAnimationManagerFactory - 动画工厂管理器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/components/animation_group/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ICFAnimationGroup - 动画组
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/components/spring_animation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ICFSpringAnimation - 弹簧动画
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/components/timing_animation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ICFTimingAnimation - 时间动画
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_4" id="__nav_3_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/color_scheme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ICFColorScheme - 颜色方案接口
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/font_type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IFontType - 字体样式接口
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/motion_spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IMotionSpec - 动画规格接口
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/radius_scale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IRadiusScale - 圆角规范接口
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ICFTheme - 主题接口
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/theme_factory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ThemeFactory - 主题工厂
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/theme_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ThemeManager - 主题管理器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_4_8" id="__nav_3_5_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Token
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_5_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Token
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_4_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_4_8_1" id="__nav_3_5_4_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Material scheme
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_3_5_4_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_4_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Material scheme
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/token/material_scheme/cfmaterial_token_literals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Material Token 字面量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_4_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_4_8_2" id="__nav_3_5_4_8_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_3_5_4_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_4_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Motion
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/token/motion/cfmaterial_motion_token_literals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Motion Token 字面量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_4_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_4_8_3" id="__nav_3_5_4_8_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Radius scale
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_3_5_4_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_4_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Radius scale
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/token/radius_scale/cfmaterial_radius_scale_literals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Radius Scale Token 字面量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_4_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_4_8_4" id="__nav_3_5_4_8_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Typography
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_3_5_4_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_4_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Typography
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/core/token/typography/cfmaterial_typography_token_literals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Typography Token 字面量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_5" id="__nav_3_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Material
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Material
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/cfmaterial_fonttype/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MaterialTypography - Material 字体系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/cfmaterial_motion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MaterialMotionScheme - Material 动画系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/cfmaterial_radius_scale/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MaterialRadiusScale - Material 圆角系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/cfmaterial_scheme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MaterialColorScheme - Material Design 3 颜色方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/cfmaterial_theme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MaterialTheme - Material Design 3 主题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/material_factory_class/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MaterialFactory - Material 主题工厂
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/material_factory_hpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    material_factory.hpp - Material 工厂函数
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_5_8" id="__nav_3_5_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_5_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Animation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/animation/cfmaterial_animation_factory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CFMaterialAnimationFactory - Material 动画工厂
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/animation/cfmaterial_animation_strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AnimationStrategy - Material 动画策略
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/animation/cfmaterial_fade_animation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CFMaterialFadeAnimation - Material 淡入淡出动画
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/animation/cfmaterial_scale_animation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CFMaterialScaleAnimation - Material 缩放动画
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/animation/cfmaterial_slide_animation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CFMaterialSlideAnimation - Material 滑动动画
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_5_9" id="__nav_3_5_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_5_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/base/elevation_controller/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MdElevationController - Material 阴影控制器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/base/focus_ring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MdFocusIndicator - Material 焦点环
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/base/painter_layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PainterLayer - 绘图层管理器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/base/ripple_helper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RippleHelper - Material 涟漪效果助手
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_5_10" id="__nav_3_5_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Widget
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_5_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Widget
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/widget/button/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Button - Material 按钮
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ui/material/widget/state_machine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    StateMachine - Material 状态机
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -9028,13 +11652,8 @@
   
     
     
-      
-  
-  
-    
-    
       <li class="md-path__item">
-        <a href="../../../api/system/cpu/cfcpu/" class="md-path__link">
+        <a href="../../../api/system/os_helper/" class="md-path__link">
           
   <span class="md-ellipsis">
     HandBook
@@ -9042,9 +11661,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -9109,240 +11725,123 @@
 
 
 
-<h1 id="linux-平台-cpu-信息查询实现">Linux 平台 CPU 信息查询实现<a class="headerlink" href="#linux-平台-cpu-信息查询实现" title="链接到此章节">&para;</a></h1>
-<h2 id="简介">简介<a class="headerlink" href="#简介" title="链接到此章节">&para;</a></h2>
-<p>本文档描述了 CFDesktop CPU 模块在 Linux 平台上的实现细节。Linux 实现主要通过解析 <code>/proc</code> 和 <code>/sys</code> 伪文件系统来获取 CPU 信息。</p>
-<h2 id="实现文件">实现文件<a class="headerlink" href="#实现文件" title="链接到此章节">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><a href="#__codelineno-0-1"><span class="linenos" data-linenos="1 "></span></a>base/system/cpu/private/linux_impl/
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><a href="#__codelineno-0-2"><span class="linenos" data-linenos="2 "></span></a>├── cpu_info.h/cpp      # 基础信息实现
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><a href="#__codelineno-0-3"><span class="linenos" data-linenos="3 "></span></a>├── cpu_profile.h/cpp   # 性能信息实现
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><a href="#__codelineno-0-4"><span class="linenos" data-linenos="4 "></span></a>├── cpu_bonus.h/cpp     # 扩展信息实现
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><a href="#__codelineno-0-5"><span class="linenos" data-linenos="5 "></span></a>└── cpu_features.h/cpp  # 特性检测实现
+<h1 id="linux-平台实现细节">Linux 平台实现细节<a class="headerlink" href="#linux-平台实现细节" title="链接到此章节">&para;</a></h1>
+<p>Linux 下的 CPU 信息查询主要通过解析 <code>/proc</code> 和 <code>/sys</code> 伪文件系统实现。这套方案的优势是不需要额外的库依赖，缺点是文件格式比较繁琐——所以专门写了一套 <code>proc_parser</code> 工具来处理。</p>
+<h2 id="基础信息">基础信息<a class="headerlink" href="#基础信息" title="链接到此章节">&para;</a></h2>
+<p>CPU 型号、厂商这些静态信息从 <code>/proc/cpuinfo</code> 读取。这个文件的格式是固定的 <code>key: value</code> 结构，但不同架构下字段名不一样。x86 用 <code>vendor_id</code>，ARM 用 <code>CPU implementer</code>（是个十六进制 ID，需要转换）。</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><a href="#__codelineno-0-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="n">cf</span><span class="o">::</span><span class="n">expected</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">,</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">CPUInfoErrorType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">query_cpu_basic_info</span><span class="p">(</span><span class="n">cf</span><span class="o">::</span><span class="n">CPUInfoHost</span><span class="o">&amp;</span><span class="w"> </span><span class="n">hostInfo</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><a href="#__codelineno-0-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="n">cpuinfo</span><span class="p">(</span><span class="s">&quot;/proc/cpuinfo&quot;</span><span class="p">);</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><a href="#__codelineno-0-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">line</span><span class="p">;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><a href="#__codelineno-0-4"><span class="linenos" data-linenos=" 4 "></span></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><a href="#__codelineno-0-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">cpuinfo</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><a href="#__codelineno-0-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">line_sv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">line</span><span class="p">;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><a href="#__codelineno-0-7"><span class="linenos" data-linenos=" 7 "></span></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><a href="#__codelineno-0-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">        </span><span class="c1">// 解析 model name 字段</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><a href="#__codelineno-0-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">parse_cpuinfo_field</span><span class="p">(</span><span class="n">line_sv</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;model name&quot;</span><span class="p">);</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><a href="#__codelineno-0-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">model</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a><a href="#__codelineno-0-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">            </span><span class="n">hostInfo</span><span class="p">.</span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">model</span><span class="p">;</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a><a href="#__codelineno-0-12"><span class="linenos" data-linenos="12 "></span></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><a href="#__codelineno-0-13"><span class="linenos" data-linenos="13 "></span></a>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a><a href="#__codelineno-0-14"><span class="linenos" data-linenos="14 "></span></a><span class="w">        </span><span class="c1">// ARM 架构需要特殊处理</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a><a href="#__codelineno-0-15"><span class="linenos" data-linenos="15 "></span></a><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">implementer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">parse_cpuinfo_field</span><span class="p">(</span><span class="n">line_sv</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CPU implementer&quot;</span><span class="p">);</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16"></a><a href="#__codelineno-0-16"><span class="linenos" data-linenos="16 "></span></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">impl_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">parse_hex_uint32</span><span class="p">(</span><span class="n">implementer</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a><a href="#__codelineno-0-17"><span class="linenos" data-linenos="17 "></span></a><span class="w">            </span><span class="n">hostInfo</span><span class="p">.</span><span class="n">manufest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">arm_implementer_to_vendor</span><span class="p">(</span><span class="o">*</span><span class="n">impl_val</span><span class="p">);</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><a href="#__codelineno-0-18"><span class="linenos" data-linenos="18 "></span></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><a href="#__codelineno-0-19"><span class="linenos" data-linenos="19 "></span></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><a href="#__codelineno-0-20"><span class="linenos" data-linenos="20 "></span></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><a href="#__codelineno-0-21"><span class="linenos" data-linenos="21 "></span></a><span class="w">    </span><span class="c1">// 架构信息用 uname() 获取更可靠</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a><a href="#__codelineno-0-22"><span class="linenos" data-linenos="22 "></span></a><span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">utsname</span><span class="w"> </span><span class="n">unameInfo</span><span class="p">;</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a><a href="#__codelineno-0-23"><span class="linenos" data-linenos="23 "></span></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">uname</span><span class="p">(</span><span class="o">&amp;</span><span class="n">unameInfo</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a><a href="#__codelineno-0-24"><span class="linenos" data-linenos="24 "></span></a><span class="w">        </span><span class="n">hostInfo</span><span class="p">.</span><span class="n">arch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">unameInfo</span><span class="p">.</span><span class="n">machine</span><span class="p">;</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a><a href="#__codelineno-0-25"><span class="linenos" data-linenos="25 "></span></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a><a href="#__codelineno-0-26"><span class="linenos" data-linenos="26 "></span></a>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><a href="#__codelineno-0-27"><span class="linenos" data-linenos="27 "></span></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a><a href="#__codelineno-0-28"><span class="linenos" data-linenos="28 "></span></a><span class="p">}</span>
 </span></code></pre></div>
-<h2 id="基础信息实现-cpu_infocpp">基础信息实现 (cpu_info.cpp)<a class="headerlink" href="#基础信息实现-cpu_infocpp" title="链接到此章节">&para;</a></h2>
-<h3 id="数据来源">数据来源<a class="headerlink" href="#数据来源" title="链接到此章节">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>信息</th>
-<th>文件路径</th>
-<th>解析方式</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>型号</td>
-<td>/proc/cpuinfo</td>
-<td>model name 字段</td>
-</tr>
-<tr>
-<td>制造商</td>
-<td>/proc/cpuinfo</td>
-<td>vendor_id / CPU implementer 字段</td>
-</tr>
-<tr>
-<td>架构</td>
-<td>uname()</td>
-<td>utsname.machine</td>
-</tr>
-</tbody>
-</table>
-<h3 id="实现要点">实现要点<a class="headerlink" href="#实现要点" title="链接到此章节">&para;</a></h3>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><a href="#__codelineno-1-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="n">cf</span><span class="o">::</span><span class="n">expected</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">,</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">CPUInfoErrorType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">query_cpu_basic_info</span><span class="p">(</span><span class="n">cf</span><span class="o">::</span><span class="n">CPUInfoHost</span><span class="o">&amp;</span><span class="w"> </span><span class="n">hostInfo</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><a href="#__codelineno-1-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="w">    </span><span class="c1">// 1. 打开 /proc/cpuinfo</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><a href="#__codelineno-1-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span><span class="w"> </span><span class="n">cpuinfo</span><span class="p">(</span><span class="s">&quot;/proc/cpuinfo&quot;</span><span class="p">);</span>
+<p>架构信息用 <code>uname()</code> 而不是读文件，是因为某些嵌入式板子的 <code>/proc/cpuinfo</code> 可能不包含完整的架构字段。</p>
+<h2 id="性能信息">性能信息<a class="headerlink" href="#性能信息" title="链接到此章节">&para;</a></h2>
+<p>核心数量和频率信息散落在不同地方：<code>/proc/cpuinfo</code> 有核心数，<code>/sys/devices/system/cpu/cpu0/cpufreq/</code> 里有频率。使用率需要读 <code>/proc/stat</code>，计算两次采样之间的时间差。</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><a href="#__codelineno-1-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1">// /proc/stat 第一行格式：</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><a href="#__codelineno-1-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="c1">// cpu  user  nice  system  idle  iowait  ...</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><a href="#__codelineno-1-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="c1">// 例如：cpu  2255 34 2290 22625563 6290 127 456</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><a href="#__codelineno-1-4"><span class="linenos" data-linenos=" 4 "></span></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5"></a><a href="#__codelineno-1-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="w">    </span><span class="c1">// 2. 逐行解析</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6"></a><a href="#__codelineno-1-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">cpuinfo</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7"></a><a href="#__codelineno-1-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="w">        </span><span class="c1">// 解析 model name</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8"></a><a href="#__codelineno-1-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">parse_cpuinfo_field</span><span class="p">(</span><span class="n">line_sv</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;model name&quot;</span><span class="p">);</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9"></a><a href="#__codelineno-1-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">model</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10"></a><a href="#__codelineno-1-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">            </span><span class="n">hostInfo</span><span class="p">.</span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">model</span><span class="p">;</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11"></a><a href="#__codelineno-1-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5"></a><a href="#__codelineno-1-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="kt">float</span><span class="w"> </span><span class="nf">calculate_cpu_usage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6"></a><a href="#__codelineno-1-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">last_total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">last_idle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7"></a><a href="#__codelineno-1-7"><span class="linenos" data-linenos=" 7 "></span></a>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8"></a><a href="#__codelineno-1-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="n">nice</span><span class="p">,</span><span class="w"> </span><span class="n">system</span><span class="p">,</span><span class="w"> </span><span class="n">idle</span><span class="p">;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9"></a><a href="#__codelineno-1-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">    </span><span class="kt">FILE</span><span class="o">*</span><span class="w"> </span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fopen</span><span class="p">(</span><span class="s">&quot;/proc/stat&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10"></a><a href="#__codelineno-1-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">    </span><span class="n">fscanf</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;cpu  %lu %lu %lu %lu&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">nice</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">system</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">idle</span><span class="p">);</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11"></a><a href="#__codelineno-1-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">    </span><span class="n">fclose</span><span class="p">(</span><span class="n">stat</span><span class="p">);</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12"></a><a href="#__codelineno-1-12"><span class="linenos" data-linenos="12 "></span></a>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13"></a><a href="#__codelineno-1-13"><span class="linenos" data-linenos="13 "></span></a><span class="w">        </span><span class="c1">// 解析 vendor_id (x86)</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14"></a><a href="#__codelineno-1-14"><span class="linenos" data-linenos="14 "></span></a><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">vendor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">parse_cpuinfo_field</span><span class="p">(</span><span class="n">line_sv</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;vendor_id&quot;</span><span class="p">);</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15"></a><a href="#__codelineno-1-15"><span class="linenos" data-linenos="15 "></span></a>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16"></a><a href="#__codelineno-1-16"><span class="linenos" data-linenos="16 "></span></a><span class="w">        </span><span class="c1">// 解析 CPU implementer (ARM)</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17"></a><a href="#__codelineno-1-17"><span class="linenos" data-linenos="17 "></span></a><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">implementer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">parse_cpuinfo_field</span><span class="p">(</span><span class="n">line_sv</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CPU implementer&quot;</span><span class="p">);</span>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18"></a><a href="#__codelineno-1-18"><span class="linenos" data-linenos="18 "></span></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">impl_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">parse_hex_uint32</span><span class="p">(</span><span class="n">implementer</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19"></a><a href="#__codelineno-1-19"><span class="linenos" data-linenos="19 "></span></a><span class="w">            </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">vendor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">arm_implementer_to_vendor</span><span class="p">(</span><span class="o">*</span><span class="n">impl_val</span><span class="p">);</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20"></a><a href="#__codelineno-1-20"><span class="linenos" data-linenos="20 "></span></a><span class="w">            </span><span class="n">hostInfo</span><span class="p">.</span><span class="n">manufest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vendor</span><span class="p">;</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21"></a><a href="#__codelineno-1-21"><span class="linenos" data-linenos="21 "></span></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22"></a><a href="#__codelineno-1-22"><span class="linenos" data-linenos="22 "></span></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23"></a><a href="#__codelineno-1-23"><span class="linenos" data-linenos="23 "></span></a>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24"></a><a href="#__codelineno-1-24"><span class="linenos" data-linenos="24 "></span></a><span class="w">    </span><span class="c1">// 3. 使用 uname 获取架构</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25"></a><a href="#__codelineno-1-25"><span class="linenos" data-linenos="25 "></span></a><span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">utsname</span><span class="w"> </span><span class="n">unameInfo</span><span class="p">;</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26"></a><a href="#__codelineno-1-26"><span class="linenos" data-linenos="26 "></span></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">uname</span><span class="p">(</span><span class="o">&amp;</span><span class="n">unameInfo</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27"></a><a href="#__codelineno-1-27"><span class="linenos" data-linenos="27 "></span></a><span class="w">        </span><span class="n">hostInfo</span><span class="p">.</span><span class="n">arch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">unameInfo</span><span class="p">.</span><span class="n">machine</span><span class="p">;</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28"></a><a href="#__codelineno-1-28"><span class="linenos" data-linenos="28 "></span></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29"></a><a href="#__codelineno-1-29"><span class="linenos" data-linenos="29 "></span></a>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30"></a><a href="#__codelineno-1-30"><span class="linenos" data-linenos="30 "></span></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31"></a><a href="#__codelineno-1-31"><span class="linenos" data-linenos="31 "></span></a><span class="p">}</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13"></a><a href="#__codelineno-1-13"><span class="linenos" data-linenos="13 "></span></a><span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nice</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">system</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">idle</span><span class="p">;</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14"></a><a href="#__codelineno-1-14"><span class="linenos" data-linenos="14 "></span></a><span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">total_delta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_total</span><span class="p">;</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15"></a><a href="#__codelineno-1-15"><span class="linenos" data-linenos="15 "></span></a><span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">idle_delta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idle</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_idle</span><span class="p">;</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16"></a><a href="#__codelineno-1-16"><span class="linenos" data-linenos="16 "></span></a>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17"></a><a href="#__codelineno-1-17"><span class="linenos" data-linenos="17 "></span></a><span class="w">    </span><span class="n">last_total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18"></a><a href="#__codelineno-1-18"><span class="linenos" data-linenos="18 "></span></a><span class="w">    </span><span class="n">last_idle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idle</span><span class="p">;</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19"></a><a href="#__codelineno-1-19"><span class="linenos" data-linenos="19 "></span></a>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20"></a><a href="#__codelineno-1-20"><span class="linenos" data-linenos="20 "></span></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">total_delta</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mf">0.0f</span><span class="p">;</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21"></a><a href="#__codelineno-1-21"><span class="linenos" data-linenos="21 "></span></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mf">100.0f</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0f</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">idle_delta</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total_delta</span><span class="p">);</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22"></a><a href="#__codelineno-1-22"><span class="linenos" data-linenos="22 "></span></a><span class="p">}</span>
 </span></code></pre></div>
-<h2 id="性能信息实现-cpu_profilecpp">性能信息实现 (cpu_profile.cpp)<a class="headerlink" href="#性能信息实现-cpu_profilecpp" title="链接到此章节">&para;</a></h2>
-<h3 id="数据来源_1">数据来源<a class="headerlink" href="#数据来源_1" title="链接到此章节">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>信息</th>
-<th>文件路径</th>
-<th>解析方式</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>逻辑核心</td>
-<td>/proc/cpuinfo</td>
-<td>processors 数量</td>
-</tr>
-<tr>
-<td>物理核心</td>
-<td>/proc/cpuinfo</td>
-<td>cpu cores 字段</td>
-</tr>
-<tr>
-<td>当前频率</td>
-<td>/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq</td>
-<td>文件内容</td>
-</tr>
-<tr>
-<td>最大频率</td>
-<td>/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq</td>
-<td>文件内容</td>
-</tr>
-<tr>
-<td>使用率</td>
-<td>/proc/stat</td>
-<td>计算两次采样的差值</td>
-</tr>
-</tbody>
-</table>
-<h3 id="cpu-使用率计算">CPU 使用率计算<a class="headerlink" href="#cpu-使用率计算" title="链接到此章节">&para;</a></h3>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1">// 读取 /proc/stat 的第一行</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><a href="#__codelineno-2-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="n">cpu</span><span class="w">  </span><span class="mi">2255</span><span class="w"> </span><span class="mi">34</span><span class="w"> </span><span class="mi">2290</span><span class="w"> </span><span class="mi">22625563</span><span class="w"> </span><span class="mi">6290</span><span class="w"> </span><span class="mi">127</span><span class="w"> </span><span class="mi">456</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><a href="#__codelineno-2-3"><span class="linenos" data-linenos=" 3 "></span></a>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><a href="#__codelineno-2-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="c1">// 各字段含义</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><a href="#__codelineno-2-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="c1">// user:    用户态时间</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><a href="#__codelineno-2-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="c1">// nice:    低优先级用户态时间</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a><a href="#__codelineno-2-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="c1">// system:  内核态时间</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a><a href="#__codelineno-2-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="c1">// idle:    空闲时间</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a><a href="#__codelineno-2-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="c1">// iowait:  I/O 等待时间</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a><a href="#__codelineno-2-10"><span class="linenos" data-linenos="10 "></span></a><span class="c1">// ...</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11"></a><a href="#__codelineno-2-11"><span class="linenos" data-linenos="11 "></span></a>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12"></a><a href="#__codelineno-2-12"><span class="linenos" data-linenos="12 "></span></a><span class="c1">// 使用率计算</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13"></a><a href="#__codelineno-2-13"><span class="linenos" data-linenos="13 "></span></a><span class="kt">uint64_t</span><span class="w"> </span><span class="n">total_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nice</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">system</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">idle</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">...</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14"></a><a href="#__codelineno-2-14"><span class="linenos" data-linenos="14 "></span></a><span class="kt">uint64_t</span><span class="w"> </span><span class="n">idle_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idle</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">iowait</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15"></a><a href="#__codelineno-2-15"><span class="linenos" data-linenos="15 "></span></a><span class="kt">float</span><span class="w"> </span><span class="n">usage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">100.0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">idle_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_idle</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">total_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_total</span><span class="p">))</span>
+<p>⚠️ 首次调用会返回不准确的数据，因为需要上次采样的值作为基准。</p>
+<h2 id="扩展信息">扩展信息<a class="headerlink" href="#扩展信息" title="链接到此章节">&para;</a></h2>
+<p>CPU 特性标志在 <code>flags</code>（x86）或 <code>Features</code>（ARM）字段里，是个空格分隔的列表。缓存信息从 <code>/sys/devices/system/cpu/cpu0/cache/</code> 读取，每个缓存级别一个目录。</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1">// /sys/devices/system/cpu/cpu0/cache/</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><a href="#__codelineno-2-2"><span class="linenos" data-linenos="2 "></span></a><span class="c1">// ├── index0/ -&gt; L1 数据缓存</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><a href="#__codelineno-2-3"><span class="linenos" data-linenos="3 "></span></a><span class="c1">// ├── index1/ -&gt; L1 指令缓存</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><a href="#__codelineno-2-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1">// ├── index2/ -&gt; L2 统一缓存</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><a href="#__codelineno-2-5"><span class="linenos" data-linenos="5 "></span></a><span class="c1">// └── index3/ -&gt; L3 统一缓存</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><a href="#__codelineno-2-6"><span class="linenos" data-linenos="6 "></span></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a><a href="#__codelineno-2-7"><span class="linenos" data-linenos="7 "></span></a><span class="c1">// 读取缓存大小</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a><a href="#__codelineno-2-8"><span class="linenos" data-linenos="8 "></span></a><span class="k">auto</span><span class="w"> </span><span class="n">l1_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">read_uint32_file</span><span class="p">(</span><span class="s">&quot;/sys/devices/system/cpu/cpu0/cache/index0/size&quot;</span><span class="p">);</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a><a href="#__codelineno-2-9"><span class="linenos" data-linenos="9 "></span></a><span class="c1">// 输出通常是 &quot;32K&quot;，parse_cache_size() 会处理单位转换</span>
 </span></code></pre></div>
-<h2 id="扩展信息实现-cpu_bonuscpp">扩展信息实现 (cpu_bonus.cpp)<a class="headerlink" href="#扩展信息实现-cpu_bonuscpp" title="链接到此章节">&para;</a></h2>
-<h3 id="数据来源_2">数据来源<a class="headerlink" href="#数据来源_2" title="链接到此章节">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>信息</th>
-<th>文件路径</th>
-<th>解析方式</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>特性</td>
-<td>/proc/cpuinfo</td>
-<td>flags / Features 字段</td>
-</tr>
-<tr>
-<td>缓存</td>
-<td>/sys/devices/system/cpu/cpu0/cache/</td>
-<td>各级 cache 目录</td>
-</tr>
-<tr>
-<td>温度</td>
-<td>/sys/class/thermal/thermal_zone*/temp</td>
-<td>传感器文件</td>
-</tr>
-</tbody>
-</table>
-<h3 id="缓存信息解析">缓存信息解析<a class="headerlink" href="#缓存信息解析" title="链接到此章节">&para;</a></h3>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1">// /sys/devices/system/cpu/cpu0/cache/</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><a href="#__codelineno-3-2"><span class="linenos" data-linenos="2 "></span></a><span class="c1">// ├── index0/ -&gt; L1 数据缓存</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a><a href="#__codelineno-3-3"><span class="linenos" data-linenos="3 "></span></a><span class="c1">// ├── index1/ -&gt; L1 指令缓存</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><a href="#__codelineno-3-4"><span class="linenos" data-linenos="4 "></span></a><span class="c1">// ├── index2/ -&gt; L2 统一缓存</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5"></a><a href="#__codelineno-3-5"><span class="linenos" data-linenos="5 "></span></a><span class="c1">// └── index3/ -&gt; L3 统一缓存</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6"></a><a href="#__codelineno-3-6"><span class="linenos" data-linenos="6 "></span></a>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7"></a><a href="#__codelineno-3-7"><span class="linenos" data-linenos="7 "></span></a><span class="c1">// 读取 size 文件</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8"></a><a href="#__codelineno-3-8"><span class="linenos" data-linenos="8 "></span></a><span class="c1">// /sys/devices/system/cpu/cpu0/cache/index0/size</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9"></a><a href="#__codelineno-3-9"><span class="linenos" data-linenos="9 "></span></a><span class="c1">// 输出: &quot;32K&quot;</span>
+<p>温度信息从 <code>/sys/class/thermal/thermal_zone*/temp</code> 读取，但不是所有设备都有温度传感器。返回值通常是 millidegree，需要除以 1000 转成摄氏度。</p>
+<h2 id="biglittle-检测">big.LITTLE 检测<a class="headerlink" href="#biglittle-检测" title="链接到此章节">&para;</a></h2>
+<p>ARM 的大小核架构检测是通过比较不同 CPU 核心的最大频率来实现的。如果发现不同的频率值，就假定存在大小核，然后按频率分组统计核心数。</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="kt">bool</span><span class="w"> </span><span class="nf">detect_big_little</span><span class="p">(</span><span class="n">cf</span><span class="o">::</span><span class="n">CPUBonusInfoHost</span><span class="o">&amp;</span><span class="w"> </span><span class="n">host</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><a href="#__codelineno-3-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">max_frequencies</span><span class="p">;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a><a href="#__codelineno-3-3"><span class="linenos" data-linenos=" 3 "></span></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><a href="#__codelineno-3-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="w">    </span><span class="c1">// 收集每个核心的最大频率</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5"></a><a href="#__codelineno-3-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">cpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">cpu</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">logical_cores</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">cpu</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6"></a><a href="#__codelineno-3-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/sys/devices/system/cpu/cpu&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">cpu</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7"></a><a href="#__codelineno-3-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="w">                          </span><span class="s">&quot;/cpufreq/cpuinfo_max_freq&quot;</span><span class="p">;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8"></a><a href="#__codelineno-3-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">read_uint32_file</span><span class="p">(</span><span class="n">path</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9"></a><a href="#__codelineno-3-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">freq</span><span class="p">.</span><span class="n">has_value</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10"></a><a href="#__codelineno-3-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">            </span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">*</span><span class="n">freq</span><span class="p">);</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11"></a><a href="#__codelineno-3-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12"></a><a href="#__codelineno-3-12"><span class="linenos" data-linenos="12 "></span></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13"></a><a href="#__codelineno-3-13"><span class="linenos" data-linenos="13 "></span></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14"></a><a href="#__codelineno-3-14"><span class="linenos" data-linenos="14 "></span></a><span class="w">    </span><span class="c1">// 检查是否有不同的频率</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15"></a><a href="#__codelineno-3-15"><span class="linenos" data-linenos="15 "></span></a><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">min_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">std</span><span class="o">::</span><span class="n">min_element</span><span class="p">(</span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16"></a><a href="#__codelineno-3-16"><span class="linenos" data-linenos="16 "></span></a><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">max_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">std</span><span class="o">::</span><span class="n">max_element</span><span class="p">(</span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17"></a><a href="#__codelineno-3-17"><span class="linenos" data-linenos="17 "></span></a>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18"></a><a href="#__codelineno-3-18"><span class="linenos" data-linenos="18 "></span></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">min_freq</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">max_freq</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19"></a><a href="#__codelineno-3-19"><span class="linenos" data-linenos="19 "></span></a><span class="w">        </span><span class="n">host</span><span class="p">.</span><span class="n">has_big_little</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20"></a><a href="#__codelineno-3-20"><span class="linenos" data-linenos="20 "></span></a><span class="w">        </span><span class="n">host</span><span class="p">.</span><span class="n">big_core_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="n">max_freq</span><span class="p">);</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21"></a><a href="#__codelineno-3-21"><span class="linenos" data-linenos="21 "></span></a><span class="w">        </span><span class="n">host</span><span class="p">.</span><span class="n">little_core_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">count</span><span class="p">(</span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="n">min_freq</span><span class="p">);</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22"></a><a href="#__codelineno-3-22"><span class="linenos" data-linenos="22 "></span></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23"></a><a href="#__codelineno-3-23"><span class="linenos" data-linenos="23 "></span></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24"></a><a href="#__codelineno-3-24"><span class="linenos" data-linenos="24 "></span></a>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25"></a><a href="#__codelineno-3-25"><span class="linenos" data-linenos="25 "></span></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26"></a><a href="#__codelineno-3-26"><span class="linenos" data-linenos="26 "></span></a><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="温度信息解析">温度信息解析<a class="headerlink" href="#温度信息解析" title="链接到此章节">&para;</a></h3>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><a href="#__codelineno-4-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1">// 遍历 thermal_zone 目录</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><a href="#__codelineno-4-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a><a href="#__codelineno-4-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/sys/class/thermal/thermal_zone&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/temp&quot;</span><span class="p">;</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><a href="#__codelineno-4-4"><span class="linenos" data-linenos=" 4 "></span></a>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5"></a><a href="#__codelineno-4-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">read_uint32_file</span><span class="p">(</span><span class="n">path</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6"></a><a href="#__codelineno-4-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">temp</span><span class="p">.</span><span class="n">has_value</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7"></a><a href="#__codelineno-4-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="w">        </span><span class="c1">// 温度值通常是 millidegree，需要除以 1000</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8"></a><a href="#__codelineno-4-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">celsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">temp</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9"></a><a href="#__codelineno-4-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">celsius</span><span class="p">;</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10"></a><a href="#__codelineno-4-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11"></a><a href="#__codelineno-4-11"><span class="linenos" data-linenos="11 "></span></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="biglittle-架构检测">big.LITTLE 架构检测<a class="headerlink" href="#biglittle-架构检测" title="链接到此章节">&para;</a></h2>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="kt">bool</span><span class="w"> </span><span class="nf">detect_big_little</span><span class="p">(</span><span class="n">cf</span><span class="o">::</span><span class="n">CPUBonusInfoHost</span><span class="o">&amp;</span><span class="w"> </span><span class="n">host</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2"></a><a href="#__codelineno-5-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="w">    </span><span class="c1">// 方法1：检查 CPU 频率策略</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3"></a><a href="#__codelineno-5-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="w">    </span><span class="c1">// 在 /sys/devices/system/cpu/ 目录下查找不同的频率范围</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4"></a><a href="#__codelineno-5-4"><span class="linenos" data-linenos=" 4 "></span></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5"></a><a href="#__codelineno-5-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="w">    </span><span class="c1">// 方法2：解析 /proc/cpuinfo 中的 CPU 实现者</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6"></a><a href="#__codelineno-5-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="w">    </span><span class="c1">// 检查是否有不同的实现者 ID</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7"></a><a href="#__codelineno-5-7"><span class="linenos" data-linenos=" 7 "></span></a>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8"></a><a href="#__codelineno-5-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">    </span><span class="c1">// 简化实现：检查不同 CPU 核心的最大频率</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9"></a><a href="#__codelineno-5-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">max_frequencies</span><span class="p">;</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10"></a><a href="#__codelineno-5-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">cpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">cpu</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">logical_cores</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">cpu</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11"></a><a href="#__codelineno-5-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/sys/devices/system/cpu/cpu&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">cpu</span><span class="p">)</span><span class="w"> </span><span class="o">+</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12"></a><a href="#__codelineno-5-12"><span class="linenos" data-linenos="12 "></span></a><span class="w">                          </span><span class="s">&quot;/cpufreq/cpuinfo_max_freq&quot;</span><span class="p">;</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13"></a><a href="#__codelineno-5-13"><span class="linenos" data-linenos="13 "></span></a><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">read_uint32_file</span><span class="p">(</span><span class="n">path</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14"></a><a href="#__codelineno-5-14"><span class="linenos" data-linenos="14 "></span></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">freq</span><span class="p">.</span><span class="n">has_value</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15"></a><a href="#__codelineno-5-15"><span class="linenos" data-linenos="15 "></span></a><span class="w">            </span><span class="n">max_frequencies</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">*</span><span class="n">freq</span><span class="p">);</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16"></a><a href="#__codelineno-5-16"><span class="linenos" data-linenos="16 "></span></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17"></a><a href="#__codelineno-5-17"><span class="linenos" data-linenos="17 "></span></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18"></a><a href="#__codelineno-5-18"><span class="linenos" data-linenos="18 "></span></a>
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19"></a><a href="#__codelineno-5-19"><span class="linenos" data-linenos="19 "></span></a><span class="w">    </span><span class="c1">// 如果有不同的最大频率，可能存在大小核</span>
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20"></a><a href="#__codelineno-5-20"><span class="linenos" data-linenos="20 "></span></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">has_different_values</span><span class="p">(</span><span class="n">max_frequencies</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21"></a><a href="#__codelineno-5-21"><span class="linenos" data-linenos="21 "></span></a><span class="w">        </span><span class="n">host</span><span class="p">.</span><span class="n">has_big_little</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22"></a><a href="#__codelineno-5-22"><span class="linenos" data-linenos="22 "></span></a><span class="w">        </span><span class="n">host</span><span class="p">.</span><span class="n">big_core_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count_by_frequency</span><span class="p">(</span><span class="n">max_frequencies</span><span class="p">,</span><span class="w"> </span><span class="cm">/*max*/</span><span class="p">);</span>
-</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23"></a><a href="#__codelineno-5-23"><span class="linenos" data-linenos="23 "></span></a><span class="w">        </span><span class="n">host</span><span class="p">.</span><span class="n">little_core_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count_by_frequency</span><span class="p">(</span><span class="n">max_frequencies</span><span class="p">,</span><span class="w"> </span><span class="cm">/*min*/</span><span class="p">);</span>
-</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24"></a><a href="#__codelineno-5-24"><span class="linenos" data-linenos="24 "></span></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25"></a><a href="#__codelineno-5-25"><span class="linenos" data-linenos="25 "></span></a><span class="p">}</span>
-</span></code></pre></div>
-<h2 id="平台差异处理">平台差异处理<a class="headerlink" href="#平台差异处理" title="链接到此章节">&para;</a></h2>
-<h3 id="arm-vs-x86">ARM vs x86<a class="headerlink" href="#arm-vs-x86" title="链接到此章节">&para;</a></h3>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><a href="#__codelineno-6-1"><span class="linenos" data-linenos="1 "></span></a><span class="c1">// x86: 使用 &quot;flags&quot; 字段</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a><a href="#__codelineno-6-2"><span class="linenos" data-linenos="2 "></span></a><span class="c1">// ARM: 使用 &quot;Features&quot; 字段</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a><a href="#__codelineno-6-3"><span class="linenos" data-linenos="3 "></span></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4"></a><a href="#__codelineno-6-4"><span class="linenos" data-linenos="4 "></span></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arch_is_arm</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5"></a><a href="#__codelineno-6-5"><span class="linenos" data-linenos="5 "></span></a><span class="w">    </span><span class="n">features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parse_cpuinfo_field</span><span class="p">(</span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Features&quot;</span><span class="p">);</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6"></a><a href="#__codelineno-6-6"><span class="linenos" data-linenos="6 "></span></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7"></a><a href="#__codelineno-6-7"><span class="linenos" data-linenos="7 "></span></a><span class="w">    </span><span class="n">features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parse_cpuinfo_field</span><span class="p">(</span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;flags&quot;</span><span class="p">);</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8"></a><a href="#__codelineno-6-8"><span class="linenos" data-linenos="8 "></span></a><span class="p">}</span>
-</span></code></pre></div>
-<h3 id="arm-实现者-id-转换">ARM 实现者 ID 转换<a class="headerlink" href="#arm-实现者-id-转换" title="链接到此章节">&para;</a></h3>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><a href="#__codelineno-7-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="c1">// ARM 实现者 ID 到厂商名称的映射</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a><a href="#__codelineno-7-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="nf">arm_implementer_to_vendor</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">impl_val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3"></a><a href="#__codelineno-7-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">impl_val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4"></a><a href="#__codelineno-7-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x41</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;ARM&quot;</span><span class="p">;</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5"></a><a href="#__codelineno-7-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x42</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Broadcom&quot;</span><span class="p">;</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6"></a><a href="#__codelineno-7-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x43</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Cavium&quot;</span><span class="p">;</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7"></a><a href="#__codelineno-7-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x44</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;DEC&quot;</span><span class="p">;</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8"></a><a href="#__codelineno-7-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x49</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Infineon&quot;</span><span class="p">;</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a><a href="#__codelineno-7-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x4D</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Motorola/Freescale&quot;</span><span class="p">;</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10"></a><a href="#__codelineno-7-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x4E</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;NVIDIA&quot;</span><span class="p">;</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11"></a><a href="#__codelineno-7-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x50</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;APM&quot;</span><span class="p">;</span>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12"></a><a href="#__codelineno-7-12"><span class="linenos" data-linenos="12 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x51</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Qualcomm&quot;</span><span class="p">;</span>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13"></a><a href="#__codelineno-7-13"><span class="linenos" data-linenos="13 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x56</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Marvell&quot;</span><span class="p">;</span>
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14"></a><a href="#__codelineno-7-14"><span class="linenos" data-linenos="14 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x69</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Intel&quot;</span><span class="p">;</span>
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15"></a><a href="#__codelineno-7-15"><span class="linenos" data-linenos="15 "></span></a><span class="w">        </span><span class="k">default</span><span class="o">:</span><span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Unknown&quot;</span><span class="p">;</span>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16"></a><a href="#__codelineno-7-16"><span class="linenos" data-linenos="16 "></span></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17"></a><a href="#__codelineno-7-17"><span class="linenos" data-linenos="17 "></span></a><span class="p">}</span>
+<p>这个方法不是百分之百可靠——有些同频 CPU 也可能被误判为大小核——但在我们支持的设备上效果还可以。</p>
+<h2 id="平台差异">平台差异<a class="headerlink" href="#平台差异" title="链接到此章节">&para;</a></h2>
+<p>ARM 和 x86 在 <code>cpuinfo</code> 格式上有很多不同。ARM 的 <code>CPU implementer</code> 是个十六进制 ID，需要映射到厂商名称；x86 直接用 <code>vendor_id</code> 字符串。特性标志的字段名也不一样，x86 用 <code>flags</code>，ARM 用 <code>Features</code>。</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><a href="#__codelineno-4-1"><span class="linenos" data-linenos=" 1 "></span></a><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="nf">arm_implementer_to_vendor</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">impl_val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><a href="#__codelineno-4-2"><span class="linenos" data-linenos=" 2 "></span></a><span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">impl_val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a><a href="#__codelineno-4-3"><span class="linenos" data-linenos=" 3 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x41</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;ARM&quot;</span><span class="p">;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><a href="#__codelineno-4-4"><span class="linenos" data-linenos=" 4 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x42</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Broadcom&quot;</span><span class="p">;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5"></a><a href="#__codelineno-4-5"><span class="linenos" data-linenos=" 5 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x43</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Cavium&quot;</span><span class="p">;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6"></a><a href="#__codelineno-4-6"><span class="linenos" data-linenos=" 6 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x44</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;DEC&quot;</span><span class="p">;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7"></a><a href="#__codelineno-4-7"><span class="linenos" data-linenos=" 7 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x4E</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;NVIDIA&quot;</span><span class="p">;</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8"></a><a href="#__codelineno-4-8"><span class="linenos" data-linenos=" 8 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x51</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Qualcomm&quot;</span><span class="p">;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9"></a><a href="#__codelineno-4-9"><span class="linenos" data-linenos=" 9 "></span></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="mh">0x69</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Intel&quot;</span><span class="p">;</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10"></a><a href="#__codelineno-4-10"><span class="linenos" data-linenos="10 "></span></a><span class="w">        </span><span class="k">default</span><span class="o">:</span><span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Unknown&quot;</span><span class="p">;</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11"></a><a href="#__codelineno-4-11"><span class="linenos" data-linenos="11 "></span></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12"></a><a href="#__codelineno-4-12"><span class="linenos" data-linenos="12 "></span></a><span class="p">}</span>
 </span></code></pre></div>
 <h2 id="相关文档">相关文档<a class="headerlink" href="#相关文档" title="链接到此章节">&para;</a></h2>
 <ul>
@@ -9372,7 +11871,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年2月22日 22:15:02 CST">2026年2月22日 22:15:02</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月1日 10:27:50 CST">2026年3月1日 10:27:50</span>
   </span>
 
     
@@ -9436,13 +11935,13 @@
         
         
           
-          <a href="../../windows/cpu_implementation/" class="md-footer__link md-footer__link--next" aria-label="下一页: Windows 平台 CPU 信息查询实现">
+          <a href="../memory/memory_implementation/" class="md-footer__link md-footer__link--next" aria-label="下一页: Linux 平台实现细节">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 下一页
               </span>
               <div class="md-ellipsis">
-                Windows 平台 CPU 信息查询实现
+                Linux 平台实现细节
               </div>
             </div>
             <div class="md-footer__button md-icon">
