@@ -1,4 +1,4 @@
-/** 
+/**
  * @file    token.hpp
  * @brief   High-performance type-safe token system with runtime registration.
  *
@@ -187,15 +187,13 @@ struct TokenSlot {
     TokenSlot& operator=(const TokenSlot&) = delete;
 
     TokenSlot(TokenSlot&& other) noexcept
-        : data(std::move(other.data))
-        , type_info(other.type_info)
-        , name(std::move(other.name)) {}
+        : data(std::move(other.data)), type_info(other.type_info), name(std::move(other.name)) {}
 
     TokenSlot& operator=(TokenSlot&& other) noexcept {
         if (this != &other) {
-            data      = std::move(other.data);
+            data = std::move(other.data);
             type_info = other.type_info;
-            name      = std::move(other.name);
+            name = std::move(other.name);
         }
         return *this;
     }
@@ -379,8 +377,8 @@ class TokenRegistry {
  * @since      0.1
  * @ingroup    ui_core
  */
-template <typename T, uint64_t Hash>
-auto StaticToken<T, Hash>::get() -> cf::expected<T*, TokenError> {
+template <typename T, uint64_t Hash> auto StaticToken<T, Hash>::get()
+    -> cf::expected<T*, TokenError> {
     return TokenRegistry::get().get<StaticToken<T, Hash>>();
 }
 
@@ -396,8 +394,8 @@ auto StaticToken<T, Hash>::get() -> cf::expected<T*, TokenError> {
  * @since      0.1
  * @ingroup    ui_core
  */
-template <typename T, uint64_t Hash>
-auto StaticToken<T, Hash>::get_const() -> cf::expected<const T*, TokenError> {
+template <typename T, uint64_t Hash> auto StaticToken<T, Hash>::get_const()
+    -> cf::expected<const T*, TokenError> {
     return TokenRegistry::get().get_const<StaticToken<T, Hash>>();
 }
 
@@ -512,8 +510,8 @@ inline const detail::TokenSlot* TokenRegistry::find_slot_locked(uint64_t hash) c
 // Static Token Registration
 // -----------------------------------------------------------------------------
 
-template <typename TokenToken, typename... Args>
-auto TokenRegistry::register_token(Args&&... args) -> Result<void> {
+template <typename TokenToken, typename... Args> auto TokenRegistry::register_token(Args&&... args)
+    -> Result<void> {
     using T = typename TokenToken::value_type;
     constexpr uint64_t hash = TokenToken::hash_value;
 
@@ -526,9 +524,9 @@ auto TokenRegistry::register_token(Args&&... args) -> Result<void> {
     }
 
     detail::TokenSlot slot;
-    slot.data      = std::make_unique<std::any>(T(std::forward<Args>(args)...));
+    slot.data = std::make_unique<std::any>(T(std::forward<Args>(args)...));
     slot.type_info = &typeid(T);
-    slot.name      = "static_token_" + std::to_string(hash);
+    slot.name = "static_token_" + std::to_string(hash);
 
     slot_map_.emplace(hash, std::move(slot));
     return {};
@@ -538,8 +536,8 @@ auto TokenRegistry::register_token(Args&&... args) -> Result<void> {
 // Static Token Get
 // -----------------------------------------------------------------------------
 
-template <typename TokenToken>
-auto TokenRegistry::get() -> Result<typename TokenToken::value_type*> {
+template <typename TokenToken> auto TokenRegistry::get()
+    -> Result<typename TokenToken::value_type*> {
     using T = typename TokenToken::value_type;
     constexpr uint64_t hash = TokenToken::hash_value;
 
@@ -559,15 +557,15 @@ auto TokenRegistry::get() -> Result<typename TokenToken::value_type*> {
     }
 
     if (slot->type_info != &typeid(T)) {
-        return cf::unexpected(TokenError{TokenError::Kind::TypeMismatch,
-                                         "Type mismatch for token"});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::TypeMismatch, "Type mismatch for token"});
     }
 
     return std::any_cast<T>(a);
 }
 
-template <typename TokenToken>
-auto TokenRegistry::get_const() const -> Result<const typename TokenToken::value_type*> {
+template <typename TokenToken> auto TokenRegistry::get_const() const
+    -> Result<const typename TokenToken::value_type*> {
     using T = typename TokenToken::value_type;
     constexpr uint64_t hash = TokenToken::hash_value;
 
@@ -585,8 +583,8 @@ auto TokenRegistry::get_const() const -> Result<const typename TokenToken::value
     }
 
     if (slot->type_info != &typeid(T)) {
-        return cf::unexpected(TokenError{TokenError::Kind::TypeMismatch,
-                                         "Type mismatch for token"});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::TypeMismatch, "Type mismatch for token"});
     }
 
     return std::any_cast<T>(a);
@@ -608,16 +606,16 @@ auto TokenRegistry::register_dynamic(std::string_view name, Args&&... args) -> R
     }
 
     detail::TokenSlot slot;
-    slot.data      = std::make_unique<std::any>(T(std::forward<Args>(args)...));
+    slot.data = std::make_unique<std::any>(T(std::forward<Args>(args)...));
     slot.type_info = &typeid(T);
-    slot.name      = name;
+    slot.name = name;
 
     slot_map_.emplace(hash, std::move(slot));
     return {};
 }
 
-template <typename T>
-auto TokenRegistry::register_dynamic(std::string_view name, const T& value) -> Result<void> {
+template <typename T> auto TokenRegistry::register_dynamic(std::string_view name, const T& value)
+    -> Result<void> {
     uint64_t hash = cf::hash::fnv1a64(name);
 
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
@@ -628,16 +626,16 @@ auto TokenRegistry::register_dynamic(std::string_view name, const T& value) -> R
     }
 
     detail::TokenSlot slot;
-    slot.data      = std::make_unique<std::any>(value);
+    slot.data = std::make_unique<std::any>(value);
     slot.type_info = &typeid(T);
-    slot.name      = name;
+    slot.name = name;
 
     slot_map_.emplace(hash, std::move(slot));
     return {};
 }
 
-template <typename T>
-auto TokenRegistry::register_dynamic(std::string_view name, T&& value) -> Result<void> {
+template <typename T> auto TokenRegistry::register_dynamic(std::string_view name, T&& value)
+    -> Result<void> {
     uint64_t hash = cf::hash::fnv1a64(name);
 
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
@@ -648,9 +646,9 @@ auto TokenRegistry::register_dynamic(std::string_view name, T&& value) -> Result
     }
 
     detail::TokenSlot slot;
-    slot.data      = std::make_unique<std::any>(std::forward<T>(value));
+    slot.data = std::make_unique<std::any>(std::forward<T>(value));
     slot.type_info = &typeid(T);
-    slot.name      = name;
+    slot.name = name;
 
     slot_map_.emplace(hash, std::move(slot));
     return {};
@@ -665,61 +663,59 @@ auto TokenRegistry::get_by_hash_impl(uint64_t hash, const std::string& name_hint
     // Lock held by callers (get_dynamic / get_dynamic_by_hash) for entire scope.
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
-        return cf::unexpected(TokenError{TokenError::Kind::NotFound,
-                                         "Token not found: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::NotFound, "Token not found: " + name_hint});
     }
 
     std::any* a = slot->data.get();
     if (!a || !a->has_value()) {
-        return cf::unexpected(TokenError{TokenError::Kind::Empty,
-                                         "Token has no value: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::Empty, "Token has no value: " + name_hint});
     }
 
     if (slot->type_info != &typeid(T)) {
-        return cf::unexpected(TokenError{TokenError::Kind::TypeMismatch,
-                                         "Type mismatch for token: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::TypeMismatch, "Type mismatch for token: " + name_hint});
     }
 
     return std::any_cast<T>(a);
 }
 
 template <typename T>
-auto TokenRegistry::get_by_hash_impl_const(
-    uint64_t hash, const std::string& name_hint) const -> Result<const T*> {
+auto TokenRegistry::get_by_hash_impl_const(uint64_t hash, const std::string& name_hint) const
+    -> Result<const T*> {
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
-        return cf::unexpected(TokenError{TokenError::Kind::NotFound,
-                                         "Token not found: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::NotFound, "Token not found: " + name_hint});
     }
 
     const std::any* a = slot->data.get();
     if (!a || !a->has_value()) {
-        return cf::unexpected(TokenError{TokenError::Kind::Empty,
-                                         "Token has no value: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::Empty, "Token has no value: " + name_hint});
     }
 
     if (slot->type_info != &typeid(T)) {
-        return cf::unexpected(TokenError{TokenError::Kind::TypeMismatch,
-                                         "Type mismatch for token: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::TypeMismatch, "Type mismatch for token: " + name_hint});
     }
 
     return std::any_cast<T>(a);
 }
 
-template <typename T>
-auto TokenRegistry::get_dynamic(std::string_view name) -> Result<T*> {
+template <typename T> auto TokenRegistry::get_dynamic(std::string_view name) -> Result<T*> {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return get_by_hash_impl<T>(cf::hash::fnv1a64(name), std::string(name));
 }
 
-template <typename T>
-auto TokenRegistry::get_dynamic_by_hash(uint64_t hash) -> Result<T*> {
+template <typename T> auto TokenRegistry::get_dynamic_by_hash(uint64_t hash) -> Result<T*> {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return get_by_hash_impl<T>(hash, std::to_string(hash));
 }
 
-template <typename T>
-auto TokenRegistry::get_dynamic_const(std::string_view name) const -> Result<const T*> {
+template <typename T> auto TokenRegistry::get_dynamic_const(std::string_view name) const
+    -> Result<const T*> {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return get_by_hash_impl_const<T>(cf::hash::fnv1a64(name), std::string(name));
 }
@@ -775,17 +771,17 @@ class EmbeddedTokenRegistry {
      * @brief  Gets a dynamic token's value by name.
      * @return Result containing pointer to the token's value or TokenError.
      */
-    template <typename T> Result<T*>        get_dynamic(std::string_view name);
+    template <typename T> Result<T*> get_dynamic(std::string_view name);
     /**
      * @brief  Gets a dynamic token's value by hash.
      * @return Result containing pointer to the token's value or TokenError.
      */
-    template <typename T> Result<T*>        get_dynamic_by_hash(uint64_t hash);
+    template <typename T> Result<T*> get_dynamic_by_hash(uint64_t hash);
     /**
      * @brief  Gets a dynamic token's value by name (const).
      * @return Result containing const pointer to the token's value or TokenError.
      */
-    template <typename T> Result<const T*>  get_dynamic_const(std::string_view name) const;
+    template <typename T> Result<const T*> get_dynamic_const(std::string_view name) const;
 
     /**
      * @brief  Checks if a token exists by hash.
@@ -814,11 +810,10 @@ class EmbeddedTokenRegistry {
     size_t size() const noexcept;
 
   private:
-    detail::TokenSlot*       find_slot_locked(uint64_t hash);
+    detail::TokenSlot* find_slot_locked(uint64_t hash);
     const detail::TokenSlot* find_slot_locked(uint64_t hash) const;
 
-    template <typename T>
-    Result<T*> get_by_hash_impl(uint64_t hash, const std::string& name_hint);
+    template <typename T> Result<T*> get_by_hash_impl(uint64_t hash, const std::string& name_hint);
 
     template <typename T>
     Result<const T*> get_by_hash_impl_const(uint64_t hash, const std::string& name_hint) const;
@@ -928,15 +923,30 @@ auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, Args&&... ar
                                          "Already registered: " + std::string(name)});
     }
     detail::TokenSlot slot;
-    slot.data      = std::make_unique<std::any>(T(std::forward<Args>(args)...));
+    slot.data = std::make_unique<std::any>(T(std::forward<Args>(args)...));
     slot.type_info = &typeid(T);
-    slot.name      = name;
+    slot.name = name;
     slot_map_.emplace(hash, std::move(slot));
     return {};
 }
 
-template <typename T>
-auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, const T& value)
+template <typename T> auto EmbeddedTokenRegistry::register_dynamic(std::string_view name,
+                                                                   const T& value) -> Result<void> {
+    uint64_t hash = cf::hash::fnv1a64(name);
+    std::unique_lock<std::shared_mutex> lock(registry_mutex_);
+    if (slot_map_.find(hash) != slot_map_.end()) {
+        return cf::unexpected(TokenError{TokenError::Kind::AlreadyRegistered,
+                                         "Already registered: " + std::string(name)});
+    }
+    detail::TokenSlot slot;
+    slot.data = std::make_unique<std::any>(value);
+    slot.type_info = &typeid(T);
+    slot.name = name;
+    slot_map_.emplace(hash, std::move(slot));
+    return {};
+}
+
+template <typename T> auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, T&& value)
     -> Result<void> {
     uint64_t hash = cf::hash::fnv1a64(name);
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
@@ -945,25 +955,9 @@ auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, const T& val
                                          "Already registered: " + std::string(name)});
     }
     detail::TokenSlot slot;
-    slot.data      = std::make_unique<std::any>(value);
+    slot.data = std::make_unique<std::any>(std::forward<T>(value));
     slot.type_info = &typeid(T);
-    slot.name      = name;
-    slot_map_.emplace(hash, std::move(slot));
-    return {};
-}
-
-template <typename T>
-auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, T&& value) -> Result<void> {
-    uint64_t hash = cf::hash::fnv1a64(name);
-    std::unique_lock<std::shared_mutex> lock(registry_mutex_);
-    if (slot_map_.find(hash) != slot_map_.end()) {
-        return cf::unexpected(TokenError{TokenError::Kind::AlreadyRegistered,
-                                         "Already registered: " + std::string(name)});
-    }
-    detail::TokenSlot slot;
-    slot.data      = std::make_unique<std::any>(std::forward<T>(value));
-    slot.type_info = &typeid(T);
-    slot.name      = name;
+    slot.name = name;
     slot_map_.emplace(hash, std::move(slot));
     return {};
 }
@@ -973,56 +967,53 @@ auto EmbeddedTokenRegistry::get_by_hash_impl(uint64_t hash, const std::string& n
     -> Result<T*> {
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
-        return cf::unexpected(TokenError{TokenError::Kind::NotFound,
-                                         "Token not found: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::NotFound, "Token not found: " + name_hint});
     }
     std::any* a = slot->data.get();
     if (!a || !a->has_value()) {
-        return cf::unexpected(TokenError{TokenError::Kind::Empty,
-                                         "Token has no value: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::Empty, "Token has no value: " + name_hint});
     }
     if (slot->type_info != &typeid(T)) {
-        return cf::unexpected(TokenError{TokenError::Kind::TypeMismatch,
-                                         "Type mismatch for token: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::TypeMismatch, "Type mismatch for token: " + name_hint});
     }
     return std::any_cast<T>(a);
 }
 
-template <typename T>
-auto EmbeddedTokenRegistry::get_by_hash_impl_const(uint64_t hash,
-                                                     const std::string& name_hint) const
+template <typename T> auto
+EmbeddedTokenRegistry::get_by_hash_impl_const(uint64_t hash, const std::string& name_hint) const
     -> Result<const T*> {
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
-        return cf::unexpected(TokenError{TokenError::Kind::NotFound,
-                                         "Token not found: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::NotFound, "Token not found: " + name_hint});
     }
     const std::any* a = slot->data.get();
     if (!a || !a->has_value()) {
-        return cf::unexpected(TokenError{TokenError::Kind::Empty,
-                                         "Token has no value: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::Empty, "Token has no value: " + name_hint});
     }
     if (slot->type_info != &typeid(T)) {
-        return cf::unexpected(TokenError{TokenError::Kind::TypeMismatch,
-                                         "Type mismatch for token: " + name_hint});
+        return cf::unexpected(
+            TokenError{TokenError::Kind::TypeMismatch, "Type mismatch for token: " + name_hint});
     }
     return std::any_cast<T>(a);
 }
 
-template <typename T>
-auto EmbeddedTokenRegistry::get_dynamic(std::string_view name) -> Result<T*> {
+template <typename T> auto EmbeddedTokenRegistry::get_dynamic(std::string_view name) -> Result<T*> {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return get_by_hash_impl<T>(cf::hash::fnv1a64(name), std::string(name));
 }
 
-template <typename T>
-auto EmbeddedTokenRegistry::get_dynamic_by_hash(uint64_t hash) -> Result<T*> {
+template <typename T> auto EmbeddedTokenRegistry::get_dynamic_by_hash(uint64_t hash) -> Result<T*> {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return get_by_hash_impl<T>(hash, std::to_string(hash));
 }
 
-template <typename T>
-auto EmbeddedTokenRegistry::get_dynamic_const(std::string_view name) const -> Result<const T*> {
+template <typename T> auto EmbeddedTokenRegistry::get_dynamic_const(std::string_view name) const
+    -> Result<const T*> {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return get_by_hash_impl_const<T>(cf::hash::fnv1a64(name), std::string(name));
 }

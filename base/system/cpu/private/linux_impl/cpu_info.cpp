@@ -49,7 +49,8 @@ cf::expected<void, cf::CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& h
 
         // For ARM, try to get vendor from "CPU implementer"
         if (!foundVendor) {
-            const std::string_view implementer = cf::parse_cpuinfo_field(line_sv, "CPU implementer");
+            const std::string_view implementer =
+                cf::parse_cpuinfo_field(line_sv, "CPU implementer");
             if (!implementer.empty()) {
                 // Parse hex implementer ID using modern utilities
                 if (auto impl_val = cf::parse_hex_uint32(implementer)) {

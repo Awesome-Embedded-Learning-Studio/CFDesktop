@@ -40,4 +40,4 @@ int no_doxygen(int y);
  */
 int has_brief_tag(int z);
 
-#endif  // MISSING_BRIEF_H
+#endif // MISSING_BRIEF_H

@@ -14,8 +14,8 @@
 
 #include "cfmaterial_slide_animation.h"
 #include "base/easing.h"
-#include <QEasingCurve>
 #include <QDebug>
+#include <QEasingCurve>
 
 namespace cf::ui::components::material {
 
@@ -23,19 +23,10 @@ namespace cf::ui::components::material {
 // Constructor / Destructor
 // =============================================================================
 
-CFMaterialSlideAnimation::CFMaterialSlideAnimation(
-    cf::ui::core::IMotionSpec* spec,
-    SlideDirection direction,
-    QObject* parent)
-    : ICFTimingAnimation(spec, parent)
-    , currentOffset_(0.0f)
-    , targetWidget_(nullptr)
-    , direction_(direction)
-    , distance_(100.0f)
-    , durationMs_(300)
-    , delayMs_(0)
-    , elapsedTime_(0) {
-}
+CFMaterialSlideAnimation::CFMaterialSlideAnimation(cf::ui::core::IMotionSpec* spec,
+                                                   SlideDirection direction, QObject* parent)
+    : ICFTimingAnimation(spec, parent), currentOffset_(0.0f), targetWidget_(nullptr),
+      direction_(direction), distance_(100.0f), durationMs_(300), delayMs_(0), elapsedTime_(0) {}
 
 CFMaterialSlideAnimation::~CFMaterialSlideAnimation() {
     // Restore original position if widget still exists
@@ -50,7 +41,7 @@ CFMaterialSlideAnimation::~CFMaterialSlideAnimation() {
 
 void CFMaterialSlideAnimation::start(Direction dir) {
     if (m_state == State::Running) {
-        return;  // Already running
+        return; // Already running
     }
 
     if (!targetWidget_) {
@@ -65,7 +56,7 @@ void CFMaterialSlideAnimation::start(Direction dir) {
     if (motion_spec_) {
         // Duration would be queried from the motion token name
         // For now, use default based on direction
-        durationMs_ = 300;  // mediumEnter default
+        durationMs_ = 300; // mediumEnter default
     }
 
     elapsedTime_ = 0;
@@ -108,7 +99,7 @@ void CFMaterialSlideAnimation::reverse() {
     if (m_state == State::Running) {
         // Calculate remaining progress and reverse from there
         float progress = static_cast<float>(elapsedTime_) / durationMs_;
-        progress = 1.0f - progress;  // Reverse progress
+        progress = 1.0f - progress; // Reverse progress
 
         elapsedTime_ = static_cast<int>(progress * durationMs_);
     } else {
@@ -128,7 +119,7 @@ bool CFMaterialSlideAnimation::tick(int dt) {
 
     // Check if we're still in delay period
     if (elapsedTime_ < delayMs_) {
-        return true;  // Still waiting
+        return true; // Still waiting
     }
 
     // Calculate actual animation time (subtract delay)
@@ -187,16 +178,16 @@ void CFMaterialSlideAnimation::applyOffset(float offset) {
 QPoint CFMaterialSlideAnimation::calculateOffsetPoint(float offset) const {
     switch (direction_) {
         case SlideDirection::Up:
-            return QPoint(0, static_cast<int>(-offset));  // Move up (negative Y)
+            return QPoint(0, static_cast<int>(-offset)); // Move up (negative Y)
 
         case SlideDirection::Down:
-            return QPoint(0, static_cast<int>(offset));   // Move down (positive Y)
+            return QPoint(0, static_cast<int>(offset)); // Move down (positive Y)
 
         case SlideDirection::Left:
-            return QPoint(static_cast<int>(-offset), 0);  // Move left (negative X)
+            return QPoint(static_cast<int>(-offset), 0); // Move left (negative X)
 
         case SlideDirection::Right:
-            return QPoint(static_cast<int>(offset), 0);   // Move right (positive X)
+            return QPoint(static_cast<int>(offset), 0); // Move right (positive X)
 
         default:
             return QPoint();

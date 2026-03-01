@@ -39,13 +39,13 @@ class CF_UI_EXPORT StateMachine : public QObject {
      * @ingroup ui_widget_material_base
      */
     enum class State {
-        StateNormal = 0x00,    ///< Normal state.
-        StateHovered = 0x01,   ///< Mouse hover state.
-        StatePressed = 0x02,    ///< Mouse pressed state.
-        StateFocused = 0x04,    ///< Keyboard focused state.
-        StateDisabled = 0x08,   ///< Disabled state.
-        StateChecked = 0x10,    ///< Checked state.
-        StateDragged = 0x20     ///< Dragged state.
+        StateNormal = 0x00,   ///< Normal state.
+        StateHovered = 0x01,  ///< Mouse hover state.
+        StatePressed = 0x02,  ///< Mouse pressed state.
+        StateFocused = 0x04,  ///< Keyboard focused state.
+        StateDisabled = 0x08, ///< Disabled state.
+        StateChecked = 0x10,  ///< Checked state.
+        StateDragged = 0x20   ///< Dragged state.
     };
     Q_DECLARE_FLAGS(States, State)
 

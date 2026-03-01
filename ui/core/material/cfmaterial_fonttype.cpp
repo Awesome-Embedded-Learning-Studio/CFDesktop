@@ -52,7 +52,7 @@ inline QFont createFont(int sizeSp, QFont::Weight weight, bool italic = false) {
     font.setStyleHint(QFont::SansSerif);
     font.setWeight(weight);
     font.setItalic(italic);
-    font.setPointSizeF(sizeSp);  // 使用 pointSize (Qt 会处理 DPI)
+    font.setPointSizeF(sizeSp); // 使用 pointSize (Qt 会处理 DPI)
     return font;
 }
 
@@ -73,9 +73,12 @@ inline void registerDefaultFonts(EmbeddedTokenRegistry& registry) {
     // =========================================================================
     // Display Styles - 用于英雄内容
     // =========================================================================
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_DISPLAY_LARGE, createFont(57, QFont::Normal));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_DISPLAY_MEDIUM, createFont(45, QFont::Normal));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_DISPLAY_SMALL, createFont(36, QFont::Normal));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_DISPLAY_LARGE,
+                                     createFont(57, QFont::Normal));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_DISPLAY_MEDIUM,
+                                     createFont(45, QFont::Normal));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_DISPLAY_SMALL,
+                                     createFont(36, QFont::Normal));
 
     // 行高
     registry.register_dynamic<float>(literals::LINEHEIGHT_DISPLAY_LARGE, 64.0f);
@@ -85,9 +88,12 @@ inline void registerDefaultFonts(EmbeddedTokenRegistry& registry) {
     // =========================================================================
     // Headline Styles - 用于应用栏重要文本
     // =========================================================================
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_HEADLINE_LARGE, createFont(32, QFont::Normal));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_HEADLINE_MEDIUM, createFont(28, QFont::Normal));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_HEADLINE_SMALL, createFont(24, QFont::Normal));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_HEADLINE_LARGE,
+                                     createFont(32, QFont::Normal));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_HEADLINE_MEDIUM,
+                                     createFont(28, QFont::Normal));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_HEADLINE_SMALL,
+                                     createFont(24, QFont::Normal));
 
     // 行高
     registry.register_dynamic<float>(literals::LINEHEIGHT_HEADLINE_LARGE, 40.0f);
@@ -97,9 +103,12 @@ inline void registerDefaultFonts(EmbeddedTokenRegistry& registry) {
     // =========================================================================
     // Title Styles - 用于分区标题
     // =========================================================================
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_TITLE_LARGE, createFont(22, QFont::Medium));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_TITLE_MEDIUM, createFont(16, QFont::Medium));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_TITLE_SMALL, createFont(14, QFont::Medium));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_TITLE_LARGE,
+                                     createFont(22, QFont::Medium));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_TITLE_MEDIUM,
+                                     createFont(16, QFont::Medium));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_TITLE_SMALL,
+                                     createFont(14, QFont::Medium));
 
     // 行高
     registry.register_dynamic<float>(literals::LINEHEIGHT_TITLE_LARGE, 28.0f);
@@ -109,9 +118,12 @@ inline void registerDefaultFonts(EmbeddedTokenRegistry& registry) {
     // =========================================================================
     // Body Styles - 用于主要内容
     // =========================================================================
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_BODY_LARGE, createFont(16, QFont::Normal));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_BODY_MEDIUM, createFont(14, QFont::Normal));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_BODY_SMALL, createFont(12, QFont::Normal));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_BODY_LARGE,
+                                     createFont(16, QFont::Normal));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_BODY_MEDIUM,
+                                     createFont(14, QFont::Normal));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_BODY_SMALL,
+                                     createFont(12, QFont::Normal));
 
     // 行高
     registry.register_dynamic<float>(literals::LINEHEIGHT_BODY_LARGE, 24.0f);
@@ -121,9 +133,12 @@ inline void registerDefaultFonts(EmbeddedTokenRegistry& registry) {
     // =========================================================================
     // Label Styles - 用于次要信息
     // =========================================================================
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_LABEL_LARGE, createFont(14, QFont::Medium));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_LABEL_MEDIUM, createFont(12, QFont::Medium));
-    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_LABEL_SMALL, createFont(11, QFont::Medium));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_LABEL_LARGE,
+                                     createFont(14, QFont::Medium));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_LABEL_MEDIUM,
+                                     createFont(12, QFont::Medium));
+    registry.register_dynamic<QFont>(literals::TYPOGRAPHY_LABEL_SMALL,
+                                     createFont(11, QFont::Medium));
 
     // 行高
     registry.register_dynamic<float>(literals::LINEHEIGHT_LABEL_LARGE, 20.0f);

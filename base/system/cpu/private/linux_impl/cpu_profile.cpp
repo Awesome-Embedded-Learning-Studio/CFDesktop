@@ -25,7 +25,7 @@ constexpr int CPU_USAGE_SAMPLE_DELAY_MS = 100;
 // Read CPU frequency from sysfs file (kHz to Hz conversion)
 uint32_t readCpuFreq(const char* path) noexcept {
     if (auto freq_khz = cf::read_uint32_file(path)) {
-        return *freq_khz * 1000;  // Convert kHz to Hz
+        return *freq_khz * 1000; // Convert kHz to Hz
     }
     return 0;
 }
@@ -40,8 +40,8 @@ float getCpuUsage() noexcept {
 
     // Parse first line: "cpu  user nice system idle iowait irq softirq"
     uint64_t user1 = 0, nice1 = 0, system1 = 0, idle1 = 0, iowait1 = 0, irq1 = 0, softirq1 = 0;
-    if (fscanf(stat, "cpu %lu %lu %lu %lu %lu %lu %lu",
-               &user1, &nice1, &system1, &idle1, &iowait1, &irq1, &softirq1) != 7) {
+    if (fscanf(stat, "cpu %lu %lu %lu %lu %lu %lu %lu", &user1, &nice1, &system1, &idle1, &iowait1,
+               &irq1, &softirq1) != 7) {
         fclose(stat);
         return 0.0f;
     }
@@ -60,8 +60,8 @@ float getCpuUsage() noexcept {
     }
 
     uint64_t user2 = 0, nice2 = 0, system2 = 0, idle2 = 0, iowait2 = 0, irq2 = 0, softirq2 = 0;
-    if (fscanf(stat, "cpu %lu %lu %lu %lu %lu %lu %lu",
-               &user2, &nice2, &system2, &idle2, &iowait2, &irq2, &softirq2) != 7) {
+    if (fscanf(stat, "cpu %lu %lu %lu %lu %lu %lu %lu", &user2, &nice2, &system2, &idle2, &iowait2,
+               &irq2, &softirq2) != 7) {
         fclose(stat);
         return 0.0f;
     }
@@ -144,12 +144,15 @@ cf::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError> query_cpu_profile_info
     }
 
     // Get frequency from cpufreq sysfs
-    profile_info.current_frequecy = readCpuFreq("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
-    profile_info.max_frequency = readCpuFreq("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
+    profile_info.current_frequecy =
+        readCpuFreq("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
+    profile_info.max_frequency =
+        readCpuFreq("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq");
 
     // If cpufreq is not available, try cpuinfo_max_freq
     if (profile_info.max_frequency == 0) {
-        profile_info.max_frequency = readCpuFreq("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+        profile_info.max_frequency =
+            readCpuFreq("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
     }
 
     // Get CPU usage

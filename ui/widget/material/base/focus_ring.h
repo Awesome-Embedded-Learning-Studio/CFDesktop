@@ -14,7 +14,6 @@
 #pragma once
 #include "color.h"
 #include "components/material/cfmaterial_animation_factory.h"
-#include "core/material/cfmaterial_motion.h"
 #include <QObject>
 class QPainter;
 class QPainterPath;

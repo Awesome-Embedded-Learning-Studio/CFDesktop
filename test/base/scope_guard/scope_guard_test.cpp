@@ -19,8 +19,8 @@
  */
 
 #include "base/scope_guard/scope_guard.hpp"
-#include <gtest/gtest.h>
 #include <functional>
+#include <gtest/gtest.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -96,7 +96,7 @@ TEST(ScopeGuardTest, DismissMultipleTimes) {
     {
         cf::ScopeGuard guard([&counter]() { counter = 42; });
         guard.dismiss();
-        guard.dismiss();  // Safe to call multiple times
+        guard.dismiss(); // Safe to call multiple times
     }
 
     EXPECT_EQ(counter, 0);
@@ -145,12 +145,8 @@ TEST(ScopeGuardTest, CleanupWhenExceptionThrown) {
 
 TEST(ScopeGuardTest, CleanupFunctionThrows) {
     // When cleanup throws, it should propagate
-    EXPECT_THROW(
-        {
-            cf::ScopeGuard guard([]() { throw std::runtime_error("cleanup error"); });
-        },
-        std::runtime_error
-    );
+    EXPECT_THROW({ cf::ScopeGuard guard([]() { throw std::runtime_error("cleanup error"); }); },
+                 std::runtime_error);
 }
 
 TEST(ScopeGuardTest, ExceptionInGuardedCode) {
@@ -213,7 +209,8 @@ TEST(ScopeGuardTest, CaptureUniquePtrByReference) {
 
     {
         cf::ScopeGuard guard([&ptr, &result]() {
-            if (ptr) result = *ptr;
+            if (ptr)
+                result = *ptr;
         });
     }
 
@@ -234,9 +231,9 @@ TEST(ScopeGuardTest, LIFODestructionOrder) {
     }
 
     ASSERT_EQ(order.size(), 3);
-    EXPECT_EQ(order[0], 3);  // Last created, first destroyed
+    EXPECT_EQ(order[0], 3); // Last created, first destroyed
     EXPECT_EQ(order[1], 2);
-    EXPECT_EQ(order[2], 1);  // First created, last destroyed
+    EXPECT_EQ(order[2], 1); // First created, last destroyed
 }
 
 TEST(ScopeGuardTest, NestedScopesOrder) {
@@ -247,13 +244,13 @@ TEST(ScopeGuardTest, NestedScopesOrder) {
 
         {
             cf::ScopeGuard inner([&order]() { order.push_back(2); });
-        }  // inner executes here
+        } // inner executes here
 
         cf::ScopeGuard outer2([&order]() { order.push_back(3); });
-    }  // outer2 executes, then outer1
+    } // outer2 executes, then outer1
 
     ASSERT_EQ(order.size(), 3);
-    EXPECT_EQ(order[0], 2);  // Inner scope guard executes first
+    EXPECT_EQ(order[0], 2); // Inner scope guard executes first
     EXPECT_EQ(order[1], 3);
     EXPECT_EQ(order[2], 1);
 }
@@ -267,7 +264,7 @@ TEST(ScopeGuardTest, WithEarlyReturn) {
 
     auto func = [&counter]() -> void {
         cf::ScopeGuard guard([&counter]() { counter++; });
-        return;  // Early return
+        return; // Early return
     };
 
     func();
@@ -283,7 +280,7 @@ TEST(ScopeGuardTest, WithMultipleReturns) {
         if (condition) {
             return;
         }
-        counter = 100;  // Won't execute if condition is true
+        counter = 100; // Won't execute if condition is true
     };
 
     func(true);
@@ -291,7 +288,7 @@ TEST(ScopeGuardTest, WithMultipleReturns) {
 
     counter = 0;
     func(false);
-    EXPECT_EQ(counter, 101);  // 100 from code + 1 from cleanup
+    EXPECT_EQ(counter, 101); // 100 from code + 1 from cleanup
 }
 
 TEST(ScopeGuardTest, WithBreakStatement) {
@@ -299,10 +296,11 @@ TEST(ScopeGuardTest, WithBreakStatement) {
 
     for (int i = 0; i < 10; ++i) {
         cf::ScopeGuard guard([&counter]() { counter++; });
-        if (i == 2) break;
+        if (i == 2)
+            break;
     }
 
-    EXPECT_EQ(counter, 3);  // Iterations 0, 1, 2
+    EXPECT_EQ(counter, 3); // Iterations 0, 1, 2
 }
 
 TEST(ScopeGuardTest, WithContinueStatement) {
@@ -310,10 +308,11 @@ TEST(ScopeGuardTest, WithContinueStatement) {
 
     for (int i = 0; i < 3; ++i) {
         cf::ScopeGuard guard([&counter]() { counter++; });
-        if (i < 2) continue;
+        if (i < 2)
+            continue;
     }
 
-    EXPECT_EQ(counter, 3);  // All 3 iterations
+    EXPECT_EQ(counter, 3); // All 3 iterations
 }
 
 TEST(ScopeGuardTest, WithGotoStatement) {
@@ -322,7 +321,7 @@ TEST(ScopeGuardTest, WithGotoStatement) {
     auto func = [&counter]() -> void {
         cf::ScopeGuard guard([&counter]() { counter++; });
         goto end;
-        counter = 100;  // Skipped
+        counter = 100; // Skipped
     end:;
     };
 
@@ -382,7 +381,7 @@ TEST(ScopeGuardTest, CaptureByValueAndReference) {
         cf::ScopeGuard guard([a, &b, &result_a, &result_b]() {
             result_a = a;
             result_b = b;
-            b = 999;  // Modify reference
+            b = 999; // Modify reference
         });
     }
 
@@ -396,9 +395,7 @@ TEST(ScopeGuardTest, MixedCaptureWithInitializer) {
     int result = 0;
 
     {
-        cf::ScopeGuard guard([y = x + 5, &result]() {
-            result = y;
-        });
+        cf::ScopeGuard guard([y = x + 5, &result]() { result = y; });
     }
 
     EXPECT_EQ(result, 15);
@@ -409,9 +406,7 @@ TEST(ScopeGuardTest, CaptureConstReference) {
     int result = 0;
 
     {
-        cf::ScopeGuard guard([&value, &result]() {
-            result = value;
-        });
+        cf::ScopeGuard guard([&value, &result]() { result = value; });
     }
 
     EXPECT_EQ(result, 42);
@@ -487,7 +482,7 @@ TEST(ScopeGuardTest, GuardWithStaticVariable) {
     }
 
     EXPECT_EQ(counter, 1);
-    counter = 0;  // Reset
+    counter = 0; // Reset
 }
 
 TEST(ScopeGuardTest, LargeLambdaCapture) {
@@ -506,7 +501,7 @@ TEST(ScopeGuardTest, LargeLambdaCapture) {
         });
     }
 
-    int expected = 999 * 1000 / 2;  // Sum of 0 to 999
+    int expected = 999 * 1000 / 2; // Sum of 0 to 999
     EXPECT_EQ(sum, expected);
 }
 
@@ -532,9 +527,7 @@ TEST(ScopeGuardTest, StdFunctionCompatibility) {
 
     std::function<void()> func = [&counter]() { counter = 42; };
 
-    {
-        cf::ScopeGuard guard(func);
-    }
+    { cf::ScopeGuard guard(func); }
 
     EXPECT_EQ(counter, 42);
 }
@@ -630,9 +623,8 @@ TEST(ScopeGuardTest, BufferRestorePattern) {
     int current_value = original_value;
 
     {
-        cf::ScopeGuard restore([&current_value, original_value]() {
-            current_value = original_value;
-        });
+        cf::ScopeGuard restore(
+            [&current_value, original_value]() { current_value = original_value; });
 
         current_value = 999;
         EXPECT_EQ(current_value, 999);
@@ -649,9 +641,7 @@ TEST(ScopeGuardTest, ConstructFromStdFunction) {
     int counter = 0;
     std::function<void()> func = [&counter]() { counter++; };
 
-    {
-        cf::ScopeGuard guard(func);
-    }
+    { cf::ScopeGuard guard(func); }
 
     EXPECT_EQ(counter, 1);
 }

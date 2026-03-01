@@ -17,7 +17,7 @@
  * @ingroup test
  */
 class MixedAccessClass {
-public:
+  public:
     /**
      * @brief  Public function.
      *
@@ -36,7 +36,7 @@ public:
         int value;
     };
 
-private:
+  private:
     // Private function - should be skipped
     int privateFunc(int x);
 
@@ -45,14 +45,14 @@ private:
         int value;
     };
 
-private:
+  private:
     // Union in private section - should be skipped
     union PrivateUnion {
         int a;
         float b;
     };
 
-protected:
+  protected:
     /**
      * @brief  Protected function.
      *
@@ -73,4 +73,4 @@ protected:
     };
 };
 
-#endif  // PRIVATE_MEMBERS_H
+#endif // PRIVATE_MEMBERS_H

@@ -56,9 +56,7 @@ class CF_UI_EXPORT ICFAnimationGroup : public ICFAbstractAnimation {
      * @since         0.1
      * @ingroup       ui_components
      */
-    void addAnimation(cf::WeakPtr<ICFAbstractAnimation> animation) {
-        animations.insert(animation);
-    }
+    void addAnimation(cf::WeakPtr<ICFAbstractAnimation> animation) { animations.insert(animation); }
 
     /**
      * @brief  Removes an animation from the group.

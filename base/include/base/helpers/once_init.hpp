@@ -70,8 +70,7 @@ template <typename Resources> struct CallOnceInit {
      * @since      0.1
      * @ingroup    base_helpers
      */
-    template <typename... Args>
-    explicit CallOnceInit(Args&&... args)
+    template <typename... Args> explicit CallOnceInit(Args&&... args)
         : resource(std::forward<Args>(args)...), initialized(true) {}
 
     /**
@@ -165,8 +164,7 @@ template <typename Resources> struct CallOnceInit {
      * @since      0.1
      * @ingroup    base_helpers
      */
-    template <typename... Args>
-    void force_reinit(Args&&... args) {
+    template <typename... Args> void force_reinit(Args&&... args) {
         std::lock_guard<std::mutex> lock(force_mtx);
         resource = Resources(std::forward<Args>(args)...);
         initialized = true;

@@ -17,12 +17,12 @@
 #include <string>
 #include <unordered_map>
 
-#include "../token.hpp"
 #include "../motion_spec.h"
+#include "../token.hpp"
+#include "../token/motion/cfmaterial_motion_token_literals.h"
 #include "base/easing.h"
 #include "base/hash/constexpr_fnv1a.hpp"
 #include "export.h"
-#include "../token/motion/cfmaterial_motion_token_literals.h"
 
 namespace cf::ui::core {
 

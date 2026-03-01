@@ -40,7 +40,7 @@ struct CPUProfileInfo {
     uint16_t physical_cnt;      ///< Number of physical CPU cores.
     uint32_t current_frequecy;  ///< Current CPU frequency in MHz.
     uint32_t max_frequency;     ///< Maximum CPU frequency in MHz.
-    float    cpu_usage_percentage; ///< Current CPU usage as percentage (0-100).
+    float cpu_usage_percentage; ///< Current CPU usage as percentage (0-100).
 };
 
 /**

@@ -30,7 +30,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QWidget>
-#include <cmath>  // For std::tan, std::floor, std::ceil
+#include <cmath> // For std::tan, std::floor, std::ceil
 
 namespace cf::ui::widget::material::base {
 
@@ -45,13 +45,8 @@ using namespace cf::ui::math;
  * @param parent QObject parent for memory management.
  */
 MdElevationController::MdElevationController(
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
-    QObject* parent)
-    : QObject(parent)
-    , m_currentLevel(0.0f)
-    , m_targetLevel(0)
-    , m_animator(factory) {
-}
+    cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory, QObject* parent)
+    : QObject(parent), m_currentLevel(0.0f), m_targetLevel(0), m_animator(factory) {}
 
 // ============================================================================
 // Configuration
@@ -83,7 +78,8 @@ void MdElevationController::setPressed(bool pressed) {
 
 float MdElevationController::pressOffset() const {
     // 按压偏移 = 当前 elevation × 2dp
-    if (!m_isPressed) return 0.0f;
+    if (!m_isPressed)
+        return 0.0f;
 
     device::CanvasUnitHelper helper(qApp ? qApp->devicePixelRatio() : 1.0);
     return helper.dpToPx(static_cast<float>(m_targetLevel) * 2.0f);
@@ -130,7 +126,7 @@ MdElevationController::ShadowParams MdElevationController::paramsForLevel(float 
     // Predefined parameters for integer levels
     struct LevelParams {
         float blurRadius;
-        float offsetY;  // Vertical offset (positive =向下)
+        float offsetY; // Vertical offset (positive =向下)
         float opacity;
     };
 
@@ -261,7 +257,7 @@ CFColor MdElevationController::tonalOverlay(CFColor surface, CFColor primary) co
     }
 
     // Calculate tonal amount based on elevation
-    float tonalAmount = m_currentLevel / 10.0f;  // 0.0 to 0.5
+    float tonalAmount = m_currentLevel / 10.0f; // 0.0 to 0.5
 
     // Blend surface with primary
     return blend(surface, primary, tonalAmount);

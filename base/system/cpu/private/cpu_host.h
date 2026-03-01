@@ -15,10 +15,10 @@
  * @ingroup system_cpu_internal
  */
 #pragma once
+#include <cstdint>
 #include <optional>
 #include <string>
 #include <vector>
-#include <cstdint>
 
 namespace cf {
 
@@ -31,9 +31,9 @@ namespace cf {
  * @ingroup system_cpu_internal
  */
 struct CPUInfoHost {
-    std::string model;     ///< CPU model name. Ownership: owner.
-    std::string manufest;  ///< CPU manufacturer name. Ownership: owner.
-    std::string arch;      ///< CPU architecture identifier. Ownership: owner.
+    std::string model;    ///< CPU model name. Ownership: owner.
+    std::string manufest; ///< CPU manufacturer name. Ownership: owner.
+    std::string arch;     ///< CPU architecture identifier. Ownership: owner.
 };
 
 /**

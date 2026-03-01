@@ -17,10 +17,10 @@
 
 #include "base/color.h"
 #include "base/color_helper.h"
-#include "token/material_scheme/cfmaterial_token_literals.h"
 #include "cfmaterial_fonttype.h"
-#include "cfmaterial_radius_scale.h"
 #include "cfmaterial_motion.h"
+#include "cfmaterial_radius_scale.h"
+#include "token/material_scheme/cfmaterial_token_literals.h"
 
 // Type aliases to avoid namespace lookup issues
 using CFColor = ::cf::ui::base::CFColor;
@@ -474,9 +474,9 @@ MaterialMotionScheme motion() {
 // MaterialFactory Class Implementation
 // =============================================================================
 
-#include "material_factory_class.h"
-#include "cfmaterial_theme.h"
 #include "../token/theme_name/material_theme_name.h"
+#include "cfmaterial_theme.h"
+#include "material_factory_class.h"
 
 namespace cf::ui::core {
 
@@ -490,8 +490,9 @@ std::unique_ptr<ICFTheme> MaterialFactory::fromName(const char* name) {
         auto radius_scale = std::make_unique<MaterialRadiusScale>(material::defaultRadiusScale());
         auto motion_spec = std::make_unique<MaterialMotionScheme>(material::motion());
 
-        return std::unique_ptr<ICFTheme>(new MaterialTheme(std::move(color_scheme), std::move(font_type),
-                                                            std::move(radius_scale), std::move(motion_spec)));
+        return std::unique_ptr<ICFTheme>(
+            new MaterialTheme(std::move(color_scheme), std::move(font_type),
+                              std::move(radius_scale), std::move(motion_spec)));
     }
 
     // Check for dark theme
@@ -501,8 +502,9 @@ std::unique_ptr<ICFTheme> MaterialFactory::fromName(const char* name) {
         auto radius_scale = std::make_unique<MaterialRadiusScale>(material::defaultRadiusScale());
         auto motion_spec = std::make_unique<MaterialMotionScheme>(material::motion());
 
-        return std::unique_ptr<ICFTheme>(new MaterialTheme(std::move(color_scheme), std::move(font_type),
-                                                            std::move(radius_scale), std::move(motion_spec)));
+        return std::unique_ptr<ICFTheme>(
+            new MaterialTheme(std::move(color_scheme), std::move(font_type),
+                              std::move(radius_scale), std::move(motion_spec)));
     }
 
     // Unknown theme name
@@ -518,8 +520,9 @@ std::unique_ptr<ICFTheme> MaterialFactory::fromJson(const QByteArray& json) {
         auto radius_scale = std::make_unique<MaterialRadiusScale>(material::defaultRadiusScale());
         auto motion_spec = std::make_unique<MaterialMotionScheme>(material::motion());
 
-        return std::unique_ptr<ICFTheme>(new MaterialTheme(std::move(color_scheme), std::move(font_type),
-                                                            std::move(radius_scale), std::move(motion_spec)));
+        return std::unique_ptr<ICFTheme>(
+            new MaterialTheme(std::move(color_scheme), std::move(font_type),
+                              std::move(radius_scale), std::move(motion_spec)));
     }
 
     // If light parsing failed, try dark
@@ -530,8 +533,9 @@ std::unique_ptr<ICFTheme> MaterialFactory::fromJson(const QByteArray& json) {
         auto radius_scale = std::make_unique<MaterialRadiusScale>(material::defaultRadiusScale());
         auto motion_spec = std::make_unique<MaterialMotionScheme>(material::motion());
 
-        return std::unique_ptr<ICFTheme>(new MaterialTheme(std::move(color_scheme), std::move(font_type),
-                                                            std::move(radius_scale), std::move(motion_spec)));
+        return std::unique_ptr<ICFTheme>(
+            new MaterialTheme(std::move(color_scheme), std::move(font_type),
+                              std::move(radius_scale), std::move(motion_spec)));
     }
 
     // Parsing failed for both light and dark

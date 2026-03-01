@@ -10,8 +10,8 @@
  */
 #include "process_memory.h"
 
-#include <cstdio>
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 
 namespace cf {

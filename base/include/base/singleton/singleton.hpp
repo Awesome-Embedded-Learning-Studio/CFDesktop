@@ -66,11 +66,8 @@ template <typename T> class Singleton {
      * @since         N/A
      * @ingroup       none
      */
-    template <typename... Args>
-    static T& init(Args&&... args) {
-        std::call_once(flag_, [&] {
-            instance_.reset(new T(std::forward<Args>(args)...));
-        });
+    template <typename... Args> static T& init(Args&&... args) {
+        std::call_once(flag_, [&] { instance_.reset(new T(std::forward<Args>(args)...)); });
         return *instance_;
     }
 

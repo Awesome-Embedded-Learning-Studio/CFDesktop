@@ -20,8 +20,8 @@
  * @ingroup test
  */
 enum class Status {
-    Ok,     ///< Status is okay.
-    Error,  ///< Status indicates error.
+    Ok,    ///< Status is okay.
+    Error, ///< Status indicates error.
 };
 
 /**
@@ -30,7 +30,7 @@ enum class Status {
  * @ingroup test
  */
 struct TestData {
-    int value;  ///< The value.
+    int value; ///< The value.
 };
 
 /**
@@ -58,4 +58,4 @@ int add(int a, int b);
  */
 void do_something(bool flag);
 
-#endif  // VALID_FILE_H
+#endif // VALID_FILE_H

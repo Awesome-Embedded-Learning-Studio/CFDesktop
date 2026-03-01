@@ -9,11 +9,11 @@
  *
  */
 #include "memory_info.h"
+#include "cached_memory.h"
 #include "dimm_info.h"
 #include "physical_memory.h"
 #include "process_memory.h"
 #include "swap_memory.h"
-#include "cached_memory.h"
 
 namespace cf {
 namespace linux_impl {

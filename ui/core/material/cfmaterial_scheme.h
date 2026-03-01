@@ -14,12 +14,12 @@
 #include <string>
 #include <unordered_map>
 
+#include "../../export.h"
 #include "base/color.h"
 #include "base/hash/constexpr_fnv1a.hpp"
 #include "color_scheme.h"
 #include "token.hpp"
 #include "token/material_scheme/cfmaterial_token_literals.h"
-#include "../../export.h"
 
 namespace cf::ui::core {
 
@@ -41,8 +41,7 @@ using OnPrimaryContainerToken = StaticToken<CFColor, cf::hash::fnv1a64(ON_PRIMAR
 using SecondaryToken = StaticToken<CFColor, cf::hash::fnv1a64(SECONDARY)>;
 using OnSecondaryToken = StaticToken<CFColor, cf::hash::fnv1a64(ON_SECONDARY)>;
 using SecondaryContainerToken = StaticToken<CFColor, cf::hash::fnv1a64(SECONDARY_CONTAINER)>;
-using OnSecondaryContainerToken =
-    StaticToken<CFColor, cf::hash::fnv1a64(ON_SECONDARY_CONTAINER)>;
+using OnSecondaryContainerToken = StaticToken<CFColor, cf::hash::fnv1a64(ON_SECONDARY_CONTAINER)>;
 
 // Tertiary color tokens
 using TertiaryToken = StaticToken<CFColor, cf::hash::fnv1a64(TERTIARY)>;

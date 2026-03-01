@@ -9,8 +9,8 @@
  *
  */
 #include "cpu_bonus.h"
-#include "cpu_features.h"
 #include "base/linux/proc_parser.h"
+#include "cpu_features.h"
 
 #include <cstdio>
 #include <cstring>
@@ -70,7 +70,8 @@ void detectBigLittleCores(cf::CPUBonusInfoHost& host) {
 
     for (int cpu = 0; cpu < cpuCount; ++cpu) {
         char capacityPath[PATH_BUFFER_SIZE];
-        snprintf(capacityPath, sizeof(capacityPath), "/sys/devices/system/cpu/cpu%d/cpu_capacity", cpu);
+        snprintf(capacityPath, sizeof(capacityPath), "/sys/devices/system/cpu/cpu%d/cpu_capacity",
+                 cpu);
 
         if (auto capacity = cf::read_uint32_file(capacityPath)) {
             hasCapacityInfo = true;
@@ -82,7 +83,7 @@ void detectBigLittleCores(cf::CPUBonusInfoHost& host) {
                 host.little_core_count++;
             }
         } else {
-            break;  // No more CPUs with capacity info
+            break; // No more CPUs with capacity info
         }
     }
 
@@ -97,7 +98,8 @@ void detectBigLittleCores(cf::CPUBonusInfoHost& host) {
 
     for (int cpu = 0; cpu < cpuCount; ++cpu) {
         char freqPath[PATH_BUFFER_SIZE];
-        snprintf(freqPath, sizeof(freqPath), "/sys/devices/system/cpu/cpu%d/cpufreq/cpuinfo_max_freq", cpu);
+        snprintf(freqPath, sizeof(freqPath),
+                 "/sys/devices/system/cpu/cpu%d/cpufreq/cpuinfo_max_freq", cpu);
 
         if (auto freq = cf::read_uint32_file(freqPath)) {
             if (*freq > maxFreq) {
@@ -114,7 +116,8 @@ void detectBigLittleCores(cf::CPUBonusInfoHost& host) {
         // Count cores at each frequency level
         for (int cpu = 0; cpu < cpuCount; ++cpu) {
             char freqPath[PATH_BUFFER_SIZE];
-            snprintf(freqPath, sizeof(freqPath), "/sys/devices/system/cpu/cpu%d/cpufreq/cpuinfo_max_freq", cpu);
+            snprintf(freqPath, sizeof(freqPath),
+                     "/sys/devices/system/cpu/cpu%d/cpufreq/cpuinfo_max_freq", cpu);
 
             if (auto freq = cf::read_uint32_file(freqPath)) {
                 if (*freq >= maxFreq - 100000) {
@@ -165,7 +168,8 @@ std::optional<uint16_t> readCpuTemperature() noexcept {
                         type_sv.find(x86_marker) != std::string_view::npos) {
 
                         char tempPath[PATH_BUFFER_SIZE];
-                        snprintf(tempPath, sizeof(tempPath), "%s/%s/temp", thermalBasePath, entry->d_name);
+                        snprintf(tempPath, sizeof(tempPath), "%s/%s/temp", thermalBasePath,
+                                 entry->d_name);
 
                         FILE* tempFile = fopen(tempPath, "r");
                         if (tempFile) {
@@ -173,7 +177,8 @@ std::optional<uint16_t> readCpuTemperature() noexcept {
                             if (fscanf(tempFile, "%d", &tempMillidegree) == 1) {
                                 fclose(tempFile);
                                 closedir(dir);
-                                return static_cast<uint16_t>(tempMillidegree / 1000); // Convert to Celsius
+                                return static_cast<uint16_t>(tempMillidegree /
+                                                             1000); // Convert to Celsius
                             }
                             fclose(tempFile);
                         }

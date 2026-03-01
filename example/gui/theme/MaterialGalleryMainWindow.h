@@ -9,17 +9,17 @@
 
 #pragma once
 
-#include <QMainWindow>
+#include <QHBoxLayout>
 #include <QLabel>
+#include <QMainWindow>
+#include <QPropertyAnimation>
 #include <QStackedWidget>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPropertyAnimation>
 
 namespace cf::ui::core {
 struct ICFTheme;
 class ThemeManager;
-}
+} // namespace cf::ui::core
 
 namespace cf::ui::gallery {
 
@@ -36,7 +36,8 @@ class TypographyPage;
  */
 class ThemeSwitch : public QWidget {
     Q_OBJECT
-    Q_PROPERTY(float knobPosition READ knobPosition WRITE setKnobPosition NOTIFY knobPositionChanged)
+    Q_PROPERTY(
+        float knobPosition READ knobPosition WRITE setKnobPosition NOTIFY knobPositionChanged)
 
   public:
     explicit ThemeSwitch(QWidget* parent = nullptr);

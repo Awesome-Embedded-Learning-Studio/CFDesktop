@@ -29,5 +29,5 @@ namespace linux_impl {
  */
 void getSystemMemoryInfo(MemoryInfo& info);
 
-}
-}
+} // namespace linux_impl
+} // namespace cf

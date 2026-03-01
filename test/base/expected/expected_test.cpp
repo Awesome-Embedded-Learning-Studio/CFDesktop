@@ -69,7 +69,7 @@ TEST(ExpectedTest, CopyConstructor) {
     cf::expected<int, std::string> e2(e1);
     EXPECT_TRUE(e2.has_value());
     EXPECT_EQ(*e2, 42);
-    EXPECT_EQ(*e1, 42);  // Original unchanged
+    EXPECT_EQ(*e1, 42); // Original unchanged
 
     // Copy with error
     cf::expected<int, std::string> e3(cf::unexpected("error"));
@@ -250,9 +250,7 @@ TEST(ExpectedTest, UnexpectedAssignment) {
 // =============================================================================
 
 TEST(ExpectedTest, AndThen) {
-    auto add_one = [](int x) -> cf::expected<int, std::string> {
-        return x + 1;
-    };
+    auto add_one = [](int x) -> cf::expected<int, std::string> { return x + 1; };
 
     cf::expected<int, std::string> e1(5);
     auto result1 = e1.and_then(add_one);
@@ -265,13 +263,11 @@ TEST(ExpectedTest, AndThen) {
     EXPECT_EQ(result2.error(), "error");
 
     // Chaining
-    auto multiply_by_two = [](int x) -> cf::expected<int, std::string> {
-        return x * 2;
-    };
+    auto multiply_by_two = [](int x) -> cf::expected<int, std::string> { return x * 2; };
 
     cf::expected<int, std::string> e3(3);
     auto result3 = e3.and_then(add_one).and_then(multiply_by_two);
-    EXPECT_EQ(*result3, 8);  // (3+1)*2
+    EXPECT_EQ(*result3, 8); // (3+1)*2
 
     auto always_error = [](int) -> cf::expected<int, std::string> {
         return cf::unexpected("chain error");
@@ -283,9 +279,7 @@ TEST(ExpectedTest, AndThen) {
 }
 
 TEST(ExpectedTest, OrElse) {
-    auto recover = [](const std::string& err) -> cf::expected<int, int> {
-        return -1;
-    };
+    auto recover = [](const std::string& err) -> cf::expected<int, int> { return -1; };
 
     cf::expected<int, std::string> e1(cf::unexpected("error"));
     auto result1 = e1.or_else(recover);
@@ -600,9 +594,7 @@ TEST(ExpectedVoidTest, Assignment) {
 TEST(ExpectedVoidTest, AndThen) {
     cf::expected<void, std::string> e;
 
-    auto return_int = []() -> cf::expected<int, std::string> {
-        return 42;
-    };
+    auto return_int = []() -> cf::expected<int, std::string> { return 42; };
 
     auto result = e.and_then(return_int);
     EXPECT_TRUE(result.has_value());

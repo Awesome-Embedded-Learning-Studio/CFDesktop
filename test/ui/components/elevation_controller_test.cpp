@@ -11,10 +11,10 @@
 
 #include "color.h"
 #include "ui/widget/material/base/elevation_controller.h"
-#include <gtest/gtest.h>
 #include <QImage>
 #include <QPainter>
 #include <QPainterPath>
+#include <gtest/gtest.h>
 
 using namespace cf::ui::widget::material::base;
 using CFColor = cf::ui::base::CFColor;
@@ -221,9 +221,9 @@ TEST(ElevationControllerTest, TonalOverlay_HighElevation_BlendsWithPrimary) {
     QColor surfaceColor = surface.native_color();
 
     // At least one color component should be different
-    bool differs = (resultColor.red() != surfaceColor.red() ||
-                    resultColor.green() != surfaceColor.green() ||
-                    resultColor.blue() != surfaceColor.blue());
+    bool differs =
+        (resultColor.red() != surfaceColor.red() || resultColor.green() != surfaceColor.green() ||
+         resultColor.blue() != surfaceColor.blue());
 
     EXPECT_TRUE(differs) << "Higher elevation should modify surface color";
 }
@@ -256,8 +256,7 @@ TEST(ElevationControllerTest, TonalOverlay_IncreasingElevation_MoreBlending) {
                    std::abs(highColor.green() - surfaceColor.green()) +
                    std::abs(highColor.blue() - surfaceColor.blue());
 
-    EXPECT_GE(highDist, lowDist)
-        << "Higher elevation should blend more primary color";
+    EXPECT_GE(highDist, lowDist) << "Higher elevation should blend more primary color";
 }
 
 // =============================================================================

@@ -12,16 +12,16 @@
 
 #pragma once
 
-#include <QMainWindow>
-#include <QLabel>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QMainWindow>
+#include <QPropertyAnimation>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QTimer>
-#include <QPropertyAnimation>
+#include <QVBoxLayout>
+#include <QWidget>
 
 #include "ui/core/material/cfmaterial_scheme.h"
 
@@ -90,7 +90,8 @@ class ColorCardWidget : public QWidget {
  */
 class ThemeSwitch : public QWidget {
     Q_OBJECT
-    Q_PROPERTY(float knobPosition READ knobPosition WRITE setKnobPosition NOTIFY knobPositionChanged)
+    Q_PROPERTY(
+        float knobPosition READ knobPosition WRITE setKnobPosition NOTIFY knobPositionChanged)
 
   public:
     explicit ThemeSwitch(QWidget* parent = nullptr);

@@ -355,8 +355,7 @@ template <typename T> class WeakPtr {
      * }
      * @endcode
      */
-    template <typename Source>
-    static WeakPtr DynamicCast(const WeakPtr<Source>& other) noexcept {
+    template <typename Source> static WeakPtr DynamicCast(const WeakPtr<Source>& other) noexcept {
         if (!other.flag_ || !other.flag_->IsAlive()) {
             return WeakPtr();
         }

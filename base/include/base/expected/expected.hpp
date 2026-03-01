@@ -313,9 +313,9 @@ template <typename T, typename E> class expected {
      * @internal
      */
     union Storage {
-        T val;  ///< Value storage.
+        T val; ///< Value storage.
 
-        E err;  ///< Error storage.
+        E err; ///< Error storage.
 
         /**
          * @brief  Default constructor.
@@ -338,8 +338,8 @@ template <typename T, typename E> class expected {
         ~Storage() {}
     };
 
-    Storage storage_;      ///< Internal storage.
-    bool has_val_;        ///< Indicates whether value is present.
+    Storage storage_; ///< Internal storage.
+    bool has_val_;    ///< Indicates whether value is present.
 
     /**
      * @brief  Destroys the currently stored value or error.
@@ -356,8 +356,8 @@ template <typename T, typename E> class expected {
     }
 
   public:
-    using value_type = T;      ///< Value type alias.
-    using error_type = E;       ///< Error type alias.
+    using value_type = T;                  ///< Value type alias.
+    using error_type = E;                  ///< Error type alias.
     using unexpected_type = unexpected<E>; ///< Unexpected type alias.
 
     /**
@@ -1355,16 +1355,16 @@ template <typename E> class expected<void, E> {
 
     /// Internal storage union.
     union Storage {
-        E err;  ///< Error storage.
+        E err; ///< Error storage.
         Storage() {}
         ~Storage() {}
     };
-    Storage storage_;  ///< Internal storage.
+    Storage storage_; ///< Internal storage.
     bool has_val_;    ///< Indicates whether in value (void) state.
 
   public:
-    using value_type = void;           ///< Value type alias.
-    using error_type = E;               ///< Error type alias.
+    using value_type = void;               ///< Value type alias.
+    using error_type = E;                  ///< Error type alias.
     using unexpected_type = unexpected<E>; ///< Unexpected type alias.
 
     /**

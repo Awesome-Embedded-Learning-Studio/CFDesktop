@@ -1,10 +1,9 @@
-#include <QCoreApplication>
-#include <QCommandLineParser>
-#include <QTextStream>
 #include "boot_detect.h"
+#include <QCommandLineParser>
+#include <QCoreApplication>
+#include <QTextStream>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
     QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName("boot_test_core");
     QCoreApplication::setApplicationVersion("1.0.0");
@@ -14,11 +13,13 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption verboseOption(QStringList() << "v" << "verbose",
-                                    "Show detailed output");
+    QCommandLineOption verboseOption(QStringList() << "v"
+                                                   << "verbose",
+                                     "Show detailed output");
     parser.addOption(verboseOption);
 
-    QCommandLineOption quietOption(QStringList() << "q" << "quiet",
+    QCommandLineOption quietOption(QStringList() << "q"
+                                                 << "quiet",
                                    "Only output errors");
     parser.addOption(quietOption);
 
@@ -35,12 +36,8 @@ int main(int argc, char *argv[])
 
     // 输出结果
     if (verbose) {
-        out << BootDetect::getSummary({
-            BootDetect::checkQtVersion(),
-            BootDetect::checkQtModules(),
-            BootDetect::checkCompiler(),
-            BootDetect::checkSystemInfo()
-        });
+        out << BootDetect::getSummary({BootDetect::checkQtVersion(), BootDetect::checkQtModules(),
+                                       BootDetect::checkCompiler(), BootDetect::checkSystemInfo()});
     } else if (!quiet) {
         out << result.message << "\n";
     }

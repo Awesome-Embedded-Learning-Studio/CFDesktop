@@ -14,8 +14,8 @@
 
 #include "cfmaterial_fade_animation.h"
 #include "base/easing.h"
-#include <QEasingCurve>
 #include <QDebug>
+#include <QEasingCurve>
 
 namespace cf::ui::components::material {
 
@@ -23,18 +23,10 @@ namespace cf::ui::components::material {
 // Constructor / Destructor
 // =============================================================================
 
-CFMaterialFadeAnimation::CFMaterialFadeAnimation(
-    cf::ui::core::IMotionSpec* spec,
-    QObject* parent)
-    : ICFTimingAnimation(spec, parent)
-    , currentOpacity_(1.0f)
-    , targetWidget_(nullptr)
-    , opacityEffect_(nullptr)
-    , ownsOpacityEffect_(false)
-    , durationMs_(200)
-    , delayMs_(0)
-    , elapsedTime_(0) {
-}
+CFMaterialFadeAnimation::CFMaterialFadeAnimation(cf::ui::core::IMotionSpec* spec, QObject* parent)
+    : ICFTimingAnimation(spec, parent), currentOpacity_(1.0f), targetWidget_(nullptr),
+      opacityEffect_(nullptr), ownsOpacityEffect_(false), durationMs_(200), delayMs_(0),
+      elapsedTime_(0) {}
 
 CFMaterialFadeAnimation::~CFMaterialFadeAnimation() {
     // Clean up opacity effect if we own it
@@ -50,14 +42,14 @@ CFMaterialFadeAnimation::~CFMaterialFadeAnimation() {
 
 void CFMaterialFadeAnimation::start(Direction dir) {
     if (m_state == State::Running) {
-        return;  // Already running
+        return; // Already running
     }
 
     // Get duration from motion spec if available
     if (motion_spec_) {
         // Duration would be queried from the motion token name
         // For now, use default
-        durationMs_ = 200;  // shortEnter default
+        durationMs_ = 200; // shortEnter default
     }
 
     elapsedTime_ = 0;
@@ -97,7 +89,7 @@ void CFMaterialFadeAnimation::reverse() {
     if (m_state == State::Running) {
         // Calculate remaining progress and reverse from there
         float progress = static_cast<float>(elapsedTime_) / durationMs_;
-        progress = 1.0f - progress;  // Reverse progress
+        progress = 1.0f - progress; // Reverse progress
 
         elapsedTime_ = static_cast<int>(progress * durationMs_);
     } else {
@@ -117,7 +109,7 @@ bool CFMaterialFadeAnimation::tick(int dt) {
 
     // Check if we're still in delay period
     if (elapsedTime_ < delayMs_) {
-        return true;  // Still waiting
+        return true; // Still waiting
     }
 
     // Calculate actual animation time (subtract delay)
@@ -189,8 +181,7 @@ void CFMaterialFadeAnimation::ensureOpacityEffect() {
     }
 
     // Check if widget already has an opacity effect
-    opacityEffect_ = qobject_cast<QGraphicsOpacityEffect*>(
-        targetWidget_->graphicsEffect());
+    opacityEffect_ = qobject_cast<QGraphicsOpacityEffect*>(targetWidget_->graphicsEffect());
 
     if (!opacityEffect_) {
         // Create new opacity effect

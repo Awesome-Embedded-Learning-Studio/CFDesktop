@@ -70,8 +70,8 @@ class CF_UI_EXPORT RippleHelper : public QObject {
      * @ingroup ui_widget_material_base
      */
     enum class Mode {
-        Bounded,   ///< Clipped by widget bounds.
-        Unbounded  ///< Not clipped by widget bounds.
+        Bounded,  ///< Clipped by widget bounds.
+        Unbounded ///< Not clipped by widget bounds.
     };
     Q_ENUM(Mode)
 

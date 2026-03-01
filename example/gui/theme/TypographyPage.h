@@ -29,9 +29,8 @@ namespace cf::ui::gallery {
 class FontCardWidget : public QWidget {
     Q_OBJECT
   public:
-    explicit FontCardWidget(const QString& tokenName, const QFont& font,
-                           float lineHeight, const QString& previewText,
-                           QWidget* parent = nullptr);
+    explicit FontCardWidget(const QString& tokenName, const QFont& font, float lineHeight,
+                            const QString& previewText, QWidget* parent = nullptr);
 
     void updateFont(const QFont& font, float lineHeight);
     QSize sizeHint() const override;
@@ -82,7 +81,7 @@ class TypographyPage : public ThemePageWidget {
     int calculateColumnCount() const;
 
     void createFontGroup(const QString& title, QGridLayout* layout, int& row,
-                        const QStringList& tokens);
+                         const QStringList& tokens);
 
     QString getPreviewText(const QString& token) const;
     void showToast(const QString& message);

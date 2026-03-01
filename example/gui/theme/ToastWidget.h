@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include <QWidget>
 #include <QString>
+#include <QWidget>
 
 namespace cf::ui::gallery {
 

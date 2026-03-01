@@ -17,11 +17,11 @@
 #include <string>
 #include <unordered_map>
 
-#include "base/hash/constexpr_fnv1a.hpp"
-#include "token.hpp"
-#include "radius_scale.h"
-#include "token/radius_scale/cfmaterial_radius_scale_literals.h"
 #include "../export.h"
+#include "base/hash/constexpr_fnv1a.hpp"
+#include "radius_scale.h"
+#include "token.hpp"
+#include "token/radius_scale/cfmaterial_radius_scale_literals.h"
 
 namespace cf::ui::core {
 

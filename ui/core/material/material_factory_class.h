@@ -17,8 +17,8 @@
 #include <QByteArray>
 #include <memory>
 
-#include "../theme_factory.h"
 #include "../export.h"
+#include "../theme_factory.h"
 
 namespace cf::ui::core {
 

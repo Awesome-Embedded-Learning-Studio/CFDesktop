@@ -13,12 +13,12 @@
 
 #include <QByteArray>
 
-#include "base/expected/expected.hpp"
-#include "cfmaterial_scheme.h"
-#include "cfmaterial_fonttype.h"
-#include "cfmaterial_radius_scale.h"
-#include "cfmaterial_motion.h"
 #include "../../export.h"
+#include "base/expected/expected.hpp"
+#include "cfmaterial_fonttype.h"
+#include "cfmaterial_motion.h"
+#include "cfmaterial_radius_scale.h"
+#include "cfmaterial_scheme.h"
 
 namespace cf::ui::core::material {
 

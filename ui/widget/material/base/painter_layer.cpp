@@ -25,10 +25,7 @@ namespace cf::ui::widget::material::base {
  * @param parent QObject parent for memory management.
  */
 PainterLayer::PainterLayer(QObject* parent)
-    : QObject(parent)
-    , cached_color_(Qt::black)
-    , opacity_(1.0f) {
-}
+    : QObject(parent), cached_color_(Qt::black), opacity_(1.0f) {}
 
 /**
  * @brief Paints the layer with current color and opacity.

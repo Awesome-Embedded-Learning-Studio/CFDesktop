@@ -28,7 +28,8 @@ float clamp(float value, float min, float max) {
 
 float remap(float value, float inMin, float inMax, float outMin, float outMax) {
     // Handle edge case where input range is zero
-    // When input range is zero, value at or below min returns output max, value above min returns output min
+    // When input range is zero, value at or below min returns output max, value above min returns
+    // output min
     if (inMax == inMin) {
         return (value <= inMin) ? outMax : outMin;
     }
@@ -60,7 +61,8 @@ float cubicBezier(float x1, float y1, float x2, float y2, float t) {
         float x_guess = 3.0f * mt2 * guess * x1 + 3.0f * mt * t2 * x2 + guess * t2;
 
         // x'(guess) = 3(1-t)²*x1 + 6(1-t)t*(x2-x1) + 3t²*(1-x2)
-        float x_derivative = 3.0f * mt2 * x1 + 6.0f * mt * guess * (x2 - x1) + 3.0f * t2 * (1.0f - x2);
+        float x_derivative =
+            3.0f * mt2 * x1 + 6.0f * mt * guess * (x2 - x1) + 3.0f * t2 * (1.0f - x2);
 
         float delta = (x_guess - t) / x_derivative;
         guess -= delta;
@@ -71,8 +73,10 @@ float cubicBezier(float x1, float y1, float x2, float y2, float t) {
     }
 
     // Clamp guess to [0, 1]
-    if (guess < 0.0f) guess = 0.0f;
-    if (guess > 1.0f) guess = 1.0f;
+    if (guess < 0.0f)
+        guess = 0.0f;
+    if (guess > 1.0f)
+        guess = 1.0f;
 
     // Compute y at the solved parameter
     float mt = 1.0f - guess;
@@ -105,8 +109,10 @@ float lerpAngle(float a, float b, float t) {
     float diff = bRad - aRad;
 
     // Normalize to [-PI, PI]
-    while (diff <= -PI) diff += TWO_PI;
-    while (diff > PI) diff -= TWO_PI;
+    while (diff <= -PI)
+        diff += TWO_PI;
+    while (diff > PI)
+        diff -= TWO_PI;
 
     // Handle the exact 180 degree case - prefer positive direction
     if (std::abs(diff - PI) < 0.0001f) {
@@ -118,8 +124,10 @@ float lerpAngle(float a, float b, float t) {
     float result = aRad + diff * t;
 
     // Normalize result to [0, TWO_PI)
-    while (result < 0) result += TWO_PI;
-    while (result >= TWO_PI) result -= TWO_PI;
+    while (result < 0)
+        result += TWO_PI;
+    while (result >= TWO_PI)
+        result -= TWO_PI;
 
     return result * RAD_TO_DEG;
 }

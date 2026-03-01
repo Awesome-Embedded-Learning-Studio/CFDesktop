@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include <QWidget>
 #include <QList>
+#include <QWidget>
 
 namespace cf::ui::core {
 struct ICFTheme;
@@ -70,9 +70,9 @@ class ThemeSidebar : public QWidget {
 
   private:
     struct TabItem {
-        QString icon;        // Emoji icon
-        QString label;       // Text label (Chinese)
-        QString labelEn;     // English label (optional)
+        QString icon;    // Emoji icon
+        QString label;   // Text label (Chinese)
+        QString labelEn; // English label (optional)
     };
 
     /**

@@ -67,8 +67,7 @@ template <typename T> class span {
      *
      * @ingroup base_containers
      */
-    template <size_t N>
-    constexpr span(T (&arr)[N]) noexcept : data_(arr), size_(N) {}
+    template <size_t N> constexpr span(T (&arr)[N]) noexcept : data_(arr), size_(N) {}
 
     /**
      * @brief  Constructs a span from a std::vector.
@@ -99,8 +98,8 @@ template <typename T> class span {
      *
      * @ingroup base_containers
      */
-    template <size_t N>
-    constexpr span(std::array<T, N>& arr) noexcept : data_(arr.data()), size_(N) {}
+    template <size_t N> constexpr span(std::array<T, N>& arr) noexcept
+        : data_(arr.data()), size_(N) {}
 
     /**
      * @brief  Constructs a const span from a const std::array.

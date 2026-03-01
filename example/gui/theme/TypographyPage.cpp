@@ -9,10 +9,10 @@
 
 #include "TypographyPage.h"
 #include "ToastWidget.h"
-#include "ui/core/theme.h"
 #include "ui/core/material/cfmaterial_fonttype.h"
 #include "ui/core/material/cfmaterial_scheme.h"
 #include "ui/core/material/material_factory.hpp"
+#include "ui/core/theme.h"
 #include "ui/core/token/typography/cfmaterial_typography_token_literals.h"
 
 #include <QApplication>
@@ -34,25 +34,25 @@ namespace cf::ui::gallery {
 // Static Token Lists
 // =============================================================================
 
-const QStringList TypographyPage::DISPLAY_TOKENS = {
-    token_literals::TYPOGRAPHY_DISPLAY_LARGE, token_literals::TYPOGRAPHY_DISPLAY_MEDIUM,
-    token_literals::TYPOGRAPHY_DISPLAY_SMALL};
+const QStringList TypographyPage::DISPLAY_TOKENS = {token_literals::TYPOGRAPHY_DISPLAY_LARGE,
+                                                    token_literals::TYPOGRAPHY_DISPLAY_MEDIUM,
+                                                    token_literals::TYPOGRAPHY_DISPLAY_SMALL};
 
-const QStringList TypographyPage::HEADLINE_TOKENS = {
-    token_literals::TYPOGRAPHY_HEADLINE_LARGE, token_literals::TYPOGRAPHY_HEADLINE_MEDIUM,
-    token_literals::TYPOGRAPHY_HEADLINE_SMALL};
+const QStringList TypographyPage::HEADLINE_TOKENS = {token_literals::TYPOGRAPHY_HEADLINE_LARGE,
+                                                     token_literals::TYPOGRAPHY_HEADLINE_MEDIUM,
+                                                     token_literals::TYPOGRAPHY_HEADLINE_SMALL};
 
-const QStringList TypographyPage::TITLE_TOKENS = {
-    token_literals::TYPOGRAPHY_TITLE_LARGE, token_literals::TYPOGRAPHY_TITLE_MEDIUM,
-    token_literals::TYPOGRAPHY_TITLE_SMALL};
+const QStringList TypographyPage::TITLE_TOKENS = {token_literals::TYPOGRAPHY_TITLE_LARGE,
+                                                  token_literals::TYPOGRAPHY_TITLE_MEDIUM,
+                                                  token_literals::TYPOGRAPHY_TITLE_SMALL};
 
-const QStringList TypographyPage::BODY_TOKENS = {
-    token_literals::TYPOGRAPHY_BODY_LARGE, token_literals::TYPOGRAPHY_BODY_MEDIUM,
-    token_literals::TYPOGRAPHY_BODY_SMALL};
+const QStringList TypographyPage::BODY_TOKENS = {token_literals::TYPOGRAPHY_BODY_LARGE,
+                                                 token_literals::TYPOGRAPHY_BODY_MEDIUM,
+                                                 token_literals::TYPOGRAPHY_BODY_SMALL};
 
-const QStringList TypographyPage::LABEL_TOKENS = {
-    token_literals::TYPOGRAPHY_LABEL_LARGE, token_literals::TYPOGRAPHY_LABEL_MEDIUM,
-    token_literals::TYPOGRAPHY_LABEL_SMALL};
+const QStringList TypographyPage::LABEL_TOKENS = {token_literals::TYPOGRAPHY_LABEL_LARGE,
+                                                  token_literals::TYPOGRAPHY_LABEL_MEDIUM,
+                                                  token_literals::TYPOGRAPHY_LABEL_SMALL};
 
 // =============================================================================
 // FontCardWidget Implementation
@@ -80,16 +80,36 @@ void FontCardWidget::updateFont(const QFont& font, float lineHeight) {
 QString FontCardWidget::generateCssStyle() const {
     QString weightStr;
     switch (font_.weight()) {
-        case QFont::Thin: weightStr = "100"; break;
-        case QFont::ExtraLight: weightStr = "200"; break;
-        case QFont::Light: weightStr = "300"; break;
-        case QFont::Normal: weightStr = "400"; break;
-        case QFont::Medium: weightStr = "500"; break;
-        case QFont::DemiBold: weightStr = "600"; break;
-        case QFont::Bold: weightStr = "700"; break;
-        case QFont::ExtraBold: weightStr = "800"; break;
-        case QFont::Black: weightStr = "900"; break;
-        default: weightStr = "400"; break;
+        case QFont::Thin:
+            weightStr = "100";
+            break;
+        case QFont::ExtraLight:
+            weightStr = "200";
+            break;
+        case QFont::Light:
+            weightStr = "300";
+            break;
+        case QFont::Normal:
+            weightStr = "400";
+            break;
+        case QFont::Medium:
+            weightStr = "500";
+            break;
+        case QFont::DemiBold:
+            weightStr = "600";
+            break;
+        case QFont::Bold:
+            weightStr = "700";
+            break;
+        case QFont::ExtraBold:
+            weightStr = "800";
+            break;
+        case QFont::Black:
+            weightStr = "900";
+            break;
+        default:
+            weightStr = "400";
+            break;
     }
 
     return QString("font-family: '%1'; font-size: %2sp; font-weight: %3; line-height: %4sp;")
@@ -286,10 +306,11 @@ void TypographyPage::createFontGroups() {
     createFontGroup("Label Styles 标签样式", fontGridLayout_, row, LABEL_TOKENS);
 }
 
-void TypographyPage::createFontGroup(const QString& title, QGridLayout* layout,
-                                     int& row, const QStringList& tokens) {
+void TypographyPage::createFontGroup(const QString& title, QGridLayout* layout, int& row,
+                                     const QStringList& tokens) {
     // Get typography from theme
-    if (!theme_) return;
+    if (!theme_)
+        return;
     auto& typography = const_cast<cf::ui::core::MaterialTypography&>(
         static_cast<const cf::ui::core::MaterialTypography&>(theme_->font_type()));
 
@@ -314,8 +335,7 @@ void TypographyPage::createFontGroup(const QString& title, QGridLayout* layout,
         FontCardWidget* card = new FontCardWidget(token, font, lineHeight, previewText);
 
         // Connect click signal
-        connect(card, &FontCardWidget::clicked, this,
-                &TypographyPage::onFontCardClicked);
+        connect(card, &FontCardWidget::clicked, this, &TypographyPage::onFontCardClicked);
 
         // Store card info
         fontCards_.append({card, token});

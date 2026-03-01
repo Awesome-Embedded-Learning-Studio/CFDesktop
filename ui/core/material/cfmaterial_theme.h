@@ -17,12 +17,12 @@
 
 #pragma once
 
-#include "cfmaterial_scheme.h"
-#include "cfmaterial_fonttype.h"
-#include "cfmaterial_radius_scale.h"
-#include "cfmaterial_motion.h"
-#include "../theme.h"
 #include "../export.h"
+#include "../theme.h"
+#include "cfmaterial_fonttype.h"
+#include "cfmaterial_motion.h"
+#include "cfmaterial_radius_scale.h"
+#include "cfmaterial_scheme.h"
 
 namespace cf::ui::core {
 

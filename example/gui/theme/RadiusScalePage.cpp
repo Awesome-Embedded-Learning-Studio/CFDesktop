@@ -8,10 +8,10 @@
  */
 
 #include "RadiusScalePage.h"
-#include "ui/core/theme.h"
 #include "ui/core/material/cfmaterial_radius_scale.h"
 #include "ui/core/material/cfmaterial_scheme.h"
 #include "ui/core/material/material_factory.hpp"
+#include "ui/core/theme.h"
 #include "ui/core/token/radius_scale/cfmaterial_radius_scale_literals.h"
 
 #include <QFont>
@@ -116,7 +116,8 @@ void RadiusScalePage::setupUI() {
 }
 
 void RadiusScalePage::createRadiusCards() {
-    if (!theme_) return;
+    if (!theme_)
+        return;
     auto& radiusScale = const_cast<cf::ui::core::MaterialRadiusScale&>(
         static_cast<const cf::ui::core::MaterialRadiusScale&>(theme_->radius_scale()));
     auto& colorScheme = const_cast<cf::ui::core::MaterialColorScheme&>(
@@ -196,8 +197,7 @@ void RadiusScalePage::applyTheme(const cf::ui::core::ICFTheme& theme) {
         {token_literals::CORNER_MEDIUM, "Corner Medium"},
         {token_literals::CORNER_LARGE, "Corner Large"},
         {token_literals::CORNER_EXTRA_LARGE, "Corner Extra Large"},
-        {token_literals::CORNER_EXTRA_EXTRA_LARGE, "Corner Extra Extra Large"}
-    };
+        {token_literals::CORNER_EXTRA_EXTRA_LARGE, "Corner Extra Extra Large"}};
 
     int row = 0, col = 0;
     int maxCols = 4;

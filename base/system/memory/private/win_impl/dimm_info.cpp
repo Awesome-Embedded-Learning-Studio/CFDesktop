@@ -30,20 +30,20 @@ namespace {
  * @brief Raw SMBIOS data header returned by GetSystemFirmwareTable.
  */
 struct RawSMBIOSData {
-    uint8_t  Used20CallingMethod;
-    uint8_t  SMBIOSMajorVersion;
-    uint8_t  SMBIOSMinorVersion;
-    uint8_t  DmiRevision;
+    uint8_t Used20CallingMethod;
+    uint8_t SMBIOSMajorVersion;
+    uint8_t SMBIOSMinorVersion;
+    uint8_t DmiRevision;
     uint32_t Length;
-    uint8_t  SMBIOSTableData[];
+    uint8_t SMBIOSTableData[];
 };
 
 /**
  * @brief Generic SMBIOS structure header.
  */
 struct SMBIOSHeader {
-    uint8_t  Type;
-    uint8_t  Length;
+    uint8_t Type;
+    uint8_t Length;
     uint16_t Handle;
 };
 
@@ -53,22 +53,22 @@ struct SMBIOSHeader {
  */
 struct MemoryDevice {
     SMBIOSHeader Header;
-    uint16_t PhysMemArrayHandle;    // Offset 0x04
-    uint16_t MemErrorInfoHandle;    // Offset 0x06
-    uint16_t TotalWidth;            // Offset 0x08
-    uint16_t DataWidth;             // Offset 0x0A
-    uint16_t Size;                  // Offset 0x0C
-    uint8_t  FormFactor;            // Offset 0x0E
-    uint8_t  DeviceSet;             // Offset 0x0F
-    uint8_t  DeviceLocator;         // Offset 0x10 (string index)
-    uint8_t  BankLocator;           // Offset 0x11 (string index)
-    uint8_t  MemoryType;            // Offset 0x12
-    uint16_t TypeDetail;            // Offset 0x13
-    uint16_t Speed;                 // Offset 0x15
-    uint8_t  Manufacturer;          // Offset 0x17 (string index)
-    uint8_t  SerialNumber;          // Offset 0x18 (string index)
-    uint8_t  AssetTag;              // Offset 0x19 (string index)
-    uint8_t  PartNumber;            // Offset 0x1A (string index)
+    uint16_t PhysMemArrayHandle; // Offset 0x04
+    uint16_t MemErrorInfoHandle; // Offset 0x06
+    uint16_t TotalWidth;         // Offset 0x08
+    uint16_t DataWidth;          // Offset 0x0A
+    uint16_t Size;               // Offset 0x0C
+    uint8_t FormFactor;          // Offset 0x0E
+    uint8_t DeviceSet;           // Offset 0x0F
+    uint8_t DeviceLocator;       // Offset 0x10 (string index)
+    uint8_t BankLocator;         // Offset 0x11 (string index)
+    uint8_t MemoryType;          // Offset 0x12
+    uint16_t TypeDetail;         // Offset 0x13
+    uint16_t Speed;              // Offset 0x15
+    uint8_t Manufacturer;        // Offset 0x17 (string index)
+    uint8_t SerialNumber;        // Offset 0x18 (string index)
+    uint8_t AssetTag;            // Offset 0x19 (string index)
+    uint8_t PartNumber;          // Offset 0x1A (string index)
     // uint32_t Attributes;           // Offset 0x1B (SMBIOS 2.8+)
     // uint32_t ExtendedSize;         // Offset 0x1F (SMBIOS 3.2+)
     // uint16_t ConfiguredSpeed;      // Offset 0x23 (SMBIOS 3.2+)

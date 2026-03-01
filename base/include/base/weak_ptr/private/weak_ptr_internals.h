@@ -74,9 +74,7 @@ class WeakReferenceFlag {
      * @since  N/A
      * @ingroup none
      */
-    [[nodiscard]] bool IsAlive() const noexcept {
-        return alive_.load(std::memory_order_acquire);
-    }
+    [[nodiscard]] bool IsAlive() const noexcept { return alive_.load(std::memory_order_acquire); }
 
     /**
      * @brief  Marks the flag as invalid.

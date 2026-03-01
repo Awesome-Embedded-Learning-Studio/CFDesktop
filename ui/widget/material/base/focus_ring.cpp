@@ -34,12 +34,8 @@ using namespace cf::ui::base;
  * @param parent QObject parent for memory management.
  */
 MdFocusIndicator::MdFocusIndicator(
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
-    QObject* parent)
-    : QObject(parent)
-    , m_progress(0.0f)
-    , m_animator(factory) {
-}
+    cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory, QObject* parent)
+    : QObject(parent), m_progress(0.0f), m_animator(factory) {}
 
 // ============================================================================
 // Event Handlers
@@ -68,9 +64,7 @@ void MdFocusIndicator::onFocusIn() {
     }
 
     connect(rawAnim, &components::ICFAbstractAnimation::progressChanged, this,
-        [this](float progress) {
-            m_progress = progress;
-        });
+            [this](float progress) { m_progress = progress; });
 
     rawAnim->start(components::ICFAbstractAnimation::Direction::Forward);
 }
@@ -98,9 +92,7 @@ void MdFocusIndicator::onFocusOut() {
     }
 
     connect(rawAnim, &components::ICFAbstractAnimation::progressChanged, this,
-        [this](float progress) {
-            m_progress = progress;
-        });
+            [this](float progress) { m_progress = progress; });
 
     rawAnim->start(components::ICFAbstractAnimation::Direction::Forward);
 }
@@ -121,9 +113,8 @@ void MdFocusIndicator::onFocusOut() {
  * @param shape Widget shape path for focus ring outline.
  * @param indicatorColor Ring color (typically onSurface or similar).
  */
-void MdFocusIndicator::paint(QPainter* painter,
-                            const QPainterPath& shape,
-                            const CFColor& indicatorColor) {
+void MdFocusIndicator::paint(QPainter* painter, const QPainterPath& shape,
+                             const CFColor& indicatorColor) {
     if (m_progress <= 0.0f || !painter) {
         return;
     }
@@ -131,8 +122,8 @@ void MdFocusIndicator::paint(QPainter* painter,
     // Convert dp to pixels
     // Note: Using device pixel ratio 1.0 for now. In production, get from QApplication.
     device::CanvasUnitHelper helper(1.0);
-    float ringWidth = helper.dpToPx(3.0f);   // 3dp ring width
-    float inset = helper.dpToPx(3.0f);       // 3dp inset
+    float ringWidth = helper.dpToPx(3.0f); // 3dp ring width
+    float inset = helper.dpToPx(3.0f);     // 3dp inset
 
     painter->save();
 
@@ -144,7 +135,7 @@ void MdFocusIndicator::paint(QPainter* painter,
 
     // Create offset path (inset from widget boundary)
     QPainterPathStroker insetStroker;
-    insetStroker.setWidth(inset * 2);  // Inset on both sides
+    insetStroker.setWidth(inset * 2); // Inset on both sides
     QPainterPath innerShape = insetStroker.createStroke(shape);
     // Subtract to get the inset outline
     QPainterPath outlinePath = shape.subtracted(innerShape);

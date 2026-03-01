@@ -30,5 +30,5 @@ namespace win_impl {
  * @ingroup system
  */
 void getSystemMemoryInfo(MemoryInfo& info);
-}
-}
+} // namespace win_impl
+} // namespace cf

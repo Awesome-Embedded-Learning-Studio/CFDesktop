@@ -43,4 +43,4 @@ int badLanguage(int input);
  */
 int goodLanguage(int input);
 
-#endif  // LANGUAGE_ISSUES_H
+#endif // LANGUAGE_ISSUES_H

@@ -9,10 +9,10 @@
 
 #include "ThemeSidebar.h"
 #include "ui/core/theme.h"
+#include <QFontMetrics>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
-#include <QMouseEvent>
-#include <QFontMetrics>
 
 namespace cf::ui::gallery {
 
@@ -21,12 +21,10 @@ ThemeSidebar::ThemeSidebar(QWidget* parent) : QWidget(parent) {
     setMaximumWidth(280);
 
     // Initialize tabs with icons + text
-    tabs_ = {
-        {"🎨", "色彩方案", "Color Scheme"},
-        {"⚡", "动效规范", "Motion Spec"},
-        {"🔲", "圆角规范", "Radius Scale"},
-        {"🔤", "字体规范", "Typography"}
-    };
+    tabs_ = {{"🎨", "色彩方案", "Color Scheme"},
+             {"⚡", "动效规范", "Motion Spec"},
+             {"🔲", "圆角规范", "Radius Scale"},
+             {"🔤", "字体规范", "Typography"}};
 
     // Default colors (light theme)
     backgroundColor_ = QColor(245, 245, 245);
@@ -89,8 +87,8 @@ void ThemeSidebar::paintEvent(QPaintEvent*) {
             QPainterPath indicatorPath;
             qreal indicatorWidth = 4;
             indicatorPath.addRoundedRect(
-                QRectF(tabRect.left(), tabRect.top() + 8, indicatorWidth, tabRect.height() - 16),
-                2, 2);
+                QRectF(tabRect.left(), tabRect.top() + 8, indicatorWidth, tabRect.height() - 16), 2,
+                2);
             painter.fillPath(indicatorPath, activeColor_);
 
             // Active background

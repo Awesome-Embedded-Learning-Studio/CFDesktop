@@ -23,17 +23,8 @@ struct ArmImplementer {
 };
 
 constexpr ArmImplementer arm_implementers[] = {
-    {0x41, "ARM"},
-    {0x42, "Broadcom"},
-    {0x43, "Cavium"},
-    {0x44, "DEC"},
-    {0x4E, "NVIDIA"},
-    {0x50, "APM"},
-    {0x51, "Qualcomm"},
-    {0x53, "Samsung"},
-    {0x56, "Marvell"},
-    {0x69, "Intel"}
-};
+    {0x41, "ARM"}, {0x42, "Broadcom"}, {0x43, "Cavium"},  {0x44, "DEC"},     {0x4E, "NVIDIA"},
+    {0x50, "APM"}, {0x51, "Qualcomm"}, {0x53, "Samsung"}, {0x56, "Marvell"}, {0x69, "Intel"}};
 
 constexpr size_t num_implementers = sizeof(arm_implementers) / sizeof(arm_implementers[0]);
 
@@ -100,12 +91,12 @@ std::optional<uint32_t> parse_cache_size(std::string_view size_str) noexcept {
             }
             size = size * 10 + static_cast<uint32_t>(c - '0');
         } else {
-            break;  // Reached unit specifier
+            break; // Reached unit specifier
         }
     }
 
     if (pos == 0) {
-        return std::nullopt;  // No digits found
+        return std::nullopt; // No digits found
     }
 
     // Parse unit
@@ -115,12 +106,12 @@ std::optional<uint32_t> parse_cache_size(std::string_view size_str) noexcept {
             // Already in KB
         } else if (unit == 'M' || unit == 'm') {
             if (size > UINT32_MAX / 1024) {
-                return std::nullopt;  // Overflow
+                return std::nullopt; // Overflow
             }
             size *= 1024;
         } else if (unit == 'G' || unit == 'g') {
             if (size > UINT32_MAX / (1024 * 1024)) {
-                return std::nullopt;  // Overflow
+                return std::nullopt; // Overflow
             }
             size *= 1024 * 1024;
         }
@@ -143,7 +134,7 @@ std::optional<uint32_t> parse_uint32(std::string_view str) noexcept {
             }
             value = value * 10 + static_cast<uint32_t>(c - '0');
         } else {
-            return std::nullopt;  // Invalid character
+            return std::nullopt; // Invalid character
         }
     }
 
@@ -174,7 +165,7 @@ std::optional<uint32_t> parse_hex_uint32(std::string_view str) noexcept {
         } else if (c >= 'A' && c <= 'F') {
             value |= static_cast<uint32_t>(c - 'A' + 10);
         } else {
-            return std::nullopt;  // Invalid hex digit
+            return std::nullopt; // Invalid hex digit
         }
     }
 

@@ -79,8 +79,7 @@ struct AnimationTokenMapping {
      * @ingroup       ui_components_material
      */
     bool matches(const char* token) const {
-        return animationToken && token &&
-               std::strcmp(animationToken, token) == 0;
+        return animationToken && token && std::strcmp(animationToken, token) == 0;
     }
 };
 
@@ -109,12 +108,12 @@ inline constexpr AnimationTokenMapping TOKEN_MAPPINGS[] = {
     // Fade Animations
     // =========================================================================
     {
-        ANIMATION_FADE_IN,     // "md.animation.fadeIn"
-        "fade",                // Animation type
-        "md.motion.shortEnter",  // Motion spec (200ms, EmphasizedDecelerate)
-        "opacity",             // Property to animate
-        0.0f,                  // Start value (transparent)
-        1.0f                   // End value (fully visible)
+        ANIMATION_FADE_IN,      // "md.animation.fadeIn"
+        "fade",                 // Animation type
+        "md.motion.shortEnter", // Motion spec (200ms, EmphasizedDecelerate)
+        "opacity",              // Property to animate
+        0.0f,                   // Start value (transparent)
+        1.0f                    // End value (fully visible)
     },
     {
         ANIMATION_FADE_OUT,    // "md.animation.fadeOut"
@@ -129,48 +128,48 @@ inline constexpr AnimationTokenMapping TOKEN_MAPPINGS[] = {
     // Slide Animations
     // =========================================================================
     {
-        ANIMATION_SLIDE_UP,    // "md.animation.slideUp"
-        "slide",               // Animation type
+        ANIMATION_SLIDE_UP,      // "md.animation.slideUp"
+        "slide",                 // Animation type
         "md.motion.mediumEnter", // Motion spec (300ms, EmphasizedDecelerate)
-        "positionY",           // Property to animate
-        100.0f,                // Start value (offset downward)
-        0.0f                   // End value (normal position)
+        "positionY",             // Property to animate
+        100.0f,                  // Start value (offset downward)
+        0.0f                     // End value (normal position)
     },
     {
-        ANIMATION_SLIDE_DOWN,  // "md.animation.slideDown"
-        "slide",               // Animation type
+        ANIMATION_SLIDE_DOWN,   // "md.animation.slideDown"
+        "slide",                // Animation type
         "md.motion.mediumExit", // Motion spec (250ms, EmphasizedAccelerate)
-        "positionY",           // Property to animate
-        0.0f,                  // Start value (normal position)
-        100.0f                 // End value (offset downward)
+        "positionY",            // Property to animate
+        0.0f,                   // Start value (normal position)
+        100.0f                  // End value (offset downward)
     },
     {
-        ANIMATION_SLIDE_LEFT,  // "md.animation.slideLeft"
-        "slide",               // Animation type
+        ANIMATION_SLIDE_LEFT,    // "md.animation.slideLeft"
+        "slide",                 // Animation type
         "md.motion.mediumEnter", // Motion spec (300ms, EmphasizedDecelerate)
-        "positionX",           // Property to animate
-        100.0f,                // Start value (offset right)
-        0.0f                   // End value (normal position)
+        "positionX",             // Property to animate
+        100.0f,                  // Start value (offset right)
+        0.0f                     // End value (normal position)
     },
     {
-        ANIMATION_SLIDE_RIGHT, // "md.animation.slideRight"
-        "slide",               // Animation type
+        ANIMATION_SLIDE_RIGHT,   // "md.animation.slideRight"
+        "slide",                 // Animation type
         "md.motion.mediumEnter", // Motion spec (300ms, EmphasizedDecelerate)
-        "positionX",           // Property to animate
-        -100.0f,               // Start value (offset left)
-        0.0f                   // End value (normal position)
+        "positionX",             // Property to animate
+        -100.0f,                 // Start value (offset left)
+        0.0f                     // End value (normal position)
     },
 
     // =========================================================================
     // Scale Animations
     // =========================================================================
     {
-        ANIMATION_SCALE_UP,    // "md.animation.scaleUp"
-        "scale",               // Animation type
+        ANIMATION_SCALE_UP,     // "md.animation.scaleUp"
+        "scale",                // Animation type
         "md.motion.shortEnter", // Motion spec (200ms, EmphasizedDecelerate)
-        "scale",               // Property to animate
-        0.8f,                  // Start value (smaller)
-        1.0f                   // End value (normal size)
+        "scale",                // Property to animate
+        0.8f,                   // Start value (smaller)
+        1.0f                    // End value (normal size)
     },
     {
         ANIMATION_SCALE_DOWN,  // "md.animation.scaleDown"
@@ -185,20 +184,20 @@ inline constexpr AnimationTokenMapping TOKEN_MAPPINGS[] = {
     // Rotate Animations
     // =========================================================================
     {
-        ANIMATION_ROTATE_IN,   // "md.animation.rotateIn"
-        "rotate",              // Animation type
+        ANIMATION_ROTATE_IN,     // "md.animation.rotateIn"
+        "rotate",                // Animation type
         "md.motion.mediumEnter", // Motion spec (300ms, EmphasizedDecelerate)
-        "rotation",            // Property to animate
-        -45.0f,                // Start value (rotated counter-clockwise)
-        0.0f                   // End value (normal rotation)
+        "rotation",              // Property to animate
+        -45.0f,                  // Start value (rotated counter-clockwise)
+        0.0f                     // End value (normal rotation)
     },
     {
-        ANIMATION_ROTATE_OUT,  // "md.animation.rotateOut"
-        "rotate",              // Animation type
+        ANIMATION_ROTATE_OUT,   // "md.animation.rotateOut"
+        "rotate",               // Animation type
         "md.motion.mediumExit", // Motion spec (250ms, EmphasizedAccelerate)
-        "rotation",            // Property to animate
-        0.0f,                  // Start value (normal rotation)
-        45.0f                  // End value (rotated clockwise)
+        "rotation",             // Property to animate
+        0.0f,                   // Start value (normal rotation)
+        45.0f                   // End value (rotated clockwise)
     },
 };
 

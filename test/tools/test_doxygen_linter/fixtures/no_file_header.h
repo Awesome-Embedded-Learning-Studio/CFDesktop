@@ -16,4 +16,4 @@
  */
 int func(int x);
 
-#endif  // NO_FILE_HEADER_H
+#endif // NO_FILE_HEADER_H

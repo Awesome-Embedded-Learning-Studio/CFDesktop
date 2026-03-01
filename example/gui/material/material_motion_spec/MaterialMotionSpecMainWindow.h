@@ -13,6 +13,7 @@
 #pragma once
 
 #include "ui/core/material/cfmaterial_motion.h"
+#include <QColor>
 #include <QComboBox>
 #include <QFrame>
 #include <QGridLayout>
@@ -22,6 +23,7 @@
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QPainterPath>
+#include <QPointF>
 #include <QProgressBar>
 #include <QPropertyAnimation>
 #include <QPushButton>
@@ -29,8 +31,6 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QColor>
-#include <QPointF>
 
 namespace cf::ui::gallery {
 
@@ -53,8 +53,14 @@ class MotionPreviewWidget : public QWidget {
 
     void startAnimation();
     void resetAnimation();
-    void setDarkTheme(bool dark) { isDarkTheme_ = dark; update(); }
-    void updateSpec(const cf::ui::core::MotionSpec& spec) { spec_ = spec; resetAnimation(); }
+    void setDarkTheme(bool dark) {
+        isDarkTheme_ = dark;
+        update();
+    }
+    void updateSpec(const cf::ui::core::MotionSpec& spec) {
+        spec_ = spec;
+        resetAnimation();
+    }
 
   signals:
     void progressChanged();

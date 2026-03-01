@@ -83,9 +83,8 @@ inline constexpr uint32_t fnv1a32_prime = 16777619U;
  * @endcode
  */
 constexpr uint64_t fnv1a64(const char* str, uint64_t seed = fnv1a64_offset_basis) {
-    return (*str == 0)
-        ? seed
-        : fnv1a64(str + 1, (seed ^ static_cast<uint64_t>(*str)) * fnv1a64_prime);
+    return (*str == 0) ? seed
+                       : fnv1a64(str + 1, (seed ^ static_cast<uint64_t>(*str)) * fnv1a64_prime);
 }
 
 /**
@@ -134,9 +133,8 @@ constexpr uint64_t fnv1a64(std::string_view sv, uint64_t seed = fnv1a64_offset_b
  * @ingroup    base_hash
  */
 constexpr uint32_t fnv1a32(const char* str, uint32_t seed = fnv1a32_offset_basis) {
-    return (*str == 0)
-        ? seed
-        : fnv1a32(str + 1, (seed ^ static_cast<uint32_t>(*str)) * fnv1a32_prime);
+    return (*str == 0) ? seed
+                       : fnv1a32(str + 1, (seed ^ static_cast<uint32_t>(*str)) * fnv1a32_prime);
 }
 
 /**

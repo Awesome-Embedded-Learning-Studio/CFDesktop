@@ -11,10 +11,10 @@
 #include "cpu_features.h"
 
 #if defined(__x86_64__) || defined(__i386__)
-#include <cpuid.h>
+#    include <cpuid.h>
 #else
-#include "base/linux/proc_parser.h"
-#include <fstream>
+#    include "base/linux/proc_parser.h"
+#    include <fstream>
 #endif
 
 #include <string>

@@ -12,8 +12,8 @@
 #include "ThemePageWidget.h"
 #include "ToastWidget.h"
 #include "ui/core/material/cfmaterial_scheme.h"
-#include <QLabel>
 #include <QGridLayout>
+#include <QLabel>
 #include <QScrollArea>
 #include <QVBoxLayout>
 

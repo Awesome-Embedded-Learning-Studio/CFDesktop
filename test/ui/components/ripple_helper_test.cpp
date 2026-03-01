@@ -12,10 +12,10 @@
 
 #include "color.h"
 #include "ui/widget/material/base/ripple_helper.h"
-#include <gtest/gtest.h>
 #include <QImage>
 #include <QPainter>
 #include <QPainterPath>
+#include <gtest/gtest.h>
 
 using namespace cf::ui::widget::material::base;
 using CFColor = cf::ui::base::CFColor;

@@ -456,8 +456,7 @@ void MotionSpecPage::createMotionCards() {
         cardsLayout_->addWidget(card, row, col);
         motionCards_.append(card);
 
-        connect(card, &MotionCardWidget::playRequested, this,
-                &MotionSpecPage::onPlayRequested);
+        connect(card, &MotionCardWidget::playRequested, this, &MotionSpecPage::onPlayRequested);
 
         col++;
         if (col >= maxCols) {

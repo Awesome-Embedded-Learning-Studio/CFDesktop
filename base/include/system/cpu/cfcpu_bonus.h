@@ -28,8 +28,8 @@ namespace cf {
  * @ingroup system_cpu
  */
 enum class CPUBonusInfoViewError {
-    NoError,       ///< Query completed successfully.
-    GeneralError   ///< General query failure occurred.
+    NoError,     ///< Query completed successfully.
+    GeneralError ///< General query failure occurred.
 };
 
 /**

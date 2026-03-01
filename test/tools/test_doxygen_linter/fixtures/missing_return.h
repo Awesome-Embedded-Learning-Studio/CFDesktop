@@ -62,4 +62,4 @@ void void_no_return(bool flag);
  */
 int has_return(int x);
 
-#endif  // MISSING_RETURN_H
+#endif // MISSING_RETURN_H

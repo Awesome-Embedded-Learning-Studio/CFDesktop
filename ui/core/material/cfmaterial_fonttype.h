@@ -24,11 +24,11 @@
 #include <string>
 #include <unordered_map>
 
-#include "base/hash/constexpr_fnv1a.hpp"
-#include "token.hpp"
-#include "font_type.h"
-#include "token/typography/cfmaterial_typography_token_literals.h"
 #include "../export.h"
+#include "base/hash/constexpr_fnv1a.hpp"
+#include "font_type.h"
+#include "token.hpp"
+#include "token/typography/cfmaterial_typography_token_literals.h"
 
 namespace cf::ui::core {
 

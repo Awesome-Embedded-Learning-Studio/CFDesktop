@@ -244,9 +244,9 @@ class CF_UI_EXPORT Application : public QApplication {
      */
     bool animationsEnabled() const;
 
-  // ========================================================================
-  // Animation Factory Registration
-  // ========================================================================
+    // ========================================================================
+    // Animation Factory Registration
+    // ========================================================================
 
     /**
      * @brief  Animation factory creator function type.
@@ -259,8 +259,8 @@ class CF_UI_EXPORT Application : public QApplication {
      * @ingroup ui_widget_application_support
      */
     using AnimationFactoryMaker =
-        std::function<std::unique_ptr<components::ICFAnimationManagerFactory>(
-            const core::ICFTheme&, QObject*)>;
+        std::function<std::unique_ptr<components::ICFAnimationManagerFactory>(const core::ICFTheme&,
+                                                                              QObject*)>;
 
     /**
      * @brief  Register an animation factory type for a theme prefix.
@@ -294,7 +294,7 @@ class CF_UI_EXPORT Application : public QApplication {
      * @endcode
      */
     static bool registerAnimationFactoryType(const std::string& themePrefix,
-                                              AnimationFactoryMaker maker);
+                                             AnimationFactoryMaker maker);
 
     /**
      * @brief  Unregister an animation factory type.
@@ -404,10 +404,9 @@ class CF_UI_EXPORT Application : public QApplication {
      * @param  parent    QObject parent.
      * @return           Unique pointer to the created factory.
      */
-    std::unique_ptr<components::ICFAnimationManagerFactory> createAnimationFactory(
-        const std::string& themeName,
-        const core::ICFTheme& theme,
-        QObject* parent);
+    std::unique_ptr<components::ICFAnimationManagerFactory>
+    createAnimationFactory(const std::string& themeName, const core::ICFTheme& theme,
+                           QObject* parent);
 
     /**
      * @brief  Handle theme change from ThemeManager.

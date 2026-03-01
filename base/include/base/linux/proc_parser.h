@@ -43,8 +43,7 @@ namespace cf {
  * @since           0.1
  * @ingroup         base_linux
  */
-std::string_view parse_cpuinfo_field(std::string_view line,
-                                      std::string_view field) noexcept;
+std::string_view parse_cpuinfo_field(std::string_view line, std::string_view field) noexcept;
 
 /**
  * @brief  Removes whitespace from both ends of a string view.

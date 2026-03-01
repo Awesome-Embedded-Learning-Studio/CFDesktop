@@ -12,15 +12,15 @@
 
 #pragma once
 
-#include <QMainWindow>
-#include <QLabel>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QMainWindow>
+#include <QPropertyAnimation>
 #include <QScrollArea>
 #include <QTimer>
-#include <QPropertyAnimation>
+#include <QVBoxLayout>
+#include <QWidget>
 
 #include "ui/core/material/cfmaterial_fonttype.h"
 
@@ -59,9 +59,8 @@ class ToastWidget : public QWidget {
 class FontCardWidget : public QWidget {
     Q_OBJECT
   public:
-    explicit FontCardWidget(const QString& tokenName, const QFont& font,
-                           float lineHeight, const QString& previewText,
-                           QWidget* parent = nullptr);
+    explicit FontCardWidget(const QString& tokenName, const QFont& font, float lineHeight,
+                            const QString& previewText, QWidget* parent = nullptr);
 
     void updateFont(const QFont& font, float lineHeight);
 
@@ -111,7 +110,7 @@ class MaterialTypographyMainWindow : public QMainWindow {
     int calculateColumnCount() const;
 
     void createFontGroup(const QString& title, QGridLayout* layout, int& row,
-                        const QStringList& tokens);
+                         const QStringList& tokens);
 
     QString getPreviewText(const QString& token) const;
     void showToast(const QString& message);

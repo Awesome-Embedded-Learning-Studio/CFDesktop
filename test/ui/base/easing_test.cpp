@@ -17,7 +17,8 @@
 // =============================================================================
 
 TEST(EasingTest, FromEasingType_Emphasized) {
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Emphasized);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Emphasized);
 
     EXPECT_EQ(curve.type(), QEasingCurve::BezierSpline);
     EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0);
@@ -25,8 +26,8 @@ TEST(EasingTest, FromEasingType_Emphasized) {
 }
 
 TEST(EasingTest, FromEasingType_EmphasizedDecelerate) {
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedDecelerate);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedDecelerate);
 
     EXPECT_EQ(curve.type(), QEasingCurve::BezierSpline);
     EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0);
@@ -34,8 +35,8 @@ TEST(EasingTest, FromEasingType_EmphasizedDecelerate) {
 }
 
 TEST(EasingTest, FromEasingType_EmphasizedAccelerate) {
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedAccelerate);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedAccelerate);
 
     EXPECT_EQ(curve.type(), QEasingCurve::BezierSpline);
     EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0);
@@ -43,8 +44,7 @@ TEST(EasingTest, FromEasingType_EmphasizedAccelerate) {
 }
 
 TEST(EasingTest, FromEasingType_Standard) {
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::Standard);
+    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Standard);
 
     EXPECT_EQ(curve.type(), QEasingCurve::BezierSpline);
     EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0);
@@ -52,8 +52,8 @@ TEST(EasingTest, FromEasingType_Standard) {
 }
 
 TEST(EasingTest, FromEasingType_StandardDecelerate) {
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::StandardDecelerate);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::StandardDecelerate);
 
     EXPECT_EQ(curve.type(), QEasingCurve::BezierSpline);
     EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0);
@@ -61,8 +61,8 @@ TEST(EasingTest, FromEasingType_StandardDecelerate) {
 }
 
 TEST(EasingTest, FromEasingType_StandardAccelerate) {
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::StandardAccelerate);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::StandardAccelerate);
 
     EXPECT_EQ(curve.type(), QEasingCurve::BezierSpline);
     EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0);
@@ -70,8 +70,7 @@ TEST(EasingTest, FromEasingType_StandardAccelerate) {
 }
 
 TEST(EasingTest, FromEasingType_Linear) {
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::Linear);
+    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Linear);
 
     EXPECT_EQ(curve.type(), QEasingCurve::BezierSpline);
     EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0);
@@ -89,7 +88,8 @@ TEST(EasingTest, FromEasingType_Linear) {
 
 TEST(MaterialDesignEasing, Emphasized_IsEaseInOut) {
     // Emphasized: cubic-bezier(0.2, 0, 0, 1.0)
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Emphasized);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Emphasized);
 
     // At 0.5 progress, should be greater than 0.5 (quick rise after slow start)
     float value = curve.valueForProgress(0.5);
@@ -100,8 +100,8 @@ TEST(MaterialDesignEasing, Emphasized_IsEaseInOut) {
 TEST(MaterialDesignEasing, EmphasizedDecelerate_IsEaseOut) {
     // EmphasizedDecelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0)
     // Fast start, slow end
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedDecelerate);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedDecelerate);
 
     // At 0.5 progress, should be greater than 0.5 (fast start)
     float value = curve.valueForProgress(0.5);
@@ -111,8 +111,8 @@ TEST(MaterialDesignEasing, EmphasizedDecelerate_IsEaseOut) {
 TEST(MaterialDesignEasing, EmphasizedAccelerate_IsEaseIn) {
     // EmphasizedAccelerate: cubic-bezier(0.3, 0, 0.8, 0.15)
     // Slow start, fast end
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedAccelerate);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedAccelerate);
 
     // At 0.5 progress, should be less than 0.5 (slow start)
     float value = curve.valueForProgress(0.5);
@@ -121,8 +121,10 @@ TEST(MaterialDesignEasing, EmphasizedAccelerate_IsEaseIn) {
 
 TEST(MaterialDesignEasing, Standard_IsSimilarToEmphasized) {
     // Standard: cubic-bezier(0.2, 0, 0, 1.0) - same as Emphasized
-    QEasingCurve emphasized = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Emphasized);
-    QEasingCurve standard = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Standard);
+    QEasingCurve emphasized =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Emphasized);
+    QEasingCurve standard =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Standard);
 
     // Should be the same curve
     for (int i = 0; i <= 10; ++i) {
@@ -134,8 +136,8 @@ TEST(MaterialDesignEasing, Standard_IsSimilarToEmphasized) {
 TEST(MaterialDesignEasing, StandardDecelerate_IsPureEaseOut) {
     // StandardDecelerate: cubic-bezier(0, 0, 0, 1.0)
     // This is actually a pure ease-out curve
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::StandardDecelerate);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::StandardDecelerate);
 
     EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0);
     EXPECT_FLOAT_EQ(curve.valueForProgress(1.0), 1.0);
@@ -144,8 +146,8 @@ TEST(MaterialDesignEasing, StandardDecelerate_IsPureEaseOut) {
 TEST(MaterialDesignEasing, StandardAccelerate_IsPureEaseIn) {
     // StandardAccelerate: cubic-bezier(0.3, 0, 1, 1)
     // Pure ease-in curve
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::StandardAccelerate);
+    QEasingCurve curve =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::StandardAccelerate);
 
     EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0);
     EXPECT_FLOAT_EQ(curve.valueForProgress(1.0), 1.0);
@@ -247,52 +249,44 @@ TEST(SpringPresets, BouncyHasLowestDamping) {
 // =============================================================================
 
 TEST(EasingCurveValidation, AllTypes_StartAtZero) {
-    auto types = {
-        cf::ui::base::Easing::Type::Emphasized,
-        cf::ui::base::Easing::Type::EmphasizedDecelerate,
-        cf::ui::base::Easing::Type::EmphasizedAccelerate,
-        cf::ui::base::Easing::Type::Standard,
-        cf::ui::base::Easing::Type::StandardDecelerate,
-        cf::ui::base::Easing::Type::StandardAccelerate,
-        cf::ui::base::Easing::Type::Linear
-    };
+    auto types = {cf::ui::base::Easing::Type::Emphasized,
+                  cf::ui::base::Easing::Type::EmphasizedDecelerate,
+                  cf::ui::base::Easing::Type::EmphasizedAccelerate,
+                  cf::ui::base::Easing::Type::Standard,
+                  cf::ui::base::Easing::Type::StandardDecelerate,
+                  cf::ui::base::Easing::Type::StandardAccelerate,
+                  cf::ui::base::Easing::Type::Linear};
 
     for (auto type : types) {
         QEasingCurve curve = cf::ui::base::Easing::fromEasingType(type);
-        EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0)
-            << "Easing curve should start at 0";
+        EXPECT_FLOAT_EQ(curve.valueForProgress(0.0), 0.0) << "Easing curve should start at 0";
     }
 }
 
 TEST(EasingCurveValidation, AllTypes_EndAtOne) {
-    auto types = {
-        cf::ui::base::Easing::Type::Emphasized,
-        cf::ui::base::Easing::Type::EmphasizedDecelerate,
-        cf::ui::base::Easing::Type::EmphasizedAccelerate,
-        cf::ui::base::Easing::Type::Standard,
-        cf::ui::base::Easing::Type::StandardDecelerate,
-        cf::ui::base::Easing::Type::StandardAccelerate,
-        cf::ui::base::Easing::Type::Linear
-    };
+    auto types = {cf::ui::base::Easing::Type::Emphasized,
+                  cf::ui::base::Easing::Type::EmphasizedDecelerate,
+                  cf::ui::base::Easing::Type::EmphasizedAccelerate,
+                  cf::ui::base::Easing::Type::Standard,
+                  cf::ui::base::Easing::Type::StandardDecelerate,
+                  cf::ui::base::Easing::Type::StandardAccelerate,
+                  cf::ui::base::Easing::Type::Linear};
 
     for (auto type : types) {
         QEasingCurve curve = cf::ui::base::Easing::fromEasingType(type);
-        EXPECT_FLOAT_EQ(curve.valueForProgress(1.0), 1.0)
-            << "Easing curve should end at 1";
+        EXPECT_FLOAT_EQ(curve.valueForProgress(1.0), 1.0) << "Easing curve should end at 1";
     }
 }
 
 TEST(EasingCurveValidation, AllTypes_Monotonic) {
     // Easing curves should be monotonically increasing
-    auto types = {
-        cf::ui::base::Easing::Type::Emphasized,
-        cf::ui::base::Easing::Type::EmphasizedDecelerate,
-        cf::ui::base::Easing::Type::EmphasizedAccelerate,
-        cf::ui::base::Easing::Type::Standard,
-        cf::ui::base::Easing::Type::StandardDecelerate,
-        cf::ui::base::Easing::Type::StandardAccelerate,
-        cf::ui::base::Easing::Type::Linear
-    };
+    auto types = {cf::ui::base::Easing::Type::Emphasized,
+                  cf::ui::base::Easing::Type::EmphasizedDecelerate,
+                  cf::ui::base::Easing::Type::EmphasizedAccelerate,
+                  cf::ui::base::Easing::Type::Standard,
+                  cf::ui::base::Easing::Type::StandardDecelerate,
+                  cf::ui::base::Easing::Type::StandardAccelerate,
+                  cf::ui::base::Easing::Type::Linear};
 
     for (auto type : types) {
         QEasingCurve curve = cf::ui::base::Easing::fromEasingType(type);
@@ -308,8 +302,7 @@ TEST(EasingCurveValidation, AllTypes_Monotonic) {
 }
 
 TEST(EasingCurveValidation, LinearIsPerfectlyLinear) {
-    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::Linear);
+    QEasingCurve curve = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Linear);
 
     for (int i = 0; i <= 10; ++i) {
         float t = i / 10.0f;
@@ -323,11 +316,8 @@ TEST(EasingCurveValidation, LinearIsPerfectlyLinear) {
 // =============================================================================
 
 TEST(EasingProgressValues, AtZeroProgress) {
-    auto types = {
-        cf::ui::base::Easing::Type::Emphasized,
-        cf::ui::base::Easing::Type::Linear,
-        cf::ui::base::Easing::Type::Standard
-    };
+    auto types = {cf::ui::base::Easing::Type::Emphasized, cf::ui::base::Easing::Type::Linear,
+                  cf::ui::base::Easing::Type::Standard};
 
     for (auto type : types) {
         QEasingCurve curve = cf::ui::base::Easing::fromEasingType(type);
@@ -338,10 +328,10 @@ TEST(EasingProgressValues, AtZeroProgress) {
 TEST(EasingProgressValues, AtQuarterProgress) {
     // Different easing types should produce different values
     QEasingCurve linear = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Linear);
-    QEasingCurve easeIn = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedAccelerate);
-    QEasingCurve easeOut = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedDecelerate);
+    QEasingCurve easeIn =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedAccelerate);
+    QEasingCurve easeOut =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedDecelerate);
 
     float t = 0.25f;
     float linearValue = linear.valueForProgress(t);
@@ -357,8 +347,8 @@ TEST(EasingProgressValues, AtQuarterProgress) {
 
 TEST(EasingProgressValues, AtHalfProgress) {
     QEasingCurve linear = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Linear);
-    QEasingCurve emphasized = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::Emphasized);
+    QEasingCurve emphasized =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Emphasized);
 
     float t = 0.5f;
     float linearValue = linear.valueForProgress(t);
@@ -373,10 +363,10 @@ TEST(EasingProgressValues, AtHalfProgress) {
 
 TEST(EasingProgressValues, AtThreeQuarterProgress) {
     QEasingCurve linear = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Linear);
-    QEasingCurve easeIn = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedAccelerate);
-    QEasingCurve easeOut = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedDecelerate);
+    QEasingCurve easeIn =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedAccelerate);
+    QEasingCurve easeOut =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedDecelerate);
 
     float t = 0.75f;
     float linearValue = linear.valueForProgress(t);
@@ -395,10 +385,10 @@ TEST(EasingProgressValues, AtThreeQuarterProgress) {
 // =============================================================================
 
 TEST(EasingComparison, AccelerateVsDecelerate) {
-    QEasingCurve accelerate = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedAccelerate);
-    QEasingCurve decelerate = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::EmphasizedDecelerate);
+    QEasingCurve accelerate =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedAccelerate);
+    QEasingCurve decelerate =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::EmphasizedDecelerate);
 
     // At early progress, accelerate should be slower
     float earlyT = 0.25f;
@@ -411,8 +401,8 @@ TEST(EasingComparison, AccelerateVsDecelerate) {
 
 TEST(EasingComparison, LinearVsEmphasized) {
     QEasingCurve linear = cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Linear);
-    QEasingCurve emphasized = cf::ui::base::Easing::fromEasingType(
-        cf::ui::base::Easing::Type::Emphasized);
+    QEasingCurve emphasized =
+        cf::ui::base::Easing::fromEasingType(cf::ui::base::Easing::Type::Emphasized);
 
     // At very start (t=0.01), emphasized is still behind linear
     float startT = 0.01f;

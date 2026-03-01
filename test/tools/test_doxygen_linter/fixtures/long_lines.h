@@ -12,19 +12,24 @@
 #ifndef LONG_LINES_H
 #define LONG_LINES_H
 
-// This line is way too long and exceeds the maximum allowed length of 100 characters by quite a bit and should be detected
+// This line is way too long and exceeds the maximum allowed length of 100 characters by quite a bit
+// and should be detected
 
 /**
- * @brief  A function with a very long documentation line that exceeds the maximum allowed length of 100 characters and should trigger a violation.
+ * @brief  A function with a very long documentation line that exceeds the maximum allowed length of
+ * 100 characters and should trigger a violation.
  *
- * @param[in]  input  This is a parameter description that is also quite long and exceeds the maximum line length limit of 100 characters.
- * @return              A very long return value description that clearly exceeds the maximum line length of 100 characters.
+ * @param[in]  input  This is a parameter description that is also quite long and exceeds the
+ * maximum line length limit of 100 characters.
+ * @return              A very long return value description that clearly exceeds the maximum line
+ * length of 100 characters.
  * @throws              None
- * @note                This note exceeds the maximum allowed line length of 100 characters and should be caught by the linter.
+ * @note                This note exceeds the maximum allowed line length of 100 characters and
+ * should be caught by the linter.
  * @warning             None
  * @since               1.0.0
  * @ingroup             test
  */
 int long_function(int input);
 
-#endif  // LONG_LINES_H
+#endif // LONG_LINES_H

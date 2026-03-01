@@ -46,7 +46,10 @@ class MotionPreviewWidget : public QWidget {
 
     void startAnimation();
     void resetAnimation();
-    void setDarkTheme(bool dark) { isDarkTheme_ = dark; update(); }
+    void setDarkTheme(bool dark) {
+        isDarkTheme_ = dark;
+        update();
+    }
     void updateSpec(const cf::ui::core::MotionSpec& spec);
 
   signals:
@@ -82,7 +85,10 @@ class MotionCardWidget : public QWidget {
                               const QString& description, QWidget* parent = nullptr);
 
     void setThemeColors(const QColor& background, const QColor& surface, const QColor& onSurface);
-    void setDarkTheme(bool dark) { isDarkTheme_ = dark; update(); }
+    void setDarkTheme(bool dark) {
+        isDarkTheme_ = dark;
+        update();
+    }
 
   signals:
     void playRequested(const cf::ui::core::MotionSpec& spec);

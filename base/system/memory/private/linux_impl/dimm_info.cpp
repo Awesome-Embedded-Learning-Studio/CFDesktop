@@ -29,21 +29,32 @@ MemoryType parseMemoryType(const char* typeStr) {
 
     // Case-insensitive comparison
     auto match = [](const char* str, const char* pattern) -> bool {
-        if (str == nullptr || pattern == nullptr) return false;
+        if (str == nullptr || pattern == nullptr)
+            return false;
         size_t len = strlen(pattern);
-        if (strlen(str) < len) return false;
+        if (strlen(str) < len)
+            return false;
         return strncasecmp(str, pattern, len) == 0;
     };
 
-    if (match(typeStr, "DDR3")) return MemoryType::DDR3;
-    if (match(typeStr, "DDR4")) return MemoryType::DDR4;
-    if (match(typeStr, "DDR5")) return MemoryType::DDR5;
-    if (match(typeStr, "LPDDR3")) return MemoryType::LPDDR3;
-    if (match(typeStr, "LPDDR4")) return MemoryType::LPDDR4;
-    if (match(typeStr, "LPDDR4X")) return MemoryType::LPDDR4X;
-    if (match(typeStr, "LPDDR5")) return MemoryType::LPDDR5;
-    if (match(typeStr, "DDR2")) return MemoryType::DDR2;
-    if (match(typeStr, "SDRAM")) return MemoryType::SDRAM;
+    if (match(typeStr, "DDR3"))
+        return MemoryType::DDR3;
+    if (match(typeStr, "DDR4"))
+        return MemoryType::DDR4;
+    if (match(typeStr, "DDR5"))
+        return MemoryType::DDR5;
+    if (match(typeStr, "LPDDR3"))
+        return MemoryType::LPDDR3;
+    if (match(typeStr, "LPDDR4"))
+        return MemoryType::LPDDR4;
+    if (match(typeStr, "LPDDR4X"))
+        return MemoryType::LPDDR4X;
+    if (match(typeStr, "LPDDR5"))
+        return MemoryType::LPDDR5;
+    if (match(typeStr, "DDR2"))
+        return MemoryType::DDR2;
+    if (match(typeStr, "SDRAM"))
+        return MemoryType::SDRAM;
 
     return MemoryType::UNKNOWN;
 }
@@ -146,8 +157,10 @@ bool parseDmidecode(const char* output, std::vector<DimmInfo>& dimms) {
             hasSize = false;
 
             // Skip to next line
-            while (*p != '\0' && *p != '\n') p++;
-            if (*p == '\n') p++;
+            while (*p != '\0' && *p != '\n')
+                p++;
+            if (*p == '\n')
+                p++;
             continue;
         }
 
@@ -155,7 +168,8 @@ bool parseDmidecode(const char* output, std::vector<DimmInfo>& dimms) {
             // Check for field indentation (typically fields start with 4-8 spaces)
             // Check for end of device (empty line or next handle)
             if (*p == '\n' || (*p == '\0')) {
-                if (*p == '\n') p++;
+                if (*p == '\n')
+                    p++;
                 // Save device if valid
                 if (hasSize && currentDimm.capacity_bytes > 0) {
                     dimms.push_back(currentDimm);
@@ -287,8 +301,8 @@ bool queryDimmViaSysFs(std::vector<DimmInfo>& dimms) {
     dimm.manufacturer = manufacturer;
     dimm.serial_number = serial;
     dimm.part_number = product;
-    dimm.type = MemoryType::UNKNOWN;  // Can't determine from /sys
-    dimm.capacity_bytes = 0;          // Can't get individual DIMM size from /sys
+    dimm.type = MemoryType::UNKNOWN; // Can't determine from /sys
+    dimm.capacity_bytes = 0;         // Can't get individual DIMM size from /sys
     dimm.slot = 0;
 
     // Only add if we have some info (but capacity will be 0)

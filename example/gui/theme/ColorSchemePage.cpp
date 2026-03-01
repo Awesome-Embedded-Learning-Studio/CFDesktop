@@ -9,9 +9,9 @@
 
 #include "ColorSchemePage.h"
 #include "ToastWidget.h"
-#include "ui/core/theme.h"
 #include "ui/core/material/cfmaterial_scheme.h"
 #include "ui/core/material/material_factory.hpp"
+#include "ui/core/theme.h"
 #include "ui/core/token/material_scheme/cfmaterial_token_literals.h"
 
 #include <QClipboard>
@@ -44,9 +44,9 @@ const QStringList ColorSchemePage::TERTIARY_TOKENS = {
     token_literals::TERTIARY, token_literals::ON_TERTIARY, token_literals::TERTIARY_CONTAINER,
     token_literals::ON_TERTIARY_CONTAINER};
 
-const QStringList ColorSchemePage::ERROR_TOKENS = {
-    token_literals::ERROR, token_literals::ON_ERROR, token_literals::ERROR_CONTAINER,
-    token_literals::ON_ERROR_CONTAINER};
+const QStringList ColorSchemePage::ERROR_TOKENS = {token_literals::ERROR, token_literals::ON_ERROR,
+                                                   token_literals::ERROR_CONTAINER,
+                                                   token_literals::ON_ERROR_CONTAINER};
 
 const QStringList ColorSchemePage::SURFACE_TOKENS = {
     token_literals::BACKGROUND, token_literals::ON_BACKGROUND,   token_literals::SURFACE,
@@ -145,8 +145,7 @@ void ColorCardWidget::paintEvent(QPaintEvent*) {
     }
 
     painter.setPen(contrastColor);
-    QRectF contrastRect =
-        r.adjusted(8, hexRect.top() + QFontMetrics(hexFont).height() + 2, -8, -8);
+    QRectF contrastRect = r.adjusted(8, hexRect.top() + QFontMetrics(hexFont).height() + 2, -8, -8);
     painter.drawText(contrastRect, Qt::AlignTop | Qt::AlignHCenter, contrastInfo_);
 
     // Click hint on hover
@@ -177,8 +176,7 @@ void ColorCardWidget::mousePressEvent(QMouseEvent*) {
 // ColorSchemePage Implementation
 // =============================================================================
 
-ColorSchemePage::ColorSchemePage(QWidget* parent)
-    : ThemePageWidget(parent) {
+ColorSchemePage::ColorSchemePage(QWidget* parent) : ThemePageWidget(parent) {
 
     // Default card colors (light theme)
     cardBgColor_ = QColor(250, 250, 250);
@@ -229,10 +227,11 @@ void ColorSchemePage::createColorGroups() {
     createColorGroup("Utility Colors 工具色", colorGridLayout_, row, UTILITY_TOKENS);
 }
 
-void ColorSchemePage::createColorGroup(const QString& title, QGridLayout* layout,
-                                       int& row, const QStringList& tokens) {
+void ColorSchemePage::createColorGroup(const QString& title, QGridLayout* layout, int& row,
+                                       const QStringList& tokens) {
     // Get color scheme from theme
-    if (!theme_) return;
+    if (!theme_)
+        return;
     auto& colorScheme = const_cast<cf::ui::core::MaterialColorScheme&>(
         static_cast<const cf::ui::core::MaterialColorScheme&>(theme_->color_scheme()));
 
@@ -263,8 +262,7 @@ void ColorSchemePage::createColorGroup(const QString& title, QGridLayout* layout
         ColorCardInfo info{card, token};
         colorCards_.append(info);
 
-        connect(card, &ColorCardWidget::clicked, this,
-                &ColorSchemePage::onColorCardClicked);
+        connect(card, &ColorCardWidget::clicked, this, &ColorSchemePage::onColorCardClicked);
 
         if (col >= maxCols) {
             col = 0;
@@ -335,7 +333,8 @@ float ColorSchemePage::calculateContrastRatio(const QColor& fg, const QColor& bg
 }
 
 void ColorSchemePage::updateAllColors() {
-    if (!theme_) return;
+    if (!theme_)
+        return;
     auto& colorScheme = const_cast<cf::ui::core::MaterialColorScheme&>(
         static_cast<const cf::ui::core::MaterialColorScheme&>(theme_->color_scheme()));
 
@@ -350,7 +349,8 @@ void ColorSchemePage::updateAllColors() {
 }
 
 void ColorSchemePage::updateWindowTheme() {
-    if (!theme_) return;
+    if (!theme_)
+        return;
     auto& colorScheme = const_cast<cf::ui::core::MaterialColorScheme&>(
         static_cast<const cf::ui::core::MaterialColorScheme&>(theme_->color_scheme()));
 

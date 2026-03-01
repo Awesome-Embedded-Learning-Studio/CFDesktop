@@ -23,8 +23,8 @@ namespace cf {
  * @ingroup system_cpu
  */
 enum class CPUInfoErrorType {
-    CPU_QUERY_NOERROR,           ///< Query completed successfully.
-    CPU_QUERY_GENERAL_FAILED     ///< General query failure occurred.
+    CPU_QUERY_NOERROR,       ///< Query completed successfully.
+    CPU_QUERY_GENERAL_FAILED ///< General query failure occurred.
 };
 
 /**

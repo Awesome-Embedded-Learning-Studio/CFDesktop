@@ -169,18 +169,18 @@ ICFAnimationManagerFactory::RegisteredResult
 CFMaterialAnimationFactory::registerOneAnimation(const QString& name, const QString& type) {
     // Material Design factory uses predefined token mappings
     // Custom registrations are stored in a separate map
-    (void)name;    // TODO: Implement custom animation registration
-    (void)type;    // TODO: Implement custom animation registration
+    (void)name; // TODO: Implement custom animation registration
+    (void)type; // TODO: Implement custom animation registration
     return ICFAnimationManagerFactory::RegisteredResult::UNSUPPORT_TYPE;
 }
 
 ICFAnimationManagerFactory::RegisteredResult
 CFMaterialAnimationFactory::registerAnimationCreator(const QString& name,
-                                                      AnimationCreator creator) {
+                                                     AnimationCreator creator) {
     // Material Design factory uses predefined token mappings
     // Custom registrations are stored in a separate map
-    (void)name;        // TODO: Implement custom animation registration
-    (void)creator;     // TODO: Implement custom animation registration
+    (void)name;    // TODO: Implement custom animation registration
+    (void)creator; // TODO: Implement custom animation registration
     return ICFAnimationManagerFactory::RegisteredResult::UNSUPPORT_TYPE;
 }
 

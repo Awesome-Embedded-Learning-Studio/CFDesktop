@@ -40,4 +40,4 @@ int add(int x, int y);
  */
 int add_correct(int a, int b);
 
-#endif  // MISSING_PARAM_DIRECTION_H
+#endif // MISSING_PARAM_DIRECTION_H

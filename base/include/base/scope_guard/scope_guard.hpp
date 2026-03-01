@@ -60,8 +60,7 @@ class ScopeGuard {
      * @since      0.1
      * @ingroup    base_utilities
      */
-    template <typename F>
-    explicit ScopeGuard(F&& f) : fn_(std::forward<F>(f)) {}
+    template <typename F> explicit ScopeGuard(F&& f) : fn_(std::forward<F>(f)) {}
 
     /**
      * @brief  Destroys the scope guard and executes the cleanup function.

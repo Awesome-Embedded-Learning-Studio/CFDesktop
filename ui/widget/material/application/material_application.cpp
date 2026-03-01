@@ -29,7 +29,8 @@ void MaterialApplication::init() {
     // Register Material animation factory FIRST (before theme registration)
     // This must be registered before calling Application::init() which
     // tries to create the animation factory
-    Application::registerAnimationFactoryType("theme.material", [](const core::ICFTheme& theme, QObject* parent) {
+    Application::registerAnimationFactoryType("theme.material", [](const core::ICFTheme& theme,
+                                                                   QObject* parent) {
         return std::make_unique<components::material::CFMaterialAnimationFactory>(theme, nullptr,
                                                                                   parent);
     });

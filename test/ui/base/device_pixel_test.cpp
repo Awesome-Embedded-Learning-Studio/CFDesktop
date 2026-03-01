@@ -209,9 +209,12 @@ TEST(CanvasUnitHelperTest, Dpi_Formula) {
 TEST(CanvasUnitHelperTest, BreakPoint_Compact) {
     cf::ui::base::device::CanvasUnitHelper helper(1.0);
 
-    EXPECT_EQ(helper.breakPoint(300.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
-    EXPECT_EQ(helper.breakPoint(599.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
-    EXPECT_EQ(helper.breakPoint(599.99), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
+    EXPECT_EQ(helper.breakPoint(300.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
+    EXPECT_EQ(helper.breakPoint(599.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
+    EXPECT_EQ(helper.breakPoint(599.99),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
 }
 
 TEST(CanvasUnitHelperTest, BreakPoint_Medium) {
@@ -220,15 +223,19 @@ TEST(CanvasUnitHelperTest, BreakPoint_Medium) {
     EXPECT_EQ(helper.breakPoint(600.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
     EXPECT_EQ(helper.breakPoint(700.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
     EXPECT_EQ(helper.breakPoint(839.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
-    EXPECT_EQ(helper.breakPoint(839.99), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
+    EXPECT_EQ(helper.breakPoint(839.99),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
 }
 
 TEST(CanvasUnitHelperTest, BreakPoint_Expanded) {
     cf::ui::base::device::CanvasUnitHelper helper(1.0);
 
-    EXPECT_EQ(helper.breakPoint(840.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
-    EXPECT_EQ(helper.breakPoint(1000.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
-    EXPECT_EQ(helper.breakPoint(1920.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(840.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(1000.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(1920.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
 }
 
 TEST(CanvasUnitHelperTest, BreakPoint_BoundaryValues) {
@@ -236,21 +243,27 @@ TEST(CanvasUnitHelperTest, BreakPoint_BoundaryValues) {
 
     // Exactly at boundaries
     EXPECT_EQ(helper.breakPoint(600.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
-    EXPECT_EQ(helper.breakPoint(840.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(840.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
 
     // Just below boundaries
-    EXPECT_EQ(helper.breakPoint(599.99), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
-    EXPECT_EQ(helper.breakPoint(839.99), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
+    EXPECT_EQ(helper.breakPoint(599.99),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
+    EXPECT_EQ(helper.breakPoint(839.99),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
 
     // Just above boundaries
-    EXPECT_EQ(helper.breakPoint(600.01), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
-    EXPECT_EQ(helper.breakPoint(840.01), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(600.01),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
+    EXPECT_EQ(helper.breakPoint(840.01),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
 }
 
 TEST(CanvasUnitHelperTest, BreakPoint_NegativeWidth) {
     cf::ui::base::device::CanvasUnitHelper helper(1.0);
 
-    EXPECT_EQ(helper.breakPoint(-100.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
+    EXPECT_EQ(helper.breakPoint(-100.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
 }
 
 TEST(CanvasUnitHelperTest, BreakPoint_Zero) {
@@ -268,9 +281,12 @@ TEST(MaterialDesignBreakpoints, Compact_Range) {
     cf::ui::base::device::CanvasUnitHelper helper(1.0);
 
     // Typical phone widths
-    EXPECT_EQ(helper.breakPoint(360.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
-    EXPECT_EQ(helper.breakPoint(375.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
-    EXPECT_EQ(helper.breakPoint(414.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
+    EXPECT_EQ(helper.breakPoint(360.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
+    EXPECT_EQ(helper.breakPoint(375.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
+    EXPECT_EQ(helper.breakPoint(414.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
 }
 
 TEST(MaterialDesignBreakpoints, Medium_Range) {
@@ -286,10 +302,14 @@ TEST(MaterialDesignBreakpoints, Expanded_Range) {
     // Expanded: >= 840dp (desktops)
     cf::ui::base::device::CanvasUnitHelper helper(1.0);
 
-    EXPECT_EQ(helper.breakPoint(840.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
-    EXPECT_EQ(helper.breakPoint(1024.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
-    EXPECT_EQ(helper.breakPoint(1280.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
-    EXPECT_EQ(helper.breakPoint(1920.0), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(840.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(1024.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(1280.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(1920.0),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
 }
 
 // =============================================================================
@@ -302,15 +322,18 @@ TEST(CanvasUnitHelperIntegration, ResponsiveLayout_Calculation) {
 
     // Physical width of 720px at 2x DPR = 360dp (Compact)
     double widthDp = helper.pxToDp(720.0);
-    EXPECT_EQ(helper.breakPoint(widthDp), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
+    EXPECT_EQ(helper.breakPoint(widthDp),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Compact);
 
     // Physical width of 1400px at 2x DPR = 700dp (Medium)
     widthDp = helper.pxToDp(1400.0);
-    EXPECT_EQ(helper.breakPoint(widthDp), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
+    EXPECT_EQ(helper.breakPoint(widthDp),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Medium);
 
     // Physical width of 2000px at 2x DPR = 1000dp (Expanded)
     widthDp = helper.pxToDp(2000.0);
-    EXPECT_EQ(helper.breakPoint(widthDp), cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
+    EXPECT_EQ(helper.breakPoint(widthDp),
+              cf::ui::base::device::CanvasUnitHelper::BreakPoint::Expanded);
 }
 
 TEST(CanvasUnitHelperIntegration, FontScaling) {

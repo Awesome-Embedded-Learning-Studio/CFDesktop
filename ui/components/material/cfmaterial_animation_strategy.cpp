@@ -20,7 +20,7 @@ namespace cf::ui::components::material {
 // =============================================================================
 
 bool AnimationStrategy::shouldEnable(QWidget* widget) const {
-    (void)widget;  // Suppress unused parameter warning
+    (void)widget; // Suppress unused parameter warning
     return globalEnabled_;
 }
 
@@ -32,12 +32,11 @@ void AnimationStrategy::setGlobalEnabled(bool enabled) {
 // DefaultAnimationStrategy
 // =============================================================================
 
-AnimationDescriptor DefaultAnimationStrategy::adjust(
-    const AnimationDescriptor& descriptor,
-    QWidget* widget) {
+AnimationDescriptor DefaultAnimationStrategy::adjust(const AnimationDescriptor& descriptor,
+                                                     QWidget* widget) {
 
     // Return descriptor unchanged - this is a no-op strategy
-    (void)widget;  // Suppress unused parameter warning
+    (void)widget; // Suppress unused parameter warning
     return descriptor;
 }
 

@@ -12,13 +12,13 @@
 
 #pragma once
 
-#include <QMainWindow>
-#include <QLabel>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QMainWindow>
 #include <QScrollArea>
+#include <QVBoxLayout>
+#include <QWidget>
 
 #include "ui/core/material/cfmaterial_radius_scale.h"
 
@@ -35,8 +35,8 @@ namespace cf::ui::gallery {
 class RadiusPreviewWidget : public QWidget {
     Q_OBJECT
   public:
-    explicit RadiusPreviewWidget(const QString& name, float radiusDp,
-                                 const QColor& accentColor, QWidget* parent = nullptr);
+    explicit RadiusPreviewWidget(const QString& name, float radiusDp, const QColor& accentColor,
+                                 QWidget* parent = nullptr);
 
   protected:
     void paintEvent(QPaintEvent* event) override;

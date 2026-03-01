@@ -12,13 +12,13 @@
 
 #pragma once
 
-#include <QMainWindow>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QGridLayout>
 #include <QGroupBox>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QMainWindow>
 #include <QScrollArea>
+#include <QVBoxLayout>
 #include <QWidget>
 
 namespace cf::ui::example {

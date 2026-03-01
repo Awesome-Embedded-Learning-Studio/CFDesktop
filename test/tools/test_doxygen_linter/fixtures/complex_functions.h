@@ -15,8 +15,7 @@
 #define COMPLEX_FUNCTIONS_H
 
 // Template function - undocumented
-template<typename T>
-T undoc_template(T x);
+template <typename T> T undoc_template(T x);
 
 /**
  * @brief  Documented template function.
@@ -30,11 +29,12 @@ T undoc_template(T x);
  * @since         1.0.0
  * @ingroup       test
  */
-template<typename T>
-T doc_template(T x);
+template <typename T> T doc_template(T x);
 
 // Constexpr function - undocumented
-constexpr int undoc_constexpr(int x) { return x * 2; }
+constexpr int undoc_constexpr(int x) {
+    return x * 2;
+}
 
 /**
  * @brief  Documented constexpr.
@@ -47,7 +47,9 @@ constexpr int undoc_constexpr(int x) { return x * 2; }
  * @since         1.0.0
  * @ingroup       test
  */
-constexpr int doc_constexpr(int x) { return x * 2; }
+constexpr int doc_constexpr(int x) {
+    return x * 2;
+}
 
 // Virtual function - undocumented
 virtual int undoc_virtual() = 0;
@@ -109,4 +111,4 @@ explicit MyClass(int x);
  */
 int doc_noexcept(int x) noexcept;
 
-#endif  // COMPLEX_FUNCTIONS_H
+#endif // COMPLEX_FUNCTIONS_H

@@ -81,14 +81,8 @@ inline constexpr const char CORNER_EXTRA_EXTRA_LARGE[] = "md.shape.cornerExtraEx
  * @brief Array containing all 7 Material Design 3 radius scale token literals.
  */
 inline constexpr const char* const ALL_RADIUS_TOKENS[] = {
-    CORNER_NONE,
-    CORNER_EXTRA_SMALL,
-    CORNER_SMALL,
-    CORNER_MEDIUM,
-    CORNER_LARGE,
-    CORNER_EXTRA_LARGE,
-    CORNER_EXTRA_EXTRA_LARGE
-};
+    CORNER_NONE,        CORNER_EXTRA_SMALL,      CORNER_SMALL, CORNER_MEDIUM, CORNER_LARGE,
+    CORNER_EXTRA_LARGE, CORNER_EXTRA_EXTRA_LARGE};
 
 /**
  * @brief Total count of Material Design 3 radius scale tokens.
