@@ -1,5 +1,5 @@
-PROJECT_NAME           = "Embedded Common Tools"
-INPUT                  = base example
+PROJECT_NAME           = "CFDesktop"
+INPUT                  = base example ui desktop
 RECURSIVE              = YES
 
 EXTRACT_ALL            = YES
