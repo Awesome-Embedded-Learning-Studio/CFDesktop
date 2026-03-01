@@ -51,8 +51,16 @@ FAILED_OUTPUT_FILE: Path = PROJECT_ROOT / "FAILED_DOXYGEN.md"
 # ====================== REGEX RULES =========================
 # ============================================================
 
-FIRST_PERSON_PATTERN = re.compile(r"\b(we|our|my)\b|\bI\b(?![/oO])", re.IGNORECASE)
+# Note: 'I' must be case-sensitive to avoid matching loop variable 'i'
+# we/our/my are case-insensitive to catch variants like WE, Our, MY, etc.
 FUTURE_TENSE_PATTERN = re.compile(r"\bwill\b", re.IGNORECASE)
+
+# Compile a case-sensitive pattern for 'I' to avoid matching loop variable 'i'
+# This pattern matches 'I' (uppercase only) as a whole word, except when followed by /, o, or O
+FIRST_PERSON_I_PATTERN = re.compile(r"\bI\b(?![/oO])")
+
+# Pattern for we/our/my (case-insensitive)
+FIRST_PERSON_WE_PATTERN = re.compile(r"\b(?:we|our|my)\b", re.IGNORECASE)
 
 FUNCTION_PATTERN = re.compile(
     r'^\s*(?:template\s*<[^>]*>\s*)?(?:virtual\s+)?(?:inline\s+)?(?:explicit\s+)?(?:static\s+)?(?:constexpr\s+)?(?:consteval\s+)?(?:constinit\s+)?(?:friend\s+)?([\w:<>&\s]+?)(?:\s+const)?\s+(?!if|for|while|switch|return|static_assert|catch|union|struct|class)(\w+)\s*\(([^)]*)\)(?:\s*(?:const|volatile|noexcept(?:\([^)]*\))?|override|final|consteval|constinit)\s*)*(?:\s*=\s*0)?\s*[;{]',
@@ -715,6 +723,16 @@ def check_function_blocks(content: str, file: Path) -> List[Violation]:
         if not return_type or not return_type.strip():
             continue
 
+        # Skip if return type is ":" - this is a member initializer list, not a function
+        # Example: ": ICFAbstractAnimation(parent) {"
+        if return_type.strip() == ':':
+            continue
+
+        # Skip if return type is "return" - this is a return statement, not a function
+        # Example: "return WeakPtr();"
+        if return_type.strip() == 'return':
+            continue
+
         # Skip if function is inside a @code block (example code)
         if is_in_code_block(func_pos, content):
             continue
@@ -928,7 +946,12 @@ def check_function_blocks(content: str, file: Path) -> List[Violation]:
 def check_language_rules(content: str, file: Path) -> List[Violation]:
     violations: List[Violation] = []
 
-    if FIRST_PERSON_PATTERN.search(content):
+    # Check for first-person pronouns
+    # For 'I', use case-sensitive pattern to avoid matching loop variable 'i'
+    if FIRST_PERSON_I_PATTERN.search(content):
+        violations.append(Violation(file, "First-person usage detected"))
+    # For we/our/my, use case-insensitive pattern
+    elif FIRST_PERSON_WE_PATTERN.search(content):
         violations.append(Violation(file, "First-person usage detected"))
 
     if FUTURE_TENSE_PATTERN.search(content):

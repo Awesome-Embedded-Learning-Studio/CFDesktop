@@ -83,14 +83,18 @@ struct CF_UI_EXPORT AnimationDescriptor {
     /**
      * @brief  Construct with all fields.
      *
-     * @param  type Animation type
-     * @param  motion Motion spec token
-     * @param  prop Property name
-     * @param  from Start value
-     * @param  to End value
-     * @param  delay Delay in milliseconds
+     * @param[in]     type Animation type.
+     * @param[in]     motion Motion spec token.
+     * @param[in]     prop Property name.
+     * @param[in]     from Start value.
+     * @param[in]     to End value.
+     * @param[in]     delay Delay in milliseconds.
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components_material
      *
      * @code
      * AnimationDescriptor desc("fade", "md.motion.longEnter", "opacity", 0.0f, 1.0f);
@@ -167,10 +171,10 @@ class CF_UI_EXPORT AnimationStrategy {
      *          - Modifying value ranges
      *          - Adding delays
      *
-     * @param  descriptor Original animation descriptor.
-     * @param  widget Target widget (may be nullptr).
+     * @param[in]     descriptor Original animation descriptor.
+     * @param[in]     widget Target widget (may be nullptr).
      *
-     * @return Adjusted animation descriptor.
+     * @return        Adjusted animation descriptor.
      *
      * @throws     None
      * @note       The default implementation returns the descriptor unchanged.
@@ -205,9 +209,9 @@ class CF_UI_EXPORT AnimationStrategy {
      *          - Low-performance mode
      *          - Widget-specific conditions
      *
-     * @param  widget Target widget (may be nullptr).
+     * @param[in]     widget Target widget (may be nullptr).
      *
-     * @return true if animation should be enabled, false otherwise.
+     * @return        true if animation should be enabled, false otherwise.
      *
      * @throws     None
      * @note       The default implementation returns the global enabled state.
@@ -232,9 +236,9 @@ class CF_UI_EXPORT AnimationStrategy {
      *          Individual widget checks can still override this by
      *          returning false in their implementation.
      *
-     * @param  enabled true to enable animations, false to disable.
+     * @param[in]     enabled true to enable animations, false to disable.
      *
-     * @throws     None
+     * @throws        None
      * @note       This affects all subsequent shouldEnable() calls.
      * @warning    None
      * @since      0.1
@@ -280,12 +284,16 @@ class CF_UI_EXPORT DefaultAnimationStrategy : public AnimationStrategy {
     /**
      * @brief  Returns the descriptor unchanged.
      *
-     * @param  descriptor The animation descriptor.
-     * @param  widget The target widget (unused).
+     * @param[in]     descriptor The animation descriptor.
+     * @param[in]     widget The target widget (unused).
      *
-     * @return The original descriptor, unmodified.
+     * @return        The original descriptor, unmodified.
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components_material
      */
     AnimationDescriptor adjust(const AnimationDescriptor& descriptor, QWidget* widget) override;
 };

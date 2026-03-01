@@ -111,16 +111,16 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      *          of the factory. It is used to query MotionSpec values
      *          (duration, easing) for animations.
      *
-     * @param  theme Reference to the Material Design theme.
-     * @param  strategy Optional strategy for widget-specific behavior.
-     *                  If nullptr, DefaultAnimationStrategy is used.
-     * @param  parent QObject parent.
+     * @param[in]     theme Reference to the Material Design theme.
+     * @param[in]     strategy Optional strategy for widget-specific behavior.
+     *                        If nullptr, DefaultAnimationStrategy is used.
+     * @param[in]     parent QObject parent.
      *
-     * @throws     None
-     * @note       If strategy is nullptr, DefaultAnimationStrategy is used.
-     * @warning    The theme must outlive this factory.
-     * @since      0.1
-     * @ingroup    ui_components_material
+     * @throws        None
+     * @note          If strategy is nullptr, DefaultAnimationStrategy is used.
+     * @warning       The theme must outlive this factory.
+     * @since         0.1
+     * @ingroup       ui_components_material
      *
      * @code
      * CFMaterialAnimationFactory factory(*theme);
@@ -133,8 +133,8 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
     /**
      * @brief  Destructor.
      *
-     * @details All owned animations will be destroyed. Any WeakPtr
-     *          returned by this factory will become invalid.
+     * @details All owned animations are destroyed. Any WeakPtr
+     *          returned by this factory becomes invalid.
      *
      * @since 0.1
      */
@@ -151,8 +151,37 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
     }
 
     // Implement pure virtual functions from ICFAnimationManagerFactory
+    /**
+     * @brief  Register an animation type by name.
+     *
+     * @param[in] name Unique name for the animation.
+     * @param[in] type Animation type identifier.
+     *
+     * @return        Registration result indicating success or failure reason.
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components_material
+     */
     ICFAnimationManagerFactory::RegisteredResult registerOneAnimation(const QString& name,
                                                                       const QString& type) override;
+
+    /**
+     * @brief  Register an animation with a creator function.
+     *
+     * @param[in] name Unique name for the animation.
+     * @param[in] creator Function that creates the animation instance.
+     *
+     * @return        Registration result indicating success or failure reason.
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components_material
+     */
     ICFAnimationManagerFactory::RegisteredResult
     registerAnimationCreator(const QString& name, AnimationCreator creator) override;
 
@@ -178,7 +207,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      *         - Strategy disables animation
      *
      * @throws     None
-     * @note       If the animation doesn't exist, it will be created.
+     * @note       If the animation doesn't exist, a new animation is created.
      * @warning    The returned WeakPtr may become invalid if the factory
      *             is destroyed. Always check validity before use.
      * @since      0.1
@@ -198,7 +227,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      * @brief  Create an animation from a descriptor.
      *
      * @details Creates a new animation instance based on the descriptor.
-     *          The strategy (if set) will be applied before creation.
+     *          The strategy (if set) is applied before creation.
      *
      *          Unlike getAnimation(), this method always creates a new
      *          animation instance, even if one with the same configuration
@@ -206,7 +235,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      *
      * @param  descriptor Animation configuration descriptor.
      * @param  targetWidget Optional target widget for the animation.
-     *                      The animation will apply to this widget.
+     *                      The animation applies to this widget.
      *
      * @return WeakPtr to the created animation, or invalid WeakPtr if:
      *         - Animation type is not supported
@@ -239,14 +268,14 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      *          - Dialogs: longer animations
      *          - Lists: staggered animations
      *
-     * @param  strategy Unique pointer to the strategy (takes ownership).
-     *                  Pass nullptr to use DefaultAnimationStrategy.
+     * @param[in]     strategy Unique pointer to the strategy (takes ownership).
+     *                        Pass nullptr to use DefaultAnimationStrategy.
      *
-     * @throws     None
-     * @note       Pass nullptr to use the default strategy.
-     * @warning    The factory takes ownership of the strategy.
-     * @since      0.1
-     * @ingroup    ui_components_material
+     * @throws        None
+     * @note          Pass nullptr to use the default strategy.
+     * @warning       The factory takes ownership of the strategy.
+     * @since         0.1
+     * @ingroup       ui_components_material
      *
      * @code
      * factory->setStrategy(std::make_unique<ButtonAnimationStrategy>());
@@ -266,22 +295,22 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
     /**
      * @brief  Set the global enabled state for all animations.
      *
-     * @details When disabled, getAnimation() will return invalid WeakPtr
-     *          and createAnimation() will return invalid WeakPtr.
+     * @details When disabled, getAnimation() returns invalid WeakPtr
+     *          and createAnimation() returns invalid WeakPtr.
      *
      *          This is useful for:
      *          - Performance optimization during heavy processing
      *          - Accessibility (respect "reduce motion" settings)
      *          - User preference (animation toggle)
      *
-     * @param  enabled true to enable animations, false to disable.
+     * @param[in]     enabled true to enable animations, false to disable.
      *
-     * @throws     None
-     * @note       This affects all animation creation methods.
-     * @warning    Existing animations continue to run; only new creations
-     *             are affected.
-     * @since      0.1
-     * @ingroup    ui_components_material
+     * @throws        None
+     * @note          This affects all animation creation methods.
+     * @warning       Existing animations continue to run; only new creations
+     *                are affected.
+     * @since         0.1
+     * @ingroup       ui_components_material
      *
      * @code
      * // Disable animations during heavy processing
@@ -324,18 +353,20 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
     /**
      * @brief  Signal emitted when an animation is created.
      *
-     * @param  token The animation token that was created.
+     * @param[in]     token The animation token that was created.
      *
-     * @since 0.1
+     * @since         0.1
+     * @ingroup       ui_components_material
      */
     void animationCreated(const QString& token);
 
     /**
      * @brief  Signal emitted when global enabled state changes.
      *
-     * @param  enabled The new enabled state.
+     * @param[in]     enabled The new enabled state.
      *
-     * @since 0.1
+     * @since         0.1
+     * @ingroup       ui_components_material
      */
     void animationEnabledChanged(bool enabled);
 

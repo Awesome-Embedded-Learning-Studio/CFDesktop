@@ -68,11 +68,15 @@ struct AnimationTokenMapping {
     /**
      * @brief  Check if this mapping matches a given token.
      *
-     * @param  token The token string to compare.
+     * @param[in]     token The token string to compare.
      *
-     * @return true if the animationToken matches, false otherwise.
+     * @return        true if the animationToken matches, false otherwise.
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components_material
      */
     bool matches(const char* token) const {
         return animationToken && token &&
@@ -224,7 +228,7 @@ inline constexpr size_t TOKEN_MAPPING_COUNT =
  * @throws     None
  * @note       Linear search is acceptable for small tables (< 100 entries).
  * @warning    The returned pointer is valid only as long as TOKEN_MAPPINGS
- *             is accessible (i.e., program lifetime).
+ *             is accessible (meaning: program lifetime).
  * @since      0.1
  * @ingroup    ui_components_material
  *
@@ -251,12 +255,15 @@ inline const AnimationTokenMapping* findTokenMapping(const char* token) {
 /**
  * @brief  Check if an animation token exists in the mapping table.
  *
- * @param  token The animation token to check.
+ * @param[in]     token The animation token to check.
  *
- * @return true if the token is found, false otherwise.
+ * @return        true if the token is found, false otherwise.
  *
- * @since  0.1
- * @ingroup ui_components_material
+ * @throws        None
+ * @note          None
+ * @warning       None
+ * @since         0.1
+ * @ingroup       ui_components_material
  */
 inline bool hasTokenMapping(const char* token) {
     return findTokenMapping(token) != nullptr;

@@ -34,15 +34,43 @@ namespace cf::ui::components {
 class CF_UI_EXPORT ICFAnimationGroup : public ICFAbstractAnimation {
     Q_OBJECT
   public:
+    /**
+     * @brief  Animation group execution mode.
+     *
+     * @since  0.1
+     * @ingroup ui_components
+     */
     enum class Mode { Parallel, Sequential };
     Q_ENUM(Mode);
 
     ICFAnimationGroup(QObject* parent = nullptr) : ICFAbstractAnimation(parent) {}
 
+    /**
+     * @brief  Adds an animation to the group.
+     *
+     * @param[in] animation WeakPtr to the animation to add.
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components
+     */
     void addAnimation(cf::WeakPtr<ICFAbstractAnimation> animation) {
         animations.insert(animation);
     }
 
+    /**
+     * @brief  Removes an animation from the group.
+     *
+     * @param[in] animation WeakPtr to the animation to remove.
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components
+     */
     void removeAnimation(cf::WeakPtr<ICFAbstractAnimation> animation) {
         animations.erase(animation);
     }

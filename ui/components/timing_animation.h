@@ -44,14 +44,50 @@ struct IMotionSpec;
 class CF_UI_EXPORT ICFTimingAnimation : public ICFAbstractAnimation {
     Q_OBJECT
   public:
+    /**
+     * @brief  Constructor with motion specification.
+     *
+     * @param[in] spec Raw pointer to the motion spec for timing/easing.
+     *                  Must remain valid for the lifetime of this animation.
+     * @param[in] parent QObject parent.
+     *
+     * @throws     None
+     * @note       The motion_spec pointer must remain valid for the lifetime
+     *             of this animation.
+     * @warning    None
+     * @since      0.1
+     * @ingroup    ui_components
+     */
     explicit ICFTimingAnimation(cf::ui::core::IMotionSpec* spec, QObject* parent = nullptr);
 
-    // Assigned Only
+    /**
+     * @brief  Sets the value range for the animation.
+     *
+     * @param[in] from Start value of the animation.
+     * @param[in] to End value of the animation.
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components
+     */
     virtual void setRange(float from, float to) {
         m_from = from;
         m_to = to;
     }
 
+    /**
+     * @brief  Gets the current animated value.
+     *
+     * @return        Current animated value.
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components
+     */
     virtual float currentValue() const = 0;
 
   protected:

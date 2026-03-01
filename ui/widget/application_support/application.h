@@ -67,14 +67,14 @@ class CF_UI_EXPORT Application : public QApplication {
     /**
      * @brief  Constructor with standard QApplication arguments.
      *
-     * @param  argc Argument count (reference for Qt compatibility).
-     * @param  argv Argument values.
+     * @param[in]     argc Argument count (reference for Qt compatibility).
+     * @param[in]     argv Argument values.
      *
-     * @throws     None
-     * @note       Initializes animation factory with current theme.
-     * @warning    None
-     * @since      0.1
-     * @ingroup    ui_widget_application_support
+     * @throws        None
+     * @note          Initializes animation factory with current theme.
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_widget_application_support
      *
      * @code
      * Application app(argc, argv);
@@ -85,7 +85,7 @@ class CF_UI_EXPORT Application : public QApplication {
     /**
      * @brief  Destructor.
      *
-     * @details All owned resources will be cleaned up. The animation factory
+     * @details All owned resources are cleaned up. The animation factory
      *          is destroyed before theme cleanup (since it holds theme references).
      *
      * @since 0.1
@@ -139,24 +139,27 @@ class CF_UI_EXPORT Application : public QApplication {
     /**
      * @brief  Get a theme by token name.
      *
-     * @param  themeToken Theme identifier (e.g., "theme.material.light").
+     * @param[in]     themeToken Theme identifier (e.g., "theme.material.light").
      *
-     * @return Reference to the theme.
-     * @throws May throw if theme not found.
-     *
-     * @since 0.1
+     * @return        Reference to the theme.
+     * @throws        May throw if theme not found.
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_widget_application_support
      */
     const core::ICFTheme& theme(const std::string& themeToken) const;
 
     /**
      * @brief  Set the active theme by token.
      *
-     * @param  themeToken Theme identifier.
+     * @param[in]     themeToken Theme identifier.
      *
-     * @throws     None
-     * @note       Emits themeChanged signal after successful theme change.
-     * @warning    Theme must have been registered via ThemeManager::insert_one().
-     * @since      0.1
+     * @throws        None
+     * @note          Emits themeChanged signal after successful theme change.
+     * @warning       Theme must have been registered via ThemeManager::insert_one().
+     * @since         0.1
+     * @ingroup       ui_widget_application_support
      *
      * @code
      * app.setTheme("theme.material.dark");
@@ -185,18 +188,19 @@ class CF_UI_EXPORT Application : public QApplication {
      *          token-based lookup. Tokens are resolved through the
      *          token mapping system.
      *
-     * @param  animationToken Animation identifier (e.g., "md.animation.fadeIn").
+     * @param[in]     animationToken Animation identifier (e.g., "md.animation.fadeIn").
      *
-     * @return WeakPtr to the animation, or invalid WeakPtr if:
-     *         - Token is not found in mapping
-     *         - Animation type is not supported
-     *         - Animations are globally disabled
+     * @return        WeakPtr to the animation, or invalid WeakPtr if:
+     *                - Token is not found in mapping
+     *                - Animation type is not supported
+     *                - Animations are globally disabled
      *
-     * @throws     None
-     * @note       The returned WeakPtr may become invalid if the factory
-     *             is destroyed or the theme changes.
-     * @warning    Always check validity before use.
-     * @since      0.1
+     * @throws        None
+     * @note          The returned WeakPtr may become invalid if the factory
+     *                is destroyed or the theme changes.
+     * @warning       Always check validity before use.
+     * @since         0.1
+     * @ingroup       ui_widget_application_support
      *
      * @code
      * auto anim = Application::animation("md.animation.fadeIn");
@@ -211,15 +215,16 @@ class CF_UI_EXPORT Application : public QApplication {
     /**
      * @brief  Set global animation enabled state.
      *
-     * @details When disabled, animation() will return invalid WeakPtr.
+     * @details When disabled, animation() returns invalid WeakPtr.
      *          Existing animations continue to run; only new creations are affected.
      *
-     * @param  enabled true to enable animations, false to disable.
+     * @param[in]     enabled true to enable animations, false to disable.
      *
-     * @throws     None
-     * @note       Emits animationsEnabledChanged signal.
-     * @warning    None
-     * @since      0.1
+     * @throws        None
+     * @note          Emits animationsEnabledChanged signal.
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_widget_application_support
      *
      * @code
      * // Disable animations during heavy processing
@@ -262,20 +267,20 @@ class CF_UI_EXPORT Application : public QApplication {
      *
      * @details Associates a theme prefix (e.g., "theme.material") with a
      *          factory creation function. When a theme matching this prefix
-     *          is activated, the registered factory will be used.
+     *          is activated, the registered factory is used.
      *
-     * @param  themePrefix Theme prefix to match (e.g., "theme.material").
-     *                     This will match all themes starting with this prefix
-     *                     (e.g., "theme.material.light", "theme.material.dark").
-     * @param  maker       Factory function that creates the animation factory.
+     * @param[in]     themePrefix Theme prefix to match (e.g., "theme.material").
+     *                          This matches all themes starting with this prefix
+     *                          (e.g., "theme.material.light", "theme.material.dark").
+     * @param[in]     maker       Factory function that creates the animation factory.
      *
-     * @return             true if registration succeeded, false if prefix already exists.
+     * @return        true if registration succeeded, false if prefix already exists.
      *
-     * @throws             None
-     * @note               The default Material factory is pre-registered.
-     * @warning            Register with a unique prefix to avoid conflicts.
-     * @since              0.1
-     * @ingroup            ui_widget_application_support
+     * @throws        None
+     * @note          The default Material factory is pre-registered.
+     * @warning       Register with a unique prefix to avoid conflicts.
+     * @since         0.1
+     * @ingroup       ui_widget_application_support
      *
      * @code
      * // Register a Fluent-style animation factory
@@ -284,7 +289,7 @@ class CF_UI_EXPORT Application : public QApplication {
      *         return std::make_unique<FluentAnimationFactory>(theme, parent);
      *     });
      *
-     * // Now when theme "theme.fluent.dark" is active, the Fluent factory will be used
+     * // Now when theme "theme.fluent.dark" is active, the Fluent factory is used
      * app.setTheme("theme.fluent.dark");
      * @endcode
      */
@@ -296,15 +301,15 @@ class CF_UI_EXPORT Application : public QApplication {
      *
      * @details Removes a previously registered animation factory for the
      *          given theme prefix. If a theme with this prefix is currently
-     *          active, the factory will be replaced with the default.
+     *          active, the factory is replaced with the default.
      *
-     * @param  themePrefix Theme prefix to unregister.
+     * @param[in]     themePrefix Theme prefix to unregister.
      *
-     * @throws             None
-     * @note               The default Material factory cannot be unregistered.
-     * @warning            None
-     * @since              0.1
-     * @ingroup            ui_widget_application_support
+     * @throws        None
+     * @note          The default Material factory cannot be unregistered.
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_widget_application_support
      *
      * @code
      * Application::unregisterAnimationFactoryType("theme.fluent");
@@ -316,20 +321,22 @@ class CF_UI_EXPORT Application : public QApplication {
     /**
      * @brief  Signal emitted when the theme changes.
      *
-     * @param  newTheme Reference to the newly activated theme.
+     * @param[in]     newTheme Reference to the newly activated theme.
      *
-     * @note Forwards ThemeManager::themeChanged signal.
-     * @warning None
-     * @since  0.1
+     * @note          Forwards ThemeManager::themeChanged signal.
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_widget_application_support
      */
     void themeChanged(const core::ICFTheme& newTheme);
 
     /**
      * @brief  Signal emitted when animation enabled state changes.
      *
-     * @param  enabled The new enabled state.
+     * @param[in]     enabled The new enabled state.
      *
-     * @since 0.1
+     * @since         0.1
+     * @ingroup       ui_widget_application_support
      */
     void animationsEnabledChanged(bool enabled);
 

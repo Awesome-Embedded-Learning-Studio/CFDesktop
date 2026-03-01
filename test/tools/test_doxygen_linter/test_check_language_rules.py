@@ -134,3 +134,46 @@ int func();"""
         content = ""
         violations = lint.check_language_rules(content, Path("test.h"))
         assert_len(violations, 0)
+
+    def test_loop_variable_i_not_flagged(self) -> None:
+        """Test that loop variable 'i' is NOT flagged as first-person."""
+        content = """/**
+ * @brief  Process items in a loop.
+ *
+ * @details Iterates through the array using index i.
+ *
+ * @param[in]  data  The data array.
+ * @return        Processed result.
+ */
+int process(const int* data);"""
+        violations = lint.check_language_rules(content, Path("test.h"))
+        assert_len(violations, 0)
+
+    def test_loop_variables_i_j_k_not_flagged(self) -> None:
+        """Test that common loop variables i, j, k are NOT flagged."""
+        content = """/**
+ * @brief  Nested loop example.
+ *
+ * @details Uses i for outer loop, j for inner loop.
+ *
+ * @return        The sum.
+ */
+int nestedLoop() {
+    for (int i = 0; i < 10; ++i) {
+        for (int j = 0; j < 10; ++j) {
+            for (int k = 0; k < 10; ++k) {
+                // Do something
+            }
+        }
+    }
+    return 0;
+}"""
+        violations = lint.check_language_rules(content, Path("test.h"))
+        assert_len(violations, 0)
+
+    def test_uppercase_i_is_flagged(self) -> None:
+        """Test that uppercase 'I' (first person) IS flagged."""
+        content = "/** I think this works. */"
+        violations = lint.check_language_rules(content, Path("test.h"))
+        assert_len(violations, 1)
+        assert_equal(violations[0].message, "First-person usage detected")

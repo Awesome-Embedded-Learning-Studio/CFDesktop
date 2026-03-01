@@ -335,7 +335,7 @@ template <typename T> class WeakPtr {
      *          otherwise returns an invalid WeakPtr.
      *
      * @tparam  Source Source type (base class).
-     * @param  other  WeakPtr to the source object.
+     * @param[in]  other  WeakPtr to the source object.
      *
      * @return        WeakPtr<Derived> pointing to the same object if
      *                the object is of type Derived, otherwise invalid.
@@ -384,12 +384,30 @@ template <typename T> class WeakPtr {
     explicit WeakPtr(T* ptr, internal::WeakReferenceFlagPtr flag) noexcept
         : ptr_(ptr), flag_(std::move(flag)) {}
 
+    /// Raw pointer to the owned object. Ownership: observer; may be nullptr.
     T* ptr_ = nullptr;
+
+    /// Weak reference flag for lifetime tracking. Ownership: shared; may be nullptr.
     internal::WeakReferenceFlagPtr flag_ = nullptr;
 
-    // Allows WeakPtr with different T to access private members (covariance)
+    /**
+     * @brief  Friend declaration for covariance support.
+     *
+     * @tparam U Type parameter for the befriended WeakPtr.
+     *
+     * @since  N/A
+     * @ingroup none
+     */
     template <typename U> friend class WeakPtr;
 
+    /**
+     * @brief  Friend declaration for factory access.
+     *
+     * @tparam U Type parameter for the befriended WeakPtrFactory.
+     *
+     * @since  N/A
+     * @ingroup none
+     */
     template <typename U> friend class WeakPtrFactory;
 };
 

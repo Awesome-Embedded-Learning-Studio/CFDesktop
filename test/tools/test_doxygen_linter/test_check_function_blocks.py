@@ -305,3 +305,94 @@ int third(int z);"""
         # Only second() should have violations
         assert_len(violations, 1)
         assert_equal(violations[0].symbol, "second")
+
+    def test_return_statement_not_matched_as_function(self) -> None:
+        """Test that return statements are not matched as function declarations."""
+        content = """/**
+ * @brief  Dynamically converts Base to Derived.
+ *
+ * @param[in]  other  WeakPtr to the source object.
+ *
+ * @return        WeakPtr<Derived> pointing to the same object.
+ *
+ * @throws        None
+ * @note          The returned WeakPtr shares the same weak reference.
+ * @warning       Always check the returned WeakPtr's validity before use.
+ * @since         0.1
+ * @ingroup       none
+ */
+template <typename Source>
+static WeakPtr DynamicCast(const WeakPtr<Source>& other) noexcept {
+    if (!other.flag_ || !other.flag_->IsAlive()) {
+        return WeakPtr();  // Should not be flagged as missing Doxygen
+    }
+    T* casted = dynamic_cast<T*>(other.ptr_);
+    if (casted) {
+        return WeakPtr(casted, other.flag_);  // Should not be flagged
+    }
+    return WeakPtr();  // Should not be flagged
+}"""
+        violations = lint.check_function_blocks(content, Path("test.h"))
+        # DynamicCast is fully documented, return statements should not cause extra violations
+        assert_len(violations, 0)
+
+    def test_undocumented_function_with_return_statements(self) -> None:
+        """Test that return statements don't create false violations."""
+        content = """
+// Undocumented function
+static WeakPtr CreateWeakPtr() {
+    return WeakPtr();  // Should not be flagged as a separate missing Doxygen
+}
+"""
+        violations = lint.check_function_blocks(content, Path("test.h"))
+        # Only CreateWeakPtr should have a violation, not the return statement
+        assert_len(violations, 1)
+        assert_equal(violations[0].symbol, "CreateWeakPtr")
+
+    def test_member_initializer_list_not_matched_as_function(self) -> None:
+        """Test that member initializer lists are not matched as function declarations."""
+        content = """/**
+ * @brief  Constructor with spring easing preset.
+ *
+ * @param[in] easing Spring preset for physics parameters.
+ * @param[in] parent QObject parent.
+ *
+ * @throws     None
+ * @note       None
+ * @warning    None
+ * @since      0.1
+ * @ingroup    ui_components
+ */
+ICFSpringAnimation(const base::Easing::SpringPreset& easing, QObject* parent = nullptr)
+    : ICFAbstractAnimation(parent) {  # Should not be flagged as a separate function
+    easing_ = easing;
+}"""
+        violations = lint.check_function_blocks(content, Path("test.h"))
+        # Constructor is documented, initializer list should not cause extra violations
+        assert_len(violations, 0)
+
+    def test_constructor_with_return_statement(self) -> None:
+        """Test constructor that contains return statements (for nested helper functions)."""
+        content = """/**
+ * @brief  Default constructor: creates an empty weak reference.
+ * @throws None
+ * @note   None
+ * @warning None
+ * @since  0.1
+ * @ingroup none
+ */
+constexpr WeakPtr() noexcept = default;
+
+/**
+ * @brief  Constructs an empty weak reference from nullptr.
+ * @param[in] nullptr_t The nullptr literal.
+ * @throws None
+ * @note   None
+ * @warning None
+ * @since  0.1
+ * @ingroup none
+ */
+constexpr WeakPtr(std::nullptr_t) noexcept {}"""
+        violations = lint.check_function_blocks(content, Path("test.h"))
+        # Both constructors are documented
+        assert_len(violations, 0)

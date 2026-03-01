@@ -72,11 +72,15 @@ class CF_UI_EXPORT CFMaterialFadeAnimation : public ICFTimingAnimation {
     /**
      * @brief  Constructor with motion spec.
      *
-     * @param  spec Raw pointer to the motion spec for timing/easing.
-     *              Must remain valid for the lifetime of this animation.
-     * @param  parent QObject parent.
+     * @param[in]     spec Raw pointer to the motion spec for timing/easing.
+     *                    Must remain valid for the lifetime of this animation.
+     * @param[in]     parent QObject parent.
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components_material
      */
     explicit CFMaterialFadeAnimation(cf::ui::core::IMotionSpec* spec, QObject* parent = nullptr);
 
@@ -100,9 +104,13 @@ class CF_UI_EXPORT CFMaterialFadeAnimation : public ICFTimingAnimation {
     /**
      * @brief  Start the fade animation.
      *
-     * @param  dir Direction to play (Forward = fade in, Backward = fade out).
+     * @param[in]     dir Direction to play (Forward = fade in, Backward = fade out).
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components_material
      */
     void start(Direction dir = Direction::Forward) override;
 
@@ -130,11 +138,15 @@ class CF_UI_EXPORT CFMaterialFadeAnimation : public ICFTimingAnimation {
     /**
      * @brief  Update animation state.
      *
-     * @param  dt Time elapsed since last tick (milliseconds).
+     * @param[in]     dt Time elapsed since last tick (milliseconds).
      *
-     * @return true if animation is still running, false if finished.
+     * @return        true if animation is still running, false if finished.
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components_material
      */
     bool tick(int dt) override;
 
@@ -158,12 +170,16 @@ class CF_UI_EXPORT CFMaterialFadeAnimation : public ICFTimingAnimation {
     /**
      * @brief  Set the target widget for the fade animation.
      *
-     * @details The widget's opacity will be animated. The widget must
+     * @details The widget's opacity is animated. The widget must
      *          remain valid for the duration of the animation.
      *
-     * @param  widget Target widget (may be nullptr).
+     * @param[in]     widget Target widget (may be nullptr).
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components_material
      *
      * @code
      * fadeAnim->setTargetWidget(myLabel);
@@ -199,7 +215,7 @@ class CF_UI_EXPORT CFMaterialFadeAnimation : public ICFTimingAnimation {
     /// Graphics effect for opacity (created/owned by this animation)
     QGraphicsOpacityEffect* opacityEffect_ = nullptr;
 
-    /// Whether we own the opacity effect
+    /// Whether the animation owns the opacity effect
     bool ownsOpacityEffect_ = false;
 
     /// Duration in milliseconds (from motion spec)

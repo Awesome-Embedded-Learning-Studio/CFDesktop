@@ -72,9 +72,13 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
     /**
      * @brief  Constructor with parent.
      *
-     * @param  parent QObject parent.
+     * @param[in] parent QObject parent.
      *
-     * @since 0.1
+     * @throws     None
+     * @note       None
+     * @warning    None
+     * @since      0.1
+     * @ingroup    ui_components
      */
     explicit ICFAnimationManagerFactory(QObject* parent);
 
@@ -116,12 +120,16 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      *          retrieval. The type string is used to determine
      *          which animation class to instantiate.
      *
-     * @param  name Unique name for the animation (e.g., "fadeIn").
-     * @param  type Animation type identifier (e.g., "fade", "slide").
+     * @param[in] name Unique name for the animation (e.g., "fadeIn").
+     * @param[in] type Animation type identifier (e.g., "fade", "slide").
      *
-     * @return Registration result indicating success or failure reason.
+     * @return        Registration result indicating success or failure reason.
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components
      *
      * @code
      * manager->registerOneAnimation("buttonPress", "fade");
@@ -136,12 +144,16 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      *          instances. This provides type-safe registration for
      *          custom animation types.
      *
-     * @param  name Unique name for the animation.
-     * @param  creator Function that creates the animation instance.
+     * @param[in] name Unique name for the animation.
+     * @param[in] creator Function that creates the animation instance.
      *
-     * @return Registration result indicating success or failure reason.
+     * @return        Registration result indicating success or failure reason.
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components
      *
      * @code
      * manager->registerAnimationCreator("customFade",
@@ -166,14 +178,16 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      *          Supports both custom registered names and Material Design
      *          tokens (e.g., "md.animation.fadeIn").
      *
-     * @param  name Animation name or token.
+     * @param[in] name Animation name or token.
      *
-     * @return WeakPtr to the animation, or invalid WeakPtr if not found.
+     * @return        WeakPtr to the animation, or invalid WeakPtr if not found.
      *
-     * @note    The returned WeakPtr may become invalid if the manager
-     *          is destroyed. Always check validity before use.
-     * @warning The manager owns the animation; do not delete it manually.
-     * @since  0.1
+     * @throws        None
+     * @note          The returned WeakPtr may become invalid if the manager
+     *                is destroyed. Always check validity before use.
+     * @warning       The manager owns the animation; do not delete it manually.
+     * @since         0.1
+     * @ingroup       ui_components
      *
      * @code
      * auto anim = manager->getAnimation("md.animation.fadeIn");
@@ -193,9 +207,13 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      * @details Sets the desired frame rate for animation updates.
      *          This affects the tick interval for all animations.
      *
-     * @param  fps Target frames per second (e.g., 60.0f).
+     * @param[in] fps Target frames per second (e.g., 60.0f).
      *
-     * @since 0.1
+     * @throws     None
+     * @note       None
+     * @warning    None
+     * @since      0.1
+     * @ingroup    ui_components
      *
      * @code
      * manager->setTargetFps(60.0f);  // 60 FPS
@@ -209,10 +227,14 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      * @details Controls whether a specific animation is allowed to run.
      *          When disabled, getAnimation() returns invalid WeakPtr.
      *
-     * @param  which Animation name.
-     * @param  enabled true to enable, false to disable.
+     * @param[in] which Animation name.
+     * @param[in] enabled true to enable, false to disable.
      *
-     * @since 0.1
+     * @throws     None
+     * @note       None
+     * @warning    None
+     * @since      0.1
+     * @ingroup    ui_components
      *
      * @code
      * manager->setTargetEnabled("md.animation.fadeIn", false);
@@ -223,11 +245,15 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
     /**
      * @brief  Check if a specific animation is enabled.
      *
-     * @param  which Animation name.
+     * @param[in] which Animation name.
      *
-     * @return true if enabled, false otherwise.
+     * @return        true if enabled, false otherwise.
      *
-     * @since 0.1
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components
      */
     bool targetEnabled(const QString& which);
 
@@ -238,9 +264,13 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      *          for all animations. Existing running animations continue
      *          until completion.
      *
-     * @param  enabled true to enable all, false to disable all.
+     * @param[in] enabled true to enable all, false to disable all.
      *
-     * @since 0.1
+     * @throws        None
+     * @note          Existing running animations continue until completion.
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components
      *
      * @code
      * // Disable all animations during heavy processing
@@ -251,25 +281,38 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      */
     virtual void setEnabledAll(bool enabled) = 0;
 
+    /**
+     * @brief  Check if all animations are enabled.
+     *
+     * @return        true if all animations are enabled, false otherwise.
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         0.1
+     * @ingroup       ui_components
+     */
     virtual bool isAllEnabled() = 0;
 
   signals:
     /**
      * @brief  Signal emitted when an animation is registered.
      *
-     * @param  name The name of the registered animation.
+     * @param[in] name The name of the registered animation.
      *
-     * @since 0.1
+     * @since      0.1
+     * @ingroup    ui_components
      */
     void animationRegistered(const QString& name);
 
     /**
      * @brief  Signal emitted when an animation's enabled state changes.
      *
-     * @param  name The name of the animation.
-     * @param  enabled The new enabled state.
+     * @param[in] name The name of the animation.
+     * @param[in] enabled The new enabled state.
      *
-     * @since 0.1
+     * @since      0.1
+     * @ingroup    ui_components
      */
     void animationEnabledChanged(const QString& name, bool enabled);
 };

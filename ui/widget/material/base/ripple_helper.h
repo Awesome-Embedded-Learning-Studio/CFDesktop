@@ -1,3 +1,17 @@
+/**
+ * @file    ui/widget/material/base/ripple_helper.h
+ * @brief   Material Design ripple effect helper.
+ *
+ * Manages ripple effects for Material Design widgets. Provides
+ * animated ripple propagation on press/release interactions with
+ * bounded and unbounded modes.
+ *
+ * @author  N/A
+ * @date    N/A
+ * @version N/A
+ * @since   N/A
+ * @ingroup ui_widget_material_base
+ */
 #pragma once
 #include "color.h"
 #include "components/material/cfmaterial_animation_factory.h"
@@ -7,41 +21,157 @@ class QPainterPath;
 
 namespace cf::ui::widget::material::base {
 
+/**
+ * @brief  Material Design ripple data structure.
+ *
+ * @since  N/A
+ * @ingroup ui_widget_material_base
+ */
+struct MdRipple {
+    QPointF center;
+    float radius;
+    float opacity;
+    bool releasing;
+    float maxRadius;
+};
+
+/**
+ * @brief  Material Design ripple effect helper.
+ *
+ * @details Manages ripple effects for Material Design widgets. Provides
+ *          animated ripple propagation on press/release interactions with
+ *          bounded and unbounded modes.
+ *
+ * @since  N/A
+ * @ingroup ui_widget_material_base
+ */
 class CF_UI_EXPORT RippleHelper : public QObject {
     Q_OBJECT
   public:
+    /**
+     * @brief  Constructor with animation factory.
+     *
+     * @param[in]     factory WeakPtr to the animation factory.
+     * @param[in]     parent QObject parent.
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         N/A
+     * @ingroup       ui_widget_material_base
+     */
     explicit RippleHelper(cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
                           QObject* parent);
-    struct MdRipple {
-        QPointF center;
-        float radius;
-        float opacity;
-        bool releasing;
-        float maxRadius; // Calculated maximum radius for this ripple
-    };
 
+    /**
+     * @brief  Ripple rendering mode.
+     *
+     * @since  N/A
+     * @ingroup ui_widget_material_base
+     */
     enum class Mode {
-        Bounded,  // Clipped By Widgets
-        Unbounded // And not :)
+        Bounded,   ///< Clipped by widget bounds.
+        Unbounded  ///< Not clipped by widget bounds.
     };
     Q_ENUM(Mode)
 
+    /**
+     * @brief  Sets the ripple rendering mode.
+     *
+     * @param[in]     mode Rendering mode to use.
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         N/A
+     * @ingroup       ui_widget_material_base
+     */
     void setMode(Mode mode);
-    void setColor(const cf::ui::base::CFColor& color); // 涟漪颜色，通常为 stateColor
 
-    // 事件接口
+    /**
+     * @brief  Sets the ripple color.
+     *
+     * @param[in]     color Ripple color (typically the state color).
+     *
+     * @throws        None
+     * @note          None
+     * @warning       None
+     * @since         N/A
+     * @ingroup       ui_widget_material_base
+     */
+    void setColor(const cf::ui::base::CFColor& color);
+
+    /**
+     * @brief  Handles press event.
+     *
+     * @param[in]     pos Press position coordinates.
+     * @param[in]     widgetRect Widget bounding rectangle.
+     *
+     * @throws        None
+     * @note          Creates a new ripple at the press position.
+     * @warning       None
+     * @since         N/A
+     * @ingroup       ui_widget_material_base
+     */
     void onPress(const QPoint& pos, const QRectF& widgetRect);
-    void onRelease();
-    void onCancel(); // 如鼠标移出时取消未释放的 ripple
 
-    // paintEvent 中调用，clipPath 用于 Bounded 模式
+    /**
+     * @brief  Handles release event.
+     *
+     * @throws        None
+     * @note          Starts ripple fade-out animation.
+     * @warning       None
+     * @since         N/A
+     * @ingroup       ui_widget_material_base
+     */
+    void onRelease();
+
+    /**
+     * @brief  Handles cancel event.
+     *
+     * @throws        None
+     * @note          Cancels unreleased ripples (e.g., when mouse leaves widget).
+     * @warning       None
+     * @since         N/A
+     * @ingroup       ui_widget_material_base
+     */
+    void onCancel();
+
+    /**
+     * @brief  Paints the ripples.
+     *
+     * @param[in]     painter QPainter to render with.
+     * @param[in]     clipPath Clipping path for bounded mode.
+     *
+     * @throws        None
+     * @note          Call in paintEvent.
+     * @warning       None
+     * @since         N/A
+     * @ingroup       ui_widget_material_base
+     */
     void paint(QPainter* painter, const QPainterPath& clipPath);
 
-    // 是否有活跃 ripple（供 paintEvent 判断是否需要 update()）
+    /**
+     * @brief  Checks if there are active ripples.
+     *
+     * @return        true if any ripples are active, false otherwise.
+     *
+     * @throws        None
+     * @note          Used to determine if repaint is needed.
+     * @warning       None
+     * @since         N/A
+     * @ingroup       ui_widget_material_base
+     */
     bool hasActiveRipple() const;
 
   signals:
-    void repaintNeeded(); // 连接到 QWidget::update()
+    /**
+     * @brief  Signal emitted when repaint is needed.
+     *
+     * @since  N/A
+     * @ingroup ui_widget_material_base
+     */
+    void repaintNeeded();
 
   private:
     QList<MdRipple> m_ripples;
@@ -49,7 +179,6 @@ class CF_UI_EXPORT RippleHelper : public QObject {
     cf::ui::base::CFColor m_color;
     cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
 
-    // 计算 ripple 最终半径（控件对角线长度）
     float maxRadius(const QRectF& rect, const QPointF& center) const;
 };
 
