@@ -79,6 +79,31 @@ log_info("Post Qt Setups" "Run Post Qt Dependencies check")
 include(cmake/custom_target_helper.cmake)
 log_info("Post Qt Setups" "Run Post Qt Dependencies OK")
 
+# ============================================================
+# Output Directory Configuration
+# ============================================================
+# 配置分类输出目录：bin/, examples/, plugins/, runtimes/
+log_info("OutputConfig" "Configuring output directories")
+include(cmake/OutputDirectoryConfig.cmake)
+
+# ============================================================
+# Example Launcher Generator (Windows)
+# ============================================================
+# 为每个 example 生成 Windows 启动脚本
+if(WIN32)
+    log_info("Launcher" "Including Windows launcher generator")
+    include(cmake/ExampleLauncher.cmake)
+endif()
+
+# ============================================================
+# Qt Shared Deployment (Windows)
+# ============================================================
+# 共享 Qt DLLs 部署到 runtimes/ 目录
+if(WIN32)
+    log_info("QtDeploy" "Including shared Qt deployment utilities")
+    include(cmake/QtDeployUtils.cmake)
+endif()
+
 # Include development helpers generation
 include(cmake/generate_develop_helpers.cmake)
 
@@ -114,5 +139,21 @@ log_module_start("test")
 add_subdirectory(test)
 # Log test module end
 log_module_end("test")
+
+# ============================================================
+# Post-Build Setup (必须在所有 add_subdirectory 之后)
+# ============================================================
+
+# 生成 Windows 启动脚本 (如果使用 ExampleLauncher)
+if(WIN32)
+    log_info("Launcher" "Generating Windows launcher scripts")
+    cf_generate_all_launchers()
+endif()
+
+# 设置共享 Qt 部署 (Windows)
+if(WIN32)
+    log_info("QtDeploy" "Setting up shared Qt deployment")
+    cf_setup_shared_qt_deployment()
+endif()
 
 log_info("Final" "Configuration Ends! You can try to build now!")

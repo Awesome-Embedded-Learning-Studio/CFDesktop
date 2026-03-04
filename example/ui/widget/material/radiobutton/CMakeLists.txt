@@ -13,9 +13,12 @@ target_link_libraries(radiobutton_example PRIVATE
     cfui
 )
 
+# 设置输出目录到 examples/ui/
+cf_set_example_output_dir(radiobutton_example "ui")
+cf_register_example_launcher(radiobutton_example "ui")
+
 if(WIN32)
     set_target_properties(radiobutton_example PROPERTIES
         WIN32_EXECUTABLE TRUE
     )
-    cf_register_qt_deployment(radiobutton_example)
 endif()

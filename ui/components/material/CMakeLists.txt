@@ -26,6 +26,7 @@ target_link_libraries(cf_ui_components_material PUBLIC
     Qt6::Gui
     Qt6::Widgets
     CFDesktop::base_headers
+    cf_ui_base
     cf_ui_components
 )
 

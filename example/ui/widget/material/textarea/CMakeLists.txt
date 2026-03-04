@@ -13,9 +13,12 @@ target_link_libraries(textarea_example PRIVATE
     cfui
 )
 
+# 设置输出目录到 examples/ui/
+cf_set_example_output_dir(textarea_example "ui")
+cf_register_example_launcher(textarea_example "ui")
+
 if(WIN32)
     set_target_properties(textarea_example PROPERTIES
         WIN32_EXECUTABLE TRUE
     )
-    cf_register_qt_deployment(textarea_example)
 endif()

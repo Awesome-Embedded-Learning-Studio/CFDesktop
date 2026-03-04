@@ -14,11 +14,13 @@ target_link_libraries(material_color_scheme_gallery PRIVATE
     cfui
 )
 
+# 设置输出目录到 examples/gui/
+cf_set_example_output_dir(material_color_scheme_gallery "gui")
+cf_register_example_launcher(material_color_scheme_gallery "gui")
+
 # Windows 下设置为 GUI 应用（不显示控制台窗口）
 if(WIN32)
     set_target_properties(material_color_scheme_gallery PROPERTIES
         WIN32_EXECUTABLE TRUE
     )
-    # 注册到统一部署列表
-    cf_register_qt_deployment(material_color_scheme_gallery)
 endif()
