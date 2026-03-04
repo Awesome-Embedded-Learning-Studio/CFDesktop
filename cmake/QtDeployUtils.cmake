@@ -86,12 +86,10 @@ function(cf_setup_shared_qt_deployment)
                     COMMAND ${CMAKE_COMMAND} -E env QT_HASH_SEED=0
                     "${WINDEPLOYQT_EXECUTABLE}"
                         --dir "${RUNTIMES_DIR}"
-                        --no-compiler-runtime
                         --no-translations
                         --no-system-d3d-compiler
                         --no-opengl-sw
                         --verbose 1
-                        --plugdir "${PLUGINS_DIR}"
                     "${DEPLOY_EXE}"
                     COMMAND ${CMAKE_COMMAND} -E touch "${DEPLOY_MARKER}"
                     COMMENT "Deploying shared Qt DLLs to ${RUNTIMES_DIR}"

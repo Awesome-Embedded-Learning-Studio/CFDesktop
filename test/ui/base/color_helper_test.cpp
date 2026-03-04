@@ -10,7 +10,6 @@
  */
 
 #include "ui/base/color_helper.h"
-#include <QGuiApplication>
 #include <gtest/gtest.h>
 
 // =============================================================================
@@ -420,16 +419,4 @@ TEST(ColorHelperIntegration, TonalPaletteThenContrast) {
     EXPECT_GT(contrast, 10.0f);
 }
 
-// =============================================================================
-// Main
-// =============================================================================
-
-int main(int argc, char* argv[]) {
-    // QCoreApplication must be created before InitGoogleTest and kept alive
-    // The instance must persist for the entire test duration
-    QGuiApplication* app = new QGuiApplication(argc, argv);
-    ::testing::InitGoogleTest(&argc, argv);
-    int result = RUN_ALL_TESTS();
-    delete app;
-    return result;
-}
+// No main() needed - using GTest::gtest_main

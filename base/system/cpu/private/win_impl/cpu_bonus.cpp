@@ -2,8 +2,23 @@
 #include "cpu_features.h"
 #include "cpu_host.h"
 #include <windows.h>
+#include <cstdint>
+
+// MinGW may not have EfficiencyClass in PROCESSOR_RELATIONSHIP (Windows 10 1903+)
+#ifndef PROCESSOR_RELATIONSHIP_EFFICIENCY_CLASS
+// Offset of EfficiencyClass in PROCESSOR_RELATIONSHIP structure
+#define PROCESSOR_RELATIONSHIP_EFFICIENCY_CLASS 20
+#endif
 
 namespace {
+
+// Helper to get EfficiencyClass - works around missing MinGW header definition
+inline BYTE GetProcessorEfficiencyClass(const PROCESSOR_RELATIONSHIP* proc) {
+    // Access EfficiencyClass by offset since MinGW may not have the field
+    // The EfficiencyClass is at offset 20 (after GroupCount and GroupMask array)
+    return *reinterpret_cast<const BYTE*>(reinterpret_cast<const uint8_t*>(proc) + PROCESSOR_RELATIONSHIP_EFFICIENCY_CLASS);
+}
+
 void filledCache(cf::CPUBonusInfoHost& host) {
     host.cache_size.resize(3);
     DWORD len = 0;
@@ -47,7 +62,7 @@ void getCPUEffecientClass(cf::CPUBonusInfoHost& host) {
     auto end = buffer.data() + len;
 
     while ((uint8_t*)ptr < end) {
-        if (ptr->Processor.EfficiencyClass == 0)
+        if (GetProcessorEfficiencyClass(&ptr->Processor) == 0)
             host.big_core_count++;
         else
             host.little_core_count++;

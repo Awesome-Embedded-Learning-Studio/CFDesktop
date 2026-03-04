@@ -1,12 +1,12 @@
 # ============================================================
 # Windows Example Launcher Generator
 # ============================================================
-# 为每个 example 可执行文件生成 Windows 启动脚本 (.bat)
+# 为每个 example 可执行文件生成 Windows 启动脚本 (.ps1)
 #
 # 功能:
-#   - 自动生成 .bat 启动脚本
+#   - 自动生成 .ps1 启动脚本
 #   - 设置 PATH 指向共享的 runtimes/ 目录
-#   - 提供环境隔离保护
+#   - 设置 QT_PLUGIN_PATH
 #   - Linux 下跳过
 # ============================================================
 
@@ -50,32 +50,53 @@ function(cf_generate_launcher_script TARGET_NAME CATEGORY OUTPUT_DIR)
 
     # 获取可执行文件名 (带扩展名)
     set(EXE_NAME "${TARGET_NAME}.exe")
-    set(BAT_NAME "${TARGET_NAME}.bat")
+    set(PS1_NAME "${TARGET_NAME}.ps1")
 
     # 启动脚本内容
-    set(LAUNCHER_CONTENT "@echo off
-REM Launcher for ${TARGET_NAME}
-REM This script sets up the PATH to find shared Qt DLLs in ../runtimes/
+    set(LAUNCHER_CONTENT "# Launcher for ${TARGET_NAME}
+# This script sets up the PATH to find shared Qt DLLs in ../../runtimes/
 
-setlocal
+\$ScriptDir = Split-Path -Parent \$MyInvocation.MyCommand.Path
+# From examples/{category}/ go up two levels to reach build_develop/, then into runtimes/
+\$RuntimesDir = Join-Path \$ScriptDir \"..\\..\\runtimes\" -Resolve
 
-REM Get the directory where this script is located
-set \"SCRIPT_DIR=%~dp0\"
+Write-Host \"[Launcher] ScriptDir: \$ScriptDir\" -ForegroundColor Cyan
+Write-Host \"[Launcher] RuntimesDir: \$RuntimesDir\" -ForegroundColor Cyan
+Write-Host \"[Launcher] Exe: ${EXE_NAME}\" -ForegroundColor Cyan
 
-REM Add runtimes directory to PATH (relative to script location)
-REM The runtimes/ directory is at the same level as examples/
-set \"PATH=%SCRIPT_DIR%..\\runtimes;%PATH%\"
+if (-not (Test-Path \$RuntimesDir)) {
+    Write-Host \"[Launcher] ERROR: RuntimesDir not found!\" -ForegroundColor Red
+    exit 1
+}
 
-REM Launch the executable
-REM %* passes all command line arguments to the executable
-start \"\" \"%SCRIPT_DIR%%EXE_NAME%\" %*\
+# Clear Qt environment to avoid conflicts
+\$env:QT_PLUGIN_PATH = \$null
+\$env:QML2_IMPORT_PATH = \$null
 
-endlocal")
+# Set PATH with runtimes FIRST to avoid loading wrong DLLs
+\$env:PATH=\"\$RuntimesDir;\$env:PATH\"
 
-    # 写入 .bat 文件
-    file(WRITE "${OUTPUT_DIR}/${BAT_NAME}" "${LAUNCHER_CONTENT}")
+# List Qt DLLs being loaded
+Write-Host \"[Launcher] Qt DLLs in runtimes:\" -ForegroundColor Cyan
+Get-ChildItem \$RuntimesDir -Filter \"Qt6*.dll\" | ForEach-Object { Write-Host \"  \$($_.Name)\" }
 
-    log_info("Launcher" "Generated: ${OUTPUT_DIR}/${BAT_NAME}")
+# Set Qt plugin path
+\$env:QT_PLUGIN_PATH=\"\$RuntimesDir\"
+
+Write-Host \"[Launcher] Starting executable...\" -ForegroundColor Green
+
+# Launch the executable
+\$exePath = Join-Path \$ScriptDir \"${EXE_NAME}\"
+Write-Host \"[Launcher] Exe path: \$exePath\" -ForegroundColor Cyan
+
+Start-Process -FilePath \$exePath -ArgumentList \$args -Wait
+Write-Host \"[Launcher] Exit code: \$LASTEXITCODE\" -ForegroundColor Yellow
+")
+
+    # 写入 .ps1 文件
+    file(WRITE "${OUTPUT_DIR}/${PS1_NAME}" "${LAUNCHER_CONTENT}")
+
+    log_info("Launcher" "Generated: ${OUTPUT_DIR}/${PS1_NAME}")
 endfunction()
 
 # ============================================================

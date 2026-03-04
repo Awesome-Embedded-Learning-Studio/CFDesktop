@@ -10,7 +10,6 @@
  */
 
 #include "ui/base/geometry_helper.h"
-#include <QGuiApplication>
 #include <QPainterPath>
 #include <QRectF>
 #include <gtest/gtest.h>
@@ -388,14 +387,4 @@ TEST(GeometryHelperSpecialCases, FloatPrecision) {
     EXPECT_FALSE(path.isEmpty());
 }
 
-// =============================================================================
-// Main
-// =============================================================================
-
-int main(int argc, char* argv[]) {
-    QGuiApplication* app = new QGuiApplication(argc, argv);
-    ::testing::InitGoogleTest(&argc, argv);
-    int result = RUN_ALL_TESTS();
-    delete app;
-    return result;
-}
+// No main() needed - using GTest::gtest_main

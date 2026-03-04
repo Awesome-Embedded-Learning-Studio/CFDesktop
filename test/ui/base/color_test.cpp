@@ -14,7 +14,6 @@
 
 #include "ui/base/color.h"
 #include <QColor>
-#include <QGuiApplication>
 #include <gtest/gtest.h>
 
 // =============================================================================
@@ -382,16 +381,4 @@ TEST(CFColorTest, HCTRangeValidation) {
     EXPECT_LE(color.tone(), 100.0f);
 }
 
-// =============================================================================
-// Main
-// =============================================================================
-
-int main(int argc, char* argv[]) {
-    // QCoreApplication must be created before InitGoogleTest and kept alive
-    // The instance must persist for the entire test duration
-    QGuiApplication* app = new QGuiApplication(argc, argv);
-    ::testing::InitGoogleTest(&argc, argv);
-    int result = RUN_ALL_TESTS();
-    delete app;
-    return result;
-}
+// No main() needed - using GTest::gtest_main

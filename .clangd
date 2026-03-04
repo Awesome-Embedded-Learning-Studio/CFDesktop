@@ -11,7 +11,7 @@ Diagnostics:
     - builtin-declaration-mismatch
     - builtin_definition
 
-Complete:
+Completion:
   Include:
     InsertIncludes: Keep
     MaxPathLength: 30

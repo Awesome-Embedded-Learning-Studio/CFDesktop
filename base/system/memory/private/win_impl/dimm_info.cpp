@@ -271,8 +271,8 @@ void parseSmbiosMemoryDevices(const uint8_t* data, uint32_t length, std::vector<
 } // anonymous namespace
 
 void queryDimmInfo(std::vector<DimmInfo>& dimms) {
-    // 'RSMB' = Raw SMBIOS
-    const DWORD signature = 'RSMB';
+    // 'RSMB' = Raw SMBIOS (0x524D5342 = 'R' 'S' 'M' 'B')
+    const DWORD signature = 0x524D5342;
 
     // Get buffer size
     DWORD bufferSize = GetSystemFirmwareTable(signature, 0, nullptr, 0);

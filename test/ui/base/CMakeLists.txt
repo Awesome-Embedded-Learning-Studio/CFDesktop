@@ -18,7 +18,7 @@ add_gtest_executable(
 add_gtest_executable(
     TEST_NAME      color_test
     SOURCE_FILE    color_test.cpp
-    LINK_LIBRARIES UI::base;GTest::gtest;
+    LINK_LIBRARIES UI::base;GTest::gtest;GTest::gtest_main
     LABELS         "ui;base;color"
     LOG_MODULE     ui_base_tests
 )
@@ -29,7 +29,7 @@ add_gtest_executable(
 add_gtest_executable(
     TEST_NAME      color_helper_test
     SOURCE_FILE    color_helper_test.cpp
-    LINK_LIBRARIES UI::base;GTest::gtest;
+    LINK_LIBRARIES UI::base;GTest::gtest;GTest::gtest_main
     LABELS         "ui;base;color"
     LOG_MODULE     ui_base_tests
 )
@@ -51,7 +51,7 @@ add_gtest_executable(
 add_gtest_executable(
     TEST_NAME      geometry_helper_test
     SOURCE_FILE    geometry_helper_test.cpp
-    LINK_LIBRARIES UI::base;GTest::gtest;
+    LINK_LIBRARIES UI::base;GTest::gtest;GTest::gtest_main
     LABELS         "ui;base;geometry"
     LOG_MODULE     ui_base_tests
 )
