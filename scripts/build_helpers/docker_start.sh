@@ -388,13 +388,20 @@ else
     MOUNT_PATH="$PROJECT_ROOT"
 fi
 
+# Detect if running in a TTY (for interactive vs non-interactive mode)
+if [[ -t 1 ]]; then
+    TTY_ARGS="-it"
+else
+    TTY_ARGS=""
+fi
+
 if [[ "$RUN_VERIFY" == true ]]; then
     show_stage "VERIFY" "Running CI build"
 
     if [[ "$STAY_ON_ERROR" == true ]]; then
         show_info "Stay-on-error enabled: container will remain open on failure"
 
-        MSYS_NO_PATHCONV=1 docker run --rm -it --platform "$DOCKER_PLATFORM" \
+        MSYS_NO_PATHCONV=1 docker run --rm $TTY_ARGS --platform "$DOCKER_PLATFORM" \
             -v "$MOUNT_PATH:/project" \
             -w /project \
             "$IMAGE_NAME" \
@@ -442,7 +449,7 @@ elif [[ "$RUN_BUILD_PROJECT" == true ]] || [[ "$RUN_BUILD_PROJECT_FAST" == true 
     esac
 
     show_stage "BUILD" "Running $BUILD_DESC in container"
-    MSYS_NO_PATHCONV=1 docker run --rm -it --platform "$DOCKER_PLATFORM" \
+    MSYS_NO_PATHCONV=1 docker run --rm $TTY_ARGS --platform "$DOCKER_PLATFORM" \
         -v "$MOUNT_PATH:/project" \
         -w /project \
         "$IMAGE_NAME" \
@@ -465,7 +472,7 @@ elif [[ "$RUN_PROJECT_TEST" == true ]]; then
     esac
 
     show_stage "TEST" "Running tests in container"
-    MSYS_NO_PATHCONV=1 docker run --rm -it --platform "$DOCKER_PLATFORM" \
+    MSYS_NO_PATHCONV=1 docker run --rm $TTY_ARGS --platform "$DOCKER_PLATFORM" \
         -v "$MOUNT_PATH:/project" \
         -w /project \
         "$IMAGE_NAME" \
@@ -483,7 +490,7 @@ else
     show_info "Type 'exit' to leave the container"
     echo ""
 
-    MSYS_NO_PATHCONV=1 docker run --rm -it --platform "$DOCKER_PLATFORM" \
+    MSYS_NO_PATHCONV=1 docker run --rm $TTY_ARGS --platform "$DOCKER_PLATFORM" \
         -v "$MOUNT_PATH:/project" \
         -w /project \
         "$IMAGE_NAME" \
