@@ -126,6 +126,27 @@ get_cmake_version() {
     grep -oP 'VERSION\s+\K[\d.]+' "$cmake_file" 2>/dev/null || echo ""
 }
 
+# 获取远程分支上的 CMakeLists.txt 版本号
+# 参数: $1 - 远程分支名 (默认: origin/main)
+# 返回: 远程 CMakeLists.txt 中的版本号，如果未找到则返回空字符串
+get_remote_cmake_version() {
+    local remote_branch="${1:-origin/main}"
+    local version=""
+
+    # 确保有最新的远程信息
+    git fetch origin main:refs/remotes/origin/main --quiet 2>/dev/null || true
+
+    # 检查远程分支是否存在
+    if ! git rev-parse --verify "$remote_branch" >/dev/null 2>&1; then
+        echo ""
+        return
+    fi
+
+    # 从远程分支的 CMakeLists.txt 提取版本号
+    version=$(git show "$remote_branch:CMakeLists.txt" 2>/dev/null | grep -oP 'VERSION\s+\K[\d.]+' || echo "")
+    echo "$version"
+}
+
 # =============================================================================
 # 调试辅助函数
 # =============================================================================

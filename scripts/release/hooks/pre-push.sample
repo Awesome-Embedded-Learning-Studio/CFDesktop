@@ -109,27 +109,27 @@ check_version_changed() {
         return 0
     fi
 
-    # 获取 CMakeLists.txt 中的版本号
-    CMAKE_VERSION=$(get_cmake_version "$PROJECT_ROOT")
+    # 获取本地 CMakeLists.txt 中的版本号
+    LOCAL_CMAKE_VERSION=$(get_cmake_version "$PROJECT_ROOT")
 
-    # 获取远程版本号 (从 Git 标签)
-    REMOTE_TAG_VERSION=$(get_remote_version)
+    # 优先检查远程 CMakeLists.txt 版本号（适用于 main 分支无标签场景）
+    REMOTE_CMAKE_VERSION=$(get_remote_cmake_version "origin/main")
 
-    # 如果没有远程版本，允许首次推送
-    if [[ "$REMOTE_TAG_VERSION" == "0.0.0" ]]; then
-        log_info "首次推送，跳过版本号检查"
+    # 如果远程没有版本号（首次推送），允许通过
+    if [[ -z "$REMOTE_CMAKE_VERSION" ]]; then
+        log_info "首次推送到远程，跳过版本号检查"
         return 0
     fi
 
-    # 比较版本号
-    if [[ "$CMAKE_VERSION" == "$REMOTE_TAG_VERSION" ]]; then
+    # 比较本地和远程的 CMakeLists.txt 版本号
+    if [[ "$LOCAL_CMAKE_VERSION" == "$REMOTE_CMAKE_VERSION" ]]; then
         echo ""
         log_error "========================================"
         log_error "版本号未变更，推送被阻止"
         log_error "========================================"
         echo ""
-        echo "当前版本: ${YELLOW}$CMAKE_VERSION${NC}"
-        echo "远程版本: ${YELLOW}$REMOTE_TAG_VERSION${NC}"
+        echo "本地版本: ${YELLOW}$LOCAL_CMAKE_VERSION${NC}"
+        echo "远程版本: ${YELLOW}$REMOTE_CMAKE_VERSION${NC}"
         echo ""
         echo "推送到 main/release 分支需要先更新版本号。"
         echo ""
@@ -150,7 +150,7 @@ check_version_changed() {
         return 1
     fi
 
-    log_success "版本号检查通过: $CMAKE_VERSION (远程: $REMOTE_TAG_VERSION)"
+    log_success "版本号检查通过: $LOCAL_CMAKE_VERSION (远程: $REMOTE_CMAKE_VERSION)"
     echo ""
     return 0
 }
