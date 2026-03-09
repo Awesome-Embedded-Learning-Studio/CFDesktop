@@ -9,6 +9,12 @@ generator=Unix Makefiles
 # Toolchain to use
 toolchain=linux/gcc
 
+# Build type: Release for CI/production
+# Debug       - No optimization (-O0), full debug info (-g)
+# Release     - Maximum optimization (-O3), minimal debug info
+# RelWithDebInfo - Optimization (-O2) + full debug info
+build_type=Debug
+
 [paths]
 # Source directory (relative to project root, use "." for root)
 source=.

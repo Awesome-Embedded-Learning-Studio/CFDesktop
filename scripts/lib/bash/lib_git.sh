@@ -33,7 +33,7 @@ get_major_version() {
 #   次版本号（如 "2"）
 get_minor_version() {
     local version="$1"
-    echo "$version" | cut -d. -f2
+    echo "$version" | cut -d. -f2 -s
 }
 
 # 解析版本号，返回补丁版本号

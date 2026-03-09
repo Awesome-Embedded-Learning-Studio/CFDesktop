@@ -1,9 +1,18 @@
 #!/bin/bash
 # This script ONLY configures the project using CMake
 # It does NOT build the project
-# Usage: ./linux_configure.sh [develop|deploy] [-c|--config <config_file>]
+# Usage: ./linux_configure.sh [develop|deploy|ci] [-c|--config <config_file>]
 
 set -e
+
+# Get the script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source library functions
+source "$SCRIPT_DIR/../lib/bash/lib_common.sh"
+source "$SCRIPT_DIR/../lib/bash/lib_config.sh"
+source "$SCRIPT_DIR/../lib/bash/lib_args.sh"
+source "$SCRIPT_DIR/../lib/bash/lib_paths.sh"
 
 # Default values
 CONFIG="develop"
@@ -20,117 +29,59 @@ while [[ $# -gt 0 ]]; do
             CONFIG="$1"
             shift
             ;;
+        -h|--help)
+            echo "Usage: $(basename "$0") [develop|deploy|ci] [-c|--config <config_file>]"
+            echo ""
+            echo "Arguments:"
+            echo "  develop    Use development configuration (default)"
+            echo "  deploy     Use deployment configuration"
+            echo "  ci         Use CI configuration"
+            echo "  -c, --config <file>  Use custom configuration file"
+            echo "  -h, --help           Show this help message"
+            exit 0
+            ;;
         *)
-            echo "ERROR: Unknown argument '$1'" >&2
-            echo "Usage: $0 [develop|deploy|ci] [-c|--config <config_file>]" >&2
+            log_error "Unknown argument '$1'"
+            log_error "Usage: $(basename "$0") [develop|deploy|ci] [-c|--config <config_file>]"
             exit 1
             ;;
     esac
 done
 
-# Determine which config file to use (if not specified via -c)
+# Use get_default_config_file from lib_config.sh
 if [[ -z "$CONFIG_FILE" ]]; then
-    if [[ "$CONFIG" == "deploy" ]]; then
-        CONFIG_FILE="$SCRIPT_DIR/build_deploy_config.ini"
-    elif [[ "$CONFIG" == "ci" ]]; then
-        CONFIG_FILE="$SCRIPT_DIR/build_ci_config.ini"
-    else
-        CONFIG_FILE="$SCRIPT_DIR/build_develop_config.ini"
-    fi
+    CONFIG_FILE="$(get_default_config_file "$CONFIG")"
 fi
 
-# Function to read INI configuration file
-get_ini_config() {
-    local filepath="$1"
-    local current_section=""
-    local config=""
-
-    if [[ ! -f "$filepath" ]]; then
-        echo "ERROR: Configuration file not found: $filepath" >&2
-        exit 1
-    fi
-
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        # Trim whitespace
-        line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-
-        # Skip empty lines and comments
-        if [[ -z "$line" ]] || [[ "$line" =~ ^[#\;] ]]; then
-            continue
-        fi
-
-        # Section header
-        if [[ "$line" =~ ^\[([^\]]+)\]$ ]]; then
-            current_section="${BASH_REMATCH[1]}"
-            continue
-        fi
-
-        # Key=value pair
-        if [[ "$line" =~ ^([^=]+)=(.*)$ ]]; then
-            local key=$(echo "${BASH_REMATCH[1]}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-            local value=$(echo "${BASH_REMATCH[2]}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-
-            if [[ -n "$current_section" ]]; then
-                config+="config_${current_section}_${key}=\"$value\""$'\n'
-            fi
-        fi
-    done < "$filepath"
-
-    echo "$config"
-}
-
-# Log function
-log() {
-    local level="$2"
-    local message="$1"
-    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
-    local color=""
-
-    case "$level" in
-        INFO)
-            color="\033[0;36m"    # Cyan
-            ;;
-        SUCCESS)
-            color="\033[0;32m"    # Green
-            ;;
-        WARNING)
-            color="\033[0;33m"    # Yellow
-            ;;
-        ERROR)
-            color="\033[0;31m"    # Red
-            ;;
-        *)
-            color="\033[0m"       # White/Default
-            ;;
-    esac
-
-    echo -e "${color}[$timestamp] [$level] $message\033[0m"
-}
-
-log "========================================" "INFO"
-log "Starting Linux CMake Configuration" "INFO"
-log "Configuration: $CONFIG" "INFO"
-log "========================================" "INFO"
-
-# Get the script directory and project root
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-
-log "Project root: $PROJECT_ROOT" "INFO"
-log "Changing to project directory" "INFO"
-
-cd "$PROJECT_ROOT"
-
-# Resolve CONFIG_FILE if it's a relative path
+# Resolve relative path
 if [[ "$CONFIG_FILE" != /* ]] && [[ "$CONFIG_FILE" != ~* ]]; then
     CONFIG_FILE="$SCRIPT_DIR/$CONFIG_FILE"
 fi
 
-log "Loading configuration from: $CONFIG_FILE" "INFO"
+log_separator "="
+log_info "Starting Linux CMake Configuration"
+log_info "Configuration: $CONFIG"
+log_separator "="
 
-# Parse and evaluate configuration
+# Use PROJECT_ROOT from lib_paths.sh
+log_info "Project root: $PROJECT_ROOT"
+log_info "Changing to project directory"
+
+cd "$PROJECT_ROOT"
+
+log_info "Loading configuration from: $CONFIG_FILE"
+
+# Safety check: config file must exist
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    log_error "Configuration file not found: $CONFIG_FILE"
+    log_error "Please create the configuration file from the .template file"
+    log_error "Example: cp \"$CONFIG_FILE.template\" \"$CONFIG_FILE\""
+    exit 1
+fi
+
+# Use get_ini_config from lib_config.sh
 eval "$(get_ini_config "$CONFIG_FILE")"
-log "Configuration loaded successfully!" "SUCCESS"
+log_success "Configuration loaded successfully!"
 
 # Extract configuration values
 GENERATOR="$config_cmake_generator"
@@ -138,18 +89,25 @@ TOOLCHAIN="$config_cmake_toolchain"
 BUILD_TYPE="$config_cmake_build_type"
 
 if [[ -z "$BUILD_TYPE" ]]; then
-    log "ERROR: build_type not specified in config file" "ERROR"
+    log_error "build_type not specified in config file"
     exit 1
 fi
 
 # Validate BuildType value
 if [[ "$BUILD_TYPE" != "Debug" && "$BUILD_TYPE" != "Release" && "$BUILD_TYPE" != "RelWithDebInfo" ]]; then
-    log "ERROR: Invalid build_type '$BUILD_TYPE'. Must be one of: Debug, Release, RelWithDebInfo" "ERROR"
+    log_error "Invalid build_type '$BUILD_TYPE'. Must be one of: Debug, Release, RelWithDebInfo"
     exit 1
 fi
 
 SOURCE_DIR="$config_paths_source"
 BUILD_DIR="$config_paths_build_dir"
+
+# Safety check: BUILD_DIR must not be empty
+if [[ -z "$BUILD_DIR" ]]; then
+    log_error "Configuration error: build_dir is not set in config file"
+    log_error "Please check the [paths] section in: $CONFIG_FILE"
+    exit 1
+fi
 
 # Resolve source directory: if relative, make it relative to project root
 if [[ "$SOURCE_DIR" = /* ]]; then
@@ -158,34 +116,34 @@ else
     RESOLVED_SOURCE_DIR="$(cd "$PROJECT_ROOT/$SOURCE_DIR" 2>/dev/null && pwd)" || "$PROJECT_ROOT/$SOURCE_DIR"
 fi
 
-log "Generator: $GENERATOR" "INFO"
-log "Toolchain: $TOOLCHAIN" "INFO"
-log "Build Type: $BUILD_TYPE" "INFO"
-log "Source directory: $SOURCE_DIR (resolved: $RESOLVED_SOURCE_DIR)" "INFO"
-log "Build directory: $BUILD_DIR" "INFO"
+log_info "Generator: $GENERATOR"
+log_info "Toolchain: $TOOLCHAIN"
+log_info "Build Type: $BUILD_TYPE"
+log_info "Source directory: $SOURCE_DIR (resolved: $RESOLVED_SOURCE_DIR)"
+log_info "Build directory: $BUILD_DIR"
 
 # Configure with CMake
-log "========================================" "INFO"
-log "Configuring with CMake (NO BUILD)" "INFO"
-log "Command: cmake -G $GENERATOR -DUSE_TOOLCHAIN=$TOOLCHAIN -DCMAKE_BUILD_TYPE=$BUILD_TYPE -S $RESOLVED_SOURCE_DIR -B $BUILD_DIR" "INFO"
-log "========================================" "INFO"
+log_separator "="
+log_info "Configuring with CMake (NO BUILD)"
+log_info "Command: cmake -G $GENERATOR -DUSE_TOOLCHAIN=$TOOLCHAIN -DCMAKE_BUILD_TYPE=$BUILD_TYPE -S $RESOLVED_SOURCE_DIR -B $BUILD_DIR"
+log_separator "="
 
 # Performance diagnostic: Print system info
-log "=== Performance Diagnostics ===" "INFO"
-log "CMake Version: $(cmake --version | head -1)" "INFO"
-log "Generator: $GENERATOR" "INFO"
+log_info "=== Performance Diagnostics ==="
+log_info "CMake Version: $(cmake --version | head -1)"
+log_info "Generator: $GENERATOR"
 
 # Run CMake
-log "" "INFO"
-log "Running CMake configuration..." "INFO"
+log_info ""
+log_info "Running CMake configuration..."
 
 if cmake -G "$GENERATOR" -DUSE_TOOLCHAIN="$TOOLCHAIN" -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -S "$RESOLVED_SOURCE_DIR" -B "$BUILD_DIR"; then
-    log "========================================" "INFO"
-    log "CMake configuration completed successfully!" "SUCCESS"
-    log "To build the project, run: cmake --build $BUILD_DIR" "INFO"
-    log "========================================" "INFO"
+    log_separator "="
+    log_success "CMake configuration completed successfully!"
+    log_info "To build the project, run: cmake --build $BUILD_DIR"
+    log_separator "="
 else
     exit_code=$?
-    log "CMake configuration failed with exit code: $exit_code" "ERROR"
+    log_error "CMake configuration failed with exit code: $exit_code"
     exit $exit_code
 fi

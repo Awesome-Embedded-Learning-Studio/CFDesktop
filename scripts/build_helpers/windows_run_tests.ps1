@@ -42,6 +42,17 @@ $ConfigFile = switch ($Config) {
 $ConfigFilePath = Join-Path $ScriptDir $ConfigFile
 Write-LogInfo "Loading configuration from: $ConfigFilePath"
 
+# Safety check: config file must exist
+if (!(Test-Path $ConfigFilePath)) {
+    Write-LogError "Configuration file not found: $ConfigFilePath"
+    Write-LogError "Please create the configuration file from the .template file"
+    $templateFile = "$ConfigFilePath.template"
+    if (Test-Path $templateFile) {
+        Write-LogError "Example: Copy-Item '$templateFile' '$ConfigFilePath'"
+    }
+    exit 1
+}
+
 try {
     $ConfigData = Get-IniConfig -FilePath $ConfigFilePath
     Write-LogSuccess "Configuration loaded successfully!"
@@ -53,6 +64,14 @@ catch {
 
 # Get build directory from config
 $BuildDir = $ConfigData["paths"]["build_dir"]
+
+# Safety check: BUILD_DIR must not be empty
+if ([string]::IsNullOrWhiteSpace($BuildDir)) {
+    Write-LogError "Configuration error: build_dir is not set in config file"
+    Write-LogError "Please check the [paths] section in: $ConfigFilePath"
+    exit 1
+}
+
 $BuildDir = Join-Path $ProjectRoot $BuildDir "test"
 
 Write-LogInfo "Test directory: $BuildDir"

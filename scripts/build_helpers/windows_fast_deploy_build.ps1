@@ -52,8 +52,28 @@ catch {
 
 # Step 2: Load config for build
 $ConfigFile = Join-Path $ScriptDir "build_deploy_config.ini"
+
+# Safety check: config file must exist
+if (!(Test-Path $ConfigFile)) {
+    Write-LogError "Configuration file not found: $ConfigFile"
+    Write-LogError "Please create the configuration file from the .template file"
+    $templateFile = "$ConfigFile.template"
+    if (Test-Path $templateFile) {
+        Write-LogError "Example: Copy-Item '$templateFile' '$ConfigFile'"
+    }
+    exit 1
+}
+
 $Config = Get-IniConfig -FilePath $ConfigFile
 $BuildDir = $Config["paths"]["build_dir"]
+
+# Safety check: BUILD_DIR must not be empty
+if ([string]::IsNullOrWhiteSpace($BuildDir)) {
+    Write-LogError "Configuration error: build_dir is not set in config file"
+    Write-LogError "Please check the [paths] section in: $ConfigFile"
+    exit 1
+}
+
 $Jobs = if ($Config["options"] -and $Config["options"]["jobs"]) { $Config["options"]["jobs"] } else { "" }
 
 # Step 3: Build with CMake

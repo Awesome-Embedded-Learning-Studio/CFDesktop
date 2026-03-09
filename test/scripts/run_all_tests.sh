@@ -27,6 +27,10 @@ readonly NC='\033[0m'
 # 获取脚本目录
 TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LIB_TEST_DIR="$TEST_DIR/lib/bash"
+# 获取项目根目录和第三方工具目录
+PROJECT_ROOT="$(cd "$TEST_DIR/../.." && pwd)"
+THIRD_PARTY_DIR="$PROJECT_ROOT/third_party"
+BASH_UNIT_DIR="$THIRD_PARTY_DIR/bash-unit"
 TOTAL_TESTS=0
 PASSED_TESTS=0
 FAILED_TESTS=0
@@ -95,16 +99,51 @@ format_duration() {
 # =============================================================================
 
 check_bash_unit() {
-    if ! command -v bash-unit >/dev/null 2>&1; then
-        print_warning "bash-unit is not installed!"
+    # 首先尝试使用 PATH 中的 bash-unit（兼容 bash_unit 和 bash-unit 两种命名）
+    if command -v bash_unit >/dev/null 2>&1; then
+        return 0
+    fi
+
+    if command -v bash-unit >/dev/null 2>&1; then
+        return 0
+    fi
+
+    # 检查 third_party 中是否已安装
+    if [[ -f "$BASH_UNIT_DIR/bash_unit" ]]; then
+        export PATH="$PATH:$BASH_UNIT_DIR"
+        return 0
+    fi
+
+    if [[ -f "$BASH_UNIT_DIR/bash-unit" ]]; then
+        export PATH="$PATH:$BASH_UNIT_DIR"
+        return 0
+    fi
+
+    # 自动安装 bash-unit
+    print_warning "bash-unit is not installed!"
+    echo ""
+    echo -e "${CYAN}Auto-installing bash-unit to:${NC} $BASH_UNIT_DIR"
+    echo ""
+
+    # 创建 third_party 目录（如果不存在）
+    mkdir -p "$THIRD_PARTY_DIR"
+
+    # Clone bash-unit
+    if git clone --quiet https://github.com/bash-unit/bash_unit.git "$BASH_UNIT_DIR" 2>/dev/null; then
+        # 添加到 PATH
+        export PATH="$PATH:$BASH_UNIT_DIR"
+        echo -e "${GREEN}✓ bash-unit installed successfully!${NC}"
         echo ""
-        echo "To install bash-unit, run:"
-        echo "  git clone https://github.com/pgrange/bash-unit.git /path/to/bash-unit"
-        echo "  export PATH=\"\$PATH:/path/to/bash-unit\""
+        return 0
+    else
+        echo -e "${RED}✗ Failed to clone bash-unit repository!${NC}"
+        echo ""
+        echo "Please install manually:"
+        echo "  git clone https://github.com/bash-unit/bash_unit.git $BASH_UNIT_DIR"
+        echo "  export PATH=\"\$PATH:$BASH_UNIT_DIR\""
         echo ""
         return 1
     fi
-    return 0
 }
 
 # =============================================================================
@@ -127,7 +166,7 @@ run_single_test() {
     local exit_code=0
 
     # 运行测试，捕获输出到变量
-    if output=$(bash-unit "$test_file" 2>&1); then
+    if output=$(bash_unit "$test_file" 2>&1); then
         exit_code=0
     else
         exit_code=$?
@@ -147,14 +186,14 @@ run_single_test() {
     fi
 
     # 更新统计
-    ((TOTAL_TESTS++))
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
 
     if [[ $exit_code -eq 0 ]]; then
-        ((PASSED_TESTS++))
+        PASSED_TESTS=$((PASSED_TESTS + 1))
         print_test_pass "$test_name" "$formatted_duration"
         return 0
     else
-        ((FAILED_TESTS++))
+        FAILED_TESTS=$((FAILED_TESTS + 1))
         FAILED_TEST_LIST+=("$test_name")
         print_test_fail "$test_name" "$formatted_duration"
         return 1
@@ -176,7 +215,7 @@ run_all_tests() {
     fi
 
     echo -e "${GRAY}Test Directory:${NC} $LIB_TEST_DIR"
-    echo -e "${GRAY}Test Framework:${NC} $(bash-unit --version 2>&1 | head -1)"
+    echo -e "${GRAY}Test Framework:${NC} $(bash_unit -v 2>&1)"
     echo -e "${GRAY}Timestamp:${NC} $(date '+%Y-%m-%d %H:%M:%S')"
     echo ""
 

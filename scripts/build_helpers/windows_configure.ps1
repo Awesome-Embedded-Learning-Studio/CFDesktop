@@ -43,6 +43,17 @@ else {
 
 Write-LogInfo "Loading configuration from: $ConfigFile"
 
+# Safety check: config file must exist
+if (!(Test-Path $ConfigFile)) {
+    Write-LogError "Configuration file not found: $ConfigFile"
+    Write-LogError "Please create the configuration file from the .template file"
+    $templateFile = "$ConfigFile.template"
+    if (Test-Path $templateFile) {
+        Write-LogError "Example: Copy-Item '$templateFile' '$ConfigFile'"
+    }
+    exit 1
+}
+
 try {
     $ConfigData = Get-IniConfig -FilePath $ConfigFile
     Write-LogSuccess "Configuration loaded successfully!"
@@ -70,6 +81,20 @@ if ($BuildType -notin $ValidBuildTypes) {
 
 $SourceDir = $ConfigData["paths"]["source"]
 $BuildDir = $ConfigData["paths"]["build_dir"]
+
+# Safety check: BUILD_DIR must not be empty
+if ([string]::IsNullOrWhiteSpace($BuildDir)) {
+    Write-LogError "Configuration error: build_dir is not set in config file"
+    Write-LogError "Please check the [paths] section in: $ConfigFile"
+    exit 1
+}
+
+# Safety check: BUILD_DIR must not be project root
+if ($BuildDir -eq "." -or $BuildDir -eq "/" -or $BuildDir -eq "\") {
+    Write-LogError "Configuration error: build_dir cannot be project root or root directory"
+    Write-LogError "Current value: $BuildDir"
+    exit 1
+}
 
 # Resolve source directory: if relative, make it relative to project root
 if ([System.IO.Path]::IsPathRooted($SourceDir)) {

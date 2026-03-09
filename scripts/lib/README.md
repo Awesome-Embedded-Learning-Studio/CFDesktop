@@ -296,7 +296,7 @@ if (Test-MainBranch) {
 
 ```bash
 # 安装 bash-unit
-git clone https://github.com/pgrange/bash-unit.git
+git clone https://github.com/bash-unit/bash_unit.git
 
 # 运行测试
 bash-unit test/scripts/lib/bash/test_lib_common.sh

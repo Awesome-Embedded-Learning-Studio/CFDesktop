@@ -8,16 +8,18 @@
 #
 # =============================================================================
 
-# 测试框架依赖检查
-if ! command -v bash-unit >/dev/null 2>&1; then
-    echo "ERROR: bash-unit is not installed."
-    echo "Install from: https://github.com/pgrange/bash-unit"
+# 测试框架依赖检查（自动安装）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEST_HELPER_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+if ! source "$TEST_HELPER_DIR/lib/bash_unit_helper.sh" || ! ensure_bash_unit; then
     exit 1
 fi
 
+# 加载额外的断言函数
+source "$SCRIPT_DIR/assertions.sh"
+
 # 加载被测试的模块
-TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LIB_DIR="$(cd "$TEST_DIR/../../../scripts/lib/bash" && pwd)"
+LIB_DIR="$(cd "$SCRIPT_DIR/../../../../scripts/lib/bash" && pwd)"
 source "$LIB_DIR/lib_config.sh"
 
 # =============================================================================
@@ -55,8 +57,8 @@ test_get_ini_config_returns_config_variables() {
     local output
     output=$(get_ini_config "$temp_file")
 
-    assert_contains "$output" "config_cmake_generator"
-    assert_contains "$output" "config_paths_build_dir"
+    assert_contains "config_cmake_generator" "$output"
+    assert_contains "config_paths_build_dir" "$output"
 
     rm -f "$temp_file"
 }
@@ -97,10 +99,7 @@ EOF
 }
 
 test_get_ini_config_returns_error_for_missing_file() {
-    local output
-    output=$(get_ini_config "/nonexistent/file.ini" 2>&1)
-    assert_not_equals 0 $?
-    assert_contains "$output" "ERROR"
+    assert_fails "get_ini_config '/nonexistent/file.ini' 2>&1"
 }
 
 test_get_ini_value_returns_correct_value() {
@@ -119,19 +118,19 @@ test_get_ini_value_returns_correct_value() {
 test_get_default_config_file_returns_develop_config() {
     local config
     config=$(get_default_config_file "develop" "$(mktemp -d)")
-    assert_contains "$config" "build_develop_config.ini"
+    assert_contains "build_develop_config.ini" "$config"
 }
 
 test_get_default_config_file_returns_deploy_config() {
     local config
     config=$(get_default_config_file "deploy" "$(mktemp -d)")
-    assert_contains "$config" "build_deploy_config.ini"
+    assert_contains "build_deploy_config.ini" "$config"
 }
 
 test_get_default_config_file_returns_ci_config() {
     local config
     config=$(get_default_config_file "ci" "$(mktemp -d)")
-    assert_contains "$config" "build_ci_config.ini"
+    assert_contains "build_ci_config.ini" "$config"
 }
 
 # 如果直接运行此脚本，执行所有测试

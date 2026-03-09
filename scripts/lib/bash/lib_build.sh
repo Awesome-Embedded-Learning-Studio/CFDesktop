@@ -31,12 +31,51 @@ fi
 clean_build_dir() {
     local build_path="$1"
 
+    # 安全检查：路径不能为空
+    if [[ -z "$build_path" ]]; then
+        log "ERROR: Build path is empty! Refusing to clean to prevent accidental deletion." "ERROR"
+        return 1
+    fi
+
+    # 安全检查：路径不能是根目录
+    if [[ "$build_path" == "/" ]]; then
+        log "ERROR: Refusing to clean root directory!" "ERROR"
+        return 1
+    fi
+
+    # 安全检查：路径不能是用户主目录
+    if [[ "$build_path" == "$HOME" ]] || [[ "$build_path" == "$HOME/" ]]; then
+        log "ERROR: Refusing to clean home directory!" "ERROR"
+        return 1
+    fi
+
+    # 安全检查：路径不能是项目根目录（如果已设置）
+    if [[ -n "${PROJECT_ROOT:-}" ]] && [[ "$build_path" == "$PROJECT_ROOT" ]] || [[ "$build_path" == "$PROJECT_ROOT/" ]]; then
+        log "ERROR: Refusing to clean project root directory!" "ERROR"
+        return 1
+    fi
+
+    # 安全检查：路径必须是包含 build、out、build_ 等关键词的子目录
+    local basename
+    basename=$(basename "$build_path")
+    if [[ ! "$basename" =~ ^(build|out|build_.+|cmake-.+)$ ]]; then
+        log "WARNING: Build directory name '$basename' does not match expected pattern. Aborting for safety." "WARNING"
+        log "Expected patterns: build, out, build_*, cmake-*" "WARNING"
+        return 1
+    fi
+
     if [[ -d "$build_path" ]]; then
         log "Removing build directory: $build_path" "INFO"
         # 使用 find 进行更可靠的删除（特别是在 Docker 挂载卷上）
-        if find "$build_path" -mindepth 1 -delete 2>/dev/null || \
-           find "$build_path" -mindepth 1 -exec rm -rf {} + 2>/dev/null || \
-           rm -rf "$build_path" 2>/dev/null; then
+        if find "$build_path" -mindepth 1 -delete 2>/dev/null && \
+           rmdir "$build_path" 2>/dev/null; then
+            log "Build directory cleaned successfully" "SUCCESS"
+            return 0
+        elif find "$build_path" -mindepth 1 -exec rm -rf {} + 2>/dev/null && \
+             rmdir "$build_path" 2>/dev/null; then
+            log "Build directory cleaned successfully" "SUCCESS"
+            return 0
+        elif rm -rf "$build_path" 2>/dev/null; then
             log "Build directory cleaned successfully" "SUCCESS"
             return 0
         else

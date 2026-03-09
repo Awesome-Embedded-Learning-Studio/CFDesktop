@@ -223,7 +223,7 @@ main() {
     log_step "Step 3: Install aqtinstall"
     # -------------------------------------------------------------------------
     # 【优化5】Docker 中直接用系统 pip，无需 venv
-    pip3 install --no-cache-dir --break-system-packages aqtinstall
+    pip3 install --no-cache-dir --break-system-packages aqtinstall -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn
     mkdir -p /etc/xdg/aqtinstall
 cat > /etc/xdg/aqtinstall/aqtinstall.ini << 'EOF'
 [aqt]

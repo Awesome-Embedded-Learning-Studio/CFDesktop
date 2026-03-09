@@ -5,6 +5,14 @@
 
 set -e
 
+# Get the script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source library functions
+source "$SCRIPT_DIR/../lib/bash/lib_common.sh"
+source "$SCRIPT_DIR/../lib/bash/lib_config.sh"
+source "$SCRIPT_DIR/../lib/bash/lib_paths.sh"
+
 # Default values
 CONFIG_MODE="develop"
 CONFIG_FILE=""
@@ -20,111 +28,35 @@ while [[ $# -gt 0 ]]; do
             CONFIG_MODE="$1"
             shift
             ;;
+        -h|--help)
+            echo "Usage: $(basename "$0") [develop|deploy|ci] [-c|--config <config_file>]"
+            echo ""
+            echo "Arguments:"
+            echo "  develop    Use development configuration (default)"
+            echo "  deploy     Use deployment configuration"
+            echo "  ci         Use CI configuration"
+            echo "  -c, --config <file>  Use custom configuration file"
+            echo "  -h, --help           Show this help message"
+            exit 0
+            ;;
         *)
-            echo "ERROR: Unknown argument '$1'" >&2
-            echo "Usage: $0 [develop|deploy|ci] [-c|--config <config_file>]" >&2
+            log_error "Unknown argument '$1'"
+            log_error "Usage: $(basename "$0") [develop|deploy|ci] [-c|--config <config_file>]"
             exit 1
             ;;
     esac
 done
 
-# Function to read INI configuration file
-get_ini_config() {
-    local filepath="$1"
-    local current_section=""
-    local config=""
+log_separator "="
+log_info "Running Tests (Config: $CONFIG_MODE)"
+log_separator "="
 
-    if [[ ! -f "$filepath" ]]; then
-        echo "ERROR: Configuration file not found: $filepath" >&2
-        exit 1
-    fi
-
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        # Trim whitespace
-        line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-
-        # Skip empty lines and comments
-        if [[ -z "$line" ]] || [[ "$line" =~ ^[#\;] ]]; then
-            continue
-        fi
-
-        # Section header
-        if [[ "$line" =~ ^\[([^\]]+)\]$ ]]; then
-            current_section="${BASH_REMATCH[1]}"
-            continue
-        fi
-
-        # Key=value pair
-        if [[ "$line" =~ ^([^=]+)=(.*)$ ]]; then
-            local key=$(echo "${BASH_REMATCH[1]}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-            local value=$(echo "${BASH_REMATCH[2]}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-
-            if [[ -n "$current_section" ]]; then
-                config+="config_${current_section}_${key}=\"$value\""$'\n'
-            fi
-        fi
-    done < "$filepath"
-
-    echo "$config"
-}
-
-# Log function
-log() {
-    local level="$2"
-    local message="$1"
-    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
-    local color=""
-
-    case "$level" in
-        INFO)
-            color="\033[0;36m"    # Cyan
-            ;;
-        SUCCESS)
-            color="\033[0;32m"    # Green
-            ;;
-        WARNING)
-            color="\033[0;33m"    # Yellow
-            ;;
-        ERROR)
-            color="\033[0;31m"    # Red
-            ;;
-        *)
-            color="\033[0m"       # White/Default
-            ;;
-    esac
-
-    echo -e "${color}[$timestamp] [$level] $message\033[0m"
-}
-
-log "========================================" "INFO"
-log "Running Tests (Config: $CONFIG_MODE)" "INFO"
-log "========================================" "INFO"
-
-# Get the script directory and project root
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Script is in scripts/build_helpers/, so project root is two levels up
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-
-log "Project root: $PROJECT_ROOT" "INFO"
+log_info "Project root: $PROJECT_ROOT"
 cd "$PROJECT_ROOT"
 
-# Determine which config file to use
+# Use get_default_config_file from lib_config.sh
 if [[ -z "$CONFIG_FILE" ]]; then
-    case "$CONFIG_MODE" in
-        develop)
-            CONFIG_FILE="build_develop_config.ini"
-            ;;
-        deploy)
-            CONFIG_FILE="build_deploy_config.ini"
-            ;;
-        ci)
-            CONFIG_FILE="build_ci_config.ini"
-            ;;
-        *)
-            log "Unknown config: $CONFIG_MODE. Valid options are: develop, deploy, ci" "ERROR"
-            exit 1
-            ;;
-    esac
+    CONFIG_FILE="$(get_default_config_file "$CONFIG_MODE")"
 fi
 
 # Resolve relative path
@@ -132,40 +64,56 @@ if [[ "$CONFIG_FILE" != /* ]] && [[ "$CONFIG_FILE" != ~* ]]; then
     CONFIG_FILE="$SCRIPT_DIR/$CONFIG_FILE"
 fi
 
-log "Loading configuration from: $CONFIG_FILE" "INFO"
+log_info "Loading configuration from: $CONFIG_FILE"
 
-# Parse and evaluate configuration
+# Safety check: config file must exist
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    log_error "Configuration file not found: $CONFIG_FILE"
+    log_error "Please create the configuration file from the .template file"
+    log_error "Example: cp \"$CONFIG_FILE.template\" \"$CONFIG_FILE\""
+    exit 1
+fi
+
+# Use get_ini_config from lib_config.sh
 eval "$(get_ini_config "$CONFIG_FILE")"
-log "Configuration loaded successfully!" "SUCCESS"
+log_success "Configuration loaded successfully!"
 
 # Get build directory from config
 BUILD_DIR="$config_paths_build_dir"
+
+# Safety check: BUILD_DIR must not be empty
+if [[ -z "$BUILD_DIR" ]]; then
+    log_error "Configuration error: build_dir is not set in config file"
+    log_error "Please check the [paths] section in: $CONFIG_FILE"
+    exit 1
+fi
+
 BUILD_DIR="$PROJECT_ROOT/$BUILD_DIR/test"
 
-log "Test directory: $BUILD_DIR" "INFO"
-log "Command: ctest --test-dir $BUILD_DIR --output-on-failure" "INFO"
+log_info "Test directory: $BUILD_DIR"
+log_info "Command: ctest --test-dir $BUILD_DIR --output-on-failure"
 
 # Check if build directory exists
 if [[ ! -d "$BUILD_DIR" ]]; then
-    log "Build directory does not exist: $BUILD_DIR" "ERROR"
-    log "Please run the build script first before running tests." "ERROR"
+    log_error "Build directory does not exist: $BUILD_DIR"
+    log_error "Please run the build script first before running tests."
     exit 1
 fi
 
 # Run tests
-log "========================================" "INFO"
-log "Running tests..." "INFO"
-log "========================================" "INFO"
+log_separator "="
+log_info "Running tests..."
+log_separator "="
 
 if ctest --test-dir "$BUILD_DIR" --output-on-failure; then
-    log "========================================" "INFO"
-    log "All tests passed successfully!" "SUCCESS"
-    log "========================================" "INFO"
+    log_separator "="
+    log_success "All tests passed successfully!"
+    log_separator "="
     exit 0
 else
     exit_code=$?
-    log "========================================" "INFO"
-    log "Some tests failed with exit code: $exit_code" "WARNING"
-    log "========================================" "INFO"
+    log_separator "="
+    log_warn "Some tests failed with exit code: $exit_code"
+    log_separator "="
     exit $exit_code
 fi

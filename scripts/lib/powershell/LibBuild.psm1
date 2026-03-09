@@ -16,7 +16,7 @@
 function Clean-BuildDir {
     <#
     .SYNOPSIS
-        清理构建目录
+        清理构建目录（带安全检查）
 
     .PARAMETER BuildPath
         构建目录路径
@@ -28,6 +28,49 @@ function Clean-BuildDir {
         [Parameter(Mandatory=$true)]
         [string]$BuildPath
     )
+
+    # 安全检查：路径不能为空
+    if ([string]::IsNullOrWhiteSpace($BuildPath)) {
+        Write-LogError "ERROR: Build path is empty! Refusing to clean to prevent accidental deletion."
+        return $false
+    }
+
+    # 安全检查：路径不能是根目录
+    $normalizedPath = (Resolve-Path -LiteralPath $BuildPath -ErrorAction SilentlyContinue)?.Path ?? $BuildPath
+    if ($normalizedPath -eq "" -or $normalizedPath -eq "/" -or $normalizedPath -eq "\") {
+        Write-LogError "ERROR: Refusing to clean root directory!"
+        return $false
+    }
+
+    # 安全检查：路径不能是用户主目录
+    $homePath = $env:USERPROFILE
+    if ($normalizedPath -eq $homePath -or $normalizedPath -eq "$homePath\") {
+        Write-LogError "ERROR: Refusing to clean home directory!"
+        return $false
+    }
+
+    # 安全检查：路径不能是项目根目录（如果已设置）
+    if ($global:ProjectRoot -and ($normalizedPath -eq $global:ProjectRoot -or $normalizedPath -eq "$global:ProjectRoot\")) {
+        Write-LogError "ERROR: Refusing to clean project root directory!"
+        return $false
+    }
+
+    # 安全检查：路径名称必须匹配预期模式
+    $dirName = Split-Path -Leaf $BuildPath
+    $validPatterns = @("build", "out", "cmake-build", "build-")
+    $patternMatches = $false
+    foreach ($pattern in $validPatterns) {
+        if ($dirName -like "$pattern*") {
+            $patternMatches = $true
+            break
+        }
+    }
+
+    if (-not $patternMatches) {
+        Write-LogWarning "WARNING: Build directory name '$dirName' does not match expected pattern. Aborting for safety."
+        Write-LogWarning "Expected patterns: build, out, cmake-build, build-*"
+        return $false
+    }
 
     if (Test-Path $BuildPath) {
         Write-LogInfo "Removing build directory: $BuildPath"

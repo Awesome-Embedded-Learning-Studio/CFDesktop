@@ -8,16 +8,18 @@
 #
 # =============================================================================
 
-# 测试框架依赖检查
-if ! command -v bash-unit >/dev/null 2>&1; then
-    echo "ERROR: bash-unit is not installed."
-    echo "Install from: https://github.com/pgrange/bash-unit"
+# 测试框架依赖检查（自动安装）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEST_HELPER_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+if ! source "$TEST_HELPER_DIR/lib/bash_unit_helper.sh" || ! ensure_bash_unit; then
     exit 1
 fi
 
+# 加载额外的断言函数
+source "$SCRIPT_DIR/assertions.sh"
+
 # 加载被测试的模块
-TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LIB_DIR="$(cd "$TEST_DIR/../../../scripts/lib/bash" && pwd)"
+LIB_DIR="$(cd "$SCRIPT_DIR/../../../../scripts/lib/bash" && pwd)"
 source "$LIB_DIR/lib_paths.sh"
 
 # =============================================================================
@@ -71,13 +73,13 @@ test_lib_dir_environment_variable_is_set() {
 }
 
 test_path_exists_returns_true_for_existing_directory() {
-    path_exists "/tmp"
-    assert_equals 0 $?
+    path_exists "/tmp" && status=0 || status=$?
+    assert_equals 0 $status
 }
 
 test_path_exists_returns_false_for_nonexistent_path() {
-    path_exists "/nonexistent/path/that/does/not/exist"
-    assert_not_equals 0 $?
+    path_exists "/nonexistent/path/that/does/not/exist" && status=0 || status=$?
+    assert_not_equals 0 $status
 }
 
 test_ensure_dir_creates_directory() {

@@ -8,16 +8,18 @@
 #
 # =============================================================================
 
-# 测试框架依赖检查
-if ! command -v bash-unit >/dev/null 2>&1; then
-    echo "ERROR: bash-unit is not installed."
-    echo "Install from: https://github.com/pgrange/bash-unit"
+# 测试框架依赖检查（自动安装）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEST_HELPER_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+if ! source "$TEST_HELPER_DIR/lib/bash_unit_helper.sh" || ! ensure_bash_unit; then
     exit 1
 fi
 
+# 加载额外的断言函数
+source "$SCRIPT_DIR/assertions.sh"
+
 # 加载被测试的模块
-TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LIB_DIR="$(cd "$TEST_DIR/../../../scripts/lib/bash" && pwd)"
+LIB_DIR="$(cd "$SCRIPT_DIR/../../../../scripts/lib/bash" && pwd)"
 source "$LIB_DIR/lib_common.sh"
 
 # =============================================================================
@@ -27,44 +29,44 @@ source "$LIB_DIR/lib_common.sh"
 test_log_function_outputs_timestamp() {
     local output
     output=$(log "test message" "INFO" 2>&1)
-    assert_contains "$output" "["
-    assert_contains "$output" "]"
+    assert_contains "[" "$output"
+    assert_contains "]" "$output"
 }
 
 test_log_function_outputs_level() {
     local output
     output=$(log "test message" "INFO" 2>&1)
-    assert_contains "$output" "[INFO]"
+    assert_contains "[INFO]" "$output"
 }
 
 test_log_function_outputs_message() {
     local output
     output=$(log "test message" "INFO" 2>&1)
-    assert_contains "$output" "test message"
+    assert_contains "test message" "$output"
 }
 
 test_log_info_outputs_info_level() {
     local output
     output=$(log_info "test message" 2>&1)
-    assert_contains "$output" "[INFO]"
+    assert_contains "[INFO]" "$output"
 }
 
 test_log_success_outputs_success_level() {
     local output
     output=$(log_success "test message" 2>&1)
-    assert_contains "$output" "[SUCCESS]"
+    assert_contains "[SUCCESS]" "$output"
 }
 
 test_log_warn_outputs_warning_level() {
     local output
     output=$(log_warn "test message" 2>&1)
-    assert_contains "$output" "[WARNING]"
+    assert_contains "[WARNING]" "$output"
 }
 
 test_log_error_outputs_error_level() {
     local output
     output=$(log_error "test message" 2>&1)
-    assert_contains "$output" "[ERROR]"
+    assert_contains "[ERROR]" "$output"
 }
 
 test_color_constants_are_defined() {

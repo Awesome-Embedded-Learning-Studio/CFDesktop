@@ -8,16 +8,18 @@
 #
 # =============================================================================
 
-# 测试框架依赖检查
-if ! command -v bash-unit >/dev/null 2>&1; then
-    echo "ERROR: bash-unit is not installed."
-    echo "Install from: https://github.com/pgrange/bash-unit"
+# 测试框架依赖检查（自动安装）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEST_HELPER_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+if ! source "$TEST_HELPER_DIR/lib/bash_unit_helper.sh" || ! ensure_bash_unit; then
     exit 1
 fi
 
+# 加载额外的断言函数
+source "$SCRIPT_DIR/assertions.sh"
+
 # 加载被测试的模块
-TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-LIB_DIR="$(cd "$TEST_DIR/../../../scripts/lib/bash" && pwd)"
+LIB_DIR="$(cd "$SCRIPT_DIR/../../../../scripts/lib/bash" && pwd)"
 source "$LIB_DIR/lib_git.sh"
 
 # =============================================================================
@@ -61,23 +63,19 @@ test_get_patch_version_returns_empty_for_missing_patch() {
 }
 
 test_compare_versions_equal() {
-    compare_versions "1.2.3" "1.2.3"
-    assert_equals 0 $?
+    assert_status_code 0 "compare_versions '1.2.3' '1.2.3'"
 }
 
 test_compare_versions_greater() {
-    compare_versions "1.3.0" "1.2.9"
-    assert_equals 1 $?
+    assert_status_code 1 "compare_versions '1.3.0' '1.2.9'"
 }
 
 test_compare_versions_less() {
-    compare_versions "1.2.9" "1.3.0"
-    assert_equals 2 $?
+    assert_status_code 2 "compare_versions '1.2.9' '1.3.0'"
 }
 
 test_compare_versions_different_lengths() {
-    compare_versions "1.2" "1.2.0"
-    assert_equals 0 $?
+    assert_status_code 0 "compare_versions '1.2' '1.2.0'"
 }
 
 test_determine_verify_level_returns_major_for_major_change() {
@@ -113,29 +111,29 @@ test_determine_verify_level_handles_empty_remote_version() {
 test_get_verify_level_description_returns_major_description() {
     local result
     result=$(get_verify_level_description "major")
-    assert_contains "$result" "Major"
-    assert_contains "$result" "X64"
-    assert_contains "$result" "ARM64"
+    assert_contains "Major" "$result"
+    assert_contains "X64" "$result"
+    assert_contains "ARM64" "$result"
 }
 
 test_get_verify_level_description_returns_minor_description() {
     local result
     result=$(get_verify_level_description "minor")
-    assert_contains "$result" "Minor"
-    assert_contains "$result" "X64"
+    assert_contains "Minor" "$result"
+    assert_contains "X64" "$result"
 }
 
 test_get_verify_level_description_returns_patch_description() {
     local result
     result=$(get_verify_level_description "patch")
-    assert_contains "$result" "Patch"
-    assert_contains "$result" "X64"
+    assert_contains "Patch" "$result"
+    assert_contains "X64" "$result"
 }
 
 test_get_verify_level_description_handles_unknown_level() {
     local result
     result=$(get_verify_level_description "unknown")
-    assert_contains "$result" "未知验证级别"
+    assert_contains "未知验证级别" "$result"
 }
 
 # 如果直接运行此脚本，执行所有测试
