@@ -20408,10 +20408,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#12-动画系统性能优化" class="md-nav__link">
+  <a href="#12-动画工厂缓存管理优化" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.2 动画系统性能优化
+        1.2 动画工厂缓存管理优化
       
     </span>
   </a>
@@ -20469,21 +20469,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#23-scripts-脚本重构" class="md-nav__link">
+  <a href="#23-测试覆盖率提升" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.3 Scripts 脚本重构
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#24-测试覆盖率提升" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2.4 测试覆盖率提升
+        2.3 测试覆盖率提升
       
     </span>
   </a>
@@ -21416,21 +21405,26 @@
 4. 添加查询频率限制机制</p>
 <p><strong>预期收益：</strong> 减少系统调用次数，降低CPU占用</p>
 <hr />
-<h4 id="12-动画系统性能优化">1.2 动画系统性能优化<a class="headerlink" href="#12-动画系统性能优化" title="链接到此章节">&para;</a></h4>
+<h4 id="12-动画工厂缓存管理优化">1.2 动画工厂缓存管理优化<a class="headerlink" href="#12-动画工厂缓存管理优化" title="链接到此章节">&para;</a></h4>
 <p><strong>问题文件：</strong>
-- <code>ui/widget/material/base/ripple_helper.cpp</code>
+- <code>ui/components/material/cfmaterial_animation_factory.cpp</code>
 - <code>ui/widget/material/base/state_machine.cpp</code>
-- <code>ui/components/animation_factory_manager.h</code></p>
+- <code>ui/widget/material/base/elevation_controller.cpp</code></p>
 <p><strong>问题分析：</strong>
-- 波纹效果每次触发都遍历所有波纹实例
-- 状态变更频繁触发UI重绘
-- 动画工厂缓存可能导致内存占用增加</p>
-<p><strong>优化方案：</strong>
-1. 实现脏矩形机制，只重绘变化区域
-2. 批量更新波纹状态，减少重绘次数
-3. 使用 <code>QTimer::singleShot</code> 合并高频更新
-4. 添加动画实例缓存上限</p>
-<p><strong>预期收益：</strong> 减少UI重绘开销，提升动画流畅度</p>
+- <code>createAnimation()</code> 使用 <code>targetWidget</code> 指针地址作为缓存 key
+- widget 销毁后缓存条目不会被清理，导致内存泄漏
+- 传 <code>nullptr</code> 时 key = "token_0"，所有调用共享同一实例（如 state_machine 和 elevation_controller）</p>
+<p><strong>代码位置：</strong> <a href="../ui/components/material/cfmaterial_animation_factory.cpp#L109-L152">cfmaterial_animation_factory.cpp:109-152</a></p>
+<p><strong>优化方案（已实现）：</strong>
+1. 添加 <code>owner</code> 参数，优先使用 owner 作为缓存 key
+2. 监听 <code>QObject::destroyed</code> 信号，widget/owner 销毁时自动清理缓存
+3. 调用处传入 <code>this</code> 作为 owner，每个组件有自己的动画实例</p>
+<p><strong>预期收益：</strong> 防止内存泄漏，按调用者隔离动画实例</p>
+<p><strong>实现文件：</strong>
+- <code>ui/components/material/cfmaterial_animation_factory.h</code> - 添加 owner 参数
+- <code>ui/components/material/cfmaterial_animation_factory.cpp</code> - 实现自动清理
+- <code>ui/widget/material/base/state_machine.cpp</code> - 传入 this 作为 owner
+- <code>ui/widget/material/base/elevation_controller.cpp</code> - 传入 this 作为 owner</p>
 <hr />
 <h4 id="13-内存管理优化">1.3 内存管理优化<a class="headerlink" href="#13-内存管理优化" title="链接到此章节">&para;</a></h4>
 <p><strong>问题文件：</strong>
@@ -21464,20 +21458,7 @@
 3. 考虑添加错误上下文追踪功能</p>
 <p><strong>预期收益：</strong> 提高错误处理一致性和调试效率</p>
 <hr />
-<h4 id="23-scripts-脚本重构">2.3 Scripts 脚本重构<a class="headerlink" href="#23-scripts-脚本重构" title="链接到此章节">&para;</a></h4>
-<p><strong>问题目录：</strong> <code>scripts/</code></p>
-<p><strong>问题分析：</strong>
-- scripts 目录下存在大量重复代码
-- 缺乏统一的脚本框架和工具函数库
-- 各脚本之间复用性差</p>
-<p><strong>优化方案：</strong>
-1. 提取公共脚本函数库（<code>scripts/lib/</code>）
-2. 统一脚本参数解析方式
-3. 规范化脚本输出格式和日志
-4. 添加脚本单元测试</p>
-<p><strong>预期收益：</strong> 减少代码重复，提高脚本可维护性</p>
-<hr />
-<h4 id="24-测试覆盖率提升">2.4 测试覆盖率提升<a class="headerlink" href="#24-测试覆盖率提升" title="链接到此章节">&para;</a></h4>
+<h4 id="23-测试覆盖率提升">2.3 测试覆盖率提升<a class="headerlink" href="#23-测试覆盖率提升" title="链接到此章节">&para;</a></h4>
 <p><strong>当前状态：</strong> 有 GoogleTest 框架，但测试覆盖不足</p>
 <p><strong>优化方案：</strong>
 1. 添加代码覆盖率统计工具（如 gcov/lcov）
@@ -21509,6 +21490,7 @@
 <th>优化项</th>
 <th>预期工作量</th>
 <th>影响范围</th>
+<th>状态</th>
 </tr>
 </thead>
 <tbody>
@@ -21517,42 +21499,35 @@
 <td>系统信息查询缓存优化</td>
 <td>中</td>
 <td>全局性能</td>
+<td>待完成</td>
 </tr>
 <tr>
 <td>P0</td>
-<td>动画系统脏矩形机制</td>
-<td>高</td>
-<td>UI性能</td>
+<td>动画工厂缓存泄漏修复</td>
+<td>中</td>
+<td>内存稳定性</td>
+<td>✅ 已完成</td>
 </tr>
 <tr>
 <td>P0</td>
 <td>测试覆盖率提升</td>
 <td>高</td>
 <td>可靠性</td>
-</tr>
-<tr>
-<td>P1</td>
-<td>内存泄漏风险修复</td>
-<td>中</td>
-<td>稳定性</td>
-</tr>
-<tr>
-<td>P1</td>
-<td>Scripts 脚本重构</td>
-<td>中</td>
-<td>可维护性</td>
+<td>待完成</td>
 </tr>
 <tr>
 <td>P2</td>
 <td>错误处理标准化</td>
 <td>低</td>
 <td>代码质量</td>
+<td>待完成</td>
 </tr>
 <tr>
 <td>P3</td>
 <td>构建配置优化</td>
 <td>低</td>
 <td>开发体验</td>
+<td>待完成</td>
 </tr>
 </tbody>
 </table>
@@ -21562,8 +21537,7 @@
 <p><strong>性能优化：</strong>
 - <code>base/system/memory/private/linux_impl/cached_memory.cpp</code> - 缓存策略
 - <code>base/system/cpu/private/linux_impl/cpu_profile.cpp</code> - CPU查询异步化
-- <code>ui/widget/material/base/ripple_helper.cpp</code> - 波纹批量更新
-- <code>ui/widget/material/base/state_machine.cpp</code> - 状态更新合并</p>
+- <code>ui/components/material/cfmaterial_animation_factory.cpp</code> - 动画缓存清理机制</p>
 <p><strong>架构优化：</strong>
 - <code>base/include/base/expected/expected.hpp</code> - 错误处理增强
 - <code>ui/core/theme_manager.cpp</code> - 单例模式优化
@@ -21615,7 +21589,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月9日 12:23:41 CST">2026年3月9日 12:23:41</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年3月9日 17:34:21 CST">2026年3月9日 17:34:21</span>
   </span>
 
     
