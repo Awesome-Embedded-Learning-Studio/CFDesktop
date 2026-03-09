@@ -233,12 +233,41 @@ if is_main_branch; then
     log_info "验证级别: X64 FastBuild + Tests"
     echo ""
 
+    # 先执行增量构建
+    log_step "开始增量构建..."
     DOCKER_ARGS=(
-        "--verify"
-        "--fast-build"
+        "--build-project-fast"
         "--arch"
         "amd64"
     )
+
+    if ! bash "$DOCKER_START_SCRIPT" "${DOCKER_ARGS[@]}"; then
+        log_error "增量构建验证失败"
+        exit 1
+    fi
+
+    log_success "增量构建验证通过"
+    echo ""
+
+    # 再执行测试
+    log_step "开始运行测试..."
+    DOCKER_ARGS=(
+        "--run-project-test"
+        "--arch"
+        "amd64"
+    )
+
+    if ! bash "$DOCKER_START_SCRIPT" "${DOCKER_ARGS[@]}"; then
+        log_error "测试验证失败"
+        exit 1
+    fi
+
+    log_success "测试验证通过"
+    echo ""
+    log_success "========================================"
+    log_success "所有验证通过，可以推送"
+    log_success "========================================"
+    exit 0
 
 elif is_release_branch; then
     # =============================================================================
