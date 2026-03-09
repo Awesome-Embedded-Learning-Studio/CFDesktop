@@ -234,9 +234,10 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      *          animation instance, even if one with the same configuration
      *          already exists.
      *
-     * @param  descriptor Animation configuration descriptor.
-     * @param  targetWidget Optional target widget for the animation.
-     *                      The animation applies to this widget.
+     * @param[in]  descriptor Animation configuration descriptor.
+     * @param[in]  targetWidget Optional target widget for the animation.
+     *                         The animation applies to this widget.
+     * @param[in]  owner Optional owner QObject for memory management.
      *
      * @return WeakPtr to the created animation, or invalid WeakPtr if:
      *         - Animation type is not supported
@@ -256,7 +257,8 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      * @endcode
      */
     cf::WeakPtr<ICFAbstractAnimation> createAnimation(const AnimationDescriptor& descriptor,
-                                                      QWidget* targetWidget = nullptr);
+                                                      QWidget* targetWidget = nullptr,
+                                                      QObject* owner = nullptr);
 
     /**
      * @brief  Create a property animation for a float value.
@@ -295,12 +297,9 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      * @endcode
      */
     cf::WeakPtr<ICFAbstractAnimation> createPropertyAnimation(
-        float* value,
-        float from,
-        float to,
-        int durationMs,
+        float* value, float from, float to, int durationMs,
         cf::ui::base::Easing::Type easing = cf::ui::base::Easing::Type::EmphasizedDecelerate,
-        QWidget* targetWidget = nullptr);
+        QWidget* targetWidget = nullptr, QObject* owner = nullptr);
 
     /**
      * @brief  Set the animation strategy for this factory.

@@ -55,25 +55,32 @@ CFDesktop/
 
 ---
 
-#### 1.2 动画系统性能优化
+#### 1.2 动画工厂缓存管理优化
 
 **问题文件：**
-- `ui/widget/material/base/ripple_helper.cpp`
+- `ui/components/material/cfmaterial_animation_factory.cpp`
 - `ui/widget/material/base/state_machine.cpp`
-- `ui/components/animation_factory_manager.h`
+- `ui/widget/material/base/elevation_controller.cpp`
 
 **问题分析：**
-- 波纹效果每次触发都遍历所有波纹实例
-- 状态变更频繁触发UI重绘
-- 动画工厂缓存可能导致内存占用增加
+- `createAnimation()` 使用 `targetWidget` 指针地址作为缓存 key
+- widget 销毁后缓存条目不会被清理，导致内存泄漏
+- 传 `nullptr` 时 key = "token_0"，所有调用共享同一实例（如 state_machine 和 elevation_controller）
 
-**优化方案：**
-1. 实现脏矩形机制，只重绘变化区域
-2. 批量更新波纹状态，减少重绘次数
-3. 使用 `QTimer::singleShot` 合并高频更新
-4. 添加动画实例缓存上限
+**代码位置：** [cfmaterial_animation_factory.cpp:109-152](../ui/components/material/cfmaterial_animation_factory.cpp#L109-L152)
 
-**预期收益：** 减少UI重绘开销，提升动画流畅度
+**优化方案（已实现）：**
+1. 添加 `owner` 参数，优先使用 owner 作为缓存 key
+2. 监听 `QObject::destroyed` 信号，widget/owner 销毁时自动清理缓存
+3. 调用处传入 `this` 作为 owner，每个组件有自己的动画实例
+
+**预期收益：** 防止内存泄漏，按调用者隔离动画实例
+
+**实现文件：**
+- `ui/components/material/cfmaterial_animation_factory.h` - 添加 owner 参数
+- `ui/components/material/cfmaterial_animation_factory.cpp` - 实现自动清理
+- `ui/widget/material/base/state_machine.cpp` - 传入 this 作为 owner
+- `ui/widget/material/base/elevation_controller.cpp` - 传入 this 作为 owner
 
 ---
 
@@ -126,26 +133,7 @@ CFDesktop/
 
 ---
 
-#### 2.3 Scripts 脚本重构
-
-**问题目录：** `scripts/`
-
-**问题分析：**
-- scripts 目录下存在大量重复代码
-- 缺乏统一的脚本框架和工具函数库
-- 各脚本之间复用性差
-
-**优化方案：**
-1. 提取公共脚本函数库（`scripts/lib/`）
-2. 统一脚本参数解析方式
-3. 规范化脚本输出格式和日志
-4. 添加脚本单元测试
-
-**预期收益：** 减少代码重复，提高脚本可维护性
-
----
-
-#### 2.4 测试覆盖率提升
+#### 2.3 测试覆盖率提升
 
 **当前状态：** 有 GoogleTest 框架，但测试覆盖不足
 
@@ -184,15 +172,13 @@ CFDesktop/
 
 ## 优先级排序
 
-| 优先级 | 优化项 | 预期工作量 | 影响范围 |
-|--------|--------|-----------|----------|
-| P0 | 系统信息查询缓存优化 | 中 | 全局性能 |
-| P0 | 动画系统脏矩形机制 | 高 | UI性能 |
-| P0 | 测试覆盖率提升 | 高 | 可靠性 |
-| P1 | 内存泄漏风险修复 | 中 | 稳定性 |
-| P1 | Scripts 脚本重构 | 中 | 可维护性 |
-| P2 | 错误处理标准化 | 低 | 代码质量 |
-| P3 | 构建配置优化 | 低 | 开发体验 |
+| 优先级 | 优化项 | 预期工作量 | 影响范围 | 状态 |
+|--------|--------|-----------|----------|------|
+| P0 | 系统信息查询缓存优化 | 中 | 全局性能 | 待完成 |
+| P0 | 动画工厂缓存泄漏修复 | 中 | 内存稳定性 | ✅ 已完成 |
+| P0 | 测试覆盖率提升 | 高 | 可靠性 | 待完成 |
+| P2 | 错误处理标准化 | 低 | 代码质量 | 待完成 |
+| P3 | 构建配置优化 | 低 | 开发体验 | 待完成 |
 
 ---
 
@@ -203,8 +189,7 @@ CFDesktop/
 **性能优化：**
 - `base/system/memory/private/linux_impl/cached_memory.cpp` - 缓存策略
 - `base/system/cpu/private/linux_impl/cpu_profile.cpp` - CPU查询异步化
-- `ui/widget/material/base/ripple_helper.cpp` - 波纹批量更新
-- `ui/widget/material/base/state_machine.cpp` - 状态更新合并
+- `ui/components/material/cfmaterial_animation_factory.cpp` - 动画缓存清理机制
 
 **架构优化：**
 - `base/include/base/expected/expected.hpp` - 错误处理增强

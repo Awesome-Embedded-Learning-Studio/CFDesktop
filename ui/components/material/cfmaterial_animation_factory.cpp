@@ -16,9 +16,9 @@
 #include "cfmaterial_animation_factory.h"
 #include "animation_factory_manager.h"
 #include "cfmaterial_fade_animation.h"
+#include "cfmaterial_property_animation.h"
 #include "cfmaterial_scale_animation.h"
 #include "cfmaterial_slide_animation.h"
-#include "cfmaterial_property_animation.h"
 #include "token/animation_token_mapping.h"
 #include <cstring>
 
@@ -108,7 +108,7 @@ CFMaterialAnimationFactory::getAnimation(const char* animationToken) {
 
 cf::WeakPtr<ICFAbstractAnimation>
 CFMaterialAnimationFactory::createAnimation(const AnimationDescriptor& descriptor,
-                                            QWidget* targetWidget) {
+                                            QWidget* targetWidget, QObject* owner) {
 
     // Check global enabled state
     if (!globalEnabled_) {
@@ -123,6 +123,20 @@ CFMaterialAnimationFactory::createAnimation(const AnimationDescriptor& descripto
         return cf::WeakPtr<ICFAbstractAnimation>();
     }
 
+    // Generate a unique key for this animation
+    // Priority: owner > targetWidget, ensuring each caller has its own cached instance
+    QObject* keyObject = owner ? owner : targetWidget;
+    std::string key = adjustedDescriptor.motionToken;
+    key += "_";
+    key += std::to_string(reinterpret_cast<uintptr_t>(keyObject));
+
+    // Check if animation already exists in cache
+    auto it = animations_.find(key);
+    if (it != animations_.end()) {
+        // Return cached instance
+        return it->second->GetWeakPtr();
+    }
+
     // Create animation based on type
     std::unique_ptr<ICFAbstractAnimation> animation;
     const char* type = adjustedDescriptor.animationType;
@@ -135,15 +149,20 @@ CFMaterialAnimationFactory::createAnimation(const AnimationDescriptor& descripto
         animation = createScaleAnimation(adjustedDescriptor, targetWidget);
     }
 
-    // Generate a unique key for this animation
-    std::string key = adjustedDescriptor.motionToken;
-    key += "_";
-    key += std::to_string(reinterpret_cast<uintptr_t>(targetWidget));
-
     // Store and return WeakPtr
     if (animation) {
         ICFAbstractAnimation* rawPtr = animation.get();
         animations_[key] = std::move(animation);
+
+        // Monitor owner/targetWidget destruction to auto-cleanup cache
+        // This prevents memory leaks when widgets are destroyed
+        if (owner) {
+            connect(owner, &QObject::destroyed, this, [this, key]() { animations_.erase(key); });
+        } else if (targetWidget) {
+            connect(targetWidget, &QObject::destroyed, this,
+                    [this, key]() { animations_.erase(key); });
+        }
+
         emit animationCreated(QString::fromUtf8(key.c_str()));
         return rawPtr->GetWeakPtr();
     }
@@ -298,7 +317,7 @@ bool CFMaterialAnimationFactory::shouldEnableAnimation(QWidget* widget) const {
 
 cf::WeakPtr<ICFAbstractAnimation> CFMaterialAnimationFactory::createPropertyAnimation(
     float* value, float from, float to, int durationMs, cf::ui::base::Easing::Type easing,
-    QWidget* targetWidget) {
+    QWidget* targetWidget, QObject* owner) {
 
     // Check global enabled state
     if (!globalEnabled_) {
@@ -310,24 +329,43 @@ cf::WeakPtr<ICFAbstractAnimation> CFMaterialAnimationFactory::createPropertyAnim
         return cf::WeakPtr<ICFAbstractAnimation>();
     }
 
+    // Generate a unique key for this animation
+    // Priority: owner > targetWidget, ensuring each caller has its own cached instance
+    QObject* keyObject = owner ? owner : targetWidget;
+    std::string key = "property_";
+    key += std::to_string(reinterpret_cast<uintptr_t>(value));
+    key += "_";
+    key += std::to_string(reinterpret_cast<uintptr_t>(keyObject));
+
+    // Check if animation already exists in cache
+    auto it = animations_.find(key);
+    if (it != animations_.end()) {
+        // Return cached instance
+        return it->second->GetWeakPtr();
+    }
+
     // Create property animation
-    auto anim = std::make_unique<CFMaterialPropertyAnimation>(value, from, to, durationMs, easing,
-                                                                nullptr);
+    auto anim =
+        std::make_unique<CFMaterialPropertyAnimation>(value, from, to, durationMs, easing, nullptr);
     anim->setTargetFps(targetFps_);
     if (targetWidget) {
         anim->setTargetWidget(targetWidget);
     }
 
-    // Generate a unique key for this animation
-    std::string key = "property_";
-    key += std::to_string(reinterpret_cast<uintptr_t>(value));
-    key += "_";
-    key += std::to_string(reinterpret_cast<uintptr_t>(targetWidget));
-
     // Store and return WeakPtr
     if (anim) {
         ICFAbstractAnimation* rawPtr = anim.get();
         animations_[key] = std::move(anim);
+
+        // Monitor owner/targetWidget destruction to auto-cleanup cache
+        // This prevents memory leaks when widgets are destroyed
+        if (owner) {
+            connect(owner, &QObject::destroyed, this, [this, key]() { animations_.erase(key); });
+        } else if (targetWidget) {
+            connect(targetWidget, &QObject::destroyed, this,
+                    [this, key]() { animations_.erase(key); });
+        }
+
         emit animationCreated(QString::fromUtf8(key.c_str()));
         return rawPtr->GetWeakPtr();
     }

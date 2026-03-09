@@ -166,14 +166,14 @@ void StateMachine::animateOpacityTo(float to) {
     // createAnimation creates a separate animation instance per call.
     // See ElevationController::animatePressOffsetTo for the same pattern.
     AnimationDescriptor desc(
-        "fade",                    // Animation type
-        "md.motion.shortEnter",    // Motion spec (short duration for hover states)
-        "opacity",                 // Property (we'll override with setRange)
-        from,                      // Start value
-        to                         // End value
+        "fade",                 // Animation type
+        "md.motion.shortEnter", // Motion spec (short duration for hover states)
+        "opacity",              // Property (we'll override with setRange)
+        from,                   // Start value
+        to                      // End value
     );
 
-    auto anim = factory->createAnimation(desc, nullptr);
+    auto anim = factory->createAnimation(desc, nullptr, this);
     if (!anim) {
         // Fallback: direct set if animation creation fails
         m_opacity = to;

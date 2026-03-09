@@ -148,15 +148,15 @@ void MdElevationController::animatePressOffsetTo(float to) {
     // Create custom animation descriptor with longer duration for smoother press effect
     // Using "md.motion.longEnter" for slower, more noticeable animation
     AnimationDescriptor desc(
-        "fade",                    // Animation type
-        "md.motion.longEnter",     // Motion spec (longer duration for smooth press)
-        "opacity",                 // Property (we'll override with setRange)
-        from,                      // Start value
-        to                         // End value
+        "fade",                // Animation type
+        "md.motion.longEnter", // Motion spec (longer duration for smooth press)
+        "opacity",             // Property (we'll override with setRange)
+        from,                  // Start value
+        to                     // End value
     );
 
     // Create animation from descriptor
-    auto anim = factory->createAnimation(desc, nullptr);
+    auto anim = factory->createAnimation(desc, nullptr, this);
     if (!anim) {
         // Fallback: direct set if animation creation fails
         m_currentPressOffset = to;

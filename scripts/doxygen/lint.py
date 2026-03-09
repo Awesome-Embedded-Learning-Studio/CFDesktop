@@ -4,7 +4,7 @@ Strict Doxygen Linter for Modern C++ Projects
 
 - Scans directory recursively
 - Applies Doxygen compliance checks
-- Writes failures to FAILED_DOXYGEN.md
+- Writes failures to FAILED_DOXYGEN.md in project root
 - Returns non-zero exit code if violations found
 """
 
@@ -20,7 +20,43 @@ from typing import List, Tuple, Iterable
 # ===================== CONFIGURATION ========================
 # ============================================================
 
-PROJECT_ROOT: Path = Path.cwd()
+
+def find_project_root() -> Path:
+    """Find the project root by searching for .git directory or markers.
+
+    Starts from the script location and searches upward.
+
+    Returns:
+        Path to the project root directory.
+    """
+    # Start from the script's directory
+    script_path = Path(__file__).resolve().parent
+
+    # Known project root markers (in order of priority)
+    markers = [".git", "CMakeLists.txt", ".project-root"]
+
+    # Search upward from script directory
+    current = script_path
+    while current != current.parent:  # Stop at filesystem root
+        # Check if any marker exists
+        if any((current / marker).exists() for marker in markers):
+            return current
+
+        # Also check if we're in a known project structure
+        # (scripts/doxygen/lint.py should be in project root)
+        if current.name == "scripts":
+            parent = current.parent
+            # Check if this looks like a project root
+            if any((parent / marker).exists() for marker in markers):
+                return parent
+
+        current = current.parent
+
+    # Fallback: use current working directory
+    return Path.cwd()
+
+
+PROJECT_ROOT: Path = find_project_root()
 
 # Directories to ignore
 EXCLUDED_DIRS: Tuple[str, ...] = (
