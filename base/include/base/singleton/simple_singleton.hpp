@@ -62,6 +62,10 @@ template <typename SingleTargetClass> class SimpleSingleton {
         return target;
     }
 
+  protected:
+    SimpleSingleton() = default;
+    ~SimpleSingleton() = default;
+
   private:
     SimpleSingleton(const SimpleSingleton&) = delete;
     SimpleSingleton& operator=(const SimpleSingleton&) = delete;

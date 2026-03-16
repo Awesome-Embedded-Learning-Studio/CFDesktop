@@ -58,7 +58,7 @@ set(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS 0)
 set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS 0)
 set(CMAKE_C_USE_RESPONSE_FILE_FOR_INCLUDES 0)
 set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_INCLUDES 0)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -134,6 +134,10 @@ add_subdirectory(ui)
 # Log base module end
 log_module_end("ui")
 
+log_module_start("desktop")
+add_subdirectory(desktop)
+# Log base module end
+log_module_end("desktop")
 
 log_module_start("example")
 add_subdirectory("example")

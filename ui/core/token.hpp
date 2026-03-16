@@ -129,8 +129,8 @@ template <typename T, uint64_t Hash> class StaticToken {
     /// @brief Compile-time hash of the token name.
     static constexpr uint64_t hash_value = Hash;
 
-    /// @brief Default constructor is deleted.
-    StaticToken() = delete;
+    /// @brief Default constructor.
+    StaticToken() = default;
 
     /// @brief Copy constructor is deleted.
     StaticToken(const StaticToken&) = delete;
@@ -377,8 +377,8 @@ class TokenRegistry {
  * @since      0.1
  * @ingroup    ui_core
  */
-template <typename T, uint64_t Hash> auto StaticToken<T, Hash>::get()
-    -> cf::expected<T*, TokenError> {
+template <typename T, uint64_t Hash>
+auto StaticToken<T, Hash>::get() -> cf::expected<T*, TokenError> {
     return TokenRegistry::get().get<StaticToken<T, Hash>>();
 }
 
@@ -394,8 +394,8 @@ template <typename T, uint64_t Hash> auto StaticToken<T, Hash>::get()
  * @since      0.1
  * @ingroup    ui_core
  */
-template <typename T, uint64_t Hash> auto StaticToken<T, Hash>::get_const()
-    -> cf::expected<const T*, TokenError> {
+template <typename T, uint64_t Hash>
+auto StaticToken<T, Hash>::get_const() -> cf::expected<const T*, TokenError> {
     return TokenRegistry::get().get_const<StaticToken<T, Hash>>();
 }
 
@@ -510,8 +510,8 @@ inline const detail::TokenSlot* TokenRegistry::find_slot_locked(uint64_t hash) c
 // Static Token Registration
 // -----------------------------------------------------------------------------
 
-template <typename TokenToken, typename... Args> auto TokenRegistry::register_token(Args&&... args)
-    -> Result<void> {
+template <typename TokenToken, typename... Args>
+auto TokenRegistry::register_token(Args&&... args) -> Result<void> {
     using T = typename TokenToken::value_type;
     constexpr uint64_t hash = TokenToken::hash_value;
 
@@ -536,8 +536,8 @@ template <typename TokenToken, typename... Args> auto TokenRegistry::register_to
 // Static Token Get
 // -----------------------------------------------------------------------------
 
-template <typename TokenToken> auto TokenRegistry::get()
-    -> Result<typename TokenToken::value_type*> {
+template <typename TokenToken>
+auto TokenRegistry::get() -> Result<typename TokenToken::value_type*> {
     using T = typename TokenToken::value_type;
     constexpr uint64_t hash = TokenToken::hash_value;
 
@@ -564,8 +564,8 @@ template <typename TokenToken> auto TokenRegistry::get()
     return std::any_cast<T>(a);
 }
 
-template <typename TokenToken> auto TokenRegistry::get_const() const
-    -> Result<const typename TokenToken::value_type*> {
+template <typename TokenToken>
+auto TokenRegistry::get_const() const -> Result<const typename TokenToken::value_type*> {
     using T = typename TokenToken::value_type;
     constexpr uint64_t hash = TokenToken::hash_value;
 
@@ -614,8 +614,8 @@ auto TokenRegistry::register_dynamic(std::string_view name, Args&&... args) -> R
     return {};
 }
 
-template <typename T> auto TokenRegistry::register_dynamic(std::string_view name, const T& value)
-    -> Result<void> {
+template <typename T>
+auto TokenRegistry::register_dynamic(std::string_view name, const T& value) -> Result<void> {
     uint64_t hash = cf::hash::fnv1a64(name);
 
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
@@ -634,8 +634,8 @@ template <typename T> auto TokenRegistry::register_dynamic(std::string_view name
     return {};
 }
 
-template <typename T> auto TokenRegistry::register_dynamic(std::string_view name, T&& value)
-    -> Result<void> {
+template <typename T>
+auto TokenRegistry::register_dynamic(std::string_view name, T&& value) -> Result<void> {
     uint64_t hash = cf::hash::fnv1a64(name);
 
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
@@ -682,8 +682,8 @@ auto TokenRegistry::get_by_hash_impl(uint64_t hash, const std::string& name_hint
 }
 
 template <typename T>
-auto TokenRegistry::get_by_hash_impl_const(uint64_t hash, const std::string& name_hint) const
-    -> Result<const T*> {
+auto TokenRegistry::get_by_hash_impl_const(uint64_t hash,
+                                           const std::string& name_hint) const -> Result<const T*> {
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
         return cf::unexpected(
@@ -714,8 +714,8 @@ template <typename T> auto TokenRegistry::get_dynamic_by_hash(uint64_t hash) -> 
     return get_by_hash_impl<T>(hash, std::to_string(hash));
 }
 
-template <typename T> auto TokenRegistry::get_dynamic_const(std::string_view name) const
-    -> Result<const T*> {
+template <typename T>
+auto TokenRegistry::get_dynamic_const(std::string_view name) const -> Result<const T*> {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return get_by_hash_impl_const<T>(cf::hash::fnv1a64(name), std::string(name));
 }
@@ -913,9 +913,8 @@ inline const detail::TokenSlot* EmbeddedTokenRegistry::find_slot_locked(uint64_t
     return (it != slot_map_.end()) ? &it->second : nullptr;
 }
 
-template <typename T, typename... Args>
-auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, Args&&... args)
-    -> Result<void> {
+template <typename T, typename... Args> auto
+EmbeddedTokenRegistry::register_dynamic(std::string_view name, Args&&... args) -> Result<void> {
     uint64_t hash = cf::hash::fnv1a64(name);
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
     if (slot_map_.find(hash) != slot_map_.end()) {
@@ -946,8 +945,8 @@ template <typename T> auto EmbeddedTokenRegistry::register_dynamic(std::string_v
     return {};
 }
 
-template <typename T> auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, T&& value)
-    -> Result<void> {
+template <typename T>
+auto EmbeddedTokenRegistry::register_dynamic(std::string_view name, T&& value) -> Result<void> {
     uint64_t hash = cf::hash::fnv1a64(name);
     std::unique_lock<std::shared_mutex> lock(registry_mutex_);
     if (slot_map_.find(hash) != slot_map_.end()) {
@@ -962,9 +961,8 @@ template <typename T> auto EmbeddedTokenRegistry::register_dynamic(std::string_v
     return {};
 }
 
-template <typename T>
-auto EmbeddedTokenRegistry::get_by_hash_impl(uint64_t hash, const std::string& name_hint)
-    -> Result<T*> {
+template <typename T> auto
+EmbeddedTokenRegistry::get_by_hash_impl(uint64_t hash, const std::string& name_hint) -> Result<T*> {
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
         return cf::unexpected(
@@ -982,9 +980,8 @@ auto EmbeddedTokenRegistry::get_by_hash_impl(uint64_t hash, const std::string& n
     return std::any_cast<T>(a);
 }
 
-template <typename T> auto
-EmbeddedTokenRegistry::get_by_hash_impl_const(uint64_t hash, const std::string& name_hint) const
-    -> Result<const T*> {
+template <typename T> auto EmbeddedTokenRegistry::get_by_hash_impl_const(
+    uint64_t hash, const std::string& name_hint) const -> Result<const T*> {
     const detail::TokenSlot* slot = find_slot_locked(hash);
     if (!slot) {
         return cf::unexpected(
@@ -1012,8 +1009,8 @@ template <typename T> auto EmbeddedTokenRegistry::get_dynamic_by_hash(uint64_t h
     return get_by_hash_impl<T>(hash, std::to_string(hash));
 }
 
-template <typename T> auto EmbeddedTokenRegistry::get_dynamic_const(std::string_view name) const
-    -> Result<const T*> {
+template <typename T>
+auto EmbeddedTokenRegistry::get_dynamic_const(std::string_view name) const -> Result<const T*> {
     std::shared_lock<std::shared_mutex> lock(registry_mutex_);
     return get_by_hash_impl_const<T>(cf::hash::fnv1a64(name), std::string(name));
 }

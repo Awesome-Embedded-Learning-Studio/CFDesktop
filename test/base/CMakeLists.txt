@@ -55,3 +55,15 @@ add_gtest_executable(
     LOG_MODULE     base_tests
     INCLUDE_DIRS   ${BASE_INCLUDE_DIR}
 )
+
+# =============================================================================
+# Base library unit tests - mpsc_queue_test
+# =============================================================================
+add_gtest_executable(
+    TEST_NAME      mpsc_queue_test
+    SOURCE_FILE    lockfree/mpsc_queue_test.cpp
+    LINK_LIBRARIES Qt6::Core;GTest::gtest;GTest::gtest_main
+    LABELS         "base;unit;lockfree"
+    LOG_MODULE     base_tests
+    INCLUDE_DIRS   ${BASE_INCLUDE_DIR}
+)

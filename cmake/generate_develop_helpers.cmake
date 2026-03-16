@@ -1,6 +1,45 @@
 # Generate Development Environment Configuration Helpers
 # Provides functions to generate IDE-specific configuration files
 
+# =============================================================================
+# Helper Functions
+# =============================================================================
+
+#[[.synopsis
+    find_host_program
+
+    Finds a program on the host system, even when using a toolchain file.
+
+    When a CMAKE_TOOLCHAIN_FILE is used, CMake enters cross-compilation mode
+    which can interfere with find_program. This helper works around that by
+    trying find_program first, then falling back to direct path checks.
+
+    Arguments:
+        VAR_NAME      - Variable to store the result
+        PROGRAM_NAME  - Name(s) of the program to find
+        STANDARD_PATHS - List of standard paths to check as fallback
+
+    Example:
+        find_host_program(CLANGD_PATH clangd "/usr/bin;/usr/local/bin")
+#]]
+function(find_host_program VAR_NAME PROGRAM_NAME STANDARD_PATHS)
+    # Try find_program first (works in most cases)
+    find_program(${VAR_NAME} ${PROGRAM_NAME})
+
+    # Fallback: check standard paths directly if find_program failed
+    if(NOT ${VAR_NAME})
+        foreach(_path IN LISTS STANDARD_PATHS)
+            if(EXISTS "${_path}/${PROGRAM_NAME}")
+                set(${VAR_NAME} "${_path}/${PROGRAM_NAME}" PARENT_SCOPE)
+                return()
+            endif()
+        endforeach()
+    endif()
+
+    # Return result to parent scope
+    set(${VAR_NAME} "${${VAR_NAME}}" PARENT_SCOPE)
+endfunction()
+
 #[[.synopsis
     generate_vscode_clangd
 
@@ -59,13 +98,20 @@ function(generate_vscode_clangd)
            "${TOOLCHAIN_ROOT_LOWER}" MATCHES "^/opt" OR
            "${TOOLCHAIN_ROOT_LOWER}" MATCHES "^/home")
 
-        # Use find_program with CACHE to avoid repeated lookups
-        # Try versioned binaries first, then bare clangd
-        find_program(CLANGD_PATH
-            NAMES clangd-17 clangd-16 clangd-15 clangd-14 clangd
-            DOC "Path to clangd for VSCode integration"
-            CACHE FORCE
-        )
+        # Try find_program first, then check standard paths directly
+        # (toolchain files can interfere with find_program behavior)
+        find_host_program(CLANGD_PATH "clangd" "/usr/bin;/usr/local/bin;/opt/homebrew/bin")
+
+        # Try versioned variants if plain clangd not found
+        if(NOT CLANGD_PATH)
+            find_host_program(CLANGD_PATH "clangd-18" "/usr/bin;/usr/local/bin")
+        endif()
+        if(NOT CLANGD_PATH)
+            find_host_program(CLANGD_PATH "clangd-17" "/usr/bin;/usr/local/bin")
+        endif()
+        if(NOT CLANGD_PATH)
+            find_host_program(CLANGD_PATH "clangd-16" "/usr/bin;/usr/local/bin")
+        endif()
 
         if(NOT CLANGD_PATH)
             message(WARNING
@@ -160,33 +206,13 @@ function(generate_vscode_debug_config)
         # Detect compiler type and choose appropriate debugger
         if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
             set(DEBUGGER_TYPE "lldb")
-            find_program(DEBUGGER_PATH lldb-vscode)
+            find_host_program(DEBUGGER_PATH "lldb-vscode" "/usr/bin;/usr/local/bin")
             if(NOT DEBUGGER_PATH)
-                find_program(DEBUGGER_PATH lldb)
-            endif()
-            # Fallback to standard paths if not found in PATH
-            if(NOT DEBUGGER_PATH)
-                set(DEBUGGER_PATHS "/usr/bin/lldb-vscode" "/usr/bin/lldb" "/usr/local/bin/lldb-vscode" "/usr/local/bin/lldb")
-                foreach(path IN LISTS DEBUGGER_PATHS)
-                    if(EXISTS "${path}")
-                        set(DEBUGGER_PATH "${path}")
-                        break()
-                    endif()
-                endforeach()
+                find_host_program(DEBUGGER_PATH "lldb" "/usr/bin;/usr/local/bin")
             endif()
         else()
             set(DEBUGGER_TYPE "gdb")
-            find_program(DEBUGGER_PATH gdb)
-            # Fallback to standard paths if not found in PATH
-            if(NOT DEBUGGER_PATH)
-                set(DEBUGGER_PATHS "/usr/bin/gdb" "/usr/local/bin/gdb")
-                foreach(path IN LISTS DEBUGGER_PATHS)
-                    if(EXISTS "${path}")
-                        set(DEBUGGER_PATH "${path}")
-                        break()
-                    endif()
-                endforeach()
-            endif()
+            find_host_program(DEBUGGER_PATH "gdb" "/usr/bin;/usr/local/bin")
         endif()
 
         if(NOT DEBUGGER_PATH)
