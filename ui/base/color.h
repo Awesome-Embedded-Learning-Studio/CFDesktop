@@ -229,14 +229,25 @@ class CFColor {
     /**
      * @brief  Copy assignment operator.
      *
+     * Copies both the native QColor and the cached HCT values to ensure
+     * consistency after assignment.
+     *
      * @param[in] other Source color.
      * @return        Reference to this color.
      * @throws       None
-     * @note         None
+     * @note         Self-assignment is safely handled.
      * @warning      None
      * @since        0.1
      */
-    CFColor& operator=(const CFColor& other) = default;
+    CFColor& operator=(const CFColor& other) {
+        if (this != &other) {
+            internal_color = other.internal_color;
+            m_hue = other.m_hue;
+            m_chroma = other.m_chroma;
+            m_tone = other.m_tone;
+        }
+        return *this;
+    }
 
   private:
     QColor internal_color; ///< Native QColor representation.

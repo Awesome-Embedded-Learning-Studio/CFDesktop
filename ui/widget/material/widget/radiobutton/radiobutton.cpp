@@ -17,6 +17,7 @@
 #include "base/device_pixel.h"
 #include "base/easing.h"
 #include "cfmaterial_animation_factory.h"
+#include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 #include "widget/material/base/focus_ring.h"
 #include "widget/material/base/ripple_helper.h"
@@ -222,7 +223,8 @@ void RadioButton::setChecked(bool checked) {
             m_stateMachine->onCheckedChanged(isCheckedNow);
         }
         // For programmatic checked change, set scale immediately without animation
-        m_innerCircleScale = isCheckedNow ? INNER_CIRCLE_SCALE_CHECKED : INNER_CIRCLE_SCALE_UNCHECKED;
+        m_innerCircleScale =
+            isCheckedNow ? INNER_CIRCLE_SCALE_CHECKED : INNER_CIRCLE_SCALE_UNCHECKED;
         update();
     }
 }
@@ -446,13 +448,6 @@ void RadioButton::startInnerCircleAnimation(bool checked) {
     float targetScale = checked ? INNER_CIRCLE_SCALE_CHECKED : INNER_CIRCLE_SCALE_UNCHECKED;
     float fromScale = m_innerCircleScale;
 
-    // For checking, immediately show a small visible dot (20% size) so user sees feedback right away
-    // For unchecking, keep current scale and let animation shrink it
-    if (checked) {
-        fromScale = 0.2f;
-        m_innerCircleScale = fromScale;
-    }
-
     if (!m_animationFactory) {
         // No factory, set directly
         m_innerCircleScale = targetScale;
@@ -466,6 +461,12 @@ void RadioButton::startInnerCircleAnimation(bool checked) {
         cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
 
     if (anim) {
+        // IMPORTANT: Update range to fix cached animation's stale from/to values
+        if (auto* propAnim =
+                dynamic_cast<cf::ui::components::material::CFMaterialPropertyAnimation*>(
+                    anim.Get())) {
+            propAnim->setRange(fromScale, targetScale);
+        }
         anim->start();
     } else {
         m_innerCircleScale = targetScale;
@@ -520,9 +521,17 @@ void RadioButton::drawStateLayer(QPainter& p, const QRectF& radioRect) {
         return;
     }
 
+    // MD3 spec: state layer is 40dp circle (2x radio size), centered on radio
+    // This corresponds to the 48dp touch target
+    CanvasUnitHelper helper(qApp->devicePixelRatio());
+    float stateLayerSize = helper.dpToPx(RADIO_SIZE_DP * 2.0f); // 40dp
+    QPointF center = radioRect.center();
+    QRectF stateLayerRect(center.x() - stateLayerSize / 2.0f, center.y() - stateLayerSize / 2.0f,
+                          stateLayerSize, stateLayerSize);
+
     // Create circular state layer path
     QPainterPath circlePath;
-    circlePath.addEllipse(radioRect);
+    circlePath.addEllipse(stateLayerRect);
 
     CFColor stateColor = stateLayerColor();
     QColor color = stateColor.native_color();
@@ -539,9 +548,16 @@ void RadioButton::drawRipple(QPainter& p, const QRectF& radioRect) {
     // Set ripple color based on state
     m_ripple->setColor(stateLayerColor());
 
-    // Create clipping path for the radio button circle
+    // MD3 spec: ripple is clipped to 40dp circle (2x radio size), centered on radio
+    CanvasUnitHelper helper(qApp->devicePixelRatio());
+    float stateLayerSize = helper.dpToPx(RADIO_SIZE_DP * 2.0f); // 40dp
+    QPointF center = radioRect.center();
+    QRectF stateLayerRect(center.x() - stateLayerSize / 2.0f, center.y() - stateLayerSize / 2.0f,
+                          stateLayerSize, stateLayerSize);
+
+    // Create clipping path for the state layer circle
     QPainterPath clipPath;
-    clipPath.addEllipse(radioRect);
+    clipPath.addEllipse(stateLayerRect);
 
     m_ripple->paint(&p, clipPath);
 }
@@ -598,7 +614,7 @@ void RadioButton::drawInnerCircle(QPainter& p, const QRectF& radioRect) {
     QPainterPath innerCirclePath;
     innerCirclePath.addEllipse(center, scaledRadius, scaledRadius);
 
-    CFColor fillColor = onRadioColor();
+    CFColor fillColor = radioColor();
     QColor color = fillColor.native_color();
 
     // Handle disabled state

@@ -53,8 +53,7 @@ class CF_UI_EXPORT TextArea : public QTextEdit {
     Q_PROPERTY(QString helperText READ helperText WRITE setHelperText)
     Q_PROPERTY(QString errorText READ errorText WRITE setErrorText)
     Q_PROPERTY(int maxLength READ maxLength WRITE setMaxLength)
-    Q_PROPERTY(bool showCharacterCounter READ showCharacterCounter WRITE
-                setShowCharacterCounter)
+    Q_PROPERTY(bool showCharacterCounter READ showCharacterCounter WRITE setShowCharacterCounter)
     Q_PROPERTY(bool isFloating READ isFloating NOTIFY floatingChanged)
     Q_PROPERTY(int minLines READ minLines WRITE setMinLines)
     Q_PROPERTY(int maxLines READ maxLines WRITE setMaxLines)
@@ -81,8 +80,7 @@ class CF_UI_EXPORT TextArea : public QTextEdit {
      * @since         0.1
      * @ingroup       ui_widget_material_widget
      */
-    explicit TextArea(TextAreaVariant variant = TextAreaVariant::Filled,
-                      QWidget* parent = nullptr);
+    explicit TextArea(TextAreaVariant variant = TextAreaVariant::Filled, QWidget* parent = nullptr);
 
     /**
      * @brief  Constructor with text and variant.
@@ -491,7 +489,6 @@ class CF_UI_EXPORT TextArea : public QTextEdit {
     // Drawing helpers - Material Design paint pipeline
     void drawBackground(QPainter& p, const QRectF& fieldRect);
     void drawOutline(QPainter& p, const QRectF& fieldRect);
-    void drawLabel(QPainter& p, const QRectF& fieldRect);
     void drawHelperText(QPainter& p, const QRectF& helperRect);
     void drawCharacterCounter(QPainter& p, const QRectF& helperRect);
     void drawFocusIndicator(QPainter& p, const QRectF& fieldRect);

@@ -1,8 +1,0 @@
-log_info("Example UI Material Widget" "Managing Material Widget Examples")
-add_subdirectory(button)
-add_subdirectory(checkbox)
-add_subdirectory(groupbox)
-add_subdirectory(radiobutton)
-add_subdirectory(label)
-add_subdirectory(textarea)
-add_subdirectory(textfield)

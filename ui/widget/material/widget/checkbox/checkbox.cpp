@@ -18,6 +18,7 @@
 #include "base/easing.h"
 #include "base/geometry_helper.h"
 #include "components/material/cfmaterial_animation_factory.h"
+#include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 #include "widget/material/base/focus_ring.h"
 #include "widget/material/base/ripple_helper.h"
@@ -139,6 +140,12 @@ void CheckBox::startCheckMarkAnimation(float target) {
         cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
 
     if (anim) {
+        // IMPORTANT: Update range to fix cached animation's stale from/to values
+        if (auto* propAnim =
+                dynamic_cast<cf::ui::components::material::CFMaterialPropertyAnimation*>(
+                    anim.Get())) {
+            propAnim->setRange(fromValue, target);
+        }
         anim->start();
     } else {
         m_checkAnimationProgress = target;

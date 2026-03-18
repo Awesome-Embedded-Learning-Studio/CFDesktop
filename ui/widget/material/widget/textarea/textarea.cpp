@@ -114,6 +114,15 @@ TextArea::TextArea(TextAreaVariant variant, QWidget* parent)
 
     // Disable tab focus for proper multi-line editing
     setTabChangesFocus(false);
+
+    // Configure viewport for proper background rendering
+    // (background appears below text, overlays are drawn in paintEvent)
+    if (viewport()) {
+        viewport()->setAutoFillBackground(true);
+        QPalette pal = viewport()->palette();
+        pal.setColor(QPalette::Base, containerColor().native_color());
+        viewport()->setPalette(pal);
+    }
 }
 
 TextArea::TextArea(const QString& text, TextAreaVariant variant, QWidget* parent)
@@ -231,39 +240,39 @@ void TextArea::keyPressEvent(QKeyEvent* event) {
 }
 
 void TextArea::paintEvent(QPaintEvent* event) {
-    // Draw custom decorations on the main widget (behind the viewport)
-    QPainter p(this);
-    p.setRenderHint(QPainter::Antialiasing);
+    // 1) First let base class render text content to viewport
+    QTextEdit::paintEvent(event);
 
-    // Calculate layout rectangles
-    QRectF field = fieldRect();
-    QRectF helper = helperTextRect();
-
-    // Step 1: Draw background (Filled variant only)
-    drawBackground(p, field);
-
-    // Step 2: Draw outline (Outlined variant and Filled active state)
-    drawOutline(p, field);
-
-    // Step 3: Draw label (floating or resting)
-    drawLabel(p, field);
-
-    // Step 4: Draw ripple
-    drawRipple(p, field);
-
-    // Step 5: Draw focus indicator
-    drawFocusIndicator(p, field);
-
-    // Step 6: Draw helper/error text
-    drawHelperText(p, helper);
-
-    // Step 7: Draw character counter
-    if (m_showCharacterCounter) {
-        drawCharacterCounter(p, helper);
+    // 2) Then draw overlays (label, outline, ripple, focus, helper, counter) on viewport
+    QWidget* vp = viewport();
+    if (!vp) {
+        return; // extreme edge case guard
     }
 
-    // Let QTextEdit handle its own text rendering in the viewport
-    QTextEdit::paintEvent(event);
+    QPainter p(vp);
+    if (!p.isActive()) {
+        qWarning() << "TextArea::paintEvent: painter not active on viewport()";
+        return;
+    }
+    p.setRenderHint(QPainter::Antialiasing);
+
+    const QRectF field = fieldRect();
+    const QRectF helper = helperTextRect();
+
+    // Draw order: outline/ripple/focus/helper/counter (overlay)
+    drawOutline(p, field);
+
+    // Ensure ripple/focus routines check painter active internally
+    if (p.isActive()) {
+        drawRipple(p, field);
+        drawFocusIndicator(p, field);
+    }
+
+    drawHelperText(p, helper);
+    if (m_showCharacterCounter)
+        drawCharacterCounter(p, helper);
+
+    // p destructor will end painting
 }
 
 // ============================================================================
@@ -750,71 +759,6 @@ void TextArea::drawOutline(QPainter& p, const QRectF& fieldRect) {
     }
 }
 
-void TextArea::drawLabel(QPainter& p, const QRectF& fieldRect) {
-    if (m_label.isEmpty()) {
-        return;
-    }
-
-    CanvasUnitHelper helper(qApp->devicePixelRatio());
-
-    QFont labelF = labelFont();
-    QFontMetricsF fm(labelF);
-
-    // Calculate label position based on floating state
-    float floatingScale = 0.75f;            // 75% of normal size
-    float floatingY = helper.dpToPx(12.0f); // Top position when floating
-    float restingY = helper.dpToPx(28.0f);  // Lower position when resting
-
-    // Interpolate between resting and floating positions
-    float currentY = restingY + (floatingY - restingY) * m_floatingProgress;
-    float currentScale = 1.0f - (1.0f - floatingScale) * m_floatingProgress;
-
-    // Calculate horizontal position
-    float leftMargin = helper.dpToPx(16.0f);
-
-    // For outlined variant with focus, add horizontal padding
-    if (m_variant == TextAreaVariant::Outlined && hasFocus()) {
-        leftMargin += helper.dpToPx(4.0f);
-    }
-
-    // For filled variant, create background gap when floating
-    if (m_variant == TextAreaVariant::Filled && m_floatingProgress > 0.5f) {
-        float bgWidth = fm.horizontalAdvance(m_label) * currentScale + helper.dpToPx(8.0f);
-        QRectF bgRect(leftMargin - helper.dpToPx(4.0f),
-                      floatingY - fm.height() * currentScale / 2 - helper.dpToPx(2.0f), bgWidth,
-                      fm.height() * currentScale + helper.dpToPx(4.0f));
-        p.fillRect(bgRect, containerColor().native_color());
-    }
-
-    p.save();
-
-    // Set font and color
-    labelF.setPixelSize(static_cast<int>(labelF.pixelSize() * currentScale));
-    p.setFont(labelF);
-
-    QColor labelColor;
-    if (m_hasError) {
-        labelColor = errorColor().native_color();
-    } else if (hasFocus() || m_isFloating) {
-        labelColor = focusOutlineColor().native_color();
-    } else {
-        labelColor = this->labelColor().native_color();
-    }
-
-    if (!isEnabled()) {
-        labelColor.setAlphaF(0.38f);
-    }
-
-    p.setPen(labelColor);
-
-    // Draw label
-    QRectF textRect(leftMargin, currentY - fm.height() * currentScale / 2,
-                    fieldRect.width() - leftMargin * 2, fm.height() * currentScale);
-    p.drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, m_label);
-
-    p.restore();
-}
-
 void TextArea::drawHelperText(QPainter& p, const QRectF& helperRect) {
     QString text = m_hasError ? m_errorText : m_helperText;
     if (text.isEmpty()) {
@@ -868,6 +812,8 @@ void TextArea::drawCharacterCounter(QPainter& p, const QRectF& helperRect) {
 }
 
 void TextArea::drawFocusIndicator(QPainter& p, const QRectF& fieldRect) {
+    if (!p.isActive())
+        return; // guard
     if (m_focusIndicator && hasFocus()) {
         QPainterPath shape = roundedRect(fieldRect, cornerRadius());
         m_focusIndicator->paint(&p, shape, focusOutlineColor());
@@ -875,6 +821,8 @@ void TextArea::drawFocusIndicator(QPainter& p, const QRectF& fieldRect) {
 }
 
 void TextArea::drawRipple(QPainter& p, const QRectF& fieldRect) {
+    if (!p.isActive())
+        return; // guard
     if (m_ripple) {
         QPainterPath shape;
         if (m_variant == TextAreaVariant::Outlined) {

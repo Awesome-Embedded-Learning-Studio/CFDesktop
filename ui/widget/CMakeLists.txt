@@ -33,9 +33,13 @@ add_library(cf_ui_widget_material STATIC
     material/base/painter_layer.cpp
     material/widget/button/button.cpp
     material/widget/checkbox/checkbox.cpp
+    material/widget/comboBox/combobox.cpp
     material/widget/groupbox/groupbox.cpp
     material/widget/label/label.cpp
+    material/widget/progressbar/progressbar.cpp
     material/widget/radiobutton/radiobutton.cpp
+    material/widget/slider/slider.cpp
+    material/widget/switch/switch.cpp
     material/widget/textarea/textarea.cpp
     material/widget/textfield/textfield.cpp
 )

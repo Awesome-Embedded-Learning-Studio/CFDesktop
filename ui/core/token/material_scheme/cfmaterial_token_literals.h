@@ -16,7 +16,7 @@
  */
 #pragma once
 
-#include <cstdint>
+#include <cstddef>
 
 namespace cf::ui::core::token::literals {
 
@@ -273,8 +273,8 @@ inline constexpr const char* const ALL_TOKENS[] = {
     SHADOW, SCRIM, INVERSE_SURFACE, INVERSE_ON_SURFACE, INVERSE_PRIMARY};
 
 /**
- * @brief Total count of Material Design 3 color tokens.
+ * @brief Total count of Material Design 3 color tokens (auto-calculated).
  */
-inline constexpr size_t TOKEN_COUNT = 26;
+inline constexpr size_t TOKEN_COUNT = sizeof(ALL_TOKENS) / sizeof(ALL_TOKENS[0]);
 
 } // namespace cf::ui::core::token::literals

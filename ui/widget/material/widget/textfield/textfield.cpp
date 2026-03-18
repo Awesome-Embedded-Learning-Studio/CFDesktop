@@ -18,6 +18,7 @@
 #include "base/device_pixel.h"
 #include "base/geometry_helper.h"
 #include "cfmaterial_animation_factory.h"
+#include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 #include "widget/material/base/focus_ring.h"
 #include "widget/material/base/ripple_helper.h"
@@ -73,16 +74,9 @@ inline CFColor fallbackPrimary() {
 // ============================================================================
 
 TextField::TextField(TextFieldVariant variant, QWidget* parent)
-    : QLineEdit(parent)
-    , m_variant(variant)
-    , m_showCharacterCounter(false)
-    , m_maxLength(0)
-    , m_isFloating(false)
-    , m_hasError(false)
-    , m_floatingProgress(0.0f)
-    , m_outlineWidth(1.0f)
-    , m_hoveringClearButton(false)
-    , m_pressingClearButton(false) {
+    : QLineEdit(parent), m_variant(variant), m_showCharacterCounter(false), m_maxLength(0),
+      m_isFloating(false), m_hasError(false), m_floatingProgress(0.0f), m_outlineWidth(1.0f),
+      m_hoveringClearButton(false), m_pressingClearButton(false) {
 
     // Disable native frame and background
     setFrame(false);
@@ -751,8 +745,8 @@ void TextField::drawOutline(QPainter& p, const QRectF& fieldRect) {
         }
 
         // Draw bottom line
-        p.fillRect(QRectF(fieldRect.left(), fieldRect.bottom() - currentWidth,
-                          fieldRect.width(), currentWidth),
+        p.fillRect(QRectF(fieldRect.left(), fieldRect.bottom() - currentWidth, fieldRect.width(),
+                          currentWidth),
                    color);
     } else {
         // Outlined variant: draw rounded rectangle with gap for label
@@ -796,8 +790,8 @@ void TextField::drawLabel(QPainter& p, const QRectF& fieldRect) {
     QFontMetricsF fm(labelF);
 
     // Calculate label position based on floating state
-    float floatingScale = 0.75f; // 75% of normal size
-    float floatingY = helper.dpToPx(12.0f); // Top position when floating
+    float floatingScale = 0.75f;             // 75% of normal size
+    float floatingY = helper.dpToPx(12.0f);  // Top position when floating
     float restingY = fieldRect.center().y(); // Center when resting
 
     // Interpolate between resting and floating positions
@@ -821,15 +815,24 @@ void TextField::drawLabel(QPainter& p, const QRectF& fieldRect) {
     if (m_variant == TextFieldVariant::Filled && m_floatingProgress > 0.5f) {
         float bgWidth = fm.horizontalAdvance(m_label) * currentScale + helper.dpToPx(8.0f);
         QRectF bgRect(leftMargin - helper.dpToPx(4.0f),
-                      floatingY - fm.height() * currentScale / 2 - helper.dpToPx(2.0f),
-                      bgWidth, fm.height() * currentScale + helper.dpToPx(4.0f));
+                      floatingY - fm.height() * currentScale / 2 - helper.dpToPx(2.0f), bgWidth,
+                      fm.height() * currentScale + helper.dpToPx(4.0f));
         p.fillRect(bgRect, containerColor().native_color());
     }
 
     p.save();
 
     // Set font and color
-    labelF.setPixelSize(static_cast<int>(labelF.pixelSize() * currentScale));
+    // Get the actual font height since pixelSize() may return 0 if pointSize is used
+    float baseFontSize = labelF.pixelSize();
+    if (baseFontSize <= 0) {
+        baseFontSize = fm.height();
+    }
+    int scaledSize = static_cast<int>(baseFontSize * currentScale);
+    if (scaledSize < 1) {
+        scaledSize = 1; // Ensure minimum valid size
+    }
+    labelF.setPixelSize(scaledSize);
     p.setFont(labelF);
 
     QColor labelColor;
@@ -1082,6 +1085,12 @@ void TextField::animateFloatingTo(bool floating) {
         cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
 
     if (anim) {
+        // IMPORTANT: Update range to fix cached animation's stale from/to values
+        if (auto* propAnim =
+                dynamic_cast<cf::ui::components::material::CFMaterialPropertyAnimation*>(
+                    anim.Get())) {
+            propAnim->setRange(m_floatingProgress, target);
+        }
         anim->start();
     } else {
         m_floatingProgress = target;

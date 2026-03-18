@@ -85,10 +85,10 @@ class CF_UI_EXPORT CFMaterialPropertyAnimation : public ICFAbstractAnimation {
      * @since         0.1
      * @ingroup       ui_components_material
      */
-    CFMaterialPropertyAnimation(float* value, float from, float to, int durationMs,
-                                base::Easing::Type easing =
-                                    base::Easing::Type::EmphasizedDecelerate,
-                                QObject* parent = nullptr);
+    CFMaterialPropertyAnimation(
+        float* value, float from, float to, int durationMs,
+        base::Easing::Type easing = base::Easing::Type::EmphasizedDecelerate,
+        QObject* parent = nullptr);
 
     /**
      * @brief  Destructor.
@@ -147,9 +147,19 @@ class CF_UI_EXPORT CFMaterialPropertyAnimation : public ICFAbstractAnimation {
      * @since      0.1
      */
     bool tick(int dt) override;
-    cf::WeakPtr<ICFAbstractAnimation> GetWeakPtr() override {
-        return weak_factory_.GetWeakPtr();
-    }
+
+    /**
+     * @brief  Gets a weak pointer to this animation.
+     *
+     * @return     Weak pointer to this animation instance.
+     *
+     * @throws     None
+     * @note       Provides safe access to potentially destroyed animation.
+     * @warning    None
+     * @since      0.1
+     * @ingroup    ui_components_material
+     */
+    cf::WeakPtr<ICFAbstractAnimation> GetWeakPtr() override { return weak_factory_.GetWeakPtr(); }
 
     // =========================================================================
     // Property-Specific Methods
@@ -179,6 +189,22 @@ class CF_UI_EXPORT CFMaterialPropertyAnimation : public ICFAbstractAnimation {
      * @since 0.1
      */
     float currentValue() const { return m_value ? *m_value : 0.0f; }
+
+    /**
+     * @brief  Set the value range for the animation.
+     *
+     * @details Allows reusing the same animation object with different
+     *          start/end values. Call before start() to update the range.
+     *
+     * @param[in] from Start value of the animation.
+     * @param[in] to End value of the animation.
+     *
+     * @since 0.1
+     */
+    void setRange(float from, float to) {
+        m_from = from;
+        m_to = to;
+    }
 
   private slots:
     /**
