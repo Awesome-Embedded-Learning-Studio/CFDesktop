@@ -49,7 +49,6 @@
 
 | 阶段 | 模块 | 完成度 | 说明 |
 |:---|:---|:---:|:---|
-| Phase 6 | P1+ 控件 | 0% | ComboBox, Slider, ProgressBar 等 12+ 常用控件 |
 | Phase 1 | 硬件探针 | 15% | CPU/Memory 检测完成，缺少 GPU 检测和档位判定 |
 
 ### 待开始 ⬜
