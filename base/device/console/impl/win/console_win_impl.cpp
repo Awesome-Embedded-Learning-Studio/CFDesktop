@@ -3,10 +3,12 @@
 #ifndef CFDESKTOP_OS_WINDOWS
 #    error "Unexpected Includes As This File is using for Windows Implementations"
 #else
+#    include "../console_platform.h"
+#    include "console_win_impl.h"
 #    include <windows.h>
 namespace cf::base::device::impl::Win {
 
-console_size_t console_size() {
+console::console_size_t console_size() {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
     if (h == INVALID_HANDLE_VALUE || !GetConsoleScreenBufferInfo(h, &csbi))

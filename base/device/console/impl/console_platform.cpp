@@ -33,17 +33,21 @@ bool platform_console_support() {
 
 } // namespace cf::base::device::console
 #else
+#    include "../console_defines.h"
+#    include "console_platform.h"
+#    include "win/console_win_impl.h"
 namespace cf::base::device::console {
 
 std::unique_ptr<PolicyChain<console_size_t>> get_platform_size_policy() {
     auto result = std::make_unique<PolicyChain<console_size_t>>();
     result->add_back([]() -> std::optional<console_size_t> {
         auto first_try = impl::Win::console_size();
-        if (first_try == impl::Win::INVALID_ONE) {
+        if (first_try == INVALID_ONE) {
             return {};
         }
         return first_try;
-    })
+    });
+    return result;
 }
 
 bool platform_console_support() {

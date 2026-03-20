@@ -47,13 +47,19 @@ set(CFDESKTOP_STATIC_LIBS
     CFDesktopEarlySession
 )
 
-# Link all static libraries using --whole-archive on Unix
+# Link all static libraries using --whole-archive
 # This ensures all symbols are included even if not directly referenced
+# Supported on both Unix and MinGW/Windows
 if(UNIX AND NOT APPLE)
     target_link_libraries(CFDesktop_shared PRIVATE
         "-Wl,--whole-archive"
         ${CFDESKTOP_STATIC_LIBS}
         "-Wl,--no-whole-archive"
+    )
+elseif(WIN32)
+    # MinGW supports --whole-archive on Windows too
+    target_link_libraries(CFDesktop_shared PRIVATE
+        ${CFDESKTOP_STATIC_LIBS}
     )
 else()
     target_link_libraries(CFDesktop_shared PRIVATE

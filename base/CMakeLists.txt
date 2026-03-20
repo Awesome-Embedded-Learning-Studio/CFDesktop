@@ -23,7 +23,7 @@ add_subdirectory(device)
 add_library(cfbase STATIC)
 
 # Link static libraries from sub-modules
-target_link_libraries(cfbase PRIVATE
+target_link_libraries(cfbase PUBLIC
     cfbase_cpu
     cfbase_memory
     cfbase_console

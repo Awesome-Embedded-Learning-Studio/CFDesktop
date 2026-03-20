@@ -4,7 +4,7 @@
 #include <memory>
 
 namespace cf::base::device::console {
-
+static constexpr console::console_size_t INVALID_ONE{-1, -1};
 /**
  * @file    console_platform.h
  * @brief   Platform-specific console policy and support functions.

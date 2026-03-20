@@ -15,7 +15,6 @@
 #pragma once
 
 #include <utility>
-
 namespace cf::base::device::impl::Win {
 
 /**
