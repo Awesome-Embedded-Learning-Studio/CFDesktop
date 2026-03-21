@@ -40,7 +40,7 @@
 | 阶段 | 模块 | 完成度 | 说明 |
 |:---|:---|:---:|:---|
 | Phase 0 | 工程骨架 | 100% | CMake 构建系统、代码规范、CI/CD、Docker 多架构构建 |
-| Phase 1 | 硬件探针 | 90% | CPU/Memory 检测完成，缺少 GPU/网络检测 |
+| Phase 1 | 硬件探针 | 100% | CPU/Memory/GPU/网络检测 完成|
 | Phase 2 | Base 库核心 | 85% | ConfigStore、Logger、DPI、ASCII Art、File Operations |
 | Phase 5 | 测试体系 | 30% | Google Test 集成，base/ui 有覆盖，desktop 待补充 |
 | Phase 6 | UI 框架核心 | 95% | Material Design 3 分层架构 (Layer 1-5) |
@@ -52,14 +52,14 @@
 
 | 阶段 | 模块 | 完成度 | 说明 |
 |:---|:---|:---:|:---|
-| Phase 6 | UI 动画系统 | 90% | SpringAnimation 待实现 |
 | Phase 2 | 配置日志增强 | 80% | 缺版本控制、迁移、验证、网络日志 |
+| Desktop | 桌面的基础组件 | 0% | 目前只有Console的欢迎 |
 
 ### 待开始 ⬜
 
 | 阶段 | 模块 | 说明 |
 |:---|:---|:---|
-| Phase 1 | 硬件探针完善 | GPU/Network 检测、HWTier 档位、CapabilityPolicy |
+| Phase 1 | 硬件探针完善 | HWTier 档位、CapabilityPolicy |
 | Phase 3 | 输入抽象层 | 触摸/按键/旋钮/手势统一接口 |
 | Phase 4 | 多平台模拟器 | 开发调试用模拟器、设备配置、DPI 注入 |
 | Phase 6 | P2 控件 | 27个高级控件 (DatePicker, MenuBar, Dialog, etc.) |
