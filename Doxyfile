@@ -2,6 +2,8 @@ PROJECT_NAME           = "CFDesktop"
 INPUT                  = base ui desktop
 RECURSIVE              = YES
 
+FILE_PATTERNS          = *.h *.hpp *.c *.cpp
+
 EXTRACT_ALL            = YES
 EXTRACT_STATIC         = YES
 EXTRACT_PRIVATE        = NO
