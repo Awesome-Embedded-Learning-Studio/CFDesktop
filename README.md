@@ -145,7 +145,7 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-org/CFDesktop.git
+git clone https://github.com/Awesome-Embedded-Learning-Studio/CFDesktop
 cd CFDesktop
 
 # Windows 快速构建
