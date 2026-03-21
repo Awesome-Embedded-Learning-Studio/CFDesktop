@@ -2,6 +2,7 @@ PROJECT_NAME           = "CFDesktop"
 INPUT                  = base ui desktop
 RECURSIVE              = YES
 
+EXTRACT_ANON_NSPACES   = NO
 FILE_PATTERNS          = *.h *.hpp *.c *.cpp
 
 EXTRACT_ALL            = YES
@@ -15,3 +16,10 @@ XML_OUTPUT             = xml
 
 QUIET                  = YES
 WARNINGS               = NO
+
+PREDEFINED += Q_OBJECT=
+PREDEFINED += signals=public
+PREDEFINED += slots=
+PREDEFINED += emit=
+HIDE_UNDOC_MEMBERS = YES
+HIDE_UNDOC_CLASSES = YES
