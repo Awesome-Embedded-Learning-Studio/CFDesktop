@@ -1,5 +1,5 @@
 PROJECT_NAME           = "CFDesktop"
-INPUT                  = base example ui desktop
+INPUT                  = base ui desktop
 RECURSIVE              = YES
 
 EXTRACT_ALL            = YES
