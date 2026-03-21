@@ -95,7 +95,7 @@
 │  StateMachine | RippleHelper | ElevationController | FocusRing   │
 ├─────────────────────────────────────────────────────────────────┤
 │                     Animation Engine Layer (90%)                 │
-│  AnimationFactory | Fade/Slide/Scale ✅ | SpringAnimation ⬜      │
+│  AnimationFactory | Fade/Slide/Scale ✅                         │
 ├─────────────────────────────────────────────────────────────────┤
 │                      Theme Engine Layer (100%)                   │
 │  ThemeManager | ColorScheme | Typography | Motion | Radius      │
