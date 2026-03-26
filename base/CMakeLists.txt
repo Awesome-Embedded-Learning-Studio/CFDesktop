@@ -21,6 +21,9 @@ add_subdirectory(device)
 # Create the unified static library
 add_library(cfbase STATIC)
 
+# Define that we are building a static library (disables dllimport/dllexport)
+target_compile_definitions(cfbase PUBLIC CFBASE_STATIC_BUILD)
+
 # Link static libraries from sub-modules
 target_link_libraries(cfbase PUBLIC
     cfbase_cpu

@@ -15,8 +15,9 @@ target_include_directories(CFDesktopEarlySession PUBLIC ${CMAKE_CURRENT_SOURCE_D
 
 # Link against cfbase to access device headers and other base utilities
 # Link against cflogger to access cflog.h
+# Link against CFDesktopLog for log_helper functions
 target_link_libraries(CFDesktopEarlySession PUBLIC
-    cfbase cflogger cfasciiart cffilesystem
+    cfbase cflogger cfasciiart cffilesystem CFDesktopLog
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets)

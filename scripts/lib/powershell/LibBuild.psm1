@@ -36,7 +36,12 @@ function Clean-BuildDir {
     }
 
     # 安全检查：路径不能是根目录
-    $normalizedPath = (Resolve-Path -LiteralPath $BuildPath -ErrorAction SilentlyContinue)?.Path ?? $BuildPath
+    $resolvedPath = Resolve-Path -LiteralPath $BuildPath -ErrorAction SilentlyContinue
+    if ($resolvedPath) {
+        $normalizedPath = $resolvedPath.Path
+    } else {
+        $normalizedPath = $BuildPath
+    }
     if ($normalizedPath -eq "" -or $normalizedPath -eq "/" -or $normalizedPath -eq "\") {
         Write-LogError "ERROR: Refusing to clean root directory!"
         return $false

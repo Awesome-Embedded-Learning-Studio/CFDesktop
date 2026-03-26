@@ -12,8 +12,8 @@ add_library(cf_ui_base STATIC
     easing.cpp
 )
 
-# Define CFUI_EXPORTS so symbols are marked as dllexport when compiling for the DLL
-target_compile_definitions(cf_ui_base PRIVATE CFUI_EXPORTS)
+# Define CFUI_STATIC_BUILD so symbols are NOT marked as dllexport when compiling for static library
+target_compile_definitions(cf_ui_base PUBLIC CFUI_STATIC_BUILD)
 
 # Add include directories so headers can be found with ui/base/ prefix
 # We need to add the ui parent directory so that ui/base/math_helper.h works

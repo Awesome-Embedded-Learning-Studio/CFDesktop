@@ -24,6 +24,9 @@ add_subdirectory(models)
 
 add_library(cfui STATIC)
 
+# Define that we are building a static library (disables dllimport/dllexport)
+target_compile_definitions(cfui PUBLIC CFUI_STATIC_BUILD)
+
 # Link against STATIC libraries from sub-modules
 # Order: dependencies first (left), then dependents (right)
 # Static libraries are linked left-to-right, so dependents must come after their dependencies

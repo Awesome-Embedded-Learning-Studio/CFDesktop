@@ -13,6 +13,9 @@ add_library(cf_ui_components STATIC
     timing_animation.cpp
 )
 
+# Define CFUI_STATIC_BUILD so symbols are NOT marked as dllexport when compiling for static library
+target_compile_definitions(cf_ui_components PUBLIC CFUI_STATIC_BUILD)
+
 # Add include directories
 target_include_directories(cf_ui_components PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

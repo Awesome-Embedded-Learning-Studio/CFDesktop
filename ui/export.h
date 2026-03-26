@@ -29,7 +29,9 @@
  */
 
 #if defined(_WIN32) || defined(_MSC_VER)
-#    ifdef CFUI_EXPORTS
+#    ifdef CFUI_STATIC_BUILD
+#        define CF_UI_EXPORT
+#    elif defined(CFUI_EXPORTS)
 #        define CF_UI_EXPORT __declspec(dllexport)
 #    else
 #        define CF_UI_EXPORT __declspec(dllimport)

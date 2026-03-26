@@ -29,7 +29,9 @@
  */
 
 #if defined(_WIN32) || defined(_MSC_VER)
-#    ifdef CFBASE_EXPORTS
+#    ifdef CFBASE_STATIC_BUILD
+#        define CF_BASE_EXPORT
+#    elif defined(CFBASE_EXPORTS)
 #        define CF_BASE_EXPORT __declspec(dllexport)
 #    else
 #        define CF_BASE_EXPORT __declspec(dllimport)
