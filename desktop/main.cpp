@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     cf::desktop::init_session::RunStageInit();
 
     /* Boot Ups, All can enter the Desktop Issues */
-    // cf::desktop::boot_desktop();
+    cf::desktop::boot_desktop();
 
     cf::log::traceftag("Main", "Boot Finished, Ready to launch everything!");
     auto quit_code = cf_desktop_app.exec();

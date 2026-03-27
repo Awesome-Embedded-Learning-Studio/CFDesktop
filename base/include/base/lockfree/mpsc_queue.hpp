@@ -199,23 +199,25 @@ template <typename T, size_t Capacity> class MpscQueue {
         const size_type count = values.size();
         const size_type start = writePos_.fetch_add(count, std::memory_order_relaxed);
 
-        // Check if all slots are available
+        // For each slot, wait for it to become available, then write
         for (size_type i = 0; i < count; ++i) {
             size_type pos = start + i;
             Cell* cell = &buffer_[pos & (Capacity - 1)];
 
             size_type seq = cell->sequence.load(std::memory_order_acquire);
-            if (seq != pos) {
-                // Not all slots available - rollback and return partial count
-                writePos_.fetch_sub(count - i, std::memory_order_relaxed);
-                return i;
+            // Wait for this slot to become available (like tryPush)
+            while (seq != pos) {
+#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
+                __builtin_ia32_pause(); // x86 pause instruction
+#else
+                // Generic fallback
+                volatile int dummy = 0;
+                (void)dummy;
+#endif
+                seq = cell->sequence.load(std::memory_order_acquire);
             }
-        }
 
-        // All slots available - write all
-        for (size_type i = 0; i < count; ++i) {
-            size_type pos = start + i;
-            Cell* cell = &buffer_[pos & (Capacity - 1)];
+            // Slot is available, write the value
             new (cell->ptr()) T(std::move(values[i]));
             cell->sequence.store(pos + 1, std::memory_order_release);
         }

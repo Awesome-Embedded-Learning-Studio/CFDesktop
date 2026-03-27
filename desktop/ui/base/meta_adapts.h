@@ -46,7 +46,7 @@ struct Version {
     uint8_t patch = 0;
 
     // ========== Basic comparison ==========
-    constexpr auto operator<= > (const Version&) const noexcept = default;
+    constexpr auto operator<=>(const Version&) const noexcept = default;
 
     // ========== Version information ==========
     /**

@@ -13,6 +13,7 @@
  */
 
 #pragma once
+#include "../../../export.h"
 #include "IDesktopPropertyStrategy.h"
 #include <functional>
 #include <memory>
@@ -34,7 +35,7 @@ namespace cf::desktop::platform_strategy {
  * auto strategy = factory.create_unique<MyStrategy>(StrategyType::Linux);
  * @endcode
  */
-class PlatformFactory {
+class CF_DESKTOP_EXPORT PlatformFactory {
   public:
     /**
      * @brief  Constructs a new PlatformFactory instance.

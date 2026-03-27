@@ -72,7 +72,7 @@ if ([string]::IsNullOrWhiteSpace($BuildDir)) {
     exit 1
 }
 
-$BuildDir = Join-Path $ProjectRoot $BuildDir "test"
+$BuildDir = Join-Path (Join-Path $ProjectRoot $BuildDir) "test"
 
 Write-LogInfo "Test directory: $BuildDir"
 Write-LogInfo "Command: ctest --test-dir $BuildDir --output-on-failure"

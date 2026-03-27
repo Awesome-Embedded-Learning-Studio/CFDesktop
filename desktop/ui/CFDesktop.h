@@ -9,6 +9,7 @@
  *
  */
 #pragma once
+#include "../export.h"
 #include "CFDesktopProxy.h"
 #include "base/weak_ptr/weak_ptr.h"
 #include "base/weak_ptr/weak_ptr_factory.h"
@@ -31,7 +32,7 @@ class CFDesktopEntity;
  * @since         0.1
  * @ingroup       desktop_ui
  */
-class CFDesktop final : public QWidget {
+class CF_DESKTOP_EXPORT CFDesktop final : public QWidget {
     Q_OBJECT
   public:
     friend class CFDesktopProxy; // Proxy Friendly

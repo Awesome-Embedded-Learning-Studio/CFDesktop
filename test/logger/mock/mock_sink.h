@@ -41,7 +41,8 @@ class MockSink : public ISink {
     bool write(const LogRecord& record) override {
         // Simulate slow write if configured
         if (config_.slow_write) {
-            std::this_thread::sleep_for(std::chrono::microseconds(100));
+            // Longer delay to ensure queue fills up during tests
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
         std::lock_guard<std::mutex> lock(mutex_);

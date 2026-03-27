@@ -13,7 +13,7 @@
  */
 
 #pragma once
-
+#include "../../../export.h"
 #include "IDesktopPropertyStrategy.h"
 #include <functional>
 
@@ -71,7 +71,7 @@ struct PlatformFactoryAPI {
  * @since   0.1
  * @ingroup none
  */
-PlatformFactoryAPI native() noexcept;
+CF_DESKTOP_EXPORT PlatformFactoryAPI native() noexcept;
 
 // TODO: Load from DLL
 // PlatformFactoryAPI* remote() noexcept;

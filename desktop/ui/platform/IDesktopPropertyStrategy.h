@@ -13,6 +13,7 @@
  */
 
 #pragma once
+#include "../../../export.h"
 
 namespace cf::desktop::platform_strategy {
 
@@ -26,7 +27,7 @@ namespace cf::desktop::platform_strategy {
  * @note   Not thread-safe unless externally synchronized.
  * @ingroup none
  */
-class IDesktopPropertyStrategy {
+class CF_DESKTOP_EXPORT IDesktopPropertyStrategy {
   public:
     /**
      * @brief  Defines the available strategy types.

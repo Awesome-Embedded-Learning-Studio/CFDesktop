@@ -13,7 +13,7 @@
  */
 
 #pragma once
-
+#include "../../../export.h"
 #include "IDesktopPropertyStrategy.h"
 #include "base/weak_ptr/weak_ptr.h"
 #include "base/weak_ptr/weak_ptr_factory.h"
@@ -58,7 +58,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(DesktopBehaviors)
  * auto behaviors = strategy->query();
  * @endcode
  */
-class IDesktopDisplaySizeStrategy : public IDesktopPropertyStrategy {
+class CF_DESKTOP_EXPORT IDesktopDisplaySizeStrategy : public IDesktopPropertyStrategy {
   public:
     /**
      * @brief  Constructs a DisplaySizePolicy strategy instance.

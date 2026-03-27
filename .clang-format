@@ -104,7 +104,7 @@ LineEnding: LF
 
 # C/C++ 语言设置
 Language: Cpp
-Standard: c++17
+Standard: Latest
 
 # 包含块排序
 SortIncludes: true

@@ -71,15 +71,18 @@ void AsyncPostQueue::flush() {
 }
 
 void AsyncPostQueue::flush_sync() {
+    // Get a unique token for this flush request
+    uint64_t my_token = flush_token_.fetch_add(1, std::memory_order_acq_rel) + 1;
+
     // Set flush request flag
     flush_requested_.store(true, std::memory_order_release);
-    flush_completed_.store(false, std::memory_order_release);
     cv_.notify_one();
 
-    // Wait for flush to complete
+    // Wait for OUR specific token to complete
     std::unique_lock<std::mutex> lock(flush_completed_mu_);
-    flush_completed_cv_.wait(
-        lock, [this] { return flush_completed_.load(std::memory_order_acquire) || !running_; });
+    flush_completed_cv_.wait(lock, [this, my_token] {
+        return flush_completed_.load(std::memory_order_acquire) >= my_token || !running_;
+    });
 }
 
 void AsyncPostQueue::clear_sinks() {
@@ -121,12 +124,16 @@ void AsyncPostQueue::worker_loop() {
 
         // 队列为空，检查是否有 flush 请求
         if (flush_requested_.exchange(false, std::memory_order_acq_rel)) {
-            std::lock_guard<std::mutex> lock(sinksMu_);
-            for (auto& sink : sinks_) {
-                sink->flush();
+            {
+                std::lock_guard<std::mutex> lock(sinksMu_);
+                for (auto& sink : sinks_) {
+                    sink->flush();
+                }
             }
-            // Notify that flush is complete
-            flush_completed_.store(true, std::memory_order_release);
+            // Update completed token to current flush_token_
+            // This unblocks all flush_sync() calls with tokens <= this value
+            uint64_t current_token = flush_token_.load(std::memory_order_acquire);
+            flush_completed_.store(current_token, std::memory_order_release);
             flush_completed_cv_.notify_all();
         }
 

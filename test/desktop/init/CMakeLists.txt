@@ -34,6 +34,11 @@ target_link_libraries(init_session_chain_test PRIVATE
     Qt6::Widgets
 )
 
+# Set output directory to test/bin
+set_target_properties(init_session_chain_test PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test/bin"
+)
+
 # Add Qt6::Test if available
 if(Qt6Test_FOUND)
     target_link_libraries(init_session_chain_test PRIVATE Qt6::Test)
@@ -44,10 +49,11 @@ else()
 endif()
 
 # Register with CTest
+# Set working directory to where Qt DLLs are located
 add_test(NAME init_session_chain_test COMMAND init_session_chain_test)
 set_tests_properties(init_session_chain_test PROPERTIES
     LABELS "desktop;init;functional"
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/bin"
 )
 
 log_info("desktop_init_tests" "  - init_session_chain_test")

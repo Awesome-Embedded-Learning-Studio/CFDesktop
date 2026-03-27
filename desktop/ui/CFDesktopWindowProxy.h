@@ -12,6 +12,7 @@
  * @ingroup desktop_ui
  */
 #pragma once
+#include "../export.h"
 #include "CFDesktopProxy.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include "platform/IDesktopDisplaySizeStrategy.h"
@@ -38,7 +39,7 @@ namespace cf::desktop {
  * proxy.show_desktop();
  * @endcode
  */
-class CFDesktopWindowProxy : public CFDesktopProxy {
+class CF_DESKTOP_EXPORT CFDesktopWindowProxy : public CFDesktopProxy {
   public:
     /**
      * @brief  Default constructor. Creates a window proxy instance.

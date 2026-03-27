@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "../export.h"
 #include "base/weak_ptr/weak_ptr.h"
 #include <QObject>
 #include <memory>
@@ -43,7 +44,7 @@ class CFDesktop;
  * @endcode
  */
 // Real Handles
-class CFDesktopEntity : public QObject {
+class CF_DESKTOP_EXPORT CFDesktopEntity : public QObject {
   public:
     /**
      * @brief  Returns the singleton instance of CFDesktopEntity.

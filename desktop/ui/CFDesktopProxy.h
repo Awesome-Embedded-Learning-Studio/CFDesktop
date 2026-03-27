@@ -12,6 +12,7 @@
  * @ingroup desktop_ui
  */
 #pragma once
+#include "../export.h"
 #include "CFDesktop.h"
 #include "base/weak_ptr/weak_ptr.h"
 #include <memory>
@@ -37,7 +38,7 @@ class CFDesktop;
  * proxy->someMethod();
  * @endcode
  */
-class CFDesktopProxy {
+class CF_DESKTOP_EXPORT CFDesktopProxy {
   public:
     /**
      * @brief  Destroys the proxy instance.

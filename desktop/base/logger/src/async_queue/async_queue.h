@@ -236,7 +236,6 @@ class AsyncPostQueue {
     std::thread worker_thread_;               ///< Worker thread for processing records.
     std::atomic_bool running_{false};         ///< Indicates if the worker is running.
     std::atomic_bool flush_requested_{false}; ///< Indicates if a flush was requested.
-    std::atomic_bool flush_completed_{true};  ///< Indicates if the last flush completed.
 
     // Error queue (guaranteed channel, unlimited)
     std::deque<LogRecord> errorQueue_; ///< Fallback queue for error messages.
@@ -250,9 +249,11 @@ class AsyncPostQueue {
     std::condition_variable cv_; ///< Condition variable for waking the worker.
     std::mutex wakeMu_;          ///< Mutex for the wake condition variable.
 
-    // Flush completion notification
+    // Flush completion notification (token-based for concurrent flush_sync calls)
     std::condition_variable flush_completed_cv_; ///< CV for flush completion.
     std::mutex flush_completed_mu_;              ///< Mutex for flush completion CV.
+    std::atomic<uint64_t> flush_token_{0};       ///< Incrementing token for each flush request.
+    std::atomic<uint64_t> flush_completed_{0};   ///< Highest completed flush token.
 
     // Sink management
     std::mutex sinksMu_;                        ///< Mutex for sink list access.

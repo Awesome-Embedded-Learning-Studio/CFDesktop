@@ -24,6 +24,13 @@
 #include <string>
 #include <thread>
 
+// Undef Windows macros that conflict with our level enum
+#ifdef _WIN32
+#    include <windows.h>
+// Windows.h defines ERROR as a macro, which breaks level::ERROR
+#    undef ERROR
+#endif
+
 using namespace cf::log;
 using namespace cf::log::test;
 
@@ -74,19 +81,19 @@ TEST(QueueFullBehavior, QueueFullDropsNormalLogs) {
 
     Logger::instance().add_sink(mock_sink);
 
-    // Submit more logs than queue capacity
-    // Use CFLOGGER_QUEUE_FLOOD_COUNT from test_config.h
-    constexpr size_t total_logs = CFLOGGER_QUEUE_FLOOD_COUNT;
+    // Submit enough logs to exceed queue capacity (70000 > 65536)
+    // This ensures the queue fills up and some logs are dropped
+    constexpr size_t total_logs = 70000;
     constexpr size_t expected_max_received = CFLOGGER_QUEUE_CAPACITY; // Queue capacity
 
     for (size_t i = 0; i < total_logs; ++i) {
         info("Normal log message " + std::to_string(i), "QueueTest");
     }
 
-    // Wait for processing
-    std::this_thread::sleep_for(std::chrono::milliseconds(CFLOGGER_STRESS_WAIT_MS));
+    // Wait for processing - give enough time for queue to drain
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     Logger::instance().flush();
-    std::this_thread::sleep_for(std::chrono::milliseconds(CFLOGGER_STRESS_WAIT_MS));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     // Verify that some logs were dropped
     size_t received_count = mock_sink->entry_count();
@@ -132,8 +139,8 @@ TEST(QueueFullBehavior, ErrorLogsNeverDropped) {
     }
 
     EXPECT_EQ(error_count, error_logs)
-        << "All ERROR logs should be received (unlimited error queue), " << "but only "
-        << error_count << " of " << error_logs << " were received";
+        << "All ERROR logs should be received (unlimited error queue), "
+        << "but only " << error_count << " of " << error_logs << " were received";
 
     ResetLoggerState();
 }
@@ -275,14 +282,22 @@ TEST(FileSinkFailure, FileSinkConditionalFailure) {
 TEST(FileSinkFailure, FileSinkInReadOnlyDirectory) {
     ResetLoggerState();
 
-    // Create a temporary file path in /tmp (should always be writable)
-    std::string temp_path = "/tmp/cflogger_test_writable.log";
+    // Create a temporary file path in a platform-specific temp directory
+    std::string temp_path = []() {
+#ifdef _WIN32
+        char temp_dir[MAX_PATH];
+        GetTempPathA(MAX_PATH, temp_dir);
+        return std::string(temp_dir) + "cflogger_test_writable.log";
+#else
+        return std::string("/tmp/cflogger_test_writable.log");
+#endif
+    }();
 
-    // First verify we can write to /tmp
+    // First verify we can write to the temp directory
     {
         std::ofstream test_file(temp_path);
         ASSERT_TRUE(test_file.is_open())
-            << "Cannot create test file in /tmp, skipping read-only test";
+            << "Cannot create test file in temp directory, skipping read-only test";
         test_file.close();
         std::remove(temp_path.c_str());
     }

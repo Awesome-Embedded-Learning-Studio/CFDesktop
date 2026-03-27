@@ -35,6 +35,11 @@ add_library(cf_desktop_ui_platform STATIC
     ${PLATFORM_SOURCES}
 )
 
+# Export symbols for Windows DLL - define when building static library that will be linked into DLL
+if(WIN32)
+    target_compile_definitions(cf_desktop_ui_platform PRIVATE CFDESKTOP_EXPORTS)
+endif()
+
 # Include current directory and platform-specific subdirectories
 target_include_directories(cf_desktop_ui_platform PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

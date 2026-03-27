@@ -7,6 +7,11 @@ add_subdirectory(platform)
 
 add_library(CFDesktopUi STATIC)
 
+# Export symbols for Windows DLL - define when building static library that will be linked into DLL
+if(WIN32)
+    target_compile_definitions(CFDesktopUi PRIVATE CFDESKTOP_EXPORTS)
+endif()
+
 target_sources(CFDesktopUi PRIVATE
     CFDesktop.cpp
     CFDesktopEntity.cpp
