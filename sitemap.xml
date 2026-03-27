@@ -725,6 +725,14 @@
          <lastmod>2026-03-27</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1desktop_1_1platform__strategy_1_1windows_1_1WindowsDeskProStrategyFactory/</loc>
+         <lastmod>2026-03-27</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1desktop_1_1platform__strategy_1_1windows_1_1WindowsDisplaySizePolicy/</loc>
+         <lastmod>2026-03-27</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1desktop_1_1platform__strategy_1_1wsl_1_1DisplaySizePolicyMaker/</loc>
          <lastmod>2026-03-27</lastmod>
     </url>
@@ -1677,6 +1685,10 @@
          <lastmod>2026-03-27</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/desktop_2export_8h/</loc>
+         <lastmod>2026-03-27</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/desktop__entry_8h/</loc>
          <lastmod>2026-03-27</lastmod>
     </url>
@@ -2585,7 +2597,15 @@
          <lastmod>2026-03-27</lastmod>
     </url>
     <url>
-         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/window__platform_8h/</loc>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/windows__display__size__policy_8h/</loc>
+         <lastmod>2026-03-27</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/windows__factory_8h/</loc>
+         <lastmod>2026-03-27</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/windows__platform_8h/</loc>
          <lastmod>2026-03-27</lastmod>
     </url>
     <url>
@@ -2677,15 +2697,11 @@
          <lastmod>2026-03-27</lastmod>
     </url>
     <url>
-         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Namespaces/namespacecf_1_1desktop_1_1platform/</loc>
-         <lastmod>2026-03-27</lastmod>
-    </url>
-    <url>
-         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Namespaces/namespacecf_1_1desktop_1_1platform_1_1windows/</loc>
-         <lastmod>2026-03-27</lastmod>
-    </url>
-    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Namespaces/namespacecf_1_1desktop_1_1platform__strategy/</loc>
+         <lastmod>2026-03-27</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Namespaces/namespacecf_1_1desktop_1_1platform__strategy_1_1windows/</loc>
          <lastmod>2026-03-27</lastmod>
     </url>
     <url>
