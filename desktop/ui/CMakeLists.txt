@@ -4,6 +4,8 @@ add_subdirectory(base)
 add_subdirectory(widget)
 add_subdirectory(models)
 add_subdirectory(platform)
+add_subdirectory(components)
+add_subdirectory(render)
 
 add_library(CFDesktopUi STATIC)
 
@@ -32,5 +34,6 @@ PRIVATE
     cf_desktop_ui_base
     cf_desktop_ui_widget  # Link widget submodule
     cf_desktop_ui_platform  # Link platform submodule
+    cf_desktop_render     # Link render backend abstraction
 )
 

@@ -42,6 +42,7 @@ set(CFDESKTOP_STATIC_LIBS
     cfasciiart
     CFDesktopMain
     CFDesktopUi
+    cf_desktop_render
 )
 
 # Link all static libraries using --whole-archive

@@ -1,0 +1,27 @@
+# Desktop UI Components
+# Core component interfaces: IWindow, IWindowBackend, IDisplayServerBackend,
+# PanelManager, ShellLayer, etc.
+
+add_subdirectory(statusbar)
+
+# Create interface library for convenience
+add_library(cf_desktop_components STATIC)
+
+target_sources(cf_desktop_components PRIVATE
+    WindowManager.cpp
+    PanelManager.cpp
+)
+
+target_include_directories(cf_desktop_components PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../render>
+)
+
+target_link_libraries(cf_desktop_components
+PUBLIC
+    cfbase
+    cf_desktop_render
+PRIVATE
+    Qt6::Core Qt6::Gui Qt6::Widgets
+)

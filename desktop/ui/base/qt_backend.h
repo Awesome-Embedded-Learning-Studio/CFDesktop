@@ -29,6 +29,8 @@ namespace cf::desktop::backend {
 enum class LinuxQtBackend {
     X11,     ///< X11 windowing system backend.
     Wayland, ///< Wayland compositor backend.
+    EGLFS,   ///< EGL + OpenGL ES without a windowing system (embedded).
+    LinuxFB, ///< Linux framebuffer, pure software rendering (embedded).
     Unknown  ///< Backend could not be determined or is unsupported.
 };
 
@@ -36,7 +38,7 @@ enum class LinuxQtBackend {
  * @brief  Detects the current Qt backend at runtime.
  *
  * Queries the Qt platform integration to determine whether the application
- * is running under X11 or Wayland.
+ * is running under X11, Wayland, EGLFS, LinuxFB, or an unknown backend.
  *
  * @return          Detected Qt backend for the current session.
  * @throws          None
@@ -47,6 +49,34 @@ enum class LinuxQtBackend {
  * @ingroup         none
  */
 LinuxQtBackend GetBackend();
+
+/**
+ * @brief  Determines whether CFDesktop should act as a display server.
+ *
+ * Probes the runtime environment to decide the operating mode:
+ * - Client:         A display server (X11/Wayland) is already running.
+ * - NeedCompositor: No display server detected — CFDesktop should be one.
+ * - DirectRender:   No windowing system at all — render to framebuffer.
+ *
+ * The detection priority is:
+ * 1. CFDESKTOP_DISPLAY_SERVER environment variable (force override).
+ * 2. Presence of WAYLAND_DISPLAY or DISPLAY (Client mode).
+ * 3. Presence of /dev/dri/card* (DirectRender / EGLFS).
+ * 4. Presence of /dev/fb0 (DirectRender / LinuxFB).
+ * 5. Default: Client.
+ *
+ * @return          The recommended display server mode.
+ * @throws          None
+ * @since           0.11
+ * @ingroup         none
+ */
+enum class DisplayServerMode {
+    Client,         ///< A windowing system is available; run as an app.
+    NeedCompositor, ///< No WM detected; CFDesktop should be the compositor.
+    DirectRender    ///< No windowing system; render directly to hardware.
+};
+
+DisplayServerMode DetectDisplayServerMode();
 
 #elifdef CFDESKTOP_OS_WINDOWS
 

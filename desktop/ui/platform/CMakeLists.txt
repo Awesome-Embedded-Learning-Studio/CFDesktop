@@ -60,11 +60,12 @@ elseif(WIN32)
     endif()
 endif()
 
-target_link_libraries(cf_desktop_ui_platform 
+target_link_libraries(cf_desktop_ui_platform
 PUBLIC
     cfbase
     cflogger
     cf_desktop_ui_base
+    cf_desktop_components
 PRIVATE
     Qt6::Core
     Qt6::Gui

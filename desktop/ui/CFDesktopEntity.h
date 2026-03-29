@@ -24,9 +24,14 @@ namespace cf::desktop::platform_strategy {
 class PlatformFactory;
 }
 
+namespace cf::desktop::backend::windows {
+class WindowsDisplayServerBackend;
+}
+
 namespace cf::desktop {
 
 class CFDesktop;
+class IDisplayServerBackend;
 
 /**
  * @brief  Manages the desktop application lifecycle and initialization.
@@ -141,6 +146,9 @@ class CF_DESKTOP_EXPORT CFDesktopEntity : public QObject {
 
     /// @brief Factory for creating platform-specific components. Ownership: owner.
     std::unique_ptr<platform_strategy::PlatformFactory> platform_factory_;
+
+    /// @brief Display server backend (Windows pseudo-desktop, etc.). Ownership: owner.
+    std::unique_ptr<IDisplayServerBackend> display_backend_;
 
   private:
     /// @brief Global singleton instance of CFDesktopEntity. Ownership: owner.
