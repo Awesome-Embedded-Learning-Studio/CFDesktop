@@ -6,6 +6,7 @@
 #include "base/macro/system_judge.h"
 #include "base/weak_ptr/weak_ptr.h"
 #include "cflog.h"
+#include "components/IDisplayServerBackend.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include <memory>
 
