@@ -16,8 +16,14 @@ log_info("Desktop" "Creating unified CFDesktop shared library")
 add_library(CFDesktop_shared SHARED)
 
 # Export symbols for Windows DLL
+# CFLOG_STATIC_BUILD: cflogger symbols resolve as regular refs within the DLL
+# CFDESKTOP_STATIC_BUILD: NOT set here — desktop_run_session.cpp needs
+#   CF_DESKTOP_EXPORT = dllexport (CFDESKTOP_EXPORTS is defined on this target)
 if(WIN32)
-    target_compile_definitions(CFDesktop_shared PRIVATE CFDESKTOP_EXPORTS)
+    target_compile_definitions(CFDesktop_shared PRIVATE
+        CFDESKTOP_EXPORTS
+        CFLOG_STATIC_BUILD
+    )
 endif()
 
 # Set symbol visibility to hidden on Unix/Linux
@@ -42,6 +48,12 @@ set(CFDESKTOP_STATIC_LIBS
     cfasciiart
     CFDesktopMain
     CFDesktopUi
+    cf_desktop_render
+)
+
+# Sources compiled directly into the DLL (with CFDESKTOP_EXPORTS defined)
+target_sources(CFDesktop_shared PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/desktop_run_session.cpp
 )
 
 # Link all static libraries using --whole-archive
@@ -86,14 +98,14 @@ endif()
 # Add alias for consistent naming
 add_library(CFDesktop::lib ALIAS CFDesktop_shared)
 # ============================================================
-# Main executable (links against the shared library)
+# Main executable — thin shell that calls into the DLL
 # ============================================================
-add_executable(CFDesktop main.cpp desktop_entry.cpp)
+add_executable(CFDesktop main.cpp)
 
-# Link against the unified CFDesktop shared library
-# Also link CFDesktopEarlySession directly for symbols not exported from DLL
+# The EXE only links the DLL import library.
+# All code (CFDesktopMain, desktop_entry, init stages, etc.) lives in the DLL.
 target_link_libraries(CFDesktop PRIVATE
-    CFDesktop_shared CFDesktopMain cflogger cfbase
+    CFDesktop_shared
 )
 
 log_info("Desktop Buildings" "Configuring Desktop Buildings Done")

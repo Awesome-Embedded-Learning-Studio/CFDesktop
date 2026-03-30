@@ -24,9 +24,14 @@ namespace cf::desktop::platform_strategy {
 class PlatformFactory;
 }
 
+namespace cf::desktop::backend::windows {
+class WindowsDisplayServerBackend;
+}
+
 namespace cf::desktop {
 
 class CFDesktop;
+class IDisplayServerBackend;
 
 /**
  * @brief  Manages the desktop application lifecycle and initialization.
@@ -121,6 +126,20 @@ class CF_DESKTOP_EXPORT CFDesktopEntity : public QObject {
      */
     ~CFDesktopEntity();
 
+    /**
+     * @brief  Destroys the singleton before static destruction.
+     *
+     * Must be called while QApplication is still alive, because the
+     * entity owns QWidgets that must not outlive QApplication.
+     *
+     * @throws             None
+     * @note               Safe to call multiple times; subsequent calls are no-ops.
+     * @warning            Must be called before main() returns.
+     * @since              N/A
+     * @ingroup            none
+     */
+    static void release();
+
   protected:
     /**
      * @brief  Constructs the CFDesktopEntity instance.
@@ -141,6 +160,9 @@ class CF_DESKTOP_EXPORT CFDesktopEntity : public QObject {
 
     /// @brief Factory for creating platform-specific components. Ownership: owner.
     std::unique_ptr<platform_strategy::PlatformFactory> platform_factory_;
+
+    /// @brief Display server backend (Windows pseudo-desktop, etc.). Ownership: owner.
+    std::unique_ptr<IDisplayServerBackend> display_backend_;
 
   private:
     /// @brief Global singleton instance of CFDesktopEntity. Ownership: owner.

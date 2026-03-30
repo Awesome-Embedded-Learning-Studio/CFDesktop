@@ -53,3 +53,11 @@ add_gtest_executable(
     LOG_MODULE     logger_tests
     INCLUDE_DIRS   ${MOCK_INCLUDE_DIR}
 )
+
+# Tests link cflogger directly (no DLL), CFLOG_API must expand to nothing
+if(WIN32)
+    foreach(t logger_benchmark_test logger_concurrency_test
+               logger_error_handling_test logger_formatter_test)
+        target_compile_definitions(${t} PRIVATE CFLOG_STATIC_BUILD)
+    endforeach()
+endif()

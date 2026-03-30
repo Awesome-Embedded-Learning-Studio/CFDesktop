@@ -29,3 +29,23 @@ target_link_libraries(cflogger PUBLIC
 
 # Alias for consistent naming
 add_library(CFDesktop::logger ALIAS cflogger)
+
+# =============================================================================
+# cflogger_headers — Header-only INTERFACE library
+# =============================================================================
+# DLL-internal modules that only call the public API (cflog.h free functions)
+# should link this instead of the static lib, to avoid duplicating compiled
+# symbols. Only CFDesktop_shared (via --whole-archive) and CFDesktopMain
+# (PRIVATE, for internal classes like FileSink/ConsoleSink) link the real lib.
+add_library(cflogger_headers INTERFACE)
+target_include_directories(cflogger_headers INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(cflogger_headers INTERFACE CFDesktop::base)
+add_library(CFDesktop::logger_headers ALIAS cflogger_headers)
+
+# cflogger itself: mark symbols for DLL export when building on Windows
+if(WIN32)
+    target_compile_definitions(cflogger PRIVATE CFLOG_BUILDING)
+endif()

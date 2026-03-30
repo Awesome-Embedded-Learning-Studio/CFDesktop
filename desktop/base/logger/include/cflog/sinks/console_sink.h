@@ -13,6 +13,7 @@
  */
 #pragma once
 
+#include "cflog/cflog_export.h"
 #include "cflog/cflog_sink.h"
 
 namespace cf::log {
@@ -33,7 +34,7 @@ namespace cf::log {
  * sink.flush();
  * @endcode
  */
-class ConsoleSink : public ISink {
+class CFLOG_API ConsoleSink : public ISink {
   public:
     /**
      * @brief  Writes a log record to the console.

@@ -22,9 +22,9 @@ namespace cf::desktop::early_stage {
  * @brief  Early configuration stage.
  *
  * Loads and applies initial configuration during the early boot sequence.
- * This stage must run first (position 0) in the initialization order.
+ * This stage must run at position 1 (after ConsoleSignalStage) in the initialization order.
  *
- * @note           This stage must execute at position 0 (first stage).
+ * @note           This stage must execute at position 1 (second stage).
  * @warning        None
  * @since          N/A
  * @ingroup        early_session
@@ -55,7 +55,7 @@ class EarlyConfigStage : public IEarlyStage {
      * @since      N/A
      * @ingroup    early_session
      */
-    std::optional<unsigned int> atExpectedStageBootup() const override { return 0; }
+    std::optional<unsigned int> atExpectedStageBootup() const override { return 1; }
 
     /**
      * @brief  Runs the early configuration session.

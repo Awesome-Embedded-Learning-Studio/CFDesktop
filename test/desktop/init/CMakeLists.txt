@@ -13,6 +13,7 @@ add_executable(init_session_chain_test
 target_link_libraries(init_session_chain_test PRIVATE
     CFDesktop::lib
     CFDesktopMain
+    CFDesktop::logger
     GTest::gtest
     GTest::gtest_main
     Qt6::Core
@@ -42,6 +43,16 @@ set_tests_properties(init_session_chain_test PROPERTIES
 )
 
 log_info("desktop_init_tests" "  - init_session_chain_test")
+
+# Windows: copy CFDesktop_shared.dll to test output directory
+if(WIN32)
+    add_custom_command(TARGET init_session_chain_test POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:CFDesktop_shared>
+            $<TARGET_FILE_DIR:init_session_chain_test>
+        COMMENT "Copying CFDesktop_shared.dll to test output directory"
+    )
+endif()
 
 # Windows Qt auto-deploy support
 qt_add_windows_deploy(init_session_chain_test AUTO_DEPLOY INSTALL_DEPLOY)

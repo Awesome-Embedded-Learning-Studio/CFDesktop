@@ -14,6 +14,7 @@
 #pragma once
 
 #include "base/singleton/simple_singleton.hpp"
+#include "cflog_export.h"
 #include "cflog_level.hpp"
 #include <atomic>
 #include <memory>
@@ -40,7 +41,7 @@ class ISink;
  * logger.log(level::INFO, "Hello, world!", "MyApp", std::source_location::current());
  * @endcode
  */
-class Logger : public SimpleSingleton<Logger> {
+class CFLOG_API Logger {
   public:
     /**
      * @brief  Constructor.
@@ -62,7 +63,16 @@ class Logger : public SimpleSingleton<Logger> {
      */
     ~Logger();
 
-    /* Native Interface */
+    /**
+     * @brief   Intentionally leaks to avoid deadlock on Ctrl+C
+     *          that occurs with Meyer Singletons.
+     *
+     * @return Logger&
+     */
+    static Logger& instance() {
+        static Logger* inst = new Logger();
+        return *inst;
+    }
 
     /**
      * @brief  Logs a message with the specified level and metadata.

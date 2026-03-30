@@ -19,10 +19,14 @@ target_include_directories(CFDesktopEarlySession PUBLIC
 # Link against cflogger to access cflog.h
 # Link against CFDesktopLog for log_helper functions
 target_link_libraries(CFDesktopEarlySession PUBLIC
-    cfbase cflogger cfasciiart cffilesystem CFDesktopLog
+    cfbase cflogger_headers cfasciiart cffilesystem CFDesktopLog
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets)
+
+if(WIN32)
+    target_compile_definitions(CFDesktopEarlySession PRIVATE CFLOG_STATIC_BUILD)
+endif()
 
 
 

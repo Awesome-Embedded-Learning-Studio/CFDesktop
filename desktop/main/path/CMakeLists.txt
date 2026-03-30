@@ -10,4 +10,8 @@ target_include_directories(CFDesktopPathSettings PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
-target_link_libraries(CFDesktopPathSettings PUBLIC cflogger Qt6::Core)
+target_link_libraries(CFDesktopPathSettings PUBLIC cflogger_headers Qt6::Core)
+
+if(WIN32)
+    target_compile_definitions(CFDesktopPathSettings PRIVATE CFLOG_STATIC_BUILD)
+endif()

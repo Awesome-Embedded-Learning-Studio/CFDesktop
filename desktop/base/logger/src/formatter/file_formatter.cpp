@@ -96,7 +96,7 @@ std::string FileFormatter::format_timestamp(const LogRecord& r) const {
     auto [tm, frac] = get_time_parts(r.timestamp);
     const auto& fmt = config_->get_timestamp_format();
 
-    char time_buf[64];
+    char time_buf[64] = {0};
     std::strftime(time_buf, sizeof(time_buf), fmt.c_str(), &tm);
 
     return std::format("[{}.{:03d}]", time_buf, frac);

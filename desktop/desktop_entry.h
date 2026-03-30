@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include "export.h"
+
 namespace cf::desktop {
 
 /**
@@ -38,5 +40,16 @@ enum class DesktopExitResult {
  * @ingroup             none
  */
 DesktopExitResult boot_desktop();
+
+/**
+ * @brief  Single entry point for the entire desktop session.
+ *
+ * Runs all initialization stages, boots the desktop, enters the Qt event loop,
+ * and returns the exit code. The EXE only needs to create a QApplication and
+ * call this function.
+ *
+ * @return  Exit code from the Qt event loop.
+ */
+CF_DESKTOP_EXPORT int run_desktop_session();
 
 } // namespace cf::desktop

@@ -12,6 +12,7 @@
  */
 #pragma once
 
+#include "cflog/cflog_export.h"
 #include "cflog/cflog_sink.h"
 #include <fstream>
 #include <string>
@@ -45,7 +46,7 @@ enum class OpenMode {
  * sink.flush();
  * @endcode
  */
-class FileSink : public ISink {
+class CFLOG_API FileSink : public ISink {
   public:
     /**
      * @brief  Constructs a new FileSink.

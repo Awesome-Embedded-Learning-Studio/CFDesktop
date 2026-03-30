@@ -6,26 +6,27 @@
 #pragma once
 
 #include "cflog/cflog.hpp"
+#include "cflog/cflog_export.h"
 #include <format>
 #include <source_location>
 #include <string_view>
 
 namespace cf::log {
 
-void trace(std::string_view msg, std::string_view tag = "CFLog",
-           std::source_location loc = std::source_location::current());
+CFLOG_API void trace(std::string_view msg, std::string_view tag = "CFLog",
+                     std::source_location loc = std::source_location::current());
 
-void debug(std::string_view msg, std::string_view tag = "CFLog",
-           std::source_location loc = std::source_location::current());
+CFLOG_API void debug(std::string_view msg, std::string_view tag = "CFLog",
+                     std::source_location loc = std::source_location::current());
 
-void info(std::string_view msg, std::string_view tag = "CFLog",
-          std::source_location loc = std::source_location::current());
+CFLOG_API void info(std::string_view msg, std::string_view tag = "CFLog",
+                    std::source_location loc = std::source_location::current());
 
-void warning(std::string_view msg, std::string_view tag = "CFLog",
-             std::source_location loc = std::source_location::current());
+CFLOG_API void warning(std::string_view msg, std::string_view tag = "CFLog",
+                       std::source_location loc = std::source_location::current());
 
-void error(std::string_view msg, std::string_view tag = "CFLog",
-           std::source_location loc = std::source_location::current());
+CFLOG_API void error(std::string_view msg, std::string_view tag = "CFLog",
+                     std::source_location loc = std::source_location::current());
 
 // ============================================================================
 // Formatted logging functions (std::format style)
@@ -203,8 +204,8 @@ template <typename... Args> struct traceftag {
         detail::log_helper<level::TRACE, Args...>{tag, fmt, std::forward<Args>(args)..., loc};
     }
 };
-template <typename... Args>
-traceftag(std::string_view, std::format_string<Args...>, Args&&...) -> traceftag<Args...>;
+template <typename... Args> traceftag(std::string_view, std::format_string<Args...>, Args&&...)
+    -> traceftag<Args...>;
 
 /**
  * @brief  Temporary object for debug-level formatted logging with custom tag.
@@ -229,8 +230,8 @@ template <typename... Args> struct debugftag {
         detail::log_helper<level::DEBUG, Args...>{tag, fmt, std::forward<Args>(args)..., loc};
     }
 };
-template <typename... Args>
-debugftag(std::string_view, std::format_string<Args...>, Args&&...) -> debugftag<Args...>;
+template <typename... Args> debugftag(std::string_view, std::format_string<Args...>, Args&&...)
+    -> debugftag<Args...>;
 
 /**
  * @brief  Temporary object for info-level formatted logging with custom tag.
@@ -255,8 +256,8 @@ template <typename... Args> struct infoftag {
         detail::log_helper<level::INFO, Args...>{tag, fmt, std::forward<Args>(args)..., loc};
     }
 };
-template <typename... Args>
-infoftag(std::string_view, std::format_string<Args...>, Args&&...) -> infoftag<Args...>;
+template <typename... Args> infoftag(std::string_view, std::format_string<Args...>, Args&&...)
+    -> infoftag<Args...>;
 
 /**
  * @brief  Temporary object for warning-level formatted logging with custom tag.
@@ -281,8 +282,8 @@ template <typename... Args> struct warningftag {
         detail::log_helper<level::WARNING, Args...>{tag, fmt, std::forward<Args>(args)..., loc};
     }
 };
-template <typename... Args>
-warningftag(std::string_view, std::format_string<Args...>, Args&&...) -> warningftag<Args...>;
+template <typename... Args> warningftag(std::string_view, std::format_string<Args...>, Args&&...)
+    -> warningftag<Args...>;
 
 /**
  * @brief  Temporary object for error-level formatted logging with custom tag.
@@ -307,8 +308,8 @@ template <typename... Args> struct errorftag {
         detail::log_helper<level::ERROR, Args...>{tag, fmt, std::forward<Args>(args)..., loc};
     }
 };
-template <typename... Args>
-errorftag(std::string_view, std::format_string<Args...>, Args&&...) -> errorftag<Args...>;
+template <typename... Args> errorftag(std::string_view, std::format_string<Args...>, Args&&...)
+    -> errorftag<Args...>;
 
 /**
  * @brief  Sets the minimum log level.
@@ -316,25 +317,27 @@ errorftag(std::string_view, std::format_string<Args...>, Args&&...) -> errorftag
  * Only messages at or above this level are processed.
  *
  * @param[in] lvl Minimum log level to set.
+ * @return    None
  * @throws     None
  * @note       None
  * @warning    None
  * @since      N/A
  * @ingroup    cflog
  */
-void set_level(level lvl);
+CFLOG_API void set_level(level lvl);
 
 /**
  * @brief  Flushes all pending log messages.
  *
  * Blocks until all queued messages are written to sinks.
  *
+ * @return    None
  * @throws     None
  * @note       This operation may block if the queue is full.
  * @warning    None
  * @since      N/A
  * @ingroup    cflog
  */
-void flush();
+CFLOG_API void flush();
 
 } // namespace cf::log

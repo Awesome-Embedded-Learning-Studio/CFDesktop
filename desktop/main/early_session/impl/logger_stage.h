@@ -21,9 +21,9 @@ namespace cf::desktop::early_stage {
  * @brief  Logger initialization stage.
  *
  * Initializes the logging system during the early boot sequence. This stage
- * must run second in the initialization order.
+ * must run third in the initialization order.
  *
- * @note           This stage must execute at position 1 (second stage).
+ * @note           This stage must execute at position 2 (third stage).
  * @warning        None
  * @since          N/A
  * @ingroup        early_session
@@ -54,7 +54,7 @@ class LoggerStage : public IEarlyStage {
      * @since      N/A
      * @ingroup    early_session
      */
-    std::optional<unsigned int> atExpectedStageBootup() const override { return 1; }
+    std::optional<unsigned int> atExpectedStageBootup() const override { return 2; }
 
     /**
      * @brief  Runs the logger initialization session.

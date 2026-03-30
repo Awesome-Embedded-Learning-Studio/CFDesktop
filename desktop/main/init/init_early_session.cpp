@@ -1,3 +1,4 @@
+#include "early_session/impl/console_signal_stage.h"
 #include "early_session/impl/early_config_stage.h"
 #include "early_session/impl/early_welcome_impl.h"
 #include "early_session/impl/logger_stage.h"
@@ -9,11 +10,15 @@ void RunEarlyInit() {
     // Registered the Sinks of inits
     early_stage::EarlyInitRunner early_runner;
 
-    /* Stage 0: Early Config Boots */
+    /* Stage 0: Console Signal Handler */
+    early_runner.register_stage_execute_before(
+        []() { return std::make_unique<early_stage::ConsoleSignalStage>(); });
+
+    /* Stage 1: Early Config Boots */
     early_runner.register_stage_execute_before(
         []() { return std::make_unique<early_stage::EarlyConfigStage>(); });
 
-    /* Stage 1: Logger Boots */
+    /* Stage 2: Logger Boots */
     early_runner.register_stage_execute_before(
         []() { return std::make_unique<early_stage::LoggerStage>(); });
 

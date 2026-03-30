@@ -13,6 +13,7 @@
  */
 #pragma once
 
+#include "cflog/cflog_export.h"
 #include "cflog/cflog_format.h"
 #include "cflog/cflog_format_config.h"
 #include <memory>
@@ -37,7 +38,7 @@ enum class level : int;
  * @note   COLOR flag is always ignored since ANSI escape codes
  *         should not appear in log files.
  */
-class FileFormatter : public IFormatter {
+class CFLOG_API FileFormatter : public IFormatter {
   public:
     /**
      * @brief  Constructs a new FileFormatter.

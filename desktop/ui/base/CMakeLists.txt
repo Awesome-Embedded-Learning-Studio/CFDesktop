@@ -14,9 +14,10 @@ target_include_directories(cf_desktop_ui_base PUBLIC
     $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}>
 )
 
-target_link_libraries(cf_desktop_ui_base 
+target_link_libraries(cf_desktop_ui_base
 PUBLIC
     cfbase
+    cf_desktop_render
 PRIVATE
     Qt6::Core Qt6::Gui Qt6::Widgets
 )
