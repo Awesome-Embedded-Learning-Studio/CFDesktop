@@ -19,6 +19,9 @@ void AsyncPostQueue::start() {
 void AsyncPostQueue::stop() {
     if (running_.exchange(false)) {
         cv_.notify_all();
+        flush_completed_.store(flush_token_.load(std::memory_order_acquire),
+                               std::memory_order_release);
+        flush_completed_cv_.notify_all();
         if (worker_thread_.joinable()) {
             worker_thread_.join();
         }
@@ -36,6 +39,9 @@ void AsyncPostQueue::stop() {
 }
 
 void AsyncPostQueue::submit(LogRecord record) {
+    if (!running_.load(std::memory_order_acquire)) {
+        return;
+    }
     if (record.lvl >= level::ERROR) {
         std::lock_guard<std::mutex> lock(errorMu_);
         errorQueue_.push_back(std::move(record));

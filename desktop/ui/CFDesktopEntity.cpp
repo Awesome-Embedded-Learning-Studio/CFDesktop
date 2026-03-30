@@ -34,6 +34,10 @@ CFDesktopEntity::~CFDesktopEntity() {
     log::tracef("Dekstop Entuty is released");
 }
 
+void CFDesktopEntity::release() {
+    global_instance_.reset();
+}
+
 CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // setup the window show proxy
     using StrategyType = platform_strategy::IDesktopPropertyStrategy::StrategyType;

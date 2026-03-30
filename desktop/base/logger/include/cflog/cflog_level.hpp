@@ -34,12 +34,10 @@ enum class level {
 };
 
 static constexpr const level kDEFAULT_LEVEL =
-#ifdef CFDESKTOP_DEBUG_BUILD
+#if defined(CFDESKTOP_DEBUG_BUILD) || defined(CFDESKTOP_DEVELOP_BUILD)
     level::TRACE;
-#elif defined(CFDESKTOP_DEVELOP_BUILD)
-    level::INFO;
 #else
-    level::DEBUG;
+    level::INFO;
 #endif
 
 /**

@@ -126,6 +126,20 @@ class CF_DESKTOP_EXPORT CFDesktopEntity : public QObject {
      */
     ~CFDesktopEntity();
 
+    /**
+     * @brief  Destroys the singleton before static destruction.
+     *
+     * Must be called while QApplication is still alive, because the
+     * entity owns QWidgets that must not outlive QApplication.
+     *
+     * @throws             None
+     * @note               Safe to call multiple times; subsequent calls are no-ops.
+     * @warning            Must be called before main() returns.
+     * @since              N/A
+     * @ingroup            none
+     */
+    static void release();
+
   protected:
     /**
      * @brief  Constructs the CFDesktopEntity instance.

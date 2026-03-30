@@ -13,6 +13,7 @@
  */
 #pragma once
 
+#include "cflog/cflog_export.h"
 #include "cflog/cflog_format.h"
 #include "cflog/cflog_format_config.h"
 #include <memory>
@@ -34,7 +35,7 @@ enum class level : int;
  *
  * @note   Thread-safe for format operations.
  */
-class AsciiColorFormatter : public IFormatter {
+class CFLOG_API AsciiColorFormatter : public IFormatter {
   public:
     /**
      * @brief  Constructs a new AsciiColorFormatter.

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include "export.h"
+
 namespace cf::desktop::init_session {
 
 /**
@@ -22,13 +24,14 @@ namespace cf::desktop::init_session {
  * Initializes core subsystems in staging: early config boot (stage 0) and
  * early logger boot (stage 1).
  *
+ * @return  None
  * @throws  None
  * @note    None
  * @warning None
  * @since   N/A
  * @ingroup desktop_main
  */
-void RunEarlyInit();
+CF_DESKTOP_EXPORT void RunEarlyInit();
 
 /**
  * @brief   Finalizes the early initialization phase in embedded desktop context.
@@ -37,13 +40,14 @@ void RunEarlyInit();
  * transfers configurations to formal config stores, and handles other
  * transition tasks.
  *
+ * @return  None
  * @throws  None
  * @note    None
  * @warning None
  * @since   N/A
  * @ingroup desktop_main
  */
-void ReleaseEarlyInit();
+CF_DESKTOP_EXPORT void ReleaseEarlyInit();
 
 /* Staged inits */
 
@@ -53,13 +57,14 @@ void ReleaseEarlyInit();
  * Executes the full initialization pipeline across multiple stages, including
  * resource loading, subsystem initialization, and service startup.
  *
+ * @return  None
  * @throws  None
  * @note    This function should be called after early initialization completes.
  * @warning Must not be called more than once during a session.
  * @since   N/A
  * @ingroup desktop_main
  */
-void RunStageInit();
+CF_DESKTOP_EXPORT void RunStageInit();
 
 /**
  * @brief   Releases resources allocated during staged initialization.
@@ -67,6 +72,7 @@ void RunStageInit();
  * Unlocks and deletes the boot widget to free memory after the staged
  * initialization phase completes.
  *
+ * @return  None
  * @throws  None
  * @note    The boot widget pointer retrieved from InitInfoHandle is deleted
  *          after being unlocked.
@@ -74,5 +80,5 @@ void RunStageInit();
  * @since   N/A
  * @ingroup desktop_main
  */
-void ReleaseStageInitOldResources();
+CF_DESKTOP_EXPORT void ReleaseStageInitOldResources();
 } // namespace cf::desktop::init_session

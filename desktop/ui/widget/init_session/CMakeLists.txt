@@ -31,9 +31,13 @@ target_include_directories(cf_desktop_ui_widget_init_session PUBLIC
 
 target_link_libraries(cf_desktop_ui_widget_init_session PUBLIC
     cfbase
-    cflogger
+    cflogger_headers
     cf_desktop_ui_base
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets
 )
+
+if(WIN32)
+    target_compile_definitions(cf_desktop_ui_widget_init_session PRIVATE CFLOG_STATIC_BUILD)
+endif()
