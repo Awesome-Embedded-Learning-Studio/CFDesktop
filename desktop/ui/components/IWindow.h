@@ -14,6 +14,7 @@
  */
 
 #pragma once
+#include "WindowDefine.h"
 #include "base/weak_ptr/weak_ptr.h"
 #include "base/weak_ptr/weak_ptr_factory.h"
 #include <QObject>
@@ -34,10 +35,6 @@ class IWindow : public QObject {
   public:
     explicit IWindow(QObject* parent = nullptr);
     ~IWindow();
-
-    /// Window identifier type — unique per backend implementation.
-    using win_id_t = QString;
-
     /**
      * @brief  Returns the unique identifier of this window.
      *
@@ -70,6 +67,11 @@ class IWindow : public QObject {
      * @brief  Requests the window to close gracefully.
      */
     virtual void requestClose() = 0;
+
+    /**
+     * @brief  Raises this window to the top of the stacking order.
+     */
+    virtual void raise() = 0;
 
     /**
      * @brief  Creates a weak pointer to this window.

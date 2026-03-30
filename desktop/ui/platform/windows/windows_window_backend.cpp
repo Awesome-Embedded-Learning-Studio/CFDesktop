@@ -11,7 +11,9 @@
 #include "windows_window_backend.h"
 
 #ifdef CFDESKTOP_OS_WINDOWS
-
+#    ifdef ERROR
+#        undef ERROR
+#    endif
 #    include "cflog.h"
 
 #    include <QString>
@@ -65,9 +67,7 @@ void CALLBACK WinEventProc(HWINEVENTHOOK /*hook*/, DWORD event, HWND hwnd, LONG 
  */
 BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
     auto* backend = reinterpret_cast<WindowsWindowBackend*>(lParam);
-    if (WindowsWindowBackend::shouldTrackWindow(hwnd)) {
-        backend->onExternalWindowShown(hwnd);
-    }
+    backend->onExternalWindowShown(hwnd);
     return TRUE; // continue enumeration
 }
 
@@ -96,7 +96,8 @@ bool WindowsWindowBackend::startTracking() {
     g_active_backend = this;
 
     // Hook: window show / destroy (all processes, out-of-context)
-    hook_show_destroy_ = SetWinEventHook(EVENT_OBJECT_SHOW, EVENT_OBJECT_DESTROY,
+    hook_show_destroy_ = SetWinEventHook(EVENT_OBJECT_CREATE,  // 0x8000
+                                         EVENT_OBJECT_SHOW,    // 0x8002,
                                          nullptr,              // no DLL
                                          WinEventProc,         // callback
                                          0,                    // all processes
@@ -105,7 +106,7 @@ bool WindowsWindowBackend::startTracking() {
     );
 
     if (!hook_show_destroy_) {
-        log::errorftag("WinWindowBackend", "SetWinEventHook (show/destroy) failed: %lu",
+        log::errorftag("WinWindowBackend", "SetWinEventHook (show/destroy) failed: {}",
                        GetLastError());
         g_active_backend = nullptr;
         return false;
@@ -114,7 +115,7 @@ bool WindowsWindowBackend::startTracking() {
     // Enumerate windows that are already open
     EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(this));
 
-    log::traceftag("WinWindowBackend", "Tracking started, %zu windows discovered",
+    log::traceftag("WinWindowBackend", "Tracking started, {} windows discovered",
                    tracked_windows_.size());
     return true;
 }
@@ -204,7 +205,7 @@ void WindowsWindowBackend::onExternalWindowDestroyed(HWND hwnd) {
 //  Internal helpers
 // ──────────────────────────────────────────────────────────
 
-/*static*/ bool WindowsWindowBackend::shouldTrackWindow(HWND hwnd) {
+bool WindowsWindowBackend::shouldTrackWindow(HWND hwnd) {
     // 1. Must be a valid window
     if (!IsWindow(hwnd)) {
         return false;
@@ -257,11 +258,12 @@ void WindowsWindowBackend::onExternalWindowDestroyed(HWND hwnd) {
 void WindowsWindowBackend::registerWindow(HWND hwnd) {
     auto win = std::make_unique<WindowsWindow>(hwnd, this);
     auto weak = win->make_weak();
+    const QString title = win->title();
 
     tracked_windows_[hwnd] = std::move(win);
 
-    log::debugftag("WinWindowBackend", "Window appeared: hwnd=%p title='%s'", hwnd,
-                   tracked_windows_[hwnd]->title().toStdString().c_str());
+    log::debugftag("WinWindowBackend", "Window appeared: hwnd=0x{:x} title='{}'",
+                   reinterpret_cast<std::uintptr_t>(hwnd), title.toStdString());
 
     emit window_came(weak);
 }
@@ -274,7 +276,8 @@ void WindowsWindowBackend::unregisterWindow(HWND hwnd) {
 
     auto weak = it->second->make_weak();
 
-    log::debugftag("WinWindowBackend", "Window gone: hwnd=%p", hwnd);
+    log::debugftag("WinWindowBackend", "Window gone: hwnd=0x{:x}",
+                   reinterpret_cast<std::uintptr_t>(hwnd));
 
     tracked_windows_.erase(it);
 

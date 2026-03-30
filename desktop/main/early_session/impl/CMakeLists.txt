@@ -2,6 +2,7 @@
 # Paths relative to desktop/main (parent scope)
 
 set(IMPL_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/console_signal_stage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/early_welcome_impl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/logger_stage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/early_config_stage.cpp

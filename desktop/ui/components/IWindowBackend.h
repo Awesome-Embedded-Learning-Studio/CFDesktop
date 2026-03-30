@@ -34,7 +34,7 @@ namespace cf::desktop {
 class IWindowBackend : public QObject {
     Q_OBJECT
   public:
-    explicit IWindowBackend(QObject* parent = nullptr) : QObject(parent) {}
+    explicit IWindowBackend(QObject* parent = nullptr);
 
     virtual ~IWindowBackend() = default;
 

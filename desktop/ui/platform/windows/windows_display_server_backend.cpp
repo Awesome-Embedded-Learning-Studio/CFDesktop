@@ -11,7 +11,9 @@
 #include "windows_display_server_backend.h"
 
 #ifdef CFDESKTOP_OS_WINDOWS
-
+#    ifdef ERROR
+#        undef ERROR
+#    endif
 #    include "cflog.h"
 
 #    include <QApplication>
@@ -71,11 +73,12 @@ bool WindowsDisplayServerBackend::initialize(int argc, char** argv) {
             [this](WeakPtr<IWindow> win) { emit externalWindowDisappeared(win); });
 
     // Monitor screen geometry changes.
-    connect(QGuiApplication::instance(), &QGuiApplication::screenAdded, this,
+    auto* guiApp = static_cast<QGuiApplication*>(QGuiApplication::instance());
+    connect(guiApp, &QGuiApplication::screenAdded, this,
             &WindowsDisplayServerBackend::outputChanged);
-    connect(QGuiApplication::instance(), &QGuiApplication::screenRemoved, this,
+    connect(guiApp, &QGuiApplication::screenRemoved, this,
             &WindowsDisplayServerBackend::outputChanged);
-    connect(QGuiApplication::instance(), &QGuiApplication::primaryScreenChanged, this,
+    connect(guiApp, &QGuiApplication::primaryScreenChanged, this,
             &WindowsDisplayServerBackend::outputChanged);
 
     initialized_ = true;

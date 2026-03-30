@@ -9,6 +9,7 @@
  */
 
 #pragma once
+#include "base/macro/system_judge.h"
 
 #ifdef CFDESKTOP_OS_WINDOWS
 

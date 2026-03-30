@@ -12,6 +12,7 @@
  */
 
 #pragma once
+#include "base/macro/system_judge.h"
 
 #ifdef CFDESKTOP_OS_WINDOWS
 
@@ -64,6 +65,11 @@ class WindowsWindow : public IWindow {
      * @brief  Requests the window to close gracefully.
      */
     void requestClose() override;
+
+    /**
+     * @brief  Brings this window to the top of the Z-order.
+     */
+    void raise() override;
 
     /**
      * @brief  Returns the native Win32 window handle.

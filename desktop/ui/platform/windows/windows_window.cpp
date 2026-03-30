@@ -11,8 +11,7 @@
 #include "windows_window.h"
 
 #ifdef CFDESKTOP_OS_WINDOWS
-
-#    include "cflog.h"
+#    include <QRect>
 #    include <QString>
 
 namespace cf::desktop::backend::windows {
@@ -21,7 +20,7 @@ WindowsWindow::WindowsWindow(HWND hwnd, QObject* parent) : IWindow(parent), hwnd
 
 WindowsWindow::~WindowsWindow() = default;
 
-IWindow::win_id_t WindowsWindow::windowID() const {
+win_id_t WindowsWindow::windowID() const {
     // Use hex representation of HWND as the window ID
     return QString::number(reinterpret_cast<quintptr>(hwnd_), 16);
 }
@@ -67,6 +66,14 @@ void WindowsWindow::requestClose() {
         return;
     }
     PostMessageW(hwnd_, WM_CLOSE, 0, 0);
+}
+
+void WindowsWindow::raise() {
+    if (!hwnd_ || !IsWindow(hwnd_)) {
+        return;
+    }
+    SetForegroundWindow(hwnd_);
+    BringWindowToTop(hwnd_);
 }
 
 } // namespace cf::desktop::backend::windows

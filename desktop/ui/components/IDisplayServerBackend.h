@@ -90,6 +90,7 @@ class IDisplayServerBackend : public QObject {
     Q_OBJECT
 
   public:
+    explicit IDisplayServerBackend(QObject* parent = nullptr);
     ~IDisplayServerBackend() override = default;
 
     /**

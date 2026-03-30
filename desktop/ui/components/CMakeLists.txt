@@ -10,6 +10,9 @@ add_library(cf_desktop_components STATIC)
 target_sources(cf_desktop_components PRIVATE
     WindowManager.cpp
     PanelManager.cpp
+    IWindow.cpp
+    IWindowBackend.cpp
+    IDisplayServerBackend.cpp
 )
 
 target_include_directories(cf_desktop_components PUBLIC

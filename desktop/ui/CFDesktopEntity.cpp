@@ -3,6 +3,7 @@
 #include "CFDesktopWindowProxy.h"
 #include "IDesktopDisplaySizeStrategy.h"
 #include "IDesktopPropertyStrategy.h"
+#include "base/macro/system_judge.h"
 #include "base/weak_ptr/weak_ptr.h"
 #include "cflog.h"
 #include "platform/DesktopPropertyStrategyFactory.h"

@@ -17,10 +17,17 @@
 #include "IWindow.h"
 #include "base/weak_ptr/weak_ptr.h"
 
+#include <QHash>
 #include <QObject>
-#include <vector>
-class IWindowBackend;
+#include <unordered_map>
+
 namespace cf::desktop {
+class IWindowBackend;
+
+/// Hash functor for QString, enables std::unordered_map<win_id_t, ...>.
+struct QStringHash {
+    std::size_t operator()(const QString& s) const noexcept { return qHash(s); }
+};
 /**
  * @brief  Records and manages windows created by the backend.
  *
@@ -41,7 +48,27 @@ class WindowManager : public QObject {
      */
     void setBackend(WeakPtr<IWindowBackend> backend);
 
-    WeakPtr<IWindow> create_window(const IWindow::win_id_t win_id);
+    /**
+     * @brief  Creates and registers a new window with the given ID.
+     *
+     * If a window with @p win_id already exists, returns nullptr.
+     * Otherwise delegates to the backend, registers the result, and
+     * returns a weak reference to the new window.
+     *
+     * @param[in]  win_id  Unique identifier for the new window.
+     *
+     * @return WeakPtr to the created window, or nullptr if duplicate.
+     */
+    WeakPtr<IWindow> create_window(const win_id_t& win_id);
+
+    /**
+     * @brief  Finds a tracked window by its unique ID.
+     *
+     * @param[in]  win_id  The window identifier to look up.
+     *
+     * @return WeakPtr to the window, or nullptr if not found / expired.
+     */
+    WeakPtr<IWindow> find_window(const win_id_t& win_id) const;
 
     /**
      * @brief  Requests a graceful close for the given window.
@@ -64,7 +91,7 @@ class WindowManager : public QObject {
   private:
     /// Weak reference to the window backend. Ownership: external.
     WeakPtr<IWindowBackend> window_backend_{nullptr};
-    /// Tracked windows (weak references only). Ownership: backend.
-    std::vector<WeakPtr<IWindow>> windows_;
+    /// Tracked windows keyed by window ID (weak references only). Ownership: backend.
+    std::unordered_map<win_id_t, WeakPtr<IWindow>, QStringHash> windows_;
 };
 } // namespace cf::desktop

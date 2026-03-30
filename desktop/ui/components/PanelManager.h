@@ -23,28 +23,6 @@ namespace cf::desktop {
 class IPanel;
 
 /**
- * @brief  Registration result for panel operations.
- *
- * @ingroup components
- */
-enum class RegisterFeedback {
-    OK,            ///< Registration succeeded.
-    InvalidPanel,  ///< The panel pointer is null or invalid.
-    DuplicatePanel ///< The panel is already registered.
-};
-
-/**
- * @brief  Unregistration result for panel operations.
- *
- * @ingroup components
- */
-enum class UnRegisterFeedback {
-    OK,           ///< Unregistration succeeded.
-    InvalidPanel, ///< The panel pointer is null or invalid.
-    UnknownPanel  ///< The panel was not found in the registry.
-};
-
-/**
  * @brief  Manages panels and computes available shell geometry.
  *
  * @ingroup components
@@ -52,6 +30,28 @@ enum class UnRegisterFeedback {
 class PanelManager : public QObject {
     Q_OBJECT
   public:
+    /**
+     * @brief  Registration result for panel operations.
+     *
+     * @ingroup components
+     */
+    enum class RegisterFeedback {
+        OK,            ///< Registration succeeded.
+        InvalidPanel,  ///< The panel pointer is null or invalid.
+        DuplicatePanel ///< The panel is already registered.
+    };
+
+    /**
+     * @brief  Unregistration result for panel operations.
+     *
+     * @ingroup components
+     */
+    enum class UnRegisterFeedback {
+        OK,           ///< Unregistration succeeded.
+        InvalidPanel, ///< The panel pointer is null or invalid.
+        UnknownPanel  ///< The panel was not found in the registry.
+    };
+
     explicit PanelManager(QWidget* host, QObject* parent = nullptr);
     virtual ~PanelManager();
 
