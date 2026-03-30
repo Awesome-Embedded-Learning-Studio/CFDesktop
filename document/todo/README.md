@@ -8,13 +8,14 @@
 
 | TODO 文件 | 模块 | 预计周期 | 依赖 | 状态 |
 |----------|------|---------|------|------|
-| [00_project_skeleton.md](00_project_skeleton.md) | 工程骨架搭建 | 1~2 周 | - | 🚧 85% |
-| [01_hardware_probe.md](01_hardware_probe.md) | 硬件探针与能力分级 | 2~3 周 | Phase 0 | ⬜ 0% |
+| [00_project_skeleton.md](00_project_skeleton.md) | 工程骨架搭建 | 1~2 周 | - | ✅ 100% |
+| [01_hardware_probe.md](01_hardware_probe.md) | 硬件探针与能力分级 | 2~3 周 | Phase 0 | 🚧 90% |
 | ~~[02_base_library.md](02_base_library.md)~~ | ~~Base 库核心~~ | ~~3~4 周~~ | Phase 0, 1 | ✅ 100% |
 | [02_input_layer.md](base/02_input_layer.md) | 输入抽象层 | 1~2 周 | Phase 0, 1 | ⬜ 0% |
 | [03_simulator.md](base/03_simulator.md) | 多平台模拟器 | 2~3 周 | Phase 0, 2 | ⬜ 0% |
-| [04_testing.md](base/04_testing.md) | 测试体系 | 贯穿全程 | 所有阶段 | 🚧 40% |
-| [99_ui_material_framework.md](base/99_ui_material_framework.md) | UI Material Framework | 持续迭代 | Phase 0-3 | 🚧 62% |
+| [04_testing.md](base/04_testing.md) | 测试体系 | 贯穿全程 | 所有阶段 | 🚧 55% |
+| [99_ui_material_framework.md](base/99_ui_material_framework.md) | UI Material Framework | 持续迭代 | Phase 0-3 | 🚧 95% |
+| desktop/ | Desktop 模块 (显示后端+窗口管理) | 持续迭代 | Phase 0-6 | 🚧 90% |
 
 ## 状态图例
 
@@ -64,10 +65,11 @@
 
 | 日期 | 变更 | 影响模块 |
 |------|------|----------|
+| 2026-03-30 | 更新 v0.13.1 进度: WSL X11 Backend Ready, Windows Desktop Backend, 显示后端架构完成 | desktop/, done/ |
 | 2026-03-18 | Base库完成，删除02_base_library.md，重新编号 | base/ |
 | 2026-03-07 | CI/CD 完成 (Git Hooks 策略) | 工程骨架 |
 | 2026-03-05 | 创建 TODO 看板 | 全部 |
 
 ---
 
-*最后更新: 2026-03-18*
+*最后更新: 2026-03-30*

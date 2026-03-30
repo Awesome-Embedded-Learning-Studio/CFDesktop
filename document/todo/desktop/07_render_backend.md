@@ -1,9 +1,15 @@
 # Phase 7: 渲染后端抽象 TODO
 
-> **状态**: ⬜ 待开始
+> **状态**: 🚧 部分完成 (接口已实现，具体后端待开发)
 > **预计周期**: 2 周
 > **依赖阶段**: Phase 6
-> **目标交付物**: RenderBackend 接口、EGLFS/Windows 后端实现、屏幕尺寸模拟器
+> **已完成归档**: [done/14_display_backend_status.md](../done/14_display_backend_status.md)
+
+## 已完成模块
+
+> RenderBackend 抽象接口、BackendCapabilities、RenderBackendFactory 已实现。
+> 显示后端架构 (IDisplayServerBackend)、Windows 后端、WSL X11 后端已完成。
+> 详细状态请参考: [done/14_display_backend_status.md](../done/14_display_backend_status.md)
 
 ---
 
@@ -13,10 +19,14 @@
 实现渲染后端抽象层，使同一 Shell 代码可在 EGLFS/Wayland/X11/Windows 上运行。
 
 ### 具体交付物
-- [ ] `RenderBackend` 抽象接口
+- [x] `RenderBackend` 抽象接口 (接口已实现)
+- [x] `BackendCapabilities` 能力标志 (已实现)
+- [x] `RenderBackendFactory` 工厂 (已实现)
 - [ ] `EGLFSBackend` 实现
 - [ ] `WindowsBackend` 实现
 - [ ] 屏幕尺寸模拟器（Windows 开发调试用）
+- [ ] `WaylandBackend` 实现（可选）
+- [ ] `X11Backend` 实现（可选）
 
 ---
 

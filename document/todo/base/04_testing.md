@@ -182,7 +182,7 @@
 ## 八、文件清单
 
 ### 测试配置
-- [x] `tests/CMakeLists.txt`
+- [x] `test/CMakeLists.txt` (已有)
 - [ ] `.github/workflows/test.yml`
 
 ### 单元测试
@@ -236,4 +236,4 @@
 
 ---
 
-*最后更新: 2026-03-21*
+*最后更新: 2026-03-30*

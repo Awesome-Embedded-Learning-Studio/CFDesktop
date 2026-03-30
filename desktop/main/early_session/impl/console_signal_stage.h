@@ -21,7 +21,7 @@ namespace cf::desktop::early_stage {
  *
  * @note           Must run as early as possible (before logger and config).
  * @warning        None
- * @since          N/A
+ * @since          0.13.0
  * @ingroup        early_session
  */
 class ConsoleSignalStage : public IEarlyStage {
@@ -35,7 +35,7 @@ class ConsoleSignalStage : public IEarlyStage {
      * @throws         None
      * @note           None
      * @warning        None
-     * @since          N/A
+     * @since          0.13.0
      * @ingroup        early_session
      */
     std::string_view name() const override { return "Console Signal Handler"; }
@@ -50,7 +50,7 @@ class ConsoleSignalStage : public IEarlyStage {
      * @throws         None
      * @note           None
      * @warning        None
-     * @since          N/A
+     * @since          0.13.0
      * @ingroup        early_session
      */
     std::optional<unsigned int> atExpectedStageBootup() const override { return 0; }
@@ -66,7 +66,7 @@ class ConsoleSignalStage : public IEarlyStage {
      * @throws         None
      * @note           None
      * @warning        None
-     * @since          N/A
+     * @since          0.13.0
      * @ingroup        early_session
      */
     BootResult run_session() override;

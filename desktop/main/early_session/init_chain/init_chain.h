@@ -6,10 +6,10 @@
  * initialization stages. Critical stages (e.g., logger) execute before the
  * main stage chain.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
+ * @author  CFDesktop Team
+ * @date    2026-03-16
+ * @version 0.13.1
+ * @since   0.13.0
  * @ingroup early_session
  */
 #pragma once
@@ -30,7 +30,7 @@ namespace cf::desktop::early_stage {
  * @note   Stage execution is synchronous. Dependency graph management is
  *         not provided; dependent stages must be wrapped as a single stage.
  * @warning None
- * @since  N/A
+ * @since  0.13.0
  * @ingroup early_session
  */
 class EarlyInitRunner {
@@ -57,7 +57,7 @@ class EarlyInitRunner {
      * @note       Registration is synchronous. Multithreaded execution is
      *             not supported.
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     void register_stage_back(SessionCreation f) { early_stages_.emplace_back(std::move(f)); }
@@ -74,7 +74,7 @@ class EarlyInitRunner {
      * @throws     None
      * @note       Currently only the logger is allowed to register here.
      * @warning    Abuse of this method may result in missing log output.
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     void register_stage_execute_before(SessionCreation f) {
@@ -90,7 +90,7 @@ class EarlyInitRunner {
      * @throws     None
      * @note       Execution order: first stages (critical), then main stages.
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     void execute();

@@ -2,7 +2,7 @@
 
 ## Context
 
-CFDesktop 是一个基于 Qt6 和 C++17 的桌面应用程序框架，实现了完整的 Material Design 3 UI 组件库。项目采用模块化架构设计，代码质量较高，但仍存在一些性能和架构层面的优化空间。
+CFDesktop 是一个基于 Qt6 和 C++23 的桌面应用程序框架，实现了完整的 Material Design 3 UI 组件库。项目采用模块化架构设计，代码质量较高，但仍存在一些性能和架构层面的优化空间。
 
 本计划旨在在 pre-release 阶段对项目进行系统的性能和架构优化，提升代码质量、运行效率和可维护性。
 
@@ -25,7 +25,7 @@ CFDesktop/
 └── scripts/               # 构建和工具脚本
 ```
 
-**技术栈：** Qt6 + C++17 + CMake + GoogleTest
+**技术栈：** Qt6 + C++23 + CMake + GoogleTest
 
 ---
 

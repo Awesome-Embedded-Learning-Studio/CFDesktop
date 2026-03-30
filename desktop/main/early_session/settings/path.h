@@ -5,10 +5,10 @@
  * Defines the default file path for the early settings configuration file
  * and provides a template content for generating the configuration file.
  *
- * @author N/A
- * @date N/A
- * @version N/A
- * @since N/A
+ * @author CFDesktop Team
+ * @date 2026-03-16
+ * @version 0.13.1
+ * @since 0.13.0
  * @ingroup early_session
  */
 #pragma once

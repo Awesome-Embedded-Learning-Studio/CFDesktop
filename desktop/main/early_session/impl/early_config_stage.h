@@ -11,10 +11,10 @@ namespace cf::desktop::early_stage {
  * Defines the early configuration stage that loads and applies initial
  * configuration during the boot process.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
+ * @author  CFDesktop Team
+ * @date    2026-03-16
+ * @version 0.13.1
+ * @since   0.13.0
  * @ingroup early_session
  */
 
@@ -26,7 +26,7 @@ namespace cf::desktop::early_stage {
  *
  * @note           This stage must execute at position 1 (second stage).
  * @warning        None
- * @since          N/A
+ * @since          0.13.0
  * @ingroup        early_session
  */
 class EarlyConfigStage : public IEarlyStage {
@@ -40,7 +40,7 @@ class EarlyConfigStage : public IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     std::string_view name() const override { return "Early Config Boot"; }
@@ -52,7 +52,7 @@ class EarlyConfigStage : public IEarlyStage {
      * @throws     None
      * @note       This stage must run first in the boot sequence.
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     std::optional<unsigned int> atExpectedStageBootup() const override { return 1; }
@@ -64,7 +64,7 @@ class EarlyConfigStage : public IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     BootResult run_session() override;

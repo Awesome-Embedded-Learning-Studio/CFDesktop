@@ -5,11 +5,11 @@
  * Implements a singleton factory pattern for creating and managing desktop
  * property strategies on Windows Subsystem for Linux.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
- * @ingroup none
+ * @author  CFDesktop Team
+ * @date    2026-03-27
+ * @version 0.13.1
+ * @since   0.13.0
+ * @ingroup platform_wsl
  */
 
 #pragma once
@@ -30,7 +30,7 @@ class DisplaySizePolicyMaker;
  *
  * @note   Inherits singleton semantics from SimpleSingleton base.
  *
- * @ingroup none
+ * @ingroup platform_wsl
  *
  * @code
  * auto& factory = WSLDeskProStrategyFactory::instance();
@@ -44,8 +44,8 @@ class WSLDeskProStrategyFactory : public SimpleSingleton<WSLDeskProStrategyFacto
      * @throws None
      * @note   None
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.13.0
+     * @ingroup platform_wsl
      */
     WSLDeskProStrategyFactory();
 
@@ -54,8 +54,8 @@ class WSLDeskProStrategyFactory : public SimpleSingleton<WSLDeskProStrategyFacto
      * @throws None
      * @note   None
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.13.0
+     * @ingroup platform_wsl
      */
     ~WSLDeskProStrategyFactory();
 
@@ -67,8 +67,8 @@ class WSLDeskProStrategyFactory : public SimpleSingleton<WSLDeskProStrategyFacto
      * @throws      None
      * @note        Caller owns the returned pointer and must call release().
      * @warning     None
-     * @since       N/A
-     * @ingroup     none
+     * @since       0.13.0
+     * @ingroup     platform_wsl
      */
     IDesktopPropertyStrategy* create(IDesktopPropertyStrategy::StrategyType t);
 
@@ -79,8 +79,8 @@ class WSLDeskProStrategyFactory : public SimpleSingleton<WSLDeskProStrategyFacto
      * @throws           None
      * @note             Safe to call with nullptr.
      * @warning          None
-     * @since            N/A
-     * @ingroup          none
+     * @since            0.13.0
+     * @ingroup          platform_wsl
      */
     void release(IDesktopPropertyStrategy* policy);
 

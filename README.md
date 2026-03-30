@@ -41,12 +41,13 @@
 |:---|:---|:---:|:---|
 | Phase 0 | 工程骨架 | 100% | CMake 构建系统、代码规范、CI/CD、Docker 多架构构建 |
 | Phase 1 | 硬件探针 | 90% | CPU/Memory/GPU/网络检测完成，缺HWTier/Policy |
-| Phase 2 | Base 库核心 | 80% | ConfigStore、Logger、DPI基础转换(ui/base)、ASCII Art、File Operations |
+| Phase 2 | Base 库核心 | 85% | ConfigStore(85%)、Logger(90%)、DPI基础转换(ui/base)、ASCII Art、File Operations |
 | Phase 5 | 测试体系 | 55% | Google Test 集成，base/logger/ui基础有覆盖 |
-| Phase 6 | UI 框架核心 | 75% | Material Design 3 分层架构 (Layer 1-4)，缺布局/手势 |
+| Phase 6 | UI 框架核心 | 95% | Material Design 3 分层架构 (Layer 1-4 全部完成)，缺布局/手势 |
 | Phase 6 | P0 核心控件 | 100% | Button, TextField, TextArea, Label, CheckBox, RadioButton, GroupBox |
 | Phase 6 | P1 控件 | 100% | Slider, ProgressBar, Switch, ToggleButton, etc. (12个) |
-| Desktop | 桌面基础 | 80% | 配置中心、日志系统、启动初始化、文件操作 |
+| Desktop | 桌面模块 | 90% | 配置中心、日志系统、启动初始化、文件操作、显示后端架构 |
+| Display Backend | Windows+WSL X11 | 70% | Windows 后端(100%)、WSL X11 后端(100%)，Wayland/嵌入式待实现 |
 
 ### 进行中 🚧
 
@@ -54,7 +55,7 @@
 |:---|:---|:---:|:---|
 | Phase 2 | 配置日志增强 | 80% | DPI基础转换已有(ui/base)，缺自动检测/版本控制/迁移/验证/网络日志 |
 | Phase 5 | UI控件测试 | 0% | 19个P0/P1控件无单元测试 |
-| Desktop | 桌面的基础组件 | 10% | Console欢迎完成，PanelManager/ShellLayer空缺 |
+| Desktop | 渲染后端实现 | 30% | RenderBackend 接口设计完成，具体实现待开发 |
 
 ### 待开始 ⬜
 
@@ -65,6 +66,7 @@
 | Phase 6 | 手势识别 | 触摸/手势统一接口 |
 | Phase 3 | 输入抽象层 | 触摸/按键/旋钮/手势统一接口 |
 | Phase 4 | 多平台模拟器 | 开发调试用模拟器、设备配置、DPI 注入 |
+| Display Backend | Wayland/嵌入式 | Wayland 合成器后端、EGLFS/LinuxFB 直驱后端 |
 | Phase 6 | P2 控件 | 27个高级控件 (DatePicker, MenuBar, Dialog, etc.) |
 | Phase 6 | P3 控件 | 25个专业控件 (SplitView, ChartView, etc.) |
 | Phase 5 | 测试完善 | desktop 模块、性能基准、UI 自动化 |
@@ -126,6 +128,23 @@
 | UI 核心 | [ui/core/](ui/core/) | Material Design 主题引擎、Token 系统 |
 | UI 组件 | [ui/components/](ui/components/) | 动画工厂、动画组、策略模式 |
 | UI 控件 | [ui/widget/material/](ui/widget/material/) | Material Design 控件实现 |
+
+### Display Backend
+
+CFDesktop 通过 `IDisplayServerBackend` 接口抽象了三种显示模式，使 Shell、PanelManager 和 WindowManager 可以在不同平台上一致工作：
+
+- **Client 模式**: 作为现有桌面环境内的应用运行（Windows、Linux Gnome/KDE）
+- **Compositor 模式**: CFDesktop 自身作为显示服务器/合成器管理外部应用窗口（X11/Wayland）
+- **DirectRender 模式**: 直接渲染到 framebuffer，无需窗口系统（嵌入式 EGLFS/linuxfb）
+
+| 后端 | 状态 | 说明 |
+|:---|:---:|:---|
+| Windows 后端 | 100% | Win32 DWM 集成、SetWinEventHook 窗口管理 |
+| WSL X11 后端 | 100% | XCB + XWayland、QSocketNotifier 驱动 |
+| Wayland 合成器 | 0% | 待实现 |
+| EGLFS / LinuxFB | 0% | 嵌入式直驱，待实现 |
+
+后端通过 `DisplayServerBackendFactory` 工厂在启动时自动选择平台实现。
 
 ### 技术栈
 

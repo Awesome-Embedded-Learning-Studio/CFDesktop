@@ -6,11 +6,11 @@
  * environments, implementing frameless windows, stay-on-bottom behavior,
  * fixed sizing, and system UI avoidance.
  *
- * @author  N/A
+ * @author  CFDesktop Team
  * @date    2026-03-27
- * @version 0.1
+ * @version 0.13.1
  * @since   0.1
- * @ingroup none
+ * @ingroup platform_windows
  */
 
 #pragma once
@@ -28,7 +28,7 @@ namespace cf::desktop::platform_strategy::windows {
  * for Windows environments. Configures windows to be frameless, stay on bottom,
  * non-resizable, and avoid system UI elements.
  *
- * @ingroup none
+ * @ingroup platform_windows
  *
  * @code
  * WindowsDisplaySizePolicy policy;
@@ -45,7 +45,7 @@ class CF_DESKTOP_EXPORT WindowsDisplaySizePolicy : public IDesktopDisplaySizeStr
      * @note   None
      * @warning None
      * @since  0.1
-     * @ingroup none
+     * @ingroup platform_windows
      */
     WindowsDisplaySizePolicy();
 
@@ -56,7 +56,7 @@ class CF_DESKTOP_EXPORT WindowsDisplaySizePolicy : public IDesktopDisplaySizeStr
      * @note   None
      * @warning None
      * @since  0.1
-     * @ingroup none
+     * @ingroup platform_windows
      */
     ~WindowsDisplaySizePolicy();
 

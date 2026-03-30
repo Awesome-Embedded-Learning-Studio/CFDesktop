@@ -17,12 +17,12 @@
 建立所有上层模块依赖的基础设施，包括主题引擎、动画管理、分辨率适配、配置中心和日志系统。
 
 ### 1.2 具体交付物
-- [ ] `ThemeEngine` 主题引擎模块
-- [ ] `AnimationManager` 动画管理器
+- [x] `ThemeEngine` 主题引擎模块
+- [x] `AnimationManager` 动画管理器
 - [ ] `DPIManager` 分辨率适配管理器
-- [ ] `ConfigStore` 配置中心
-- [ ] `Logger` 日志系统
-- [ ] 各模块单元测试
+- [x] `ConfigStore` 配置中心
+- [x] `Logger` 日志系统
+- [x] 各模块单元测试
 
 ---
 

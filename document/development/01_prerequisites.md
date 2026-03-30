@@ -646,6 +646,6 @@ sudo apt install qt6-base-dev qt6-tools-dev
 
   [&larr; 返回](README.md) | [环境配置 &rarr;](02_environment.md)
 
-  **版本**: 0.9.0 | **最后更新**: 2026-03-07
+  **版本**: 0.13.1 | **最后更新**: 2026-03-30
 
 </div>

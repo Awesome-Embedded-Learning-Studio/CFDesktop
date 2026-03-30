@@ -9,7 +9,7 @@
  * @version 0.1
  * @date 2026-03-27
  * @copyright Copyright (c) 2026
- * @ingroup none
+ * @ingroup base_factory
  */
 #pragma once
 #include "base/singleton/simple_singleton.hpp"
@@ -27,8 +27,8 @@ namespace cf {
  *
  * @note None
  * @warning None
- * @since N/A
- * @ingroup none
+ * @since 0.1
+ * @ingroup base_factory
  *
  * @code
  * PlainFactory<MyClass, int, double> factory;
@@ -42,8 +42,8 @@ template <typename Result, typename... Args> struct PlainFactory {
      * @throws None
      * @note None
      * @warning None
-     * @since N/A
-     * @ingroup none
+     * @since 0.1
+     * @ingroup base_factory
      */
     virtual ~PlainFactory() = default;
 
@@ -60,8 +60,8 @@ template <typename Result, typename... Args> struct PlainFactory {
      * @throws None
      * @note Caller must delete the returned pointer to avoid memory leak.
      * @warning Raw pointer ownership; consider smart pointers for new code.
-     * @since N/A
-     * @ingroup none
+     * @since 0.1
+     * @ingroup base_factory
      */
     Result* make(Args&&... args) { return new Result(std::forward<Args>(args)...); }
 };
@@ -77,8 +77,8 @@ template <typename Result, typename... Args> struct PlainFactory {
  *
  * @note None
  * @warning None
- * @since N/A
- * @ingroup none
+ * @since 0.1
+ * @ingroup base_factory
  *
  * @code
  * auto& factory = StaticPlainFactory<MyClass, int>::instance();

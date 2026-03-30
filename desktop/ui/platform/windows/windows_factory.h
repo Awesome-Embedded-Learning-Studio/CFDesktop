@@ -5,11 +5,11 @@
  * Implements a singleton factory pattern for creating and managing desktop
  * property strategies on Windows platforms.
  *
- * @author  N/A
+ * @author  CFDesktop Team
  * @date    2026-03-27
- * @version 0.1
+ * @version 0.13.1
  * @since   0.1
- * @ingroup none
+ * @ingroup platform_windows
  */
 
 #pragma once
@@ -31,7 +31,7 @@ class WindowsDisplaySizePolicy;
  *
  * @note   Inherits singleton semantics from SimpleSingleton base.
  *
- * @ingroup none
+ * @ingroup platform_windows
  *
  * @code
  * auto& factory = WindowsDeskProStrategyFactory::instance();
@@ -47,7 +47,7 @@ class CF_DESKTOP_EXPORT WindowsDeskProStrategyFactory
      * @note   None
      * @warning None
      * @since  0.1
-     * @ingroup none
+     * @ingroup platform_windows
      */
     WindowsDeskProStrategyFactory();
 
@@ -57,7 +57,7 @@ class CF_DESKTOP_EXPORT WindowsDeskProStrategyFactory
      * @note   None
      * @warning None
      * @since  0.1
-     * @ingroup none
+     * @ingroup platform_windows
      */
     ~WindowsDeskProStrategyFactory();
 

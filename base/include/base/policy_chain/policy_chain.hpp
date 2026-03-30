@@ -8,10 +8,10 @@
  * a sequence of callable policies in order, falling back to the next policy if
  * the previous one returns std::nullopt.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
+ * @author  CFDesktop Team
+ * @date    2026-03-16
+ * @version 0.13.1
+ * @since   0.13.0
  * @ingroup base_policy_chain
  */
 
@@ -196,7 +196,7 @@ template <typename Ret, typename... Args> class PolicyChainBuilder {
      * @throws           None
      * @note             The policy is moved into the chain.
      * @warning          None
-     * @since            N/A
+     * @since            0.13.0
      * @ingroup          base_policy_chain
      */
     PolicyChainBuilder& then(PolicyType policy) {

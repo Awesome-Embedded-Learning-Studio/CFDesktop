@@ -1,8 +1,8 @@
 # CFDesktop 项目状态报告
 
-> **报告日期**: 2026-03-27
-> **报告版本**: v3.0
-> **项目版本**: 0.12.0
+> **报告日期**: 2026-03-30
+> **报告版本**: v4.0
+> **项目版本**: 0.13.1
 > **扫描方式**: 7个并发Agent全面扫描
 
 ---
@@ -11,7 +11,7 @@
 
 CFDesktop 是一个基于 Qt6 的嵌入式桌面框架项目，采用 Material Design 3 设计规范。项目使用 C++23 开发，旨在为嵌入式 Linux 设备提供完整的 UI 框架和开发工具链。
 
-### 整体完成度: 约 70%
+### 整体完成度: 约 75%
 
 | 模块 | 完成度 | 状态 | 优先级 |
 |------|--------|------|--------|
@@ -20,9 +20,11 @@ CFDesktop 是一个基于 Qt6 的嵌入式桌面框架项目，采用 Material D
 | Phase 2: Base库核心 | 85% | 🚧 进行中 | P0 |
 | Phase 3: 输入抽象层 | 0% | ⬜ 待开始 | P1 |
 | Phase 4: 多平台模拟器 | 0% | ⬜ 待开始 | P1 |
-| Phase 5: 测试体系 | 30% | 🚧 进行中 | P0 |
+| Phase 5: 测试体系 | 55% | 🚧 进行中 | P0 |
 | Phase 6: UI框架 | 95% | 🚧 进行中 | P0 |
-| Desktop 模块 | 80% | 🚧 进行中 | P0 |
+| Desktop 模块 | 90% | 🚧 进行中 | P0 |
+| 显示后端 (Windows+WSL X11) | 70% | ✅ 核心完成 | P0 |
+| 显示后端 (Wayland/嵌入式) | 0% | ⬜ 待开始 | P2 |
 
 ---
 
@@ -265,15 +267,16 @@ CFDesktop 是一个基于 Qt6 的嵌入式桌面框架项目，采用 Material D
 
 ---
 
-### 1.7 Desktop 模块 - 80% 🚧 进行中
+### 1.7 Desktop 模块 - 90% 🚧 进行中
 
 #### ✅ 已完成
-- **主入口程序** (80%) - `desktop/main/`
+- **主入口程序** (85%) - `desktop/main/`
   - 主入口程序 (main.cpp)
-  - 早期初始化链 (init_chain/)
+  - DAG 初始化链 (InitSessionChain) — Kahn 算法拓扑排序
   - 早期配置阶段 (early_config_stage.cpp)
   - 日志系统启动阶段 (logger_stage.cpp)
   - 欢迎界面实现 (early_welcome_impl.cpp)
+  - GUI 初始化阶段 (gui_init_stage.cpp)
   - 路径解析器 (path/)
 
 - **ASCII Art 模块** (100%) - `desktop/base/ascii_art/`
@@ -288,13 +291,49 @@ CFDesktop 是一个基于 Qt6 的嵌入式桌面框架项目，采用 Material D
   - 路径存在检查
   - 应用运行时目录获取
 
+- **显示后端架构** (90%) - `desktop/ui/components/` + `desktop/ui/platform/`
+  - IDisplayServerBackend 三模式抽象 (Client/Compositor/DirectRender)
+  - IWindowBackend 窗口后端接口
+  - IWindow 平台无关窗口接口
+  - WindowManager 窗口管理器 (弱引用模式)
+  - PanelManager 面板管理器 (边缘布局算法)
+  - ShellLayer / IShellLayer / IShellLayerStrategy
+  - DisplayServerBackendFactory 工厂
+
+- **Windows 平台后端** (100%) - `desktop/ui/platform/windows/`
+  - WindowsDisplayServerBackend (Win32 DWM)
+  - WindowsWindowBackend (SetWinEventHook + EnumWindows)
+  - WindowsWindow (HWND → IWindow 适配)
+  - WindowsDisplaySizePolicy / WindowsPropertyStrategy
+
+- **WSL X11 平台后端** (100%) - `desktop/ui/platform/linux_wsl/`
+  - WSLX11DisplayServerBackend (XCB + XWayland)
+  - WSLX11WindowBackend (XCB + QSocketNotifier)
+  - WSLX11Window (xcb_window_t → IWindow 适配)
+  - WSLDisplaySizePolicy / WSLPlatformFactory
+
+- **启动界面 Widget** (100%) - `desktop/ui/widget/init_session/`
+  - SimpleBootWidget (Logo + 分步进度 + Material 风格)
+  - StepDotWidget (三态步骤点)
+  - BootWidgetFactory
+
+- **桌面核心类** (90%) - `desktop/ui/`
+  - CFDesktopEntity (单例，全局桌面生命周期)
+  - CFDesktop (主桌面 Widget)
+  - CFDesktopProxy / CFDesktopWindowProxy (代理模式)
+
+- **渲染后端抽象** (30%) - `desktop/ui/render/`
+  - RenderBackend 接口设计
+  - BackendCapabilities 能力标志
+  - RenderBackendFactory 工厂
+  - ❌ 具体实现未开发
+
 #### ❌ 待完成
-- ReleaseEarlyInit() 函数未实现
-- 正式初始化阶段（early session 之后）
-- file_operations 高级功能
-  - 文件权限管理
-  - 文件监控功能
-  - 文件加密/解密功能
+- Wayland 后端实现
+- EGLFS / LinuxFB 嵌入式后端
+- RenderBackend 具体实现
+- ReleaseEarlyInit() 函数
+- file_operations 高级功能 (权限/监控/加密)
 
 ---
 
@@ -422,7 +461,7 @@ CFDesktop 是一个基于 Qt6 的嵌入式桌面框架项目，采用 Material D
 
 ```
 CFDesktop/
-├── CMakeLists.txt                  # 主构建配置
+├── CMakeLists.txt                  # 主构建配置 (v0.13.1, C++23)
 ├── base/                           # 基础库模块
 │   ├── system/cpu/                 # ✅ CPU检测 (100%)
 │   ├── system/memory/              # ✅ 内存检测 (95%)
@@ -430,26 +469,33 @@ CFDesktop/
 │   ├── system/network/             # ✅ 网络检测 (85%)
 │   ├── device/console/             # ✅ 控制台设备 (85%)
 │   └── include/base/policy_chain/  # ✅ 策略链 (80%)
-├── ui/                             # UI框架 (75%)
+├── ui/                             # UI框架 (95%)
 │   ├── base/                       # ✅ 基础工具 (100%)
 │   │   └── device_pixel.h/cpp      # ✅ DPI基础转换 (60%)
 │   ├── core/                       # ✅ 主题核心 (100%)
 │   ├── components/                 # ⚠️ 动画组件 (90%)
 │   └── widget/material/            # ✅ P0/P1控件 (100%)
-├── desktop/                        # 桌面环境 (85%)
-│   ├── main/                       # 🚧 主程序入口 (80%)
+├── desktop/                        # 桌面环境 (90%)
+│   ├── main/                       # 🚧 主程序入口 (85%)
 │   ├── base/logger/                # ✅ 日志系统 (90%)
 │   ├── base/config_manager/        # ✅ 配置管理 (85%)
 │   ├── base/ascii_art/             # ✅ ASCII艺术 (100%)
-│   └── base/file_operations/       # ⚠️ 文件操作 (70%)
-├── test/                           # 测试代码 (55%覆盖率)
-├── example/                        # 示例程序 (50%覆盖)
-└── document/                       # 文档 (60%覆盖)
+│   ├── base/file_operations/       # ⚠️ 文件操作 (70%)
+│   └── ui/                         # ✅ Desktop UI (90%)
+│       ├── components/             # ✅ 显示后端抽象+窗口管理
+│       ├── platform/windows/       # ✅ Windows后端 (100%)
+│       ├── platform/linux_wsl/     # ✅ WSL X11后端 (100%)
+│       ├── render/                 # ⚠️ 渲染后端 (30%, 接口only)
+│       └── widget/init_session/    # ✅ 启动Widget (100%)
+├── test/                           # 测试代码 (55%覆盖率, 24个测试)
+├── example/                        # 示例程序 (70%覆盖, 80个示例)
+└── document/                       # 文档 (80%覆盖, 271篇)
 ```
 
 ---
 
-*报告生成时间: 2026-03-27*
-*报告版本: v3.0*
+*报告生成时间: 2026-03-30*
+*报告版本: v4.0*
 *扫描方式: 7个并发Agent全面扫描*
 *项目路径: /home/charliechen/CFDesktop*
+*项目版本: 0.13.1*

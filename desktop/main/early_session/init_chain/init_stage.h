@@ -6,10 +6,10 @@
  * boot-time initialization components with stage validation and failure
  * handling.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
+ * @author  CFDesktop Team
+ * @date    2026-03-16
+ * @version 0.13.1
+ * @since   0.13.0
  * @ingroup early_session
  */
 #pragma once
@@ -27,7 +27,7 @@ namespace cf::desktop::early_stage {
  *
  * @note   Not thread-safe unless externally synchronized.
  * @warning None
- * @since  N/A
+ * @since  0.13.0
  * @ingroup early_session
  *
  * @code
@@ -52,10 +52,10 @@ class IEarlyStage {
      * @throws             None
      * @note               None
      * @warning            None
-     * @since              N/A
+     * @since              0.13.0
      * @ingroup            early_session
      */
-    IEarlyStage(bool critical = true) : critical_(critical){};
+    IEarlyStage(bool critical = true) : critical_(critical) {};
 
     /**
      * @brief  Returns the name of this early stage.
@@ -66,7 +66,7 @@ class IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     virtual std::string_view name() const = 0;
@@ -82,7 +82,7 @@ class IEarlyStage {
      * @note       The mismatch policy (mismatch_policy) is invoked when
      *             the current stage does not match the expected stage.
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     virtual std::optional<unsigned int> atExpectedStageBootup() const = 0;
@@ -93,7 +93,7 @@ class IEarlyStage {
      * Defines the available actions when the current boot stage does not
      * match the expected stage for a component.
      *
-     * @since  N/A
+     * @since  0.13.0
      * @ingroup early_session
      */
     enum class UnexpectedStageBootSolution {
@@ -112,7 +112,7 @@ class IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     UnexpectedStageBootSolution mismatch_policy() { return policy; };
@@ -123,7 +123,7 @@ class IEarlyStage {
      * Indicates the outcome of a stage session run. Critical failures
      * may trigger application shutdown.
      *
-     * @since  N/A
+     * @since  0.13.0
      * @ingroup early_session
      */
     enum class BootResult {
@@ -141,7 +141,7 @@ class IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     virtual BootResult run_session() = 0;

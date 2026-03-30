@@ -10,7 +10,7 @@
  * @version 0.1
  * @date 2026-03-27
  * @copyright Copyright (c) 2026
- * @ingroup none
+ * @ingroup base_factory
  */
 #pragma once
 
@@ -29,8 +29,8 @@ namespace cf {
  *
  * @note None
  * @warning None
- * @since N/A
- * @ingroup none
+ * @since 0.1
+ * @ingroup base_factory
  *
  * @code
  * SmartPtrPlainFactory<MyClass, int> factory;
@@ -46,8 +46,8 @@ template <typename Result, typename... Args> struct SmartPtrPlainFactory {
      * @throws None
      * @note None
      * @warning None
-     * @since N/A
-     * @ingroup none
+     * @since 0.1
+     * @ingroup base_factory
      */
     SmartPtrPlainFactory() = default;
 
@@ -57,8 +57,8 @@ template <typename Result, typename... Args> struct SmartPtrPlainFactory {
      * @throws None
      * @note None
      * @warning None
-     * @since N/A
-     * @ingroup none
+     * @since 0.1
+     * @ingroup base_factory
      */
     virtual ~SmartPtrPlainFactory() = default;
 
@@ -75,8 +75,8 @@ template <typename Result, typename... Args> struct SmartPtrPlainFactory {
      * @throws None
      * @note None
      * @warning None
-     * @since N/A
-     * @ingroup none
+     * @since 0.1
+     * @ingroup base_factory
      */
     std::unique_ptr<Result> make_unique(Args&&... args) {
         return std::make_unique<Result>(std::forward<Args>(args)...);
@@ -95,8 +95,8 @@ template <typename Result, typename... Args> struct SmartPtrPlainFactory {
      * @throws None
      * @note None
      * @warning None
-     * @since N/A
-     * @ingroup none
+     * @since 0.1
+     * @ingroup base_factory
      */
     std::shared_ptr<Result> make_shared(Args&&... args) {
         return std::make_shared<Result>(std::forward<Args>(args)...);
@@ -114,8 +114,8 @@ template <typename Result, typename... Args> struct SmartPtrPlainFactory {
  *
  * @note None
  * @warning None
- * @since N/A
- * @ingroup none
+ * @since 0.1
+ * @ingroup base_factory
  *
  * @code
  * auto& factory = StaticSmartPtrPlainFactory<MyClass, int>::instance();

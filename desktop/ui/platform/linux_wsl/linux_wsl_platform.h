@@ -5,11 +5,11 @@
  * Provides the native implementation entry point for creating desktop property
  * strategies on Linux/WSL platforms.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
- * @ingroup none
+ * @author  CFDesktop Team
+ * @date    2026-03-27
+ * @version 0.13.1
+ * @since   0.13.0
+ * @ingroup platform_wsl
  */
 
 #pragma once
@@ -27,8 +27,8 @@ namespace cf::desktop::platform_strategy {
  * @throws  None
  * @note    None
  * @warning None
- * @since   N/A
- * @ingroup none
+ * @since   0.13.0
+ * @ingroup platform_wsl
  */
 PlatformFactoryAPI native_impl();
 

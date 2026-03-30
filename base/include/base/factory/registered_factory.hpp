@@ -11,7 +11,7 @@
  * @version 0.1
  * @date 2026-03-30
  * @copyright Copyright (c) 2026
- * @ingroup none
+ * @ingroup base_factory
  */
 #pragma once
 
@@ -34,7 +34,7 @@ namespace cf {
  * @note None
  * @warning None
  * @since N/A
- * @ingroup none
+ * @ingroup base_factory
  *
  * @code
  * RegisteredFactory<IMyInterface> factory;
@@ -68,8 +68,8 @@ template <typename Interface> class RegisteredFactory {
      * @throws None
      * @note   Calling this multiple times replaces the previous registration.
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.1
+     * @ingroup base_factory
      */
     void register_creator(Creator creator, Destroyer destroyer = nullptr) {
         creator_ = std::move(creator);
@@ -88,8 +88,8 @@ template <typename Interface> class RegisteredFactory {
      * @note   If a destroyer was registered, it is used as the deleter.
      *         Otherwise, a default delete deleter is used.
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.1
+     * @ingroup base_factory
      */
     std::unique_ptr<Interface, Destroyer> make_unique() {
         if (!creator_)
@@ -114,8 +114,8 @@ template <typename Interface> class RegisteredFactory {
      * @throws None
      * @note   If a destroyer was registered, it is used as the deleter.
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.1
+     * @ingroup base_factory
      */
     std::shared_ptr<Interface> make_shared() {
         if (!creator_)
@@ -138,8 +138,8 @@ template <typename Interface> class RegisteredFactory {
      * @throws None
      * @note   None
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.1
+     * @ingroup base_factory
      */
     bool has_creator() const { return static_cast<bool>(creator_); }
 
@@ -159,7 +159,7 @@ template <typename Interface> class RegisteredFactory {
  * @note None
  * @warning None
  * @since N/A
- * @ingroup none
+ * @ingroup base_factory
  *
  * @code
  * using MyFactory = StaticRegisteredFactory<IMyInterface>;

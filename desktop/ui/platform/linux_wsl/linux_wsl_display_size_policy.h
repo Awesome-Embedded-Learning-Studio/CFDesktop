@@ -5,11 +5,11 @@
  * Provides display size configuration strategies tailored for Windows Subsystem
  * for Linux (WSL) environments, handling both X11 and Wayland backends.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
- * @ingroup none
+ * @author  CFDesktop Team
+ * @date    2026-03-27
+ * @version 0.13.1
+ * @since   0.13.0
+ * @ingroup platform_wsl
  */
 
 #pragma once
@@ -27,7 +27,7 @@ namespace cf::desktop::platform_strategy::wsl {
  * for Windows Subsystem for Linux environments. Handles X11 backend with
  * window decoration, resizing, and maximization settings.
  *
- * @ingroup none
+ * @ingroup platform_wsl
  *
  * @code
  * DisplaySizePolicyMaker policy;
@@ -43,8 +43,8 @@ class DisplaySizePolicyMaker : public IDesktopDisplaySizeStrategy {
      * @throws None
      * @note   None
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.13.0
+     * @ingroup platform_wsl
      */
     DisplaySizePolicyMaker();
 
@@ -54,8 +54,8 @@ class DisplaySizePolicyMaker : public IDesktopDisplaySizeStrategy {
      * @throws None
      * @note   None
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.13.0
+     * @ingroup platform_wsl
      */
     ~DisplaySizePolicyMaker();
 
@@ -66,8 +66,8 @@ class DisplaySizePolicyMaker : public IDesktopDisplaySizeStrategy {
      * @throws     None
      * @note       The returned string is static and must not be freed.
      * @warning    None
-     * @since      N/A
-     * @ingroup    none
+     * @since      0.13.0
+     * @ingroup    platform_wsl
      */
     const char* name() const noexcept override { return "WSL Desktop Size Policy"; }
 
@@ -84,8 +84,8 @@ class DisplaySizePolicyMaker : public IDesktopDisplaySizeStrategy {
      * @note                   Wayland backend is not yet implemented and fails
      *                         silently.
      * @warning                Passing nullptr results in an immediate false return.
-     * @since                  N/A
-     * @ingroup                none
+     * @since                  0.13.0
+     * @ingroup                platform_wsl
      */
     bool action(QWidget* widget_data) override;
 
@@ -99,8 +99,8 @@ class DisplaySizePolicyMaker : public IDesktopDisplaySizeStrategy {
      * @throws     None
      * @note       For X11 backend, returns AllowResize flag.
      * @warning    None
-     * @since      N/A
-     * @ingroup    none
+     * @since      0.13.0
+     * @ingroup    platform_wsl
      */
     DesktopBehaviors query() const override;
 
@@ -115,8 +115,8 @@ class DisplaySizePolicyMaker : public IDesktopDisplaySizeStrategy {
      * @throws                 None
      * @note                   None
      * @warning                Passing nullptr results in immediate return.
-     * @since                  N/A
-     * @ingroup                none
+     * @since                  0.13.0
+     * @ingroup                platform_wsl
      */
     void act_with_x11(QWidget* widget_data);
 
@@ -129,8 +129,8 @@ class DisplaySizePolicyMaker : public IDesktopDisplaySizeStrategy {
      * @throws     None
      * @note       X11 backend defaults to allowing resize.
      * @warning    None
-     * @since      N/A
-     * @ingroup    none
+     * @since      0.13.0
+     * @ingroup    platform_wsl
      */
     DesktopBehaviors x11_query() const;
 };

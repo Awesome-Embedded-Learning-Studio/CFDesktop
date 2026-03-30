@@ -10,10 +10,10 @@ namespace cf::desktop::early_stage {
  * Defines the logger stage that initializes the logging system during the
  * early boot process.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
+ * @author  CFDesktop Team
+ * @date    2026-03-16
+ * @version 0.13.1
+ * @since   0.13.0
  * @ingroup early_session
  */
 
@@ -25,7 +25,7 @@ namespace cf::desktop::early_stage {
  *
  * @note           This stage must execute at position 2 (third stage).
  * @warning        None
- * @since          N/A
+ * @since          0.13.0
  * @ingroup        early_session
  */
 class LoggerStage : public IEarlyStage {
@@ -39,7 +39,7 @@ class LoggerStage : public IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     std::string_view name() const override { return "Logger Boot"; }
@@ -51,7 +51,7 @@ class LoggerStage : public IEarlyStage {
      * @throws     None
      * @note       Must be at second position in boot sequence.
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     std::optional<unsigned int> atExpectedStageBootup() const override { return 2; }
@@ -63,7 +63,7 @@ class LoggerStage : public IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     BootResult run_session() override;

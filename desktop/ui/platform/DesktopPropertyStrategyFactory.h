@@ -5,11 +5,11 @@
  * Provides template methods for creating unique and shared pointers to concrete
  * desktop property strategy implementations based on strategy type.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
- * @ingroup none
+ * @author  CFDesktop Team
+ * @date    2026-03-27
+ * @version 0.13.1
+ * @since   0.13.0
+ * @ingroup platform_strategy
  */
 
 #pragma once
@@ -28,7 +28,7 @@ namespace cf::desktop::platform_strategy {
  *
  * @note   Not thread-safe unless externally synchronized.
  *
- * @ingroup none
+ * @ingroup platform_strategy
  *
  * @code
  * PlatformFactory factory;
@@ -42,8 +42,8 @@ class CF_DESKTOP_EXPORT PlatformFactory {
      * @throws None
      * @note   None
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.13.0
+     * @ingroup platform_strategy
      */
     PlatformFactory();
 
@@ -52,8 +52,8 @@ class CF_DESKTOP_EXPORT PlatformFactory {
      * @throws None
      * @note   None
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.13.0
+     * @ingroup platform_strategy
      */
     ~PlatformFactory();
 
@@ -73,7 +73,7 @@ class CF_DESKTOP_EXPORT PlatformFactory {
      * @throws                None
      * @note                  Memory ownership is transferred to the caller.
      * @warning               Returns nullptr if dynamic_cast fails.
-     * @since                 N/A
+     * @since                 0.13.0
      * @ingroup               none
      */
     template <typename ConcretePolicy> std::unique_ptr<ConcretePolicy, StrategyDeleter>
@@ -112,7 +112,7 @@ class CF_DESKTOP_EXPORT PlatformFactory {
      * @throws                None
      * @note                  None
      * @warning               Returns nullptr if dynamic_pointer_cast fails.
-     * @since                 N/A
+     * @since                 0.13.0
      * @ingroup               none
      */
     template <typename ConcretePolicy>
@@ -137,7 +137,7 @@ class CF_DESKTOP_EXPORT PlatformFactory {
      * @throws      None
      * @note        Implementation-specific behavior.
      * @warning     None
-     * @since       N/A
+     * @since       0.13.0
      * @ingroup     none
      */
     std::unique_ptr<IDesktopPropertyStrategy, StrategyDeleter>
@@ -151,7 +151,7 @@ class CF_DESKTOP_EXPORT PlatformFactory {
      * @throws      None
      * @note        Implementation-specific behavior.
      * @warning     None
-     * @since       N/A
+     * @since       0.13.0
      * @ingroup     none
      */
     std::shared_ptr<IDesktopPropertyStrategy>

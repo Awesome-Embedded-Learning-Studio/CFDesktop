@@ -5,11 +5,11 @@
  * Provides the native implementation entry point for creating desktop property
  * strategies on Windows platforms.
  *
- * @author  N/A
+ * @author  CFDesktop Team
  * @date    2026-03-27
- * @version 0.1
+ * @version 0.13.1
  * @since   0.1
- * @ingroup none
+ * @ingroup platform_windows
  */
 
 #pragma once
@@ -29,7 +29,7 @@ namespace cf::desktop::platform_strategy {
  * @note    None
  * @warning None
  * @since   0.1
- * @ingroup none
+ * @ingroup platform_windows
  */
 CF_DESKTOP_EXPORT PlatformFactoryAPI native_impl();
 

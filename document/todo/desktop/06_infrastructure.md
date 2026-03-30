@@ -3,42 +3,20 @@
 > **状态**: 🚧 部分完成 (~50%)
 > **预计周期**: 4~5 周
 > **依赖阶段**: Phase 1, Phase 2, Phase 3
-> **目标交付物**: GPU 检测器、HWTier 系统、ConfigStore、Logger、CrashHandler 崩溃处理、IPC 基础层
-> **完成归档**: [done/06_infrastructure_status.md](done/06_infrastructure_status.md)
-
-## 已完成模块 ✅
-
-- [x] **GPU 检测器** (100%) - GPU/显示信息检测、环境评分算法
-- [x] **Network 检测器** (100%) - 网络接口、IP地址、网络状态
-- [x] **ConfigStore** (100%) - 四层存储、变更监听、INI持久化
-- [x] **Logger** (100%) - 异步日志、ConsoleSink、FileSink、CF_LOG宏
-
-详细完成状态请参考: [done/06_infrastructure_status.md](done/06_infrastructure_status.md)
+> **已完成归档**: [done/06_infrastructure_status.md](../done/06_infrastructure_status.md)
 
 ---
 
-## 一、阶段目标
+## 已完成模块
 
-### 核心目标
-补全桌面本体的前置基础设施，建立硬件探测、配置管理、日志通信的完整底座。
-
-### 具体交付物
-- [x] `GPUDetector` GPU 检测模块 ✅
-- [ ] `HWTier` 硬件分级系统
-- [ ] `CapabilityPolicy` 策略引擎
-- [x] `ConfigStore` 配置中心 ✅
-- [x] `Logger` 日志系统 ✅
-- [ ] `CrashHandler` 崩溃捕获与自动重启
-- [ ] `CrashReporter` 崩溃报告弹窗
-- [ ] `IPCService` 进程间通信层
+> GPU 检测器、Network 检测器、ConfigStore、Logger 已完成。
+> 详细状态请参考: [done/06_infrastructure_status.md](../done/06_infrastructure_status.md)
 
 ---
 
-## 二、待实现任务
+## 待实现任务
 
-> **注意**: GPU 检测器已完成，请参考 [done/06_infrastructure_status.md](done/06_infrastructure_status.md)
-
-### Week 1: HWTier 分级系统
+### HWTier 分级系统
 
 #### Day 1-2: HWTier 分级系统
 - [ ] 定义 HWTier 枚举
@@ -75,23 +53,7 @@
 
 ---
 
-### Week 2: ConfigStore 配置中心 ✅ 已完成
-
-> **完成归档**: [done/06_infrastructure_status.md](done/06_infrastructure_status.md)
-
-ConfigStore 已完整实现，采用四层存储模型(Temp/App/User/System)，支持INI格式持久化。
-
----
-
-### Week 3: Logger 日志系统 ✅ 已完成
-
-> **完成归档**: [done/06_infrastructure_status.md](done/06_infrastructure_status.md)
-
-Logger 已完整实现，包括异步日志、ConsoleSink、FileSink、CF_LOG宏系列。
-
----
-
-### Week 4: CrashHandler 崩溃处理与自动重启
+### CrashHandler 崩溃处理与自动重启
 
 #### Day 1-2: 崩溃捕获核心
 - [ ] 创建 CrashHandler 类
@@ -178,7 +140,7 @@ Logger 已完整实现，包括异步日志、ConsoleSink、FileSink、CF_LOG宏
 
 ---
 
-### Week 5: IPC 基础层
+### IPC 基础层
 
 #### Day 1-2: 消息序列化
 - [ ] 定义 IPC 消息格式

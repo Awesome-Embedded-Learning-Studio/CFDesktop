@@ -20,7 +20,7 @@ namespace cf::desktop::early_stage {
  *
  * @note           None
  * @warning        None
- * @since          N/A
+ * @since          0.13.0
  * @ingroup        early_session
  */
 class EarlyWelcomeImpl : public IEarlyStage {
@@ -35,7 +35,7 @@ class EarlyWelcomeImpl : public IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     std::string_view name() const override { return "Desktop Early Boots"; }
@@ -47,7 +47,7 @@ class EarlyWelcomeImpl : public IEarlyStage {
      * @throws     None
      * @note       This stage has no fixed boot order.
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     std::optional<unsigned int> atExpectedStageBootup() const override { return {}; }
@@ -59,7 +59,7 @@ class EarlyWelcomeImpl : public IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     BootResult run_session() override;
@@ -72,7 +72,7 @@ class EarlyWelcomeImpl : public IEarlyStage {
      * @throws     None
      * @note       None
      * @warning    None
-     * @since      N/A
+     * @since      0.13.0
      * @ingroup    early_session
      */
     std::string factorize_bootWelcomeWithString() const;

@@ -6,11 +6,11 @@
  * via init() before accessing the instance. Uses std::call_once for
  * thread-safe initialization.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
- * @ingroup none
+ * @author  CFDesktop Team
+ * @date    2026-02-20
+ * @version 0.13.1
+ * @since   0.1
+ * @ingroup base_singleton
  */
 
 #pragma once
@@ -29,7 +29,7 @@ namespace cf {
  *
  * @tparam T Type of the singleton instance.
  *
- * @ingroup none
+ * @ingroup base_singleton
  *
  * @note   Thread-safe. Uses std::call_once for initialization.
  *
@@ -80,8 +80,8 @@ template <typename T> class Singleton {
      * @throws std::logic_error if init() has not been called.
      * @note   None
      * @warning Must call init() before accessing instance().
-     * @since  N/A
-     * @ingroup none
+     * @since  0.1
+     * @ingroup base_singleton
      */
     static T& instance() {
         if (!instance_) {
@@ -99,8 +99,8 @@ template <typename T> class Singleton {
      * @note   After calling reset(), init() must be called again before
      *         accessing instance().
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.1
+     * @ingroup base_singleton
      */
     static void reset() { instance_.reset(); }
 

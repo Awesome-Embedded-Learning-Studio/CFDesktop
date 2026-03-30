@@ -5,10 +5,10 @@
  * Defines the window identifier type used across the display server
  * and window management components.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
+ * @author  CFDesktop Team
+ * @date    2026-03-27
+ * @version 0.13.1
+ * @since   0.13.0
  * @ingroup components
  */
 #pragma once

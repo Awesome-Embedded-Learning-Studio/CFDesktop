@@ -1,3 +1,18 @@
+/**
+ * @file    memory_info.cpp
+ * @brief   Implementation of memory information detection.
+ *
+ * Provides the cross-platform entry point for retrieving system
+ * memory information. Dispatches to the appropriate platform-specific
+ * implementation (Windows or Linux) at compile time.
+ *
+ * @author  Charliechen114514
+ * @date    2026-02-23
+ * @version 0.1
+ * @since   0.1
+ * @ingroup system_memory
+ */
+
 #include "system/memory/memory_info.h"
 #include "base/macro/system_judge.h"
 

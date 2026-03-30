@@ -5,11 +5,11 @@
  * Provides a minimal singleton implementation that leverages C++11 guarantees
  * for thread-safe static local variable initialization.
  *
- * @author  N/A
- * @date    N/A
- * @version N/A
- * @since   N/A
- * @ingroup none
+ * @author  CFDesktop Team
+ * @date    2026-02-20
+ * @version 0.13.1
+ * @since   0.1
+ * @ingroup base_singleton
  */
 
 #pragma once
@@ -25,7 +25,7 @@ namespace cf {
  *
  * @tparam SingleTargetClass Type of the singleton instance.
  *
- * @ingroup none
+ * @ingroup base_singleton
  *
  * @note   Thread-safe. C++11 guarantees thread-safe initialization of function-local
  *         static variables.
@@ -54,8 +54,8 @@ template <typename SingleTargetClass> class SimpleSingleton {
      * @throws None
      * @note   Thread-safe initialization guaranteed by C++11 standard.
      * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @since  0.1
+     * @ingroup base_singleton
      */
     static SingleTargetClass& instance() {
         static SingleTargetClass target;

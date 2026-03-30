@@ -5,10 +5,10 @@
  * Handles loading and accessing early desktop initialization configuration
  * from INI files using Qt's QSettings mechanism.
  *
- * @author N/A
- * @date N/A
- * @version N/A
- * @since N/A
+ * @author CFDesktop Team
+ * @date 2026-03-16
+ * @version 0.13.1
+ * @since 0.13.0
  * @ingroup early_session
  */
 #pragma once
@@ -43,7 +43,7 @@ class EarlySettings {
      * @throws None
      * @note None
      * @warning None
-     * @since N/A
+     * @since 0.13.0
      * @ingroup early_session
      */
     EarlySettings(const QString& early_config_path);
@@ -57,7 +57,7 @@ class EarlySettings {
      * @throws None
      * @note None
      * @warning None
-     * @since N/A
+     * @since 0.13.0
      * @ingroup early_session
      */
     bool valid() const;
@@ -69,7 +69,7 @@ class EarlySettings {
      * @throws None
      * @note None
      * @warning None
-     * @since N/A
+     * @since 0.13.0
      * @ingroup early_session
      */
     QString loadFrom() const;
@@ -83,7 +83,7 @@ class EarlySettings {
      * @throws None
      * @note The result is cached after the first call.
      * @warning None
-     * @since N/A
+     * @since 0.13.0
      * @ingroup early_session
      */
     QString get_boot_logger_path() const;

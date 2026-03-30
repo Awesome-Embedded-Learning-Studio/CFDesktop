@@ -5,10 +5,10 @@
  * Provides singleton access to early configuration settings and manages the
  * lifecycle of early settings during desktop initialization.
  *
- * @author N/A
- * @date N/A
- * @version N/A
- * @since N/A
+ * @author CFDesktop Team
+ * @date 2026-03-16
+ * @version 0.13.1
+ * @since 0.13.0
  * @ingroup early_session
  */
 #pragma once
@@ -46,7 +46,7 @@ class EarlyHandle : public SimpleSingleton<EarlyHandle> {
      * @throws None
      * @note None
      * @warning None
-     * @since N/A
+     * @since 0.13.0
      * @ingroup early_session
      */
     void setEarlySettingsHandle(std::unique_ptr<early_settings::EarlySettings> settings);
@@ -62,7 +62,7 @@ class EarlyHandle : public SimpleSingleton<EarlyHandle> {
      * @note After calling this method, early_settings() is invalid until a new
      *       settings object is registered.
      * @warning None
-     * @since N/A
+     * @since 0.13.0
      * @ingroup early_session
      */
     std::unique_ptr<early_settings::EarlySettings> unlockEarlySettings();
@@ -76,7 +76,7 @@ class EarlyHandle : public SimpleSingleton<EarlyHandle> {
      * @throws None
      * @note Undefined behavior if settings has not been set or has been unlocked.
      * @warning None
-     * @since N/A
+     * @since 0.13.0
      * @ingroup early_session
      */
     const early_settings::EarlySettings& early_settings() const;

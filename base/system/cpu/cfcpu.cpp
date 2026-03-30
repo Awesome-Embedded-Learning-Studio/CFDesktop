@@ -1,3 +1,18 @@
+/**
+ * @file    cfcpu.cpp
+ * @brief   Implementation of the basic CPU information query interface.
+ *
+ * Implements getCPUInfo() with lazy initialization and caching via
+ * CPUHostInfoIniter. Dispatches to the platform-specific backend
+ * (Windows or Linux) at compile time.
+ *
+ * @author  Charliechen114514
+ * @date    2026-02-21
+ * @version 0.1
+ * @since   0.1
+ * @ingroup system_cpu
+ */
+
 #include "system/cpu/cfcpu.h"
 #include "base/helpers/once_init.hpp"
 #include "base/macro/system_judge.h"
