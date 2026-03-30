@@ -45,11 +45,19 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/api/system/gpu/overview/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/api/system/memory/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/api/system/memory/memory_info/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/api/system/network/overview/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
@@ -61,7 +69,19 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/base/factory/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/base/hash/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/base/macros/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/base/mpsc_queue/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
@@ -73,7 +93,15 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/base/policy_chain/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/base/scope_guard/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/base/singleton/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
@@ -537,7 +565,79 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/checkbox/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/combobox/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/doublespinbox/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/groupbox/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/label/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/listview/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/progressbar/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/radiobutton/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/scrollview/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/separator/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/slider/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/spinbox/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/state_machine/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/switch/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/tableview/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/tabview/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/textarea/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/textfield/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/material/widget/treeview/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
@@ -577,6 +677,10 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1RegisteredFactory/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1ScopeGuard/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
@@ -586,6 +690,10 @@
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1Singleton/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1StaticRegisteredFactory/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
@@ -646,6 +754,10 @@
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1desktop_1_1CFDesktopWindowProxy/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1desktop_1_1DisplayServerBackendFactory/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
@@ -1265,6 +1377,10 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/structcf_1_1desktop_1_1platform_1_1DisplayBackendFactoryAPI/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/structcf_1_1desktop_1_1platform__strategy_1_1PlatformFactoryAPI/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
@@ -1470,6 +1586,10 @@
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/DesktopPropertyStrategyFactory_8h/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/DisplayServerBackendFactory_8h/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
@@ -2297,6 +2417,10 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/display__backend__helper_8h/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/doublespinbox_8h/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
@@ -2557,6 +2681,10 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/registered__factory_8hpp/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/render__backend_8h/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
@@ -2757,6 +2885,18 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/wsl__x11__display__server__backend_8h/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/wsl__x11__window_8h/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/wsl__x11__window__backend_8h/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Namespaces/namespaceUi/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
@@ -2809,10 +2949,6 @@
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
-         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Namespaces/namespacecf_1_1desktop_1_1backend_1_1windows/</loc>
-         <lastmod>2026-03-30</lastmod>
-    </url>
-    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Namespaces/namespacecf_1_1desktop_1_1base/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
@@ -2850,6 +2986,10 @@
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Namespaces/namespacecf_1_1desktop_1_1path/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Namespaces/namespacecf_1_1desktop_1_1platform/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
@@ -3030,6 +3170,10 @@
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/design_stage/multi_display_backend_architecture/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/design_stage/system_architecture_overview/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
@@ -3462,6 +3606,10 @@
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/todo/done/13_widget_apps_status/</loc>
+         <lastmod>2026-03-30</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/todo/done/14_display_backend_status/</loc>
          <lastmod>2026-03-30</lastmod>
     </url>
     <url>
