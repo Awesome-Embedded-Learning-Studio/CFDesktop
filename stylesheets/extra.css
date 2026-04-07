@@ -1,0 +1,149 @@
+/* ==========================================================================
+   CFDesktop Docs - Custom Stylesheet
+   Improve Chinese typography, code readability, and visual hierarchy
+   ========================================================================== */
+
+/* ---------- Chinese Typography ---------- */
+
+/* Base body text: generous line-height for Chinese character readability.
+   Chinese characters are more visually dense than Latin; 1.85 prevents
+   the "wall of text" feeling. */
+.md-typeset {
+  line-height: 1.85;
+  font-size: 0.82rem;
+}
+
+/* Headings: slightly tighter line-height than body */
+.md-typeset h1 { line-height: 1.4; }
+.md-typeset h2 { line-height: 1.45; }
+.md-typeset h3 { line-height: 1.5; }
+.md-typeset h4 { line-height: 1.55; }
+
+/* Paragraph spacing: add vertical breathing room */
+.md-typeset p {
+  margin-bottom: 1.2em;
+}
+
+/* ---------- Code Blocks ---------- */
+
+/* Code blocks: prevent excessive height for long C++ headers */
+.md-typeset pre > code {
+  max-height: 32rem;
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+/* Inline code: match CJK character width */
+.md-typeset code {
+  font-size: 0.78em;
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+}
+
+/* ---------- Tables ---------- */
+
+/* Tables: more padding for CJK cell content, subtle alternating rows */
+.md-typeset table:not([class]) {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  display: table;
+  width: 100%;
+}
+
+.md-typeset table:not([class]) th {
+  font-weight: 600;
+  padding: 0.75em 1em;
+}
+
+.md-typeset table:not([class]) td {
+  padding: 0.65em 1em;
+}
+
+/* Alternating row colors */
+.md-typeset table:not([class]) tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* ---------- Admonitions ---------- */
+
+/* Admonitions: larger text and more padding */
+.md-typeset .admonition,
+.md-typeset details {
+  font-size: 0.8rem;
+  line-height: 1.75;
+  padding: 0.8em 1.2em;
+  border-radius: 6px;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* ---------- Sidebar ---------- */
+
+/* Sidebar items: more spacing for better clickability */
+.md-nav__item {
+  padding: 0.15em 0;
+}
+
+/* Section labels in sidebar: more visually distinct */
+.md-nav__section-title {
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Content Width ---------- */
+
+/* Widen the content area for tables and code blocks */
+.md-grid {
+  max-width: 80rem;
+}
+
+/* ---------- Links ---------- */
+
+/* Links: visually distinct from body text */
+.md-typeset a {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
+.md-typeset a:hover {
+  text-decoration-style: solid;
+}
+
+/* ---------- Blockquotes ---------- */
+
+.md-typeset blockquote {
+  border-left: 3px solid var(--md-primary-fg-color);
+  padding-left: 1em;
+  margin-left: 0;
+  font-style: normal;
+  opacity: 0.9;
+}
+
+/* ---------- Dark Mode Adjustments ---------- */
+
+[data-md-color-scheme="slate"] .md-typeset code {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+
+/* ---------- Print Styles ---------- */
+
+@media print {
+  .md-typeset {
+    font-size: 11pt;
+    line-height: 1.7;
+  }
+  .md-sidebar,
+  .md-header,
+  .md-footer {
+    display: none !important;
+  }
+}
