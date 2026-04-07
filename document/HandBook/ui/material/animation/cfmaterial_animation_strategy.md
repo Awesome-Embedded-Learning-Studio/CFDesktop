@@ -181,5 +181,5 @@ strategy->setGlobalEnabled(false);  // 禁用所有使用此策略的动画
 ## 相关文档
 
 - [CFMaterialAnimationFactory - 动画工厂](./cfmaterial_animation_factory.md)
-- [AnimationDescriptor - 动画描述符](../../material/token/animation_token_mapping.md)
+- [AnimationDescriptor - 动画描述符](../../core/token/motion/cfmaterial_motion_token_literals.md)
 - [Material Design 3 运动规范](https://m3.material.io/styles/motion)

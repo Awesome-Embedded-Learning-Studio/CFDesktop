@@ -1,0 +1,6 @@
+title: 日志系统
+nav:
+  - index.md
+  - 架构: architecture.md
+  - 概览: overview.md
+  - API 参考: api_reference.md

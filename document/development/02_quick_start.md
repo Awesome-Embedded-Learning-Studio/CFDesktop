@@ -305,7 +305,7 @@ After completing the quick start:
 
 If you encounter issues not covered here:
 
-1. Check the [Design Documentation](../design_stage/) for detailed information
+1. Check the [Design Documentation](../../design_stage/) for detailed information
 2. Review the [Build System Documentation](03_build_system.md)
 3. Open an issue on [GitHub](https://github.com/Awesome-Embedded-Learning-Studio/CFDesktop/issues)
 

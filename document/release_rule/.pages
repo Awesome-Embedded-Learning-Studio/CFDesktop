@@ -1,0 +1,4 @@
+title: 发布规范
+icon: material/tag
+nav:
+  - Git Hooks 指南: git_hooks_guide.md

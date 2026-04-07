@@ -105,5 +105,5 @@ protected:
 ## 相关文档
 
 - [MaterialApplication - Material 应用](./material_application.md)
-- [ThemeManager - 主题管理](../../core/theme_manager.md)
-- [动画系统概述](../../animation/overview.md)
+- [ThemeManager - 主题管理](../core/theme_manager.md)
+- [动画系统概述](../components/animation.md)

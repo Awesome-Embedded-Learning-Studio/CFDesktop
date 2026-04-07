@@ -1,0 +1,18 @@
+title: 构建辅助
+nav:
+  - CI 构建入口: ci_build_entry.sh.md
+  - 配置文件: config_files.md
+  - Docker 启动: docker_start.md
+  - Docker 启动脚本: docker_start.sh.md
+  - Linux 配置: linux_configure.sh.md
+  - Linux 部署构建: linux_deploy_build.sh.md
+  - Linux 开发构建: linux_develop_build.sh.md
+  - Linux 快速部署: linux_fast_deploy_build.sh.md
+  - Linux 快速开发: linux_fast_develop_build.sh.md
+  - Linux 测试运行: linux_run_tests.sh.md
+  - Windows 配置: windows_configure.md
+  - Windows 部署构建: windows_deploy_build.md
+  - Windows 开发构建: windows_develop_build.md
+  - Windows 快速部署: windows_fast_deploy_build.md
+  - Windows 快速开发: windows_fast_develop_build.md
+  - Windows 测试运行: windows_run_tests.md

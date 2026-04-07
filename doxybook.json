@@ -17,5 +17,10 @@
   "markdown": {
     "includeIndex": true,
     "indexFileName": "index"
+  },
+
+  "filter": {
+    "includePrivate": false,
+    "includeUndocumented": false
   }
 }

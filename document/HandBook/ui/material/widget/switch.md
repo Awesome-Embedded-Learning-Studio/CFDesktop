@@ -114,5 +114,5 @@ Switch 的 `paintEvent` 实现以下绘制步骤：
 ## 相关文档
 
 - [CheckBox - Material 复选框](./checkbox.md)
-- [MdElevationController - 阴影控制器](../../base/elevation_controller.md)
+- [MdElevationController - 阴影控制器](../base/elevation_controller.md)
 - [Material Design 3 开关规范](https://m3.material.io/components/switch)

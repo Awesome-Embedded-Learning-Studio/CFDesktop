@@ -1,0 +1,8 @@
+title: 技术笔记
+icon: material/notebook
+nav:
+  - 01 · 从 bool 到 QFlags: 01-Desktop-Behavior-Modeling-From-Bool-To-QFlags.md
+  - 02 · Qt 窗口行为解析: 02-Qt-Window-Behavior-Analysis.md
+  - 03 · 策略模式实战: 03-Desktop-Strategy-Pattern-Design.md
+  - 04 · 行为系统架构: 04-Desktop-Behavior-System-Architecture.md
+  - 05 · Logger 单例链接架构: 05-Logger-Singleton-Link-Architecture.md

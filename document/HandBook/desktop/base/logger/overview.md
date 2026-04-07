@@ -130,11 +130,8 @@ overview → architecture → performance → troubleshooting
 
 ## 相关资源
 
-- **主文档**：[document/desktop/base/logger/](../../../../desktop/base/logger/)
 - **API 参考**：[api_reference.md](../../../../desktop/base/logger/api_reference.md)
 - **架构详解**：[architecture.md](../../../../desktop/base/logger/architecture.md)
-- **示例代码**：[example/desktop/base/logger/](../../../../example/desktop/base/logger/)
-- **测试代码**：[test/logger/](../../../../test/logger/)
 
 ## 版本要求
 

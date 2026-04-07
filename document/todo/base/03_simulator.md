@@ -258,8 +258,8 @@
 
 ## 七、相关文档
 
-- 设计文档: [../design_stage/04_phase6_simulator.md](../design_stage/04_phase6_simulator.md)
-- 依赖: [00_project_skeleton.md](../00_project_skeleton.md), [02_input_layer.md](02_input_layer.md)
+- 设计文档: [../../design_stage/04_phase6_simulator.md](../../design_stage/04_phase6_simulator.md)
+- 依赖: [工程骨架状态](../done/00_project_skeleton_status.md), [02_input_layer.md](02_input_layer.md)
 
 ---
 

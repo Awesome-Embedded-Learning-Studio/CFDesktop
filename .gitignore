@@ -10,6 +10,11 @@ BLUEPRINT.md
 # native builds
 out/
 
+# Documents summons
+xml/
+site/
+document/api/
+
 # .vscode
 .vscode
 

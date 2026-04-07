@@ -378,6 +378,6 @@ docker run --rm ubuntu:24.4 cat /etc/resolv.conf
 ## 相关文档
 
 - [开发工具配置](./04_development_tools.md)
-- [构建指南](./03_build_guide.md)
-- [环境设置](./02_environment_setup.md)
+- [构建系统](./03_build_system.md)
+- [快速开始](./02_quick_start.md)
 - [项目索引](../index.md)

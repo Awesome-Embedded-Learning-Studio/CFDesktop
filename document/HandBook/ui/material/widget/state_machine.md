@@ -185,5 +185,5 @@ if (factory) {
 ## 相关文档
 
 - [Button - Material 按钮](./button.md)
-- [RippleHelper - 水波纹效果](../../base/ripple_helper.md)
-- [MdElevationController - 阴影控制器](../../base/elevation_controller.md)
+- [RippleHelper - 水波纹效果](../base/ripple_helper.md)
+- [MdElevationController - 阴影控制器](../base/elevation_controller.md)

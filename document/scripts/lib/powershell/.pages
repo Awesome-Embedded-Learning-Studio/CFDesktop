@@ -1,0 +1,8 @@
+title: PowerShell 库
+nav:
+  - LibArgs: LibArgs.psm1.md
+  - LibBuild: LibBuild.psm1.md
+  - LibCommon: LibCommon.psm1.md
+  - LibConfig: LibConfig.psm1.md
+  - LibGit: LibGit.psm1.md
+  - LibPaths: LibPaths.psm1.md

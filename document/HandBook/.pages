@@ -1,0 +1,9 @@
+title: 开发手册
+icon: material/book-open-page-variant
+nav:
+  - 基础工具库: base
+  - 桌面模块: desktop
+  - UI 框架: ui
+  - API 参考: api
+  - 平台实现: implementation
+  - 示例: examples

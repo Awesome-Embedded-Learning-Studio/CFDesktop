@@ -272,7 +272,7 @@
 ## 五、相关文档
 
 - 设计文档: [../desktop/summary.md](summary.md) Phase A 节
-- 依赖: [base/01_hardware_probe.md](../base/01_hardware_probe.md), [base/02_base_library.md](../base/02_base_library.md)
+- 依赖: [硬件探针状态](../done/01_hardware_probe_status.md), [Base库状态](../done/02_base_library_status.md)
 - CMake 配置: `../../cmake/` （参考现有模块集成方式）
 
 ---

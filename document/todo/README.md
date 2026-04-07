@@ -8,9 +8,9 @@
 
 | TODO 文件 | 模块 | 预计周期 | 依赖 | 状态 |
 |----------|------|---------|------|------|
-| [00_project_skeleton.md](00_project_skeleton.md) | 工程骨架搭建 | 1~2 周 | - | ✅ 100% |
-| [01_hardware_probe.md](01_hardware_probe.md) | 硬件探针与能力分级 | 2~3 周 | Phase 0 | 🚧 90% |
-| ~~[02_base_library.md](02_base_library.md)~~ | ~~Base 库核心~~ | ~~3~4 周~~ | Phase 0, 1 | ✅ 100% |
+| [done/00_project_skeleton_status.md](done/00_project_skeleton_status.md) | 工程骨架搭建 | 1~2 周 | - | ✅ 100% |
+| [done/01_hardware_probe_status.md](done/01_hardware_probe_status.md) | 硬件探针与能力分级 | 2~3 周 | Phase 0 | 🚧 90% |
+| ~~[done/02_base_library_status.md](done/02_base_library_status.md)~~ | ~~Base 库核心~~ | ~~3~4 周~~ | Phase 0, 1 | ✅ 100% |
 | [02_input_layer.md](base/02_input_layer.md) | 输入抽象层 | 1~2 周 | Phase 0, 1 | ⬜ 0% |
 | [03_simulator.md](base/03_simulator.md) | 多平台模拟器 | 2~3 周 | Phase 0, 2 | ⬜ 0% |
 | [04_testing.md](base/04_testing.md) | 测试体系 | 贯穿全程 | 所有阶段 | 🚧 55% |
@@ -41,8 +41,8 @@
 
 ### 按角色查找
 
-- **新手入门**: 从 [00_project_skeleton.md](00_project_skeleton.md) 开始
-- **基础开发**: [01_hardware_probe.md](01_hardware_probe.md)
+- **新手入门**: 从 [done/00_project_skeleton_status.md](done/00_project_skeleton_status.md) 开始
+- **基础开发**: [done/01_hardware_probe_status.md](done/01_hardware_probe_status.md)
 - **UI 开发**: [99_ui_material_framework.md](base/99_ui_material_framework.md) + [02_input_layer.md](base/02_input_layer.md)
 - **调试工具**: [03_simulator.md](base/03_simulator.md)
 - **测试工程师**: [04_testing.md](base/04_testing.md)

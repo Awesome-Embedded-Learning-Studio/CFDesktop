@@ -336,12 +336,4 @@ document/release_rule/
 
 ---
 
-## 相关文档
-
-- [../../../PIPELINE.md](../../../PIPELINE.md) - 完整的 CI/CD 流水线文档
-- [../../release/README.md](../../release/README.md) - 发布策略说明
-- [./branch_strategy.md](./branch_strategy.md) - 分支策略详细说明
-
----
-
 *文档版本: v1.0 | 更新日期: 2026-03-07*

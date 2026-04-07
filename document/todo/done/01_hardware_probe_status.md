@@ -50,12 +50,12 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`base/include/system/cpu/cfcpu.h`](../../../base/include/system/cpu/cfcpu.h) | CPU 基础信息接口 |
-| [`base/include/system/cpu/cfcpu_profile.h`](../../../base/include/system/cpu/cfcpu_profile.h) | CPU 详细信息 (频率、核心数) |
-| [`base/include/system/cpu/cfcpu_bonus.h`](../../../base/include/system/cpu/cfcpu_bonus.h) | CPU 扩展信息 |
-| [`base/system/cpu/cfcpu.cpp`](../../../base/system/cpu/cfcpu.cpp) | 基础信息实现 |
-| [`base/system/cpu/cfcpu_profile.cpp`](../../../base/system/cpu/cfcpu_profile.cpp) | 详细信息实现 |
-| [`base/system/cpu/cfcpu_bonus.cpp`](../../../base/system/cpu/cfcpu_bonus.cpp) | 扩展信息实现 |
+| `base/include/system/cpu/cfcpu.h` | CPU 基础信息接口 |
+| `base/include/system/cpu/cfcpu_profile.h` | CPU 详细信息 (频率、核心数) |
+| `base/include/system/cpu/cfcpu_bonus.h` | CPU 扩展信息 |
+| `base/system/cpu/cfcpu.cpp` | 基础信息实现 |
+| `base/system/cpu/cfcpu_profile.cpp` | 详细信息实现 |
+| `base/system/cpu/cfcpu_bonus.cpp` | 扩展信息实现 |
 | `base/system/cpu/private/linux_impl/*.cpp` | Linux 平台实现 |
 | `base/system/cpu/private/win_impl/*.cpp` | Windows 平台实现 |
 
@@ -72,7 +72,7 @@
 
 #### 测试
 
-- 测试文件: [`test/system/test_cpu_info_query.cpp`](../../../test/system/test_cpu_info_query.cpp)
+- 测试文件: `test/system/test_cpu_info_query.cpp`
 
 ---
 
@@ -82,8 +82,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`base/include/system/memory/memory_info.h`](../../../base/include/system/memory/memory_info.h) | 内存信息接口 |
-| [`base/system/memory/memory_info.cpp`](../../../base/system/memory/memory_info.cpp) | 内存信息实现 |
+| `base/include/system/memory/memory_info.h` | 内存信息接口 |
+| `base/system/memory/memory_info.cpp` | 内存信息实现 |
 | `base/system/memory/private/linux_impl/*.cpp` | Linux 平台实现 |
 | `base/system/memory/private/win_impl/*.cpp` | Windows 平台实现 |
 
@@ -98,7 +98,7 @@
 
 #### 测试
 
-- 测试文件: [`test/system/test_memory_info_query.cpp`](../../../test/system/test_memory_info_query.cpp)
+- 测试文件: `test/system/test_memory_info_query.cpp`
 
 ---
 
@@ -108,8 +108,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`base/include/system/gpu/gpu.h`](../../../base/include/system/gpu/gpu.h) | GPU/显示信息接口 |
-| [`base/system/gpu/gpu.cpp`](../../../base/system/gpu/gpu.cpp) | 跨平台实现 |
+| `base/include/system/gpu/gpu.h` | GPU/显示信息接口 |
+| `base/system/gpu/gpu.cpp` | 跨平台实现 |
 | `base/system/gpu/private/linux_impl/gpu_info.cpp` | Linux 平台实现 |
 | `base/system/gpu/private/win_impl/gpu_info.cpp` | Windows 平台实现 |
 
@@ -128,7 +128,7 @@
 
 #### 示例
 
-- 示例文件: [`example/base/system/example_gpu_info.cpp`](../../../example/base/system/example_gpu_info.cpp)
+- 示例文件: `example/base/system/example_gpu_info.cpp`
 
 ---
 
@@ -138,8 +138,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`base/include/system/network/network.h`](../../../base/include/system/network/network.h) | 网络信息接口 |
-| [`base/system/network/network.cpp`](../../../base/system/network/network.cpp) | 基于 Qt 的跨平台实现 |
+| `base/include/system/network/network.h` | 网络信息接口 |
+| `base/system/network/network.cpp` | 基于 Qt 的跨平台实现 |
 
 #### 功能实现
 
@@ -155,7 +155,7 @@
 
 #### 示例
 
-- 示例文件: [`example/base/system/example_network_info.cpp`](../../../example/base/system/example_network_info.cpp)
+- 示例文件: `example/base/system/example_network_info.cpp`
 
 ---
 
@@ -544,10 +544,10 @@ tests/
 
 ## 九、相关文档
 
-- 原始TODO: [`../01_hardware_probe.md`](../01_hardware_probe.md)
-- 设计文档: [`../../design_stage/01_phase1_hardware_probe.md`](../../design_stage/01_phase1_hardware_probe.md)
-- CPU 实现: [`../../HandBook/api/system/cpu/overview.md`](../../HandBook/api/system/cpu/overview.md)
-- 内存实现: [`../../HandBook/api/system/memory/memory_info.md`](../../HandBook/api/system/memory/memory_info.md)
+- 原始TODO: ~~已归档~~（原 `01_hardware_probe.md` 已删除）
+- 设计文档: `../../../design_stage/01_phase1_hardware_probe/`
+- CPU 实现: `../../../HandBook/api/system/cpu/overview/`
+- 内存实现: `../../../HandBook/api/system/memory/memory_info/`
 
 ---
 

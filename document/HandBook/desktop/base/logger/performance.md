@@ -6,7 +6,7 @@
 
 ### 基准测试结果
 
-基于 [logger_benchmark_test.cpp](../../../../test/logger/benchmark/logger_benchmark_test.cpp) 的测试结果：
+基于 `logger_benchmark_test.cpp` 的测试结果：
 
 | 场景 | 性能指标 |
 |------|----------|

@@ -1,0 +1,10 @@
+title: 开发指南
+icon: material/developer-board
+nav:
+  - 环境准备: 01_prerequisites.md
+  - 快速开始: 02_quick_start.md
+  - 构建系统: 03_build_system.md
+  - 开发工具: 04_development_tools.md
+  - Docker 构建: 05_docker_build.md
+  - Git Hooks: 06_git_hooks.md
+  - 故障排除: 07_troubleshooting.md

@@ -67,7 +67,7 @@ CFDesktop/
 - widget 销毁后缓存条目不会被清理，导致内存泄漏
 - 传 `nullptr` 时 key = "token_0"，所有调用共享同一实例（如 state_machine 和 elevation_controller）
 
-**代码位置：** [cfmaterial_animation_factory.cpp:109-152](../ui/components/material/cfmaterial_animation_factory.cpp#L109-L152)
+**代码位置：** `cfmaterial_animation_factory.cpp:109-152`
 
 **优化方案（已实现）：**
 1. 添加 `owner` 参数，优先使用 owner 作为缓存 key

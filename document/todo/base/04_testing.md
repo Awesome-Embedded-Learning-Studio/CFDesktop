@@ -230,9 +230,9 @@
 
 ## 九、相关文档
 
-- 设计文档: [../design_stage/05_phase8_testing.md](../design_stage/05_phase8_testing.md)
+- 设计文档: [../../design_stage/05_phase8_testing.md](../../design_stage/05_phase8_testing.md)
 - 依赖: 所有其他阶段文档
-- 基础测试完成归档: [done/05_testing_foundation_done.md](done/05_testing_foundation_done.md)
+- 测试状态: [../done/05_testing_status.md](../done/05_testing_status.md)
 
 ---
 

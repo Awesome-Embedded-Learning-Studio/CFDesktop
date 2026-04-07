@@ -1,0 +1,7 @@
+title: Git Hooks
+nav:
+  - 安装 Hooks (bash): install_hooks.sh.md
+  - 安装 Hooks (PowerShell): install_hooks.ps1.md
+  - pre-commit 示例: pre-commit.sample.md
+  - pre-push 示例: pre-push.sample.md
+  - 版本工具: version_utils.sh.md

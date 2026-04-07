@@ -36,7 +36,7 @@
 
 ### 3.1 CMake 构建系统 (90%)
 
-**主配置文件**: [`CMakeLists.txt`](../../../CMakeLists.txt)
+**主配置文件**: `CMakeLists.txt`
 
 **已完成功能**:
 - CMake 3.16+ 版本要求
@@ -69,17 +69,17 @@ add_subdirectory(test)    # 测试代码
 ```
 
 **依赖文件**:
-- [`cmake/build_log_helper.cmake`](../../../cmake/build_log_helper.cmake) - 构建日志辅助
-- [`cmake/check_toolchain.cmake`](../../../cmake/check_toolchain.cmake) - 工具链检查
-- [`cmake/custom_target_helper.cmake`](../../../cmake/custom_target_helper.cmake) - 自定义目标辅助
-- [`cmake/OutputDirectoryConfig.cmake`](../../../cmake/OutputDirectoryConfig.cmake) - 输出目录配置
-- [`cmake/generate_develop_helpers.cmake`](../../../cmake/generate_develop_helpers.cmake) - 开发辅助生成
-- [`cmake/ExampleLauncher.cmake`](../../../cmake/ExampleLauncher.cmake) - Windows 启动脚本生成
-- [`cmake/QtDeployUtils.cmake`](../../../cmake/QtDeployUtils.cmake) - Qt 部署工具
+- `cmake/build_log_helper.cmake` - 构建日志辅助
+- `cmake/check_toolchain.cmake` - 工具链检查
+- `cmake/custom_target_helper.cmake` - 自定义目标辅助
+- `cmake/OutputDirectoryConfig.cmake` - 输出目录配置
+- `cmake/generate_develop_helpers.cmake` - 开发辅助生成
+- `cmake/ExampleLauncher.cmake` - Windows 启动脚本生成
+- `cmake/QtDeployUtils.cmake` - Qt 部署工具
 
 ### 3.2 代码规范配置 (80%)
 
-**配置文件**: [`.clang-format`](../../../.clang-format)
+**配置文件**: `.clang-format`
 
 **已完成功能**:
 - 基于 LLVM 风格
@@ -104,7 +104,7 @@ SortIncludes: true
 
 ### 3.3 开发工具集成 (70%)
 
-**VSCode 配置**: [`.vscode/settings.json`](../../../.vscode/settings.json)
+**VSCode 配置**: `.vscode/settings.json`
 
 **已完成功能**:
 - clangd 路径配置
@@ -115,8 +115,8 @@ SortIncludes: true
 - 头文件插入优化
 
 **其他 VSCode 配置**:
-- [`.vscode/extensions.json`](../../../.vscode/extensions.json) - 推荐扩展
-- [`.vscode/launch.json`](../../../.vscode/launch.json) - 调试配置 (自动生成)
+- `.vscode/extensions.json` - 推荐扩展
+- `.vscode/launch.json` - 调试配置 (自动生成)
 
 ### 3.4 CI/CD 流水线 (100%)
 
@@ -124,7 +124,7 @@ SortIncludes: true
 
 #### 3.4.1 Git Pre-Push Hook
 
-**文件**: [`scripts/release/hooks/pre-push.sample`](../../../scripts/release/hooks/pre-push.sample)
+**文件**: `scripts/release/hooks/pre-push.sample`
 
 **已完成功能**:
 - 版本号检查 (阻止未更新版本的推送)
@@ -137,7 +137,7 @@ SortIncludes: true
 
 #### 3.4.2 Git Pre-Commit Hook
 
-**文件**: [`scripts/release/hooks/pre-commit.sample`](../../../scripts/release/hooks/pre-commit.sample)
+**文件**: `scripts/release/hooks/pre-commit.sample`
 
 **已完成功能**:
 - 空白字符检查 (trailing whitespace)
@@ -146,16 +146,16 @@ SortIncludes: true
 
 #### 3.4.3 Docker 构建系统
 
-**文件**: [`scripts/docker/Dockerfile.build`](../../../scripts/docker/Dockerfile.build)
+**文件**: `scripts/docker/Dockerfile.build`
 
 **已完成功能**:
 - 多架构支持 (amd64/arm64/armhf)
 - Qt 6.8.1 通过 aqtinstall 自动安装
-- 依赖自动化安装 ([`scripts/dependency/install_build_dependencies.sh`](../../../scripts/dependency/install_build_dependencies.sh))
+- 依赖自动化安装 (`scripts/dependency/install_build_dependencies.sh`)
 
 #### 3.4.4 Docker 构建脚本
 
-**文件**: [`scripts/build_helpers/docker_start.sh`](../../../scripts/build_helpers/docker_start.sh)
+**文件**: `scripts/build_helpers/docker_start.sh`
 
 **已完成功能**:
 - 多架构构建 (--arch amd64/arm64)
@@ -167,7 +167,7 @@ SortIncludes: true
 
 #### 3.4.5 CI 构建入口
 
-**文件**: [`scripts/build_helpers/ci_build_entry.sh`](../../../scripts/build_helpers/ci_build_entry.sh)
+**文件**: `scripts/build_helpers/ci_build_entry.sh`
 
 **已完成功能**:
 - 自动架构检测 (x86_64/aarch64/armv7l)
@@ -175,7 +175,7 @@ SortIncludes: true
 
 #### 3.4.6 版本工具
 
-**文件**: [`scripts/release/hooks/version_utils.sh`](../../../scripts/release/hooks/version_utils.sh)
+**文件**: `scripts/release/hooks/version_utils.sh`
 
 **已完成功能**:
 - 版本号解析 (Major/Minor/Patch)
@@ -184,7 +184,7 @@ SortIncludes: true
 
 #### 3.4.7 Hooks 安装脚本
 
-**文件**: [`scripts/release/hooks/install_hooks.sh`](../../../scripts/release/hooks/install_hooks.sh)
+**文件**: `scripts/release/hooks/install_hooks.sh`
 
 **已完成功能**:
 - 自动安装 pre-commit 和 pre-push hooks
@@ -193,7 +193,7 @@ SortIncludes: true
 
 #### 3.4.8 文档部署流水线
 
-**文件**: [`.github/workflows/deploy.yml`](../../../.github/workflows/deploy.yml)
+**文件**: `.github/workflows/deploy.yml`
 
 **已完成功能**:
 - MkDocs 文档自动构建
@@ -239,74 +239,72 @@ CFDesktop/
   - [x] `test/` - 测试代码
   - [x] `cmake/` - CMake 模块
   - [x] `scripts/` - 构建和辅助脚本
-- [x] 编写主 [`CMakeLists.txt`](../../../CMakeLists.txt)
+- [x] 编写主 `CMakeLists.txt`
   - [x] 设置 C++17 标准
   - [x] 配置 Qt6 依赖
   - [x] 添加子目录
   - [x] 自动化 MOC/RCC/UIC
 - [x] 创建各子模块的 CMakeLists.txt 框架
 - [x] 配置 VSCode 开发环境
-  - [x] [`.vscode/settings.json`](../../../.vscode/settings.json) - clangd 配置
-  - [x] [`.vscode/extensions.json`](../../../.vscode/extensions.json) - 推荐扩展
-  - [x] [`.vscode/launch.json`](../../../.vscode/launch.json) - 调试配置
+  - [x] `.vscode/settings.json` - clangd 配置
+  - [x] `.vscode/extensions.json` - 推荐扩展
+  - [x] `.vscode/launch.json` - 调试配置
 
 #### Day 3-4: ~~交叉编译配置~~ (已取消，使用 Docker 多架构替代)
 - ~~编写 ARMv7 工具链文件~~
 - ~~编写 ARM64 工具链文件~~
 - [x] Docker 多架构构建替代方案
-  - [x] [`scripts/docker/Dockerfile.build`](../../../scripts/docker/Dockerfile.build) - 支持 amd64/arm64/armhf
+  - [x] `scripts/docker/Dockerfile.build` - 支持 amd64/arm64/armhf
 
 #### Day 5: 代码规范配置
-- [x] 配置 [`.clang-format`](../../../.clang-format)
+- [x] 配置 `.clang-format`
   - [x] 基于 LLVM 风格
   - [x] 设置缩进为 4 空格
   - [x] 配置列宽 100
   - [x] 设置指针对齐方式
 - [x] 配置 Git pre-commit hook
-  - [x] 创建 [`scripts/release/hooks/pre-commit.sample`](../../../scripts/release/hooks/pre-commit.sample) 脚本
+  - [x] 创建 `scripts/release/hooks/pre-commit.sample` 脚本
   - [x] 自动格式化 (clang-format)
   - [x] 添加 trailing whitespace 检查
   - [x] 配置可跳过选项 (git commit --no-verify)
-  - [x] 安装脚本配置 ([`scripts/release/hooks/install_hooks.sh`](../../../scripts/release/hooks/install_hooks.sh))
+  - [x] 安装脚本配置 (`scripts/release/hooks/install_hooks.sh`)
 
 ### Week 2 任务
 
 #### Day 1-3: CI/CD 搭建
 - [x] 创建 Docker 构建镜像
-  - [x] [`scripts/docker/Dockerfile.build`](../../../scripts/docker/Dockerfile.build) - 多架构支持 (amd64/arm64/armhf)
+  - [x] `scripts/docker/Dockerfile.build` - 多架构支持 (amd64/arm64/armhf)
   - [x] 配置 Qt6 环境 (aqtinstall 6.8.1)
 - [x] 编写 Git Hooks 工作流
-  - [x] [`scripts/release/hooks/pre-push.sample`](../../../scripts/release/hooks/pre-push.sample) - Push 前验证
-  - [x] [`scripts/release/hooks/pre-commit.sample`](../../../scripts/release/hooks/pre-commit.sample) - Commit 前检查
-  - [x] [`scripts/release/hooks/version_utils.sh`](../../../scripts/release/hooks/version_utils.sh) - 版本工具
-  - [x] [`scripts/release/hooks/install_hooks.sh`](../../../scripts/release/hooks/install_hooks.sh) - Hooks 安装脚本
+  - [x] `scripts/release/hooks/pre-push.sample` - Push 前验证
+  - [x] `scripts/release/hooks/pre-commit.sample` - Commit 前检查
+  - [x] `scripts/release/hooks/version_utils.sh` - 版本工具
+  - [x] `scripts/release/hooks/install_hooks.sh` - Hooks 安装脚本
 - [x] Docker 构建脚本
-  - [x] [`scripts/build_helpers/docker_start.sh`](../../../scripts/build_helpers/docker_start.sh) - 本地 Docker 构建
-  - [x] [`scripts/build_helpers/ci_build_entry.sh`](../../../scripts/build_helpers/ci_build_entry.sh) - CI 入口 (自动架构检测)
-- [x] 配置部署流程 [`.github/workflows/deploy.yml`](../../../.github/workflows/deploy.yml) - MkDocs 文档自动部署
+  - [x] `scripts/build_helpers/docker_start.sh` - 本地 Docker 构建
+  - [x] `scripts/build_helpers/ci_build_entry.sh` - CI 入口 (自动架构检测)
+- [x] 配置部署流程 `.github/workflows/deploy.yml` - MkDocs 文档自动部署
 - [x] 测试完整构建流程
 
 #### Day 4-5: 开发工具完善
-- [x] 创建 VSCode 工作区配置 [`.vscode/settings.json`](../../../.vscode/settings.json)
+- [x] 创建 VSCode 工作区配置 `.vscode/settings.json`
   - [x] CMake 配置参数
   - [x] Clangd 配置
-- [x] 配置推荐扩展 [`.vscode/extensions.json`](../../../.vscode/extensions.json)
+- [x] 配置推荐扩展 `.vscode/extensions.json`
   - [x] CMake Tools
   - [x] C/C++
   - [x] clang-format
 - [x] 编写 Hello World 测试程序
-  - [x] `example/gui/theme/` - Material Gallery 示例
   - [x] `example/base/system/` - 系统信息示例
   - [x] `example/ui/widget/material/` - 控件示例
 - [x] 编写开发环境设置文档
-  - [x] [`document/development/README.md`](../../development/README.md) - 开发环境总览
-  - [x] [`document/development/01_prerequisites.md`](../../development/01_prerequisites.md) - 前置要求
-  - [x] [`document/development/02_quick_start.md`](../../development/02_quick_start.md) - 快速开始
-  - [x] [`document/development/03_build_system.md`](../../development/03_build_system.md) - 构建系统
-  - [x] [`document/development/04_development_tools.md`](../../development/04_development_tools.md) - 开发工具
-  - [x] [`document/development/05_docker_build.md`](../../development/05_docker_build.md) - Docker 构建
-  - [x] [`document/development/06_git_hooks.md`](../../development/06_git_hooks.md) - Git Hooks
-  - [x] [`document/development/07_troubleshooting.md`](../../development/07_troubleshooting.md) - 常见问题
+  - [x] `document/development/01_prerequisites.md` - 前置要求
+  - [x] `document/development/02_quick_start.md` - 快速开始
+  - [x] `document/development/03_build_system.md` - 构建系统
+  - [x] `document/development/04_development_tools.md` - 开发工具
+  - [x] `document/development/05_docker_build.md` - Docker 构建
+  - [x] `document/development/06_git_hooks.md` - Git Hooks
+  - [x] `document/development/07_troubleshooting.md` - 常见问题
 
 ---
 
@@ -434,12 +432,9 @@ CFDesktop/
 
 ## 九、相关文档
 
-- 原始TODO: [`../00_project_skeleton.md`](../00_project_skeleton.md)
-- 设计文档: [`../../design_stage/00_phase0_project_skeleton.md`](../../design_stage/00_phase0_project_skeleton.md)
-- 参考文档: [`./00_project_skeleton_ref.md`](./00_project_skeleton_ref.md)
-- 完成记录: [`./00_project_skeleton_done.md`](./00_project_skeleton_done.md)
-- 开发环境设置: [`../../development/README.md`](../../development/README.md)
-- Base库参考: [`./02_base_library_ref.md`](./02_base_library_ref.md)
+- 原始TODO: ~~已归档~~（原 `00_project_skeleton.md` 已删除）
+- 设计文档: `../../design_stage/00_phase0_project_skeleton.md`
+- 开发环境设置: `../../development/`
 
 ---
 

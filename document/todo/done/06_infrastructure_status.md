@@ -14,12 +14,12 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`base/include/system/gpu/gpu.h`](../../../base/include/system/gpu/gpu.h) | GPU/显示信息接口 |
-| [`base/system/gpu/gpu.cpp`](../../../base/system/gpu/gpu.cpp) | 跨平台实现 |
-| [`base/system/gpu/private/linux_impl/gpu_info.h`](../../../base/system/gpu/private/linux_impl/gpu_info.h) | Linux 接口 |
-| [`base/system/gpu/private/linux_impl/gpu_info.cpp`](../../../base/system/gpu/private/linux_impl/gpu_info.cpp) | Linux 实现 |
-| [`base/system/gpu/private/win_impl/gpu_info.h`](../../../base/system/gpu/private/win_impl/gpu_info.h) | Windows 接口 |
-| [`base/system/gpu/private/win_impl/gpu_info.cpp`](../../../base/system/gpu/private/win_impl/gpu_info.cpp) | Windows 实现 |
+| `base/include/system/gpu/gpu.h` | GPU/显示信息接口 |
+| `base/system/gpu/gpu.cpp` | 跨平台实现 |
+| `base/system/gpu/private/linux_impl/gpu_info.h` | Linux 接口 |
+| `base/system/gpu/private/linux_impl/gpu_info.cpp` | Linux 实现 |
+| `base/system/gpu/private/win_impl/gpu_info.h` | Windows 接口 |
+| `base/system/gpu/private/win_impl/gpu_info.cpp` | Windows 实现 |
 
 #### 功能实现
 
@@ -34,7 +34,7 @@
 
 #### 示例
 
-- 示例文件: [`example/base/system/example_gpu_info.cpp`](../../../example/base/system/example_gpu_info.cpp)
+- 示例文件: `example/base/system/example_gpu_info.cpp`
 
 ---
 
@@ -44,8 +44,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`base/include/system/network/network.h`](../../../base/include/system/network/network.h) | 网络信息接口 |
-| [`base/system/network/network.cpp`](../../../base/system/network/network.cpp) | 基于 Qt 的跨平台实现 |
+| `base/include/system/network/network.h` | 网络信息接口 |
+| `base/system/network/network.cpp` | 基于 Qt 的跨平台实现 |
 
 #### 功能实现
 
@@ -62,7 +62,7 @@
 
 #### 示例
 
-- 示例文件: [`example/base/system/example_network_info.cpp`](../../../example/base/system/example_network_info.cpp)
+- 示例文件: `example/base/system/example_network_info.cpp`
 
 ---
 
@@ -72,11 +72,10 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/base/config_manager/include/cfconfig.hpp`](../../../desktop/base/config_manager/include/cfconfig.hpp) | 主接口定义 |
-| [`desktop/base/config_manager/src/cfconfig.cpp`](../../../desktop/base/config_manager/src/cfconfig.cpp) | 主要实现 |
-| [`desktop/base/config_manager/include/cfconfig_layer.h`](../../../desktop/base/config_manager/include/cfconfig_layer.h) | 层级定义 |
-| [`desktop/base/config_manager/include/cfconfig/cfconfig_watcher.h`](../../../desktop/base/config_manager/include/cfconfig/cfconfig_watcher.h) | 监听器定义 |
-| [`desktop/base/config_manager/include/cfconfig/cfconfig_path_provider.h`](../../../desktop/base/config_manager/include/cfconfig/cfconfig_path_provider.h) | 路径提供者 |
+| `desktop/base/config_manager/src/cfconfig.cpp` | 主要实现 |
+| `desktop/base/config_manager/include/cfconfig_layer.h` | 层级定义 |
+| `desktop/base/config_manager/include/cfconfig/cfconfig_watcher.h` | 监听器定义 |
+| `desktop/base/config_manager/include/cfconfig/cfconfig_path_provider.h` | 路径提供者 |
 
 #### 功能实现
 
@@ -104,11 +103,10 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/base/logger/include/cflog/cflog.hpp`](../../../desktop/base/logger/include/cflog/cflog.hpp) | Logger 主接口 |
-| [`desktop/base/logger/include/cflog/cflog_sink.h`](../../../desktop/base/logger/include/cflog/cflog_sink.h) | Sink 接口 |
-| [`desktop/base/logger/include/cflog/sinks/console_sink.h`](../../../desktop/base/logger/include/cflog/sinks/console_sink.h) | 控制台输出 |
-| [`desktop/base/logger/include/cflog/sinks/file_sink.h`](../../../desktop/base/logger/include/cflog/sinks/file_sink.h) | 文件输出 |
-| [`desktop/base/logger/include/cflog.h`](../../../desktop/base/logger/include/cflog.h) | CF_LOG 宏系列 |
+| `desktop/base/logger/include/cflog/cflog_sink.h` | Sink 接口 |
+| `desktop/base/logger/include/cflog/sinks/console_sink.h` | 控制台输出 |
+| `desktop/base/logger/include/cflog/sinks/file_sink.h` | 文件输出 |
+| `desktop/base/logger/include/cflog.h` | CF_LOG 宏系列 |
 
 #### 功能实现
 
@@ -124,7 +122,7 @@
 
 #### 示例
 
-- 示例文件: [`example/desktop/base/logger/logger_init.cpp`](../../../example/desktop/base/logger/logger_init.cpp)
+- 示例文件: `example/desktop/base/logger/logger_init.cpp`
 
 ---
 
@@ -159,8 +157,8 @@
 ## 三、相关文档
 
 - 原始 TODO: [`../desktop/06_infrastructure.md`](../desktop/06_infrastructure.md)
-- GPU/Network 状态: [`../done/01_hardware_probe_status.md`](../done/01_hardware_probe_status.md)
-- Logger 文档: [`../../../document/desktop/base/logger/`](../../../document/desktop/base/logger/)
+- GPU/Network 状态: [`./01_hardware_probe_status.md`](./01_hardware_probe_status.md)
+- Logger 文档: (见 desktop/base/logger/)
 
 ---
 

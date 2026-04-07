@@ -1,0 +1,7 @@
+title: 动画
+nav:
+  - 动画工厂: cfmaterial_animation_factory.md
+  - 动画策略: cfmaterial_animation_strategy.md
+  - 淡入淡出: cfmaterial_fade_animation.md
+  - 缩放动画: cfmaterial_scale_animation.md
+  - 滑动动画: cfmaterial_slide_animation.md

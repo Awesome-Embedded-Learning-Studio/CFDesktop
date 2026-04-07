@@ -112,8 +112,6 @@ int main() {
 
 ## 代码示例
 
-完整的示例代码位于：[example/desktop/base/config_manager/example_usage.cpp](../../../../../example/desktop/base/config_manager/example_usage.cpp)
-
 运行示例：
 
 ```bash
@@ -129,5 +127,3 @@ cd build/example/desktop/base/config_manager
 ## 相关链接
 
 - **API 参考手册**: [document/desktop/base/config_manager/](../../../../../document/desktop/base/config_manager/)
-- 源代码: [desktop/base/config_manager/](../../../../../desktop/base/config_manager/)
-- 测试代码: [test/config_manager/](../../../../../test/config_manager/)

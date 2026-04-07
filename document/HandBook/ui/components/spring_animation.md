@@ -138,4 +138,4 @@ bool isSettled() {
 
 - [ICFAbstractAnimation - 动画基类](./animation.md)
 - [ICFTimingAnimation - 时间动画](./timing_animation.md)
-- [Easing - 缓动曲线和弹簧预设](../../base/easing.md)
+- [Easing - 缓动曲线和弹簧预设](../base/easing.md)

@@ -1,0 +1,6 @@
+title: CPU
+nav:
+  - 概览: overview.md
+  - CFCpu: cfcpu.md
+  - CFCpu Bonus: cfcpu_bonus.md
+  - 性能分析: cfcpu_profile.md

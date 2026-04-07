@@ -567,7 +567,7 @@ echo ""
 
 完成前置要求安装和验证后，请继续阅读：
 
-- **[02. 环境配置](02_environment.md)** - 配置 Qt6 路径、编译器和构建选项
+- **[02. 快速开始](02_quick_start.md)** - 快速上手开发
 - **[03. 构建系统](03_build_system.md)** - 了解 CMake 构建系统和编译命令
 
 ---
@@ -644,7 +644,7 @@ sudo apt install qt6-base-dev qt6-tools-dev
 
 <div align="center">
 
-  [&larr; 返回](README.md) | [环境配置 &rarr;](02_environment.md)
+  [&larr; 返回](./) | [快速开始 &rarr;](02_quick_start.md)
 
   **版本**: 0.13.1 | **最后更新**: 2026-03-30
 

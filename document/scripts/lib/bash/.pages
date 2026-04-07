@@ -1,0 +1,8 @@
+title: Bash 库
+nav:
+  - 参数库: lib_args.sh.md
+  - 构建库: lib_build.sh.md
+  - 通用库: lib_common.sh.md
+  - 配置库: lib_config.sh.md
+  - Git 库: lib_git.sh.md
+  - 路径库: lib_paths.sh.md

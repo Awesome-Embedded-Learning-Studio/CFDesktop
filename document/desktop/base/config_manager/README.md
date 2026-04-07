@@ -21,4 +21,3 @@
 ## 相关文档
 
 - [使用手册](../../HandBook/desktop/base/config_manager/) - 快速入门和最佳实践
-- [架构设计](../../design_stage/config_store_architecture.md) - 设计文档

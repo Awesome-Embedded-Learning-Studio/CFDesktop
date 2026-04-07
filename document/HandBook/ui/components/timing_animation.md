@@ -96,4 +96,4 @@ fadeIn->start();
 
 - [ICFAbstractAnimation - 动画基类](./animation.md)
 - [ICFSpringAnimation - 弹簧动画](./spring_animation.md)
-- [IMotionSpec - 运动规范](../../core/motion_spec.md)
+- [IMotionSpec - 运动规范](../core/motion_spec.md)

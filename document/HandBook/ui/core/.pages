@@ -1,0 +1,10 @@
+title: 核心模块
+nav:
+  - 主题: theme.md
+  - 配色方案: color_scheme.md
+  - 字体类型: font_type.md
+  - 运动规格: motion_spec.md
+  - 圆角缩放: radius_scale.md
+  - 主题工厂: theme_factory.md
+  - 主题管理器: theme_manager.md
+  - Token 系统: token

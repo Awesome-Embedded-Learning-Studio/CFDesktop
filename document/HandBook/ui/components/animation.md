@@ -85,4 +85,4 @@ cf::WeakPtr<ICFAbstractAnimation> weak = anim->GetWeakPtr();
 
 - [CFTimingAnimation - 时间动画](./timing_animation.md)
 - [CFSpringAnimation - 弹簧动画](./spring_animation.md)
-- [Easing - 缓动曲线](../../base/easing.md)
+- [Easing - 缓动曲线](../base/easing.md)

@@ -1,0 +1,12 @@
+title: 首页
+nav:
+  - HandBook
+  - Development: development
+  - Desktop: desktop
+  - CI/CD: ci
+  - Scripts: scripts
+  - Design Stage: design_stage
+  - Notes: notes
+  - TODO: todo
+  - Optimize: optimize
+  - Release Rule: release_rule

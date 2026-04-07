@@ -66,6 +66,22 @@ jobs:
                     --output ./document/api \
                     --config doxybook.json
 
+      # 6.5. 为自动生成的 API 文档配置导航
+      - name: 配置 API 导航
+        run: |
+          cat > document/api/.pages <<'EOF'
+          title: API 自动文档
+          icon: material/file-document
+          nav:
+            - 命名空间: Namespaces
+            - 类: Classes
+            - 文件: Files
+          EOF
+
+      # 6.6. 修复 doxybook2 生成的相对链接路径
+      - name: 修复 API 文档链接
+        run: python3 scripts/document/fix_doxybook_links.py
+
       # 7. 构建网站
       - name: 构建网站
         run: mkdocs build --clean

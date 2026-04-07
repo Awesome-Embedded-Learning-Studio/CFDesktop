@@ -674,7 +674,7 @@ This will:
 - [Quick Start Guide](02_quick_start.md) - Get started in 30 minutes
 - [Project Skeleton Design](../design_stage/00_phase0_project_skeleton.md) - Detailed project architecture
 - [Base Library Design](../design_stage/02_phase2_base_library.md) - Base module documentation
-- [UI Framework Design](../todo/99_ui_material_framework.md) - UI module documentation
+- [UI Framework Design](../todo/base/99_ui_material_framework.md) - UI module documentation
 
 ---
 

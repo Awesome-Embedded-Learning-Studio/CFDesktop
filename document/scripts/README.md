@@ -24,7 +24,7 @@ scripts/
 ## 快速导航
 
 ### 构建相关
-- [构建辅助脚本](build_helpers/README.md) - Linux/Windows构建脚本
+- [构建辅助脚本](build_helpers/) - Linux/Windows构建脚本
 
 ### 开发工具
 - [依赖安装](dependency/install_build_dependencies.sh.md) - 环境配置
@@ -35,11 +35,11 @@ scripts/
 - [Docker配置](docker/Dockerfile.build.md) - 构建环境镜像
 
 ### 库文件
-- [Bash库](lib/bash/README.md) - Bash函数库
-- [PowerShell库](lib/powershell/README.md) - PowerShell模块
+- [Bash库](lib/bash/) - Bash函数库
+- [PowerShell库](lib/powershell/) - PowerShell模块
 
 ### 版本控制
-- [Git钩子](release/hooks/README.md) - Git hooks配置
+- [Git钩子](release/hooks/) - Git hooks配置
 
 ## 文档规范
 

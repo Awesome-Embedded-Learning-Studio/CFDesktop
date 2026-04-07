@@ -282,5 +282,5 @@ void parseSmbiosMemoryDevices(const uint8_t* data, uint32_t length,
 
 ## 相关文档
 
-- [Memory 信息 API](../../api/system/memory/memory_info.md)
-- [Linux 平台内存实现](../linux/memory_implementation.md)
+- [Memory 信息 API](../../../../api/system/memory/memory_info/)
+- [Linux 平台内存实现](../../linux/memory/memory_implementation.md)

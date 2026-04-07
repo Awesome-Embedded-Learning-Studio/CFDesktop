@@ -69,12 +69,12 @@ ui/base             -> QtCore only (no QtWidgets/QtGui)
 
 | 文件 | 路径 | 功能 |
 |------|------|------|
-| MathHelper | [ui/base/math_helper.h](../../../ui/base/math_helper.h) | 插值、钳位、曲线求值 |
-| Color | [ui/base/color.h](../../../ui/base/color.h) | 颜色空间转换、HCT支持 |
-| ColorHelper | [ui/base/color_helper.h](../../../ui/base/color_helper.h) | 颜色混合、对比度 |
-| Easing | [ui/base/easing.h](../../../ui/base/easing.h) | Material缓动曲线 |
-| GeometryHelper | [ui/base/geometry_helper.h](../../../ui/base/geometry_helper.h) | 圆角形状生成 |
-| DevicePixel | [ui/base/device_pixel.h](../../../ui/base/device_pixel.h) | DPI单位转换 |
+| MathHelper | `ui/base/math_helper.h` | 插值、钳位、曲线求值 |
+| Color | `ui/base/color.h` | 颜色空间转换、HCT支持 |
+| ColorHelper | `ui/base/color_helper.h` | 颜色混合、对比度 |
+| Easing | `ui/base/easing.h` | Material缓动曲线 |
+| GeometryHelper | `ui/base/geometry_helper.h` | 圆角形状生成 |
+| DevicePixel | `ui/base/device_pixel.h` | DPI单位转换 |
 
 **核心特性:**
 - 零 Qt UI 依赖 (仅 QtCore)
@@ -99,47 +99,42 @@ Component Token (widget-specific)
 #### 已完成文件
 
 **核心接口:**
-- [ui/core/theme_manager.h](../../../ui/core/theme_manager.h) - 主题管理器单例
-- [ui/core/color_scheme.h](../../../ui/core/color_scheme.h) - 颜色方案接口
-- [ui/core/font_type.h](../../../ui/core/font_type.h) - 字体类型接口
-- [ui/core/motion_spec.h](../../../ui/core/motion_spec.h) - 动画规范接口
-- [ui/core/radius_scale.h](../../../ui/core/radius_scale.h) - 形状缩放接口
+- `ui/core/theme_manager.h` - 主题管理器单例
+- `ui/core/color_scheme.h` - 颜色方案接口
+- `ui/core/font_type.h` - 字体类型接口
+- `ui/core/motion_spec.h` - 动画规范接口
+- `ui/core/radius_scale.h` - 形状缩放接口
 
 **Material 实现:**
-- [ui/core/material/cfmaterial_scheme.h](../../../ui/core/material/cfmaterial_scheme.h) - Material 颜色实现
-- [ui/core/material/cfmaterial_theme.h](../../../ui/core/material/cfmaterial_theme.h) - Material 主题
-- [ui/core/material/cfmaterial_fonttype.h](../../../ui/core/material/cfmaterial_fonttype.h) - Material 字体实现
-- [ui/core/material/cfmaterial_motion.h](../../../ui/core/material/cfmaterial_motion.h) - Material 动画实现
-- [ui/core/material/cfmaterial_radius_scale.h](../../../ui/core/material/cfmaterial_radius_scale.h) - Material 形状实现
-- [ui/core/material/material_factory.h](../../../ui/core/material/material_factory.h) - Material 主题工厂
+- `ui/core/material/cfmaterial_scheme.h` - Material 颜色实现
+- `ui/core/material/cfmaterial_theme.h` - Material 主题
+- `ui/core/material/cfmaterial_fonttype.h` - Material 字体实现
+- `ui/core/material/cfmaterial_motion.h` - Material 动画实现
+- `ui/core/material/cfmaterial_radius_scale.h` - Material 形状实现
+- `ui/core/material/material_factory.h` - Material 主题工厂
 
-**Token 目录:**
-- [ui/core/token/material_scheme/](../../../ui/core/token/material_scheme/) - 颜色 token
-- [ui/core/token/motion/](../../../ui/core/token/motion/) - 动画 token
-- [ui/core/token/radius_scale/](../../../ui/core/token/radius_scale/) - 形状 token
-- [ui/core/token/typography/](../../../ui/core/token/typography/) - 字体 token
-- [ui/core/token/theme_name/](../../../ui/core/token/theme_name/) - 主题名称
+**Token 目录:** (参见 ui/core/token/ 源码)
 
 ### 3.3 Layer 3: Animation Engine (100%)
 
 #### 已完成文件
 
 **核心接口:**
-- [ui/components/animation.h](../../../ui/components/animation.h) - ICFAbstractAnimation 基类
-- [ui/components/timing_animation.h](../../../ui/components/timing_animation.h) - ICFTimingAnimation (基于时间)
-- [ui/components/animation_factory_manager.h](../../../ui/components/animation_factory_manager.h) - 动画工厂管理器
+- `ui/components/animation.h` - ICFAbstractAnimation 基类
+- `ui/components/timing_animation.h` - ICFTimingAnimation (基于时间)
+- `ui/components/animation_factory_manager.h` - 动画工厂管理器
 
 **Material 实现:**
-- [ui/components/material/cfmaterial_animation_factory.h](../../../ui/components/material/cfmaterial_animation_factory.h) - Material 工厂实现
-- [ui/components/material/cfmaterial_animation_strategy.h](../../../ui/components/material/cfmaterial_animation_strategy.h) - 动画策略模式
-- [ui/components/material/cfmaterial_fade_animation.h](../../../ui/components/material/cfmaterial_fade_animation.h) - 淡入淡出
-- [ui/components/material/cfmaterial_scale_animation.h](../../../ui/components/material/cfmaterial_scale_animation.h) - 缩放变换
-- [ui/components/material/cfmaterial_slide_animation.h](../../../ui/components/material/cfmaterial_slide_animation.h) - 滑动动画
-- [ui/components/material/cfmaterial_property_animation.h](../../../ui/components/material/cfmaterial_property_animation.h) - Qt 属性动画包装器
+- `ui/components/material/cfmaterial_animation_factory.h` - Material 工厂实现
+- `ui/components/material/cfmaterial_animation_strategy.h` - 动画策略模式
+- `ui/components/material/cfmaterial_fade_animation.h` - 淡入淡出
+- `ui/components/material/cfmaterial_scale_animation.h` - 缩放变换
+- `ui/components/material/cfmaterial_slide_animation.h` - 滑动动画
+- `ui/components/material/cfmaterial_property_animation.h` - Qt 属性动画包装器
 
 **Tokens:**
-- [ui/components/material/token/animation_token_literals.h](../../../ui/components/material/token/animation_token_literals.h) - 动画 token 定义
-- [ui/components/material/token/animation_token_mapping.h](../../../ui/components/material/token/animation_token_mapping.h) - Token 到动画映射
+- `ui/components/material/token/animation_token_literals.h` - 动画 token 定义
+- `ui/components/material/token/animation_token_mapping.h` - Token 到动画映射
 
 #### 动画状态
 
@@ -164,11 +159,11 @@ Idle -> Running -> (Paused | Finished)
 
 | 组件 | 文件 | 功能 |
 |------|------|------|
-| StateMachine | [ui/widget/material/base/state_machine.h](../../../ui/widget/material/base/state_machine.h) | 视觉状态管理 |
-| PainterLayer | [ui/widget/material/base/painter_layer.h](../../../ui/widget/material/base/painter_layer.h) | 颜色叠加层绘制 |
-| RippleHelper | [ui/widget/material/base/ripple_helper.h](../../../ui/widget/material/base/ripple_helper.h) | 涟漪效果控制器 |
-| ElevationController | [ui/widget/material/base/elevation_controller.h](../../../ui/widget/material/base/elevation_controller.h) | 阴影/海拔系统 |
-| FocusRing | [ui/widget/material/base/focus_ring.h](../../../ui/widget/material/base/focus_ring.h) | 焦点环渲染器 |
+| StateMachine | `ui/widget/material/base/state_machine.h` | 视觉状态管理 |
+| PainterLayer | `ui/widget/material/base/painter_layer.h` | 颜色叠加层绘制 |
+| RippleHelper | `ui/widget/material/base/ripple_helper.h` | 涟漪效果控制器 |
+| ElevationController | `ui/widget/material/base/elevation_controller.h` | 阴影/海拔系统 |
+| FocusRing | `ui/widget/material/base/focus_ring.h` | 焦点环渲染器 |
 
 #### 状态机状态与透明度
 
@@ -199,13 +194,13 @@ Idle -> Running -> (Paused | Finished)
 
 | 控件 | 文件 | Qt 基类 | 功能 |
 |------|------|---------|------|
-| **Button** | [ui/widget/material/widget/button/](../../../ui/widget/material/widget/button/) | QPushButton | 5种变体、阴影、涟漪 |
-| **TextField** | [ui/widget/material/widget/textfield/](../../../ui/widget/material/widget/textfield/) | QLineEdit | 浮空标签、前后图标、计数器 |
-| **TextArea** | [ui/widget/material/widget/textarea/](../../../ui/widget/material/widget/textarea/) | QTextEdit | 多行文本输入 |
-| **Label** | [ui/widget/material/widget/label/](../../../ui/widget/material/widget/label/) | QLabel | 文本显示 |
-| **CheckBox** | [ui/widget/material/widget/checkbox/](../../../ui/widget/material/widget/checkbox/) | QCheckBox | 复选框 |
-| **RadioButton** | [ui/widget/material/widget/radiobutton/](../../../ui/widget/material/widget/radiobutton/) | QRadioButton | 单选按钮 |
-| **GroupBox** | [ui/widget/material/widget/groupbox/](../../../ui/widget/material/widget/groupbox/) | QGroupBox | 分组容器 |
+| **Button** | `ui/widget/material/widget/button/` | QPushButton | 5种变体、阴影、涟漪 |
+| **TextField** | `ui/widget/material/widget/textfield/` | QLineEdit | 浮空标签、前后图标、计数器 |
+| **TextArea** | `ui/widget/material/widget/textarea/` | QTextEdit | 多行文本输入 |
+| **Label** | `ui/widget/material/widget/label/` | QLabel | 文本显示 |
+| **CheckBox** | `ui/widget/material/widget/checkbox/` | QCheckBox | 复选框 |
+| **RadioButton** | `ui/widget/material/widget/radiobutton/` | QRadioButton | 单选按钮 |
+| **GroupBox** | `ui/widget/material/widget/groupbox/` | QGroupBox | 分组容器 |
 
 #### Button 变体
 - Filled (primary) - 填充主按钮
@@ -231,25 +226,25 @@ Idle -> Running -> (Paused | Finished)
 
 | 控件 | Qt 基类 | 路径 | Demo |
 |------|---------|------|------|
-| **Button** | QPushButton | [button/](../../../ui/widget/material/widget/button/) | ButtonDemo |
-| **CheckBox** | QCheckBox | [checkbox/](../../../ui/widget/material/widget/checkbox/) | CheckBoxDemo |
-| **ComboBox** | QComboBox | [comboBox/](../../../ui/widget/material/widget/comboBox/) | ComboBoxDemo |
-| **DoubleSpinBox** | QDoubleSpinBox | [doublespinbox/](../../../ui/widget/material/widget/doublespinbox/) | DoubleSpinBoxDemo |
-| **GroupBox** | QGroupBox | [groupbox/](../../../ui/widget/material/widget/groupbox/) | GroupBoxDemo |
-| **Label** | QLabel | [label/](../../../ui/widget/material/widget/label/) | LabelDemo |
-| **ListView** | QListView | [listview/](../../../ui/widget/material/widget/listview/) | ListViewDemo |
-| **ProgressBar** | QProgressBar | [progressbar/](../../../ui/widget/material/widget/progressbar/) | ProgressBarDemo |
-| **RadioButton** | QRadioButton | [radiobutton/](../../../ui/widget/material/widget/radiobutton/) | RadioButtonDemo |
-| **ScrollView** | QScrollArea | [scrollview/](../../../ui/widget/material/widget/scrollview/) | ScrollViewDemo |
-| **Separator** | QFrame | [separator/](../../../ui/widget/material/widget/separator/) | SeparatorDemo |
-| **Slider** | QSlider | [slider/](../../../ui/widget/material/widget/slider/) | SliderDemo |
-| **SpinBox** | QSpinBox | [spinbox/](../../../ui/widget/material/widget/spinbox/) | SpinBoxDemo |
-| **Switch** | QCheckBox | [switch/](../../../ui/widget/material/widget/switch/) | SwitchDemo |
-| **TabView** | QTabWidget | [tabview/](../../../ui/widget/material/widget/tabview/) | TabViewDemo |
-| **TableView** | QTableView | [tableview/](../../../ui/widget/material/widget/tableview/) | TableViewDemo |
-| **TextArea** | QTextEdit | [textarea/](../../../ui/widget/material/widget/textarea/) | TextAreaDemo |
-| **TextField** | QLineEdit | [textfield/](../../../ui/widget/material/widget/textfield/) | TextFieldDemo |
-| **TreeView** | QTreeView | [treeview/](../../../ui/widget/material/widget/treeview/) | TreeViewDemo |
+| **Button** | QPushButton | `button/` | ButtonDemo |
+| **CheckBox** | QCheckBox | `checkbox/` | CheckBoxDemo |
+| **ComboBox** | QComboBox | `comboBox/` | ComboBoxDemo |
+| **DoubleSpinBox** | QDoubleSpinBox | `doublespinbox/` | DoubleSpinBoxDemo |
+| **GroupBox** | QGroupBox | `groupbox/` | GroupBoxDemo |
+| **Label** | QLabel | `label/` | LabelDemo |
+| **ListView** | QListView | `listview/` | ListViewDemo |
+| **ProgressBar** | QProgressBar | `progressbar/` | ProgressBarDemo |
+| **RadioButton** | QRadioButton | `radiobutton/` | RadioButtonDemo |
+| **ScrollView** | QScrollArea | `scrollview/` | ScrollViewDemo |
+| **Separator** | QFrame | `separator/` | SeparatorDemo |
+| **Slider** | QSlider | `slider/` | SliderDemo |
+| **SpinBox** | QSpinBox | `spinbox/` | SpinBoxDemo |
+| **Switch** | QCheckBox | `switch/` | SwitchDemo |
+| **TabView** | QTabWidget | `tabview/` | TabViewDemo |
+| **TableView** | QTableView | `tableview/` | TableViewDemo |
+| **TextArea** | QTextEdit | `textarea/` | TextAreaDemo |
+| **TextField** | QLineEdit | `textfield/` | TextFieldDemo |
+| **TreeView** | QTreeView | `treeview/` | TreeViewDemo |
 
 ### 4.2 Layer 5: P2 高级控件 (0/27)
 
@@ -409,22 +404,22 @@ void Widget::paintEvent(QPaintEvent* event) {
 ### 已实现的测试
 
 **ui/base 测试:**
-- [math_helper_test.cpp](../../../test/ui/base/math_helper_test.cpp)
-- [color_test.cpp](../../../test/ui/base/color_test.cpp)
-- [color_helper_test.cpp](../../../test/ui/base/color_helper_test.cpp)
-- [device_pixel_test.cpp](../../../test/ui/base/device_pixel_test.cpp)
-- [geometry_helper_test.cpp](../../../test/ui/base/geometry_helper_test.cpp)
-- [easing_test.cpp](../../../test/ui/base/easing_test.cpp)
+- `math_helper_test.cpp`
+- `color_test.cpp`
+- `color_helper_test.cpp`
+- `device_pixel_test.cpp`
+- `geometry_helper_test.cpp`
+- `easing_test.cpp`
 
 **ui/components 测试:**
-- [state_machine_test.cpp](../../../test/ui/components/state_machine_test.cpp)
-- [ripple_helper_test.cpp](../../../test/ui/components/ripple_helper_test.cpp)
-- [elevation_controller_test.cpp](../../../test/ui/components/elevation_controller_test.cpp)
-- [focus_ring_test.cpp](../../../test/ui/components/focus_ring_test.cpp)
-- [painter_layer_test.cpp](../../../test/ui/components/painter_layer_test.cpp)
+- `state_machine_test.cpp`
+- `ripple_helper_test.cpp`
+- `elevation_controller_test.cpp`
+- `focus_ring_test.cpp`
+- `painter_layer_test.cpp`
 
 **ui/core 测试:**
-- [token_test.cpp](../../../test/ui/core/token_test.cpp)
+- `token_test.cpp`
 
 ### 关键缺口: UI控件测试
 
@@ -621,10 +616,7 @@ d:\ProjectHome\CFDesktop\ui\core\
 
 ## 九、相关文档
 
-- 原始TODO: [../99_ui_material_framework.md](../99_ui_material_framework.md)
-- 架构规范: [../../ui/MaterialRules.md](../../ui/MaterialRules.md)
-- Layer 1-4 完成归档: [./99_ui_layer1-4_and_p0_widgets_done.md](./99_ui_layer1-4_and_p0_widgets_done.md)
-- 测试报告: [./05_testing_foundation_done.md](./05_testing_foundation_done.md)
+- 原始TODO: [../base/99_ui_material_framework.md](../base/99_ui_material_framework.md)
 
 ---
 

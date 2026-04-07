@@ -1,0 +1,3 @@
+title: 依赖安装
+nav:
+  - 构建依赖: install_build_dependencies.sh.md

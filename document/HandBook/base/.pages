@@ -1,0 +1,18 @@
+title: 基础工具库
+icon: material/toolbox
+nav:
+  - 总览: overview.md
+  - expected 错误处理: expected.md
+  - span 视图: span.md
+  - 宏工具: macros.md
+  - 宏定义: macro
+  - Linux 工具: linux
+  - 单例模式: singleton.md
+  - 作用域守卫: scope_guard.md
+  - 工厂模式: factory.md
+  - 哈希: hash.md
+  - MPSC 队列: mpsc_queue.md
+  - 一次初始化: once_init.md
+  - 策略链: policy_chain.md
+  - 弱引用: weak_ptr.md
+  - 弱引用工厂: weak_ptr_factory.md

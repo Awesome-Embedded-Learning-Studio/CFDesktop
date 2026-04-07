@@ -1,0 +1,11 @@
+title: 脚本文档
+icon: material/console
+nav:
+  - 构建辅助: build_helpers
+  - 依赖安装: dependency
+  - 开发脚本: develop
+  - Docker: docker
+  - 文档工具: document
+  - Doxygen: doxygen
+  - 脚本库: lib
+  - 发布: release

@@ -121,5 +121,5 @@ mainLayout->addWidget(addressGroup);
 
 ## 相关文档
 
-- [MdElevationController - 阴影控制器](../../base/elevation_controller.md)
+- [MdElevationController - 阴影控制器](../base/elevation_controller.md)
 - [Material Design 3 容器规范](https://m3.material.io/components/cards)

@@ -1,0 +1,22 @@
+title: Widget
+nav:
+  - Button: button.md
+  - Checkbox: checkbox.md
+  - ComboBox: combobox.md
+  - DoubleSpinBox: doublespinbox.md
+  - GroupBox: groupbox.md
+  - Label: label.md
+  - ListView: listview.md
+  - ProgressBar: progressbar.md
+  - RadioButton: radiobutton.md
+  - ScrollView: scrollview.md
+  - Separator: separator.md
+  - Slider: slider.md
+  - SpinBox: spinbox.md
+  - 状态机: state_machine.md
+  - Switch: switch.md
+  - TableView: tableview.md
+  - TabView: tabview.md
+  - TextArea: textarea.md
+  - TextField: textfield.md
+  - TreeView: treeview.md

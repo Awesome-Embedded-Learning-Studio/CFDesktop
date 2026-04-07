@@ -129,5 +129,5 @@ Slider 的 `paintEvent` 实现以下绘制步骤：
 ## 相关文档
 
 - [ProgressBar - Material 进度条](./progressbar.md)
-- [MdElevationController - 阴影控制器](../../base/elevation_controller.md)
+- [MdElevationController - 阴影控制器](../base/elevation_controller.md)
 - [Material Design 3 滑块规范](https://m3.material.io/components/sliders)

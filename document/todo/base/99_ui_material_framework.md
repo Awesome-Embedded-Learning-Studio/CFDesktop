@@ -3,7 +3,6 @@
 > **状态**: ⬜ 高级控件待实现
 > **预计周期**: 持续迭代
 > **依赖阶段**: Phase 0-3
-> **参考文档**: [../../ui/MaterialRules.md](../../ui/MaterialRules.md)
 
 **完成进度**:
 - ✅ Layer 1-4: 基础框架 (100%) - 已归档
@@ -12,9 +11,7 @@
 - ⬜ P2控件 (0/27)
 - ⬜ P3控件 (0/25)
 
-**已完成归档**:
-- [Layer 1-4 及 P0 控件](done/99_ui_layer1-4_and_p0_widgets_done.md)
-- [P1 控件](done/08_p1_controls_status.md)
+**已完成归档**: (已归档)
 
 ---
 
@@ -187,8 +184,7 @@ Layer 1: Core Math & Utility Layer (math_helper, color, geometry, ...)
 
 ## 五、相关文档
 
-- 架构规范: [../../ui/MaterialRules.md](../../ui/MaterialRules.md)
-- 依赖: [00_project_skeleton.md](../00_project_skeleton.md), [02_input_layer.md](02_input_layer.md)
+- 依赖: [工程骨架状态](../done/00_project_skeleton_status.md), [02_input_layer.md](02_input_layer.md)
 
 ---
 

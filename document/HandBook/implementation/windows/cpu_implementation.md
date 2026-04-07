@@ -178,4 +178,4 @@ cf::ScopeGuard varGuard([&vtProp]() { VariantClear(&vtProp); });
 ## 相关文档
 
 - [Linux 平台实现](../linux/cpu_implementation.md)
-- [CPU 模块概述](../../api/system/cpu/overview.md)
+- [CPU 模块概述](../../../api/system/cpu/overview/)

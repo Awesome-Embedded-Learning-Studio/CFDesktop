@@ -155,5 +155,5 @@ if (anim) {  // 这里会失败，WeakPtr 已经失效
 ## 相关文档
 
 - [AnimationStrategy - 动画策略](./cfmaterial_animation_strategy.md)
-- [动画 Token 映射](../../material/token/animation_token_mapping.md)
+- [动画 Token 映射](../../core/token/motion/cfmaterial_motion_token_literals.md)
 - [Material Design 3 运动规范](https://m3.material.io/styles/motion)

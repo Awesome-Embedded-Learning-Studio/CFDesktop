@@ -439,10 +439,8 @@ public:
 
 如果以上方法无法解决问题：
 
-1. 检查 [测试代码](../../../../test/logger/) 了解正确用法
-2. 查看 [示例代码](../../../../example/desktop/base/logger/)
-3. 参考 [API 文档](../../../../desktop/base/logger/api_reference.md)
-4. 搜索或提交 Issue 到项目仓库
+1. 参考 [API 文档](../../../../desktop/base/logger/api_reference.md)
+2. 搜索或提交 Issue 到项目仓库
 
 ## 常用调试命令
 

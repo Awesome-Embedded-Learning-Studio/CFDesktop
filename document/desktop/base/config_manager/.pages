@@ -1,0 +1,9 @@
+title: 配置管理器
+nav:
+  - index.md
+  - API 类型: 02-api-types.md
+  - 查询 API: 03-api-query.md
+  - 写入 API: 04-api-write.md
+  - 监听 API: 05-api-watch.md
+  - 持久化 API: 06-api-persist.md
+  - 单例 API: 07-api-singleton.md

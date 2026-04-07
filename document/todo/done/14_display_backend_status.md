@@ -14,8 +14,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/components/IDisplayServerBackend.h`](../../../desktop/ui/components/IDisplayServerBackend.h) | 显示服务器后端抽象接口 |
-| [`desktop/ui/components/IDisplayServerBackend.cpp`](../../../desktop/ui/components/IDisplayServerBackend.cpp) | 接口实现 |
+| `desktop/ui/components/IDisplayServerBackend.h` | 显示服务器后端抽象接口 |
+| `desktop/ui/components/IDisplayServerBackend.cpp` | 接口实现 |
 
 #### 功能实现
 
@@ -40,8 +40,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/components/IWindowBackend.h`](../../../desktop/ui/components/IWindowBackend.h) | 窗口后端抽象接口 |
-| [`desktop/ui/components/IWindowBackend.cpp`](../../../desktop/ui/components/IWindowBackend.cpp) | 接口实现 |
+| `desktop/ui/components/IWindowBackend.h` | 窗口后端抽象接口 |
+| `desktop/ui/components/IWindowBackend.cpp` | 接口实现 |
 
 #### 功能实现
 
@@ -58,8 +58,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/components/IWindow.h`](../../../desktop/ui/components/IWindow.h) | 平台无关窗口接口 |
-| [`desktop/ui/components/IWindow.cpp`](../../../desktop/ui/components/IWindow.cpp) | 接口实现 |
+| `desktop/ui/components/IWindow.h` | 平台无关窗口接口 |
+| `desktop/ui/components/IWindow.cpp` | 接口实现 |
 
 #### 功能实现
 
@@ -78,8 +78,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/platform/windows/windows_display_server_backend.h`](../../../desktop/ui/platform/windows/windows_display_server_backend.h) | Windows 显示服务器后端 |
-| [`desktop/ui/platform/windows/windows_display_server_backend.cpp`](../../../desktop/ui/platform/windows/windows_display_server_backend.cpp) | 实现 |
+| `desktop/ui/platform/windows/windows_display_server_backend.h` | Windows 显示服务器后端 |
+| `desktop/ui/platform/windows/windows_display_server_backend.cpp` | 实现 |
 
 #### 功能实现
 
@@ -97,8 +97,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/platform/windows/windows_window_backend.h`](../../../desktop/ui/platform/windows/windows_window_backend.h) | Windows 窗口后端 |
-| [`desktop/ui/platform/windows/windows_window_backend.cpp`](../../../desktop/ui/platform/windows/windows_window_backend.cpp) | 实现 |
+| `desktop/ui/platform/windows/windows_window_backend.h` | Windows 窗口后端 |
+| `desktop/ui/platform/windows/windows_window_backend.cpp` | 实现 |
 
 #### 功能实现
 
@@ -116,8 +116,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/platform/windows/windows_window.h`](../../../desktop/ui/platform/windows/windows_window.h) | Win32 HWND 窗口包装 |
-| [`desktop/ui/platform/windows/windows_window.cpp`](../../../desktop/ui/platform/windows/windows_window.cpp) | 实现 |
+| `desktop/ui/platform/windows/windows_window.h` | Win32 HWND 窗口包装 |
+| `desktop/ui/platform/windows/windows_window.cpp` | 实现 |
 
 #### 功能实现
 
@@ -137,8 +137,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/platform/linux_wsl/wsl_x11_display_server_backend.h`](../../../desktop/ui/platform/linux_wsl/wsl_x11_display_server_backend.h) | X11 显示服务器后端 |
-| [`desktop/ui/platform/linux_wsl/wsl_x11_display_server_backend.cpp`](../../../desktop/ui/platform/linux_wsl/wsl_x11_display_server_backend.cpp) | 实现 |
+| `desktop/ui/platform/linux_wsl/wsl_x11_display_server_backend.h` | X11 显示服务器后端 |
+| `desktop/ui/platform/linux_wsl/wsl_x11_display_server_backend.cpp` | 实现 |
 
 #### 功能实现
 
@@ -153,8 +153,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/platform/linux_wsl/wsl_x11_window_backend.h`](../../../desktop/ui/platform/linux_wsl/wsl_x11_window_backend.h) | X11 窗口后端 |
-| [`desktop/ui/platform/linux_wsl/wsl_x11_window_backend.cpp`](../../../desktop/ui/platform/linux_wsl/wsl_x11_window_backend.cpp) | 实现 |
+| `desktop/ui/platform/linux_wsl/wsl_x11_window_backend.h` | X11 窗口后端 |
+| `desktop/ui/platform/linux_wsl/wsl_x11_window_backend.cpp` | 实现 |
 
 #### 功能实现
 
@@ -176,8 +176,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/platform/linux_wsl/wsl_x11_window.h`](../../../desktop/ui/platform/linux_wsl/wsl_x11_window.h) | X11 窗口包装 |
-| [`desktop/ui/platform/linux_wsl/wsl_x11_window.cpp`](../../../desktop/ui/platform/linux_wsl/wsl_x11_window.cpp) | 实现 |
+| `desktop/ui/platform/linux_wsl/wsl_x11_window.h` | X11 窗口包装 |
+| `desktop/ui/platform/linux_wsl/wsl_x11_window.cpp` | 实现 |
 
 #### 功能实现
 
@@ -198,8 +198,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/components/WindowManager.h`](../../../desktop/ui/components/WindowManager.h) | 窗口管理器 |
-| [`desktop/ui/components/WindowManager.cpp`](../../../desktop/ui/components/WindowManager.cpp) | 实现 |
+| `desktop/ui/components/WindowManager.h` | 窗口管理器 |
+| `desktop/ui/components/WindowManager.cpp` | 实现 |
 
 #### 功能实现
 
@@ -213,8 +213,8 @@
 
 | 文件路径 | 说明 |
 |---------|------|
-| [`desktop/ui/components/PanelManager.h`](../../../desktop/ui/components/PanelManager.h) | 面板管理器 |
-| [`desktop/ui/components/PanelManager.cpp`](../../../desktop/ui/components/PanelManager.cpp) | 实现 |
+| `desktop/ui/components/PanelManager.h` | 面板管理器 |
+| `desktop/ui/components/PanelManager.cpp` | 实现 |
 
 #### 功能实现
 

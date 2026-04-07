@@ -195,6 +195,6 @@ cardLayout->addStretch();
 ## 相关文档
 
 - [StateMachine - Material 状态机](./state_machine.md)
-- [RippleHelper - 水波纹效果](../../base/ripple_helper.md)
-- [MdElevationController - 阴影控制器](../../base/elevation_controller.md)
+- [RippleHelper - 水波纹效果](../base/ripple_helper.md)
+- [MdElevationController - 阴影控制器](../base/elevation_controller.md)
 - [Material Design 3 按钮规范](https://m3.material.io/components/buttons)

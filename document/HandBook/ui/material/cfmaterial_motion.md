@@ -193,4 +193,4 @@ spec.durationMs = 400;  // 延长时长
 
 - [MaterialTheme - 主题组合](./cfmaterial_theme.md)
 - [MaterialColorScheme - 颜色方案](./cfmaterial_scheme.md)
-- [base/easing.h - 缓动曲线](../../base/easing.md)
+- [base/easing.h - 缓动曲线](../base/easing.md)

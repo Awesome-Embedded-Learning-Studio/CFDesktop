@@ -144,4 +144,4 @@ if (weak) {
 - [macros 详解](./macros.md)
 - [system_judge 详解](./macro/system_judge.md)
 - [CallOnceInit 详解](./once_init.md)
-- [proc_parser 详解](./linux/proc_parser.md)
+- [proc_parser 详解](../linux/proc_parser/)

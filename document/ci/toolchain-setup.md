@@ -13,7 +13,7 @@
 
 ## 为什么不需要修改脚本？
 
-现有的 [`check_toolchain.cmake`](../../cmake/check_toolchain.cmake) 已经能够：
+现有的 `check_toolchain.cmake` 已经能够：
 
 1. 解析 `platform/toolchain` 格式
 2. 自动查找对应的工具链文件
@@ -157,7 +157,7 @@ file out/build_ci/bin/*
 
 ### Docker 容器验证
 
-使用 [docker_start.sh](../../scripts/build_helpers/docker_start.sh) 脚本：
+使用 `docker_start.sh` 脚本：
 
 ```bash
 # 测试 AMD64
@@ -263,4 +263,4 @@ Phase 1 完成后，继续实施：
 
 ---
 
-*文档版本: v2.0 | 最后更新: 2026-03-07 | [返回索引](README.md)*
+*文档版本: v2.0 | 最后更新: 2026-03-07*

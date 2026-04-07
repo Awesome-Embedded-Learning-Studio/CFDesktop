@@ -184,4 +184,4 @@ void SettingsDialog::onThemeSelected(const QString& name) {
 
 - [ThemeFactory - 主题工厂](./theme_factory.md)
 - [ICFTheme - 主题接口](./theme.md)
-- [UI 核心组件概述](./overview.md)
+- [UI 核心组件概述](./index.md)

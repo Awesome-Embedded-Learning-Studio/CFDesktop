@@ -527,9 +527,9 @@ tests/unit/base/input/
 
 ## 九、相关文档
 
-- 原始TODO: [../03_input_layer.md](../03_input_layer.md)
-- 设计文档: [../../design_stage/03_phase3_input_layer.md](../../design_stage/03_phase3_input_layer.md)
-- 依赖模块: [../02_base_library.md](../02_base_library.md)
+- 原始TODO: [../base/02_input_layer.md](../base/02_input_layer.md)
+- 设计文档: `../../design_stage/03_phase3_input_layer.md`
+- 依赖模块: [Base库状态](./02_base_library_status.md)
 
 ---
 

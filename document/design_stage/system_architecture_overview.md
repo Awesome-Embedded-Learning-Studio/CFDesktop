@@ -610,4 +610,4 @@ target_link_libraries(CFDesktop_shared PRIVATE
 
 ---
 
-*本文档随项目开发持续更新。如需了解各设计阶段的详细设计，请参阅 [design_stage/README.md](README.md)。*
+*本文档随项目开发持续更新。*

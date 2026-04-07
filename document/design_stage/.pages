@@ -1,0 +1,11 @@
+title: 设计阶段
+icon: material/drawing
+nav:
+  - Phase 0 · 工程骨架: 00_phase0_project_skeleton.md
+  - Phase 1 · 硬件探针: 01_phase1_hardware_probe.md
+  - Phase 2 · 基础库: 02_phase2_base_library.md
+  - Phase 3 · 输入层: 03_phase3_input_layer.md
+  - Phase 4 · 模拟器: 04_phase6_simulator.md
+  - Phase 5 · 测试: 05_phase8_testing.md
+  - 多显示后端架构: multi_display_backend_architecture.md
+  - 系统架构总览: system_architecture_overview.md

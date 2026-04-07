@@ -31,7 +31,7 @@ scripts/
 
 ### Dockerfile.build
 
-**文件**: [`scripts/docker/Dockerfile.build`](../../scripts/docker/Dockerfile.build)
+**文件**: `scripts/docker/Dockerfile.build`
 
 **基础镜像**: Ubuntu 24.04
 
@@ -66,7 +66,7 @@ docker build --platform linux/arm64 \
 
 ## Docker Compose 配置
 
-**文件**: [`scripts/docker/docker-compose.yml`](../../scripts/docker/docker-compose.yml)
+**文件**: `scripts/docker/docker-compose.yml`
 
 **服务定义**:
 ```yaml
@@ -95,7 +95,7 @@ docker-compose -f scripts/docker/docker-compose.yml run verify
 
 ### Linux: docker_start.sh
 
-**文件**: [`scripts/build_helpers/docker_start.sh`](../../scripts/build_helpers/docker_start.sh)
+**文件**: `scripts/build_helpers/docker_start.sh`
 
 **功能**:
 - 检查 Docker 是否安装和运行
@@ -131,7 +131,7 @@ bash scripts/build_helpers/docker_start.sh --arch arm64
 
 ### Windows: docker_start.ps1
 
-**文件**: [`scripts/build_helpers/docker_start.ps1`](../../scripts/build_helpers/docker_start.ps1)
+**文件**: `scripts/build_helpers/docker_start.ps1`
 
 **功能**: 与 Linux 版本相同，适配 PowerShell 环境。
 
@@ -139,7 +139,7 @@ bash scripts/build_helpers/docker_start.sh --arch arm64
 
 ### Qt 安装流程
 
-Dockerfile 通过调用 [`install_build_dependencies.sh`](../../scripts/dependency/install_build_dependencies.sh) 完成 Qt 安装：
+Dockerfile 通过调用 `install_build_dependencies.sh` 完成 Qt 安装：
 
 1. 安装 Python3 和 pip
 2. 安装 aqtinstall
@@ -156,7 +156,7 @@ Dockerfile 通过调用 [`install_build_dependencies.sh`](../../scripts/dependen
 
 ### 依赖安装
 
-通过 [`scripts/dependency/install_build_dependencies.sh`](../../scripts/dependency/install_build_dependencies.sh) 安装：
+通过 `scripts/dependency/install_build_dependencies.sh` 安装：
 
 - **编译工具**: gcc, g++, cmake, ninja-build, ccache
 - **Qt 依赖**: libgl1-mesa-dev, libxkbcommon-x11-dev, libfontconfig1-dev
@@ -262,4 +262,4 @@ Phase 2 完成后，继续实施：
 
 ---
 
-*文档版本: v2.0 | 最后更新: 2026-03-07 | [返回索引](README.md)*
+*文档版本: v2.0 | 最后更新: 2026-03-07*

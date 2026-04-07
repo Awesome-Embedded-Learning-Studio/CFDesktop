@@ -578,8 +578,8 @@ make VERBOSE=1
 
 - **GitHub Issues**: [提交问题](https://github.com/your-org/CFDesktop/issues)
 - **文档首页**: [文档索引](../index.md)
-- **开发指南**: [开发环境设置](./01_setup.md)
-- **构建系统**: [构建系统详解](./02_build_system.md)
+- **开发指南**: [环境准备](./01_prerequisites.md)
+- **构建系统**: [构建系统详解](./03_build_system.md)
 
 ---
 

@@ -1,0 +1,6 @@
+title: CI/CD
+icon: material/pipe
+nav:
+  - Docker 环境: docker-environment.md
+  - 工具链配置: toolchain-setup.md
+  - 构建入口: ci-build-entry.md

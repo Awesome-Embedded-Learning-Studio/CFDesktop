@@ -110,5 +110,5 @@ Material Design 3 的复选框支持三种状态：
 ## 相关文档
 
 - [StateMachine - Material 状态机](./state_machine.md)
-- [RippleHelper - 水波纹效果](../../base/ripple_helper.md)
+- [RippleHelper - 水波纹效果](../base/ripple_helper.md)
 - [Material Design 3 复选框规范](https://m3.material.io/components/checkboxes)

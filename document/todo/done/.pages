@@ -1,0 +1,13 @@
+title: 已完成
+nav:
+  - 项目状态报告: PROJECT_STATUS_REPORT.md
+  - 工程骨架: 00_project_skeleton_status.md
+  - 硬件探针: 01_hardware_probe_status.md
+  - 基础库: 02_base_library_status.md
+  - 输入层: 03_input_layer_status.md
+  - 模拟器: 04_simulator_status.md
+  - 测试: 05_testing_status.md
+  - 基础设施: 06_infrastructure_status.md
+  - 小部件应用: 13_widget_apps_status.md
+  - 显示后端: 14_display_backend_status.md
+  - UI 框架: 99_ui_material_framework_status.md

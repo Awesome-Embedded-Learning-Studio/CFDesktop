@@ -479,4 +479,4 @@ void initialize(std::shared_ptr<IConfigStorePathProvider> path_provider);
 
 ## 下一篇
 
-- [返回 README](./README.md)
+- [返回 Config Manager](./)

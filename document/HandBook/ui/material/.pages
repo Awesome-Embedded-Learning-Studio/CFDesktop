@@ -1,0 +1,13 @@
+title: Material 设计
+icon: material/shape
+nav:
+  - 动画: animation
+  - 基础: base
+  - Widget: widget
+  - 主题配置: cfmaterial_theme.md
+  - 配色方案: cfmaterial_scheme.md
+  - 字体类型: cfmaterial_fonttype.md
+  - 运动规格: cfmaterial_motion.md
+  - 圆角缩放: cfmaterial_radius_scale.md
+  - 工厂类: material_factory_class.md
+  - 工厂头文件: material_factory_hpp.md

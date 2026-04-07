@@ -1,0 +1,7 @@
+title: 组件系统
+nav:
+  - 动画组件: animation.md
+  - 动画组: animation_group.md
+  - 动画工厂管理器: animation_factory_manager.md
+  - Spring 动画: spring_animation.md
+  - Timing 动画: timing_animation.md

@@ -145,5 +145,5 @@ std::string_view arm_implementer_to_vendor(uint32_t impl_val) {
 ## 相关文档
 
 - [Windows 平台实现](../windows/cpu_implementation.md)
-- [proc_parser 工具](../../base/linux/proc_parser.md)
-- [CPU 模块概述](../../api/system/cpu/overview.md)
+- [proc_parser 工具](../../../base/linux/proc_parser/)
+- [CPU 模块概述](../../../api/system/cpu/overview/)

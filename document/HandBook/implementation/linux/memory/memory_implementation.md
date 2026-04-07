@@ -415,6 +415,6 @@ VmPeak:     234567 kB
 
 ## 相关文档
 
-- [Windows 平台实现](../windows/memory_implementation.md)
-- [Memory 信息 API](../../api/system/memory/memory_info.md)
-- [proc_parser 工具](../../base/linux/proc_parser.md)
+- [Windows 平台实现](../../windows/memory/memory_implementation.md)
+- [Memory 信息 API](../../../../api/system/memory/memory_info/)
+- [proc_parser 工具](../../../../base/linux/proc_parser/)

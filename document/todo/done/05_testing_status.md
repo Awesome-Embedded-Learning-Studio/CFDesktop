@@ -48,8 +48,8 @@
 - 自定义 `add_gtest_executable` 辅助函数
 
 #### 测试运行脚本
-- [run_all_tests.ps1](../../../scripts/run_all_tests.ps1) (Windows PowerShell)
-- [run_all_tests.sh](../../../scripts/run_all_tests.sh) (Linux/macOS Bash)
+- `run_all_tests.ps1` (Windows PowerShell)
+- `run_all_tests.sh` (Linux/macOS Bash)
 
 ---
 
@@ -102,44 +102,44 @@ test/
 
 | 测试文件 | 路径 | 覆盖内容 |
 |---------|------|---------|
-| **expected_test.cpp** | [test/base/expected/expected_test.cpp](../../../test/base/expected/expected_test.cpp) | `cf::expected<T,E>` Result 类型：构造/销毁、值和错误访问、赋值、单子操作 (and_then, or_else, transform)、比较、交换、异常处理、移动语义、const 正确性 |
-| **scope_guard_test.cpp** | [test/base/scope_guard/scope_guard_test.cpp](../../../test/base/scope_guard/scope_guard_test.cpp) | RAII 作用域守卫基本功能 |
-| **constexpr_fnv1a_test.cpp** | [test/base/hash/constexpr_fnv1a_test.cpp](../../../test/base/hash/constexpr_fnv1a_test.cpp) | FNV1a 编译时哈希、抗冲突性 |
-| **weak_ptr_test.cpp** | [test/base/weak_ptr/weak_ptr_test.cpp](../../../test/base/weak_ptr/weak_ptr_test.cpp) | `cf::WeakPtr` 所有权语义、生命周期管理 |
+| **expected_test.cpp** | `test/base/expected/expected_test.cpp` | `cf::expected<T,E>` Result 类型：构造/销毁、值和错误访问、赋值、单子操作 (and_then, or_else, transform)、比较、交换、异常处理、移动语义、const 正确性 |
+| **scope_guard_test.cpp** | `test/base/scope_guard/scope_guard_test.cpp` | RAII 作用域守卫基本功能 |
+| **constexpr_fnv1a_test.cpp** | `test/base/hash/constexpr_fnv1a_test.cpp` | FNV1a 编译时哈希、抗冲突性 |
+| **weak_ptr_test.cpp** | `test/base/weak_ptr/weak_ptr_test.cpp` | `cf::WeakPtr` 所有权语义、生命周期管理 |
 
 #### UI Base 测试
 
 | 测试文件 | 路径 | 覆盖内容 |
 |---------|------|---------|
-| **math_helper_test.cpp** | [test/ui/base/math_helper_test.cpp](../../../test/ui/base/math_helper_test.cpp) | `lerp` (7), `clamp` (6), `remap` (8), `cubicBezier` (7), `springStep` (7), `lerpAngle` (10) 测试用例 |
-| **device_pixel_test.cpp** | [test/ui/base/device_pixel_test.cpp](../../../test/ui/base/device_pixel_test.cpp) | 设备像素比转换、DP 到像素转换 |
-| **easing_test.cpp** | [test/ui/base/easing_test.cpp](../../../test/ui/base/easing_test.cpp) | QEasingCurve 包装器、Material 缓动曲线验证 |
-| **color_test.cpp** | [test/ui/base/color_test.cpp](../../../test/ui/base/color_test.cpp) | 颜色空间转换、Material 颜色系统、对比度计算 |
-| **color_helper_test.cpp** | [test/ui/base/color_helper_test.cpp](../../../test/ui/base/color_helper_test.cpp) | 颜色辅助工具 |
-| **geometry_helper_test.cpp** | [test/ui/base/geometry_helper_test.cpp](../../../test/ui/base/geometry_helper_test.cpp) | 圆角矩形路径生成、矩形裁剪 |
+| **math_helper_test.cpp** | `test/ui/base/math_helper_test.cpp` | `lerp` (7), `clamp` (6), `remap` (8), `cubicBezier` (7), `springStep` (7), `lerpAngle` (10) 测试用例 |
+| **device_pixel_test.cpp** | `test/ui/base/device_pixel_test.cpp` | 设备像素比转换、DP 到像素转换 |
+| **easing_test.cpp** | `test/ui/base/easing_test.cpp` | QEasingCurve 包装器、Material 缓动曲线验证 |
+| **color_test.cpp** | `test/ui/base/color_test.cpp` | 颜色空间转换、Material 颜色系统、对比度计算 |
+| **color_helper_test.cpp** | `test/ui/base/color_helper_test.cpp` | 颜色辅助工具 |
+| **geometry_helper_test.cpp** | `test/ui/base/geometry_helper_test.cpp` | 圆角矩形路径生成、矩形裁剪 |
 
 #### UI Components 测试
 
 | 测试文件 | 路径 | 覆盖内容 |
 |---------|------|---------|
-| **state_machine_test.cpp** | [test/ui/components/state_machine_test.cpp](../../../test/ui/components/state_machine_test.cpp) | Material 行为层：状态转换 (8)、组合状态 (2)、透明度计算 (6)、状态优先级 (2) |
-| **ripple_helper_test.cpp** | [test/ui/components/ripple_helper_test.cpp](../../../test/ui/components/ripple_helper_test.cpp) | 涟漪创建和生命周期、多涟漪支持、淡入动画 |
-| **elevation_controller_test.cpp** | [test/ui/components/elevation_controller_test.cpp](../../../test/ui/components/elevation_controller_test.cpp) | 阴影渲染、高度级别验证 (0-5)、暗主题色调覆盖 |
-| **focus_ring_test.cpp** | [test/ui/components/focus_ring_test.cpp](../../../test/ui/components/focus_ring_test.cpp) | 焦点环渲染、Material 规范合规 (3dp 宽度, 3dp 内边距) |
-| **painter_layer_test.cpp** | [test/ui/components/painter_layer_test.cpp](../../../test/ui/components/painter_layer_test.cpp) | 颜色覆盖层、Alpha 混合验证 |
+| **state_machine_test.cpp** | `test/ui/components/state_machine_test.cpp` | Material 行为层：状态转换 (8)、组合状态 (2)、透明度计算 (6)、状态优先级 (2) |
+| **ripple_helper_test.cpp** | `test/ui/components/ripple_helper_test.cpp` | 涟漪创建和生命周期、多涟漪支持、淡入动画 |
+| **elevation_controller_test.cpp** | `test/ui/components/elevation_controller_test.cpp` | 阴影渲染、高度级别验证 (0-5)、暗主题色调覆盖 |
+| **focus_ring_test.cpp** | `test/ui/components/focus_ring_test.cpp` | 焦点环渲染、Material 规范合规 (3dp 宽度, 3dp 内边距) |
+| **painter_layer_test.cpp** | `test/ui/components/painter_layer_test.cpp` | 颜色覆盖层、Alpha 混合验证 |
 
 #### UI Core 测试
 
 | 测试文件 | 路径 | 覆盖内容 |
 |---------|------|---------|
-| **token_test.cpp** | [test/ui/core/token_test.cpp](../../../test/ui/core/token_test.cpp) | Token 系统验证、颜色方案 Token、排版 Token |
+| **token_test.cpp** | `test/ui/core/token_test.cpp` | Token 系统验证、颜色方案 Token、排版 Token |
 
 #### System 测试
 
 | 测试文件 | 路径 | 覆盖内容 |
 |---------|------|---------|
-| **test_memory_info_query.cpp** | [test/system/test_memory_info_query.cpp](../../../test/system/test_memory_info_query.cpp) | 内存信息查询、跨平台内存 API 验证 |
-| **test_cpu_info_query.cpp** | [test/system/test_cpu_info_query.cpp](../../../test/system/test_cpu_info_query.cpp) | CPU 信息查询、处理器计数检测 |
+| **test_memory_info_query.cpp** | `test/system/test_memory_info_query.cpp` | 内存信息查询、跨平台内存 API 验证 |
+| **test_cpu_info_query.cpp** | `test/system/test_cpu_info_query.cpp` | CPU 信息查询、处理器计数检测 |
 
 ---
 
@@ -291,11 +291,6 @@ cmake --build out/build_test
 ---
 
 ## 八、相关文档
-
-- 原始TODO: [../05_testing.md](../05_testing.md)
-- 完成归档: [05_testing_foundation_done.md](05_testing_foundation_done.md)
-- 参考文档: [05_testing_ref.md](05_testing_ref.md)
-- UI框架归档: [99_ui_layer1-4_and_p0_widgets_done.md](99_ui_layer1-4_and_p0_widgets_done.md)
 
 ---
 

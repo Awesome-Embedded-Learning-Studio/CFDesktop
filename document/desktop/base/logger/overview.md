@@ -146,8 +146,7 @@ CFLogger 支持五个日志级别（按严重程度递增）：
 主日志类，提供日志记录的公共 API。使用 PIMPL 模式隐藏实现细节。
 
 **关键文件**：
-- [cflog.hpp](../../../../desktop/base/logger/include/cflog/cflog.hpp)
-- [cflog_impl.h](../../../../desktop/base/logger/src/impl/cflog_impl.h)
+- `cflog_impl.h`
 
 ### AsyncPostQueue
 
@@ -158,7 +157,7 @@ CFLogger 支持五个日志级别（按严重程度递增）：
 - 队列满时：丢弃普通日志，保留错误日志
 
 **关键文件**：
-- [async_queue.h](../../../../desktop/base/logger/src/async_queue/async_queue.h)
+- `async_queue.h`
 
 ### Formatter（格式化器）
 
@@ -241,7 +240,7 @@ void init_logger() {
 | 多线程（16 线程） | 保持基准性能 |
 | 目标性能 | 10,000-50,000 条日志/秒 |
 
-详细性能数据请参阅 [HandBook/performance.md](../../../HandBook/desktop/base/logger/performance.md)。
+详细性能数据请参阅 `HandBook/performance.md`。
 
 ## 线程安全保证
 
@@ -262,5 +261,5 @@ CFLogger 采用"不抛异常"的设计理念：
 
 - [架构详解](./architecture.md) - 详细的架构设计和组件交互
 - [API 参考](./api_reference.md) - 完整的 API 文档
-- [HandBook/快速入门](../../../HandBook/desktop/base/logger/quick_start.md) - 5 分钟入门指南
-- [HandBook/最佳实践](../../../HandBook/desktop/base/logger/best_practices.md) - 使用建议
+- `HandBook/快速入门` - 5 分钟入门指南
+- `HandBook/最佳实践` - 使用建议

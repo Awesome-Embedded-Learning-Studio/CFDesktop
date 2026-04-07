@@ -1,0 +1,19 @@
+title: Desktop TODO
+nav:
+  - 总览: summary.md
+  - 里程碑总览: milestone_00_overview.md
+  - 里程碑 01 · 骨架: milestone_01_desktop_skeleton.md
+  - 里程碑 02 · 状态栏: milestone_02_status_bar.md
+  - 里程碑 03 · 任务栏: milestone_03_taskbar.md
+  - 里程碑 04 · 启动器: milestone_04_app_launcher.md
+  - 里程碑 05 · 窗口管理: milestone_05_window_management.md
+  - 里程碑 06 · 控制中心: milestone_06_widget_control_center.md
+  - 基础设施: 06_infrastructure.md
+  - 渲染后端: 07_render_backend.md
+  - P1 控件: 08_p1_controls.md
+  - 窗口管理器: 09_window_manager.md
+  - Shell 导航: 10_shell_navigation.md
+  - 通知控件: 11_notification_control.md
+  - 主题/锁屏: 12_theme_settings_lockscreen.md
+  - 小部件应用: 13_widget_apps.md
+  - 崩溃处理: CRASH_HANDLE_STEP.md

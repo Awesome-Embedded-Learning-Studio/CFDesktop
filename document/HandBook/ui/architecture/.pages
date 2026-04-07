@@ -1,0 +1,8 @@
+title: 架构总览
+icon: material/layers-triple
+nav:
+  - 第一层 · 数学工具: layer-1-math-utility
+  - 第二层 · 主题引擎: layer-2-theme-engine
+  - 第三层 · 动画引擎: layer-3-animation-engine
+  - 第四层 · Material 行为: layer-4-material-behavior
+  - 第五层 · Widget 适配: layer-5-widget-adapter

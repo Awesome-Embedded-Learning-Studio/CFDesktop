@@ -1,0 +1,6 @@
+title: 开发脚本
+nav:
+  - C++ 格式化 (bash): format_cpp.sh.md
+  - C++ 格式化 (PowerShell): format_cpp.ps1.md
+  - 尾部空格清理 (bash): remove_trailing_space.sh.md
+  - 尾部空格清理 (PowerShell): remove_trailing_space.ps1.md

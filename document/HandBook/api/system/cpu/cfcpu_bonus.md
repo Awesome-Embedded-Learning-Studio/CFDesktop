@@ -151,4 +151,4 @@ int main() {
 
 - [基础信息 API](./cfcpu.md)
 - [性能信息 API](./cfcpu_profile.md)
-- [使用示例](../../examples/cpu_info_example.md)
+- [使用示例](../../../examples/cpu_info_example/)

@@ -1,0 +1,4 @@
+title: 文档工具
+nav:
+  - MkDocs 开发 (bash): mkdocs_dev.sh.md
+  - MkDocs 开发 (PowerShell): mkdocs_dev.ps1.md

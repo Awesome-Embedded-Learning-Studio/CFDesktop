@@ -1520,10 +1520,8 @@ debounced_watcher->install();
 
 如果以上方法无法解决问题：
 
-1. 检查 [测试代码](../../../../../test/config_manager/) 了解正确用法
-2. 查看 [示例代码](../../../../../example/desktop/base/config_manager/)
-3. 参考 [快速入门](./01-quick-start.md)
-4. 搜索或提交 Issue 到项目仓库
+1. 参考 [快速入门](./01-quick-start.md)
+2. 搜索或提交 Issue 到项目仓库
 
 ---
 

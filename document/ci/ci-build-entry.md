@@ -28,7 +28,7 @@ scripts/build_helpers/
 
 ### build_ci_config.ini (AMD64)
 
-**文件**: [`scripts/build_helpers/build_ci_config.ini`](../../scripts/build_helpers/build_ci_config.ini)
+**文件**: `scripts/build_helpers/build_ci_config.ini`
 
 AMD64/x86_64 架构的 CI 构建配置：
 
@@ -48,7 +48,7 @@ jobs=16                            # 并行编译任务数
 
 ### build_ci_aarch64_config.ini (ARM64)
 
-**文件**: [`scripts/build_helpers/build_ci_aarch64_config.ini`](../../scripts/build_helpers/build_ci_aarch64_config.ini)
+**文件**: `scripts/build_helpers/build_ci_aarch64_config.ini`
 
 ARM64/aarch64 架构的 CI 构建配置：
 
@@ -68,7 +68,7 @@ jobs=16
 
 ### build_ci_armhf_config.ini (ARM32)
 
-**文件**: [`scripts/build_helpers/build_ci_armhf_config.ini`](../../scripts/build_helpers/build_ci_armhf_config.ini)
+**文件**: `scripts/build_helpers/build_ci_armhf_config.ini`
 
 ARM32/ARMHF 架构的 CI 构建配置（用于 IMX6ULL）：
 
@@ -88,7 +88,7 @@ jobs=8
 
 ## CI 构建入口脚本
 
-**文件**: [`scripts/build_helpers/ci_build_entry.sh`](../../scripts/build_helpers/ci_build_entry.sh)
+**文件**: `scripts/build_helpers/ci_build_entry.sh`
 
 ### 功能特性
 
@@ -158,7 +158,7 @@ ci_build_entry.sh
 
 ### Docker 集成
 
-由 [`docker_start.sh`](../../scripts/build_helpers/docker_start.sh) 调用：
+由 `docker_start.sh` 调用：
 
 ```bash
 # AMD64
@@ -269,8 +269,8 @@ CI 入口脚本调用现有的脚本：
 
 | 现有脚本 | 用途 |
 |----------|------|
-| [`linux_develop_build.sh`](../../scripts/build_helpers/linux_develop_build.sh) | CI 模式下的配置和构建 |
-| [`linux_run_tests.sh`](../../scripts/build_helpers/linux_run_tests.sh) | 测试执行 |
+| `linux_develop_build.sh` | CI 模式下的配置和构建 |
+| `linux_run_tests.sh` | 测试执行 |
 
 这种设计确保：
 - **单一职责**: CI 入口只负责流程控制
@@ -312,11 +312,11 @@ Phase 3 已完成，相关 Phase：
 
 | 文件 | 说明 |
 |------|------|
-| [ci_build_entry.sh](../../scripts/build_helpers/ci_build_entry.sh) | CI 构建入口脚本 |
-| [build_ci_config.ini](../../scripts/build_helpers/build_ci_config.ini) | AMD64 CI 配置 |
-| [build_ci_aarch64_config.ini](../../scripts/build_helpers/build_ci_aarch64_config.ini) | ARM64 CI 配置 |
-| [build_ci_armhf_config.ini](../../scripts/build_helpers/build_ci_armhf_config.ini) | ARM32 CI 配置 |
+| `ci_build_entry.sh` | CI 构建入口脚本 |
+| `build_ci_config.ini` | AMD64 CI 配置 |
+| `build_ci_aarch64_config.ini` | ARM64 CI 配置 |
+| `build_ci_armhf_config.ini` | ARM32 CI 配置 |
 
 ---
 
-*文档版本: v2.0 | 最后更新: 2026-03-07 | [返回索引](README.md)*
+*文档版本: v2.0 | 最后更新: 2026-03-07*

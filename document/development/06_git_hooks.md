@@ -326,7 +326,7 @@ choco install clang-format
 
 ## 相关文档
 
-- [开发环境设置](./01_setup.md)
-- [构建系统](./02_build_system.md)
+- [环境准备](./01_prerequisites.md)
+- [构建系统](./03_build_system.md)
 - [常见问题排查](./07_troubleshooting.md)
-- [Docker 构建指南](../operations/docker_build.md)
+- [Docker 构建](./05_docker_build.md)

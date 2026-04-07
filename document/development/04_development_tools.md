@@ -267,7 +267,7 @@ gdb out/build_develop/bin/your_app
 
 ## 相关文档
 
-- [环境设置](./02_environment_setup.md)
-- [构建指南](./03_build_guide.md)
+- [快速开始](./02_quick_start.md)
+- [构建系统](./03_build_system.md)
 - [Docker 构建](./05_docker_build.md)
 - [项目索引](../index.md)

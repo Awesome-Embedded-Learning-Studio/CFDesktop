@@ -110,9 +110,9 @@ cd CFDesktop
 请按照文档顺序阅读：
 
 1. **[01. 前置要求](01_prerequisites.md)** - 确保您的开发环境满足所有要求
-2. **[02. 环境配置](02_environment.md)** - 配置 Qt6 和编译器
+2. **[02. 快速开始](02_quick_start.md)** - 快速上手开发
 3. **[03. 构建系统](03_build_system.md)** - 了解 CMake 构建系统
-4. **[04. IDE 配置](04_ide_setup.md)** - 配置您喜欢的开发工具
+4. **[04. 开发工具](04_development_tools.md)** - 配置您喜欢的开发工具
 
 ---
 
@@ -124,7 +124,7 @@ cd CFDesktop
 
 - **GitHub Issues**: [提交问题](https://github.com/your-org/CFDesktop/issues)
 - **讨论区**: [GitHub Discussions](https://github.com/your-org/CFDesktop/discussions)
-- **文档**: 查看项目根目录下的 [README.md](../../README.md)
+- **文档**: 查看项目根目录下的 [README](../../)
 
 ### 常见问题
 

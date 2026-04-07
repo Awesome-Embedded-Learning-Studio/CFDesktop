@@ -126,5 +126,5 @@ enum class RegisteredResult {
 ## 相关文档
 
 - [ICFAbstractAnimation - 动画基类](./animation.md)
-- [CFMaterialAnimationFactory - Material 动画工厂](../material/animation_factory.md)
+- [CFMaterialAnimationFactory - Material 动画工厂](../material/animation/cfmaterial_animation_factory.md)
 - [ICFTheme - 主题系统](../core/theme.md)

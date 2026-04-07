@@ -103,5 +103,5 @@ app.init();  // 别忘了手动调用 init()
 ## 相关文档
 
 - [Application - 应用基础类](./application.md)
-- [Material 主题系统](../../theme/material.md)
-- [Material 动画](../../animation/material.md)
+- [Material 主题系统](../material/cfmaterial_theme.md)
+- [Material 动画](../material/animation/index.md)
