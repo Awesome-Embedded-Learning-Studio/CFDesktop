@@ -19,7 +19,25 @@
 #include <QPoint>
 #include <QRect>
 #include <QSize>
+#include <QString>
 #include <format>
+
+// ============================================================================
+// QString
+// ============================================================================
+
+/**
+ * @brief  std::formatter specialization for QString.
+ *
+ * Formats a QString by converting to UTF-8 std::string.
+ *
+ * @ingroup ui
+ */
+template <> struct std::formatter<QString> : std::formatter<std::string> {
+    auto format(const QString& s, std::format_context& ctx) const {
+        return std::formatter<std::string>::format(s.toStdString(), ctx);
+    }
+};
 
 // ============================================================================
 // Point types

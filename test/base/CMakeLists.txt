@@ -68,3 +68,14 @@ add_gtest_executable(
     LABELS         "base;unit;policy_chain"
     LOG_MODULE     base_tests
 )
+
+# =============================================================================
+# Base library unit tests - indexed_vector_test
+# =============================================================================
+add_gtest_executable(
+    TEST_NAME      indexed_vector_test
+    SOURCE_FILE    indexed_vector/indexed_vector_test.cpp
+    LINK_LIBRARIES CFDesktop::base_headers;Qt6::Core;GTest::gtest;GTest::gtest_main
+    LABELS         "base;unit;indexed_vector"
+    LOG_MODULE     base_tests
+)

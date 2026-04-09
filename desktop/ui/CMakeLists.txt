@@ -35,5 +35,6 @@ PRIVATE
     cf_desktop_ui_widget  # Link widget submodule
     cf_desktop_ui_platform  # Link platform submodule
     cf_desktop_render     # Link render backend abstraction
+    cf_ui_base            # For qt_format.h (std::formatter<QString>)
 )
 

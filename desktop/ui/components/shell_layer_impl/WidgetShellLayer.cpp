@@ -44,7 +44,15 @@ void WidgetShellLayer::onAvailableGeometryChanged(const QRect& rect) {
 
 void WidgetShellLayer::paintEvent(QPaintEvent*) {
     QPainter p(this);
-    // Fallback solid background color (dark surface)
+    if (strategy_) {
+        QImage bg = strategy_->currentBackgroundImage();
+        if (!bg.isNull()) {
+            p.drawImage(0, 0, bg);
+            return;
+        }
+        p.fillRect(rect(), strategy_->backgroundColor());
+        return;
+    }
     p.fillRect(rect(), QColor(0x1c, 0x1b, 0x1f));
 }
 

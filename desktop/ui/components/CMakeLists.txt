@@ -3,6 +3,7 @@
 # PanelManager, ShellLayer, etc.
 log_info("Dekstop UI" "Start UI Components Configurations")
 
+add_subdirectory(wallpaper)
 add_subdirectory(shell_layer_impl)
 add_subdirectory(statusbar)
 
@@ -29,5 +30,6 @@ PUBLIC
     cf_desktop_render
 PRIVATE
     cfdesktop_shell_layer_impl
+    cfdesktop_wallpaper
     Qt6::Core Qt6::Gui Qt6::Widgets
 )

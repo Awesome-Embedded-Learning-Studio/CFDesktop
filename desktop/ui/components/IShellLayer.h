@@ -51,6 +51,15 @@ class IShellLayer {
      * @return Shell layer rectangle in device pixels.
      */
     virtual QRect geometry() const = 0;
+
+    /**
+     * @brief  Requests a repaint of the shell layer.
+     *
+     * Implementations should schedule a repaint without blocking.
+     * QWidget-based layers call QWidget::update();
+     * Wayland compositor layers commit the surface.
+     */
+    virtual void requestRepaint() = 0;
 };
 
 } // namespace cf::desktop

@@ -15,6 +15,8 @@
 
 #pragma once
 #include "base/weak_ptr/weak_ptr.h"
+#include <QColor>
+#include <QImage>
 #include <QRect>
 
 namespace cf::desktop {
@@ -53,5 +55,24 @@ class IShellLayerStrategy {
      * @param[in]  available  The new available geometry rectangle.
      */
     virtual void onGeometryChanged(const QRect& available) = 0;
+
+    /**
+     * @brief  Returns the current background image, if any.
+     *
+     * Default implementation returns a null QImage (no image).
+     * Strategies that provide a wallpaper image override this.
+     *
+     * @return Current background image, or null QImage for solid-color fallback.
+     */
+    virtual QImage currentBackgroundImage() const { return {}; }
+
+    /**
+     * @brief  Returns the background fill color.
+     *
+     * Used as fallback when no image is available, or for letterbox bars.
+     *
+     * @return Background color.
+     */
+    virtual QColor backgroundColor() const { return QColor(0x1c, 0x1b, 0x1f); }
 };
 } // namespace cf::desktop

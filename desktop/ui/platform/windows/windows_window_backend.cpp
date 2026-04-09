@@ -15,6 +15,7 @@
 #        undef ERROR
 #    endif
 #    include "cflog.h"
+#    include "qt_format.h"
 
 #    include <QString>
 #    include <psapi.h>
@@ -263,7 +264,7 @@ void WindowsWindowBackend::registerWindow(HWND hwnd) {
     tracked_windows_[hwnd] = std::move(win);
 
     log::debugftag("WinWindowBackend", "Window appeared: hwnd=0x{:x} title='{}'",
-                   reinterpret_cast<std::uintptr_t>(hwnd), title.toStdString());
+                   reinterpret_cast<std::uintptr_t>(hwnd), title);
 
     emit window_came(weak);
 }

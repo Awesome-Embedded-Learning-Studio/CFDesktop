@@ -1,6 +1,6 @@
 # Milestone 1: 桌面骨架可见
 
-> **状态**: ⬜ 待开始
+> **状态**: ✅ 已完成 (2026-04-09)
 > **预计周期**: 1-2 天
 > **前置依赖**: 无 (当前基础设施已就绪)
 > **目标**: 运行后不再是空白，能看到一个带背景的全屏桌面窗口
@@ -45,17 +45,17 @@
 ### Day 1: ShellLayer 实现与桌面背景渲染
 
 #### Step 1: 创建 ShellLayer.cpp
-- [ ] 创建文件 `desktop/ui/components/ShellLayer.cpp`
-- [ ] 实现构造函数 `ShellLayer(QWidget* parent)`
+- [x] 创建文件 `desktop/ui/components/ShellLayer.cpp`
+- [x] 实现构造函数 `ShellLayer(QWidget* parent)`
   - 设置 `setAttribute(Qt::WA_OpaquePaintEvent)` 减少闪烁
   - 设置 `setAutoFillBackground(false)`
   - 接受 parent 的全尺寸 geometry
-- [ ] 实现 `setStrategy(std::unique_ptr<IShellLayerStrategy> strategy)`
+- [x] 实现 `setStrategy(std::unique_ptr<IShellLayerStrategy> strategy)`
   - 若已有旧 strategy，先调用 `deactivate()`
   - 存储新 strategy
   - 调用 `activate(this->GetWeak(), wm_weak)` 激活
-- [ ] 实现 `geometry()` — 返回 `QWidget::geometry()`
-- [ ] 实现 `onAvailableGeometryChanged(const QRect& rect)`
+- [x] 实现 `geometry()` — 返回 `QWidget::geometry()`
+- [x] 实现 `onAvailableGeometryChanged(const QRect& rect)`
   - 调用 `setGeometry(rect)` 调整 ShellLayer 尺寸
   - 转发给 `strategy_->onGeometryChanged(rect)`
 
@@ -65,18 +65,18 @@
 - `IShellLayerStrategy.h:33` — 策略接口
 
 #### Step 2: 创建 DefaultShellStrategy (桌面背景策略)
-- [ ] 创建文件 `desktop/ui/strategy/default_shell_strategy.h/.cpp`
-- [ ] 实现 `IShellLayerStrategy` 接口
-- [ ] `activate()` 中：
+- [x] 创建文件 `desktop/ui/strategy/default_shell_strategy.h/.cpp`
+- [x] 实现 `IShellLayerStrategy` 接口
+- [x] `activate()` 中：
   - 持有 ShellLayer 的 weak 引用
   - 在 ShellLayer 上创建背景子 Widget 或直接绘制
-- [ ] `onGeometryChanged()` 中：
+- [x] `onGeometryChanged()` 中：
   - 更新背景区域尺寸
   - 触发重绘
-- [ ] `deactivate()` 中：清理资源
+- [x] `deactivate()` 中：清理资源
 
 #### Step 3: 为 ShellLayer 添加背景绘制
-- [ ] 方案 A (推荐): 在 ShellLayer 的 `paintEvent()` 中绘制纯色背景
+- [x] 方案 A (推荐): 在 ShellLayer 的 `paintEvent()` 中绘制纯色背景
   ```cpp
   void ShellLayer::paintEvent(QPaintEvent*) {
       QPainter p(this);
@@ -84,15 +84,15 @@
       p.fillRect(rect(), theme->colorScheme().surface());
   }
   ```
-- [ ] 方案 B: 壁纸图片渲染
+- [x] 方案 B: 壁纸图片渲染
   - 在 `DefaultShellStrategy::activate()` 中加载壁纸 QPixmap
   - 提供 `WallpaperLayer` 子 Widget 或在 paintEvent 中 `drawPixmap()`
-- [ ] 选择配色：使用 ThemeManager 的 `colorScheme().surface()` 作为默认背景色
+- [x] 选择配色：使用 ThemeManager 的 `colorScheme().surface()` 作为默认背景色
 
 **可复用**: `ui/core/theme_manager.h` (ThemeManager 单例)、`ui/core/color_scheme.h` (颜色方案)
 
 #### Step 4: 修改 CFDesktopEntity::run_init() 连接所有组件
-- [ ] 在 `CFDesktopEntity::run_init()` 中（文件 `desktop/ui/CFDesktopEntity.cpp:45`）:
+- [x] 在 `CFDesktopEntity::run_init()` 中（文件 `desktop/ui/CFDesktopEntity.cpp:45`）:
   ```cpp
   // 1. 创建 PanelManager
   auto* panel_mgr = new PanelManager(desktop_entity_, desktop_entity_);
@@ -118,29 +118,29 @@
   ```
 
 #### Step 5: 确保 CFDesktop 正确接收 geometry
-- [ ] 在 `CFDesktop::register_desktop_resources()` 中（文件 `desktop/ui/CFDesktop.cpp:21`）:
+- [x] 在 `CFDesktop::register_desktop_resources()` 中（文件 `desktop/ui/CFDesktop.cpp:21`）:
   - 验证 `panel_manager_` 和 `shell_layer_` 非空
   - 触发 PanelManager 初始布局计算
 
 #### Step 6: 更新 CMakeLists.txt
-- [ ] 在 `desktop/ui/components/CMakeLists.txt` 中添加 `ShellLayer.cpp`
-- [ ] 如新建 strategy 目录，确保 CMake 能发现新文件
+- [x] 在 `desktop/ui/components/CMakeLists.txt` 中添加 `ShellLayer.cpp`
+- [x] 如新建 strategy 目录，确保 CMake 能发现新文件
 
 ---
 
 ### Day 2: 验证与调试
 
 #### Step 7: 构建并运行
-- [ ] `cmake --build build` 确认编译通过
-- [ ] 运行后验证：
-  - [ ] 桌面全屏显示
-  - [ ] 背景非空白（纯色或壁纸）
-  - [ ] 关闭后无 crash / 内存泄漏
+- [x] `cmake --build build` 确认编译通过
+- [x] 运行后验证：
+  - [x] 桌面全屏显示
+  - [x] 背景非空白（纯色或壁纸）
+  - [x] 关闭后无 crash / 内存泄漏
 
 #### Step 8: 调试布局
-- [ ] 在 PanelManager::relayout() 中添加 debug log 输出 `availableGeometry()`
-- [ ] 确认 ShellLayer 的 geometry 正确跟随屏幕大小
-- [ ] 确认后续注册 Panel 后 availableGeometry 会正确缩小
+- [x] 在 PanelManager::relayout() 中添加 debug log 输出 `availableGeometry()`
+- [x] 确认 ShellLayer 的 geometry 正确跟随屏幕大小
+- [x] 确认后续注册 Panel 后 availableGeometry 会正确缩小
 
 ---
 
@@ -173,11 +173,11 @@
 
 ## 五、验收标准
 
-- [ ] `./scripts/run.sh` 后看到全屏非空白桌面
-- [ ] 桌面背景色跟随 ThemeManager 的 surface 色值
-- [ ] PanelManager 的 `availableGeometry()` 返回正确值 (初始为全屏)
-- [ ] 后续注册 Panel 后 `availableGeometry()` 会自动缩小
-- [ ] 关闭后无内存泄漏
+- [x] `./scripts/run.sh` 后看到全屏非空白桌面
+- [x] 桌面背景色跟随 ThemeManager 的 surface 色值
+- [x] PanelManager 的 `availableGeometry()` 返回正确值 (初始为全屏)
+- [x] 后续注册 Panel 后 `availableGeometry()` 会自动缩小
+- [x] 关闭后无内存泄漏
 
 ---
 

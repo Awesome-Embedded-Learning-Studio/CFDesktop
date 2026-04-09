@@ -23,7 +23,9 @@
 namespace cf::desktop {
 
 class IShellLayerStrategy;
+namespace wallpaper {
 class WallPaperLayer;
+}
 class WindowManager;
 
 /**
@@ -65,6 +67,14 @@ class WidgetShellLayer : public QWidget, public IShellLayer {
      * @return A WeakPtr referencing this instance.
      */
     WeakPtr<WidgetShellLayer> GetWeak() const { return weak_factory_.GetWeakPtr(); }
+
+    // -- IShellLayer ----------------------------------------------------------
+    /**
+     * @brief  Requests a repaint of this shell layer widget.
+     *
+     * Calls QWidget::update() to schedule a repaint without blocking.
+     */
+    void requestRepaint() override { update(); }
 
   public slots:
     /**

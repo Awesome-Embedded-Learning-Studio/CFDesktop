@@ -13,6 +13,7 @@
 #ifdef CFDESKTOP_OS_LINUX
 
 #    include "cflog.h"
+#    include "qt_format.h"
 
 #    include <QRect>
 #    include <QString>
@@ -374,7 +375,7 @@ void WSLX11WindowBackend::registerWindow(xcb_window_t win) {
     tracked_windows_[win] = std::move(wsl_win);
 
     cf::log::debugftag("WSLWindowBackend", "Window appeared: win=0x{:08x} title='{}'",
-                       static_cast<uint32_t>(win), title.toStdString());
+                       static_cast<uint32_t>(win), title);
 
     emit window_came(weak);
 }
