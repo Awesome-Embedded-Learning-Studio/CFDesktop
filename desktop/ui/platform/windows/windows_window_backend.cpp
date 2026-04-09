@@ -264,7 +264,7 @@ void WindowsWindowBackend::registerWindow(HWND hwnd) {
     tracked_windows_[hwnd] = std::move(win);
 
     log::debugftag("WinWindowBackend", "Window appeared: hwnd=0x{:x} title='{}'",
-                   reinterpret_cast<std::uintptr_t>(hwnd), title);
+                   reinterpret_cast<std::uintptr_t>(hwnd), title.toStdString());
 
     emit window_came(weak);
 }

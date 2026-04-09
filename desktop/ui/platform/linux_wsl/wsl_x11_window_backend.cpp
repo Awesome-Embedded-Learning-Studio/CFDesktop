@@ -375,7 +375,7 @@ void WSLX11WindowBackend::registerWindow(xcb_window_t win) {
     tracked_windows_[win] = std::move(wsl_win);
 
     cf::log::debugftag("WSLWindowBackend", "Window appeared: win=0x{:08x} title='{}'",
-                       static_cast<uint32_t>(win), title);
+                       static_cast<uint32_t>(win), title.toStdString());
 
     emit window_came(weak);
 }

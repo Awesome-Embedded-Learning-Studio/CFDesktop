@@ -8,9 +8,23 @@
 
 #pragma once
 
+#include <QCoreApplication>
 #include <QImage>
 #include <QWidget>
 #include <gtest/gtest.h>
+
+/**
+ * @brief Ensure fonts are available for offscreen rendering.
+ *
+ * Qt6 no longer ships bundled fonts. In offscreen QPA mode on Windows,
+ * set QT_QPA_FONTDIR to the system fonts directory so text renders properly.
+ * Must be called before QApplication is constructed.
+ */
+inline void ensureFontsAvailable() {
+#ifdef _WIN32
+    qputenv("QT_QPA_FONTDIR", "C:/Windows/Fonts");
+#endif
+}
 
 namespace widget_test {
 
@@ -61,7 +75,10 @@ inline QImage renderWidgetToImage(QWidget* widget, const QSize& size) {
     QImage image(size, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     widget->resize(size);
+    widget->show();
+    QCoreApplication::processEvents();
     widget->render(&image);
+    widget->hide();
     return image;
 }
 

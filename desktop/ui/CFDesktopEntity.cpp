@@ -71,7 +71,7 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                 QObject::connect(raw, &IWindowBackend::window_came, this, [](WeakPtr<IWindow> win) {
                     if (win) {
                         cf::log::traceftag("CFDesktopEntity", "External window detected: {}",
-                                           win->title());
+                                           win->title().toStdString());
                     }
                 });
                 QObject::connect(raw, &IWindowBackend::window_gone, this,

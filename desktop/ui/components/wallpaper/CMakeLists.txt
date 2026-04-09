@@ -16,3 +16,4 @@ target_link_libraries(cfdesktop_wallpaper PRIVATE
     cfbase
     cf_ui_base
 )
+target_compile_definitions(cfdesktop_wallpaper PRIVATE CFLOG_STATIC_BUILD)

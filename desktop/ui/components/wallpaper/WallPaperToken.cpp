@@ -22,8 +22,9 @@ struct WallPaperToken::Private {
 
     Private(const QString& path, SourceType type, const QString& name, const QString& auth,
             const QString& desc, WallPaperToken* owner)
-        : source_path(path), display_name(name), author(auth), description(desc), source_type(type),
-          weak_ptr_factory(owner) {}
+        : source_path(path), display_name(name),
+          author(auth.isNull() ? QStringLiteral("Unknown") : auth), description(desc),
+          source_type(type), weak_ptr_factory(owner) {}
 };
 
 // ============================================================
@@ -47,7 +48,7 @@ const QString& WallPaperToken::displayName() const {
     return d->display_name;
 }
 const QString& WallPaperToken::author() const {
-    return d->author.isNull() ? static_cast<const QString&>(QStringLiteral("Unknown")) : d->author;
+    return d->author;
 }
 const QString& WallPaperToken::description() const {
     return d->description;

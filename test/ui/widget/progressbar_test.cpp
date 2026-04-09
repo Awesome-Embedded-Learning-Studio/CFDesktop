@@ -116,6 +116,7 @@ TEST(ProgressBarTest, D02_Paint_EnabledDisabled_DifferentPixels) {
 
 int main(int argc, char* argv[]) {
     qputenv("QT_QPA_PLATFORM", "offscreen");
+    ensureFontsAvailable();
     QApplication app(argc, argv);
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

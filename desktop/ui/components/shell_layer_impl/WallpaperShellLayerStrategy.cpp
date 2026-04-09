@@ -56,7 +56,8 @@ void WallpaperShellLayerStrategy::deactivate() {
 }
 
 void WallpaperShellLayerStrategy::onGeometryChanged(const QRect& available) {
-    log::traceftag("WallpaperShellLayerStrategy", "Geometry changed: {}", available);
+    log::traceftag("WallpaperShellLayerStrategy", "Geometry changed: QRect({}, {}, {}, {})",
+                   available.x(), available.y(), available.width(), available.height());
     if (d->current_geometry == available) {
         return;
     }

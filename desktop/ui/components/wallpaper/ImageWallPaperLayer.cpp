@@ -106,13 +106,14 @@ bool ImageWallPaperLayer::loadImageFromToken(const WeakPtr<WallPaperToken>& toke
 
     QImage loaded;
     if (!loaded.load(path)) {
-        log::warningftag("ImageWallPaperLayer", "Failed to load image from: {}", path);
+        log::warningftag("ImageWallPaperLayer", "Failed to load image from: {}",
+                         path.toStdString());
         d->current_image = {};
         return false;
     }
 
     d->current_image = std::move(loaded);
-    log::traceftag("ImageWallPaperLayer", "Loaded wallpaper: {} ({}x{})", path,
+    log::traceftag("ImageWallPaperLayer", "Loaded wallpaper: {} ({}x{})", path.toStdString(),
                    d->current_image.width(), d->current_image.height());
     notifyImageChanged();
     return true;

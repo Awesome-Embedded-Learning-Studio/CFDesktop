@@ -89,6 +89,15 @@ function(add_gtest_executable)
         WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     )
 
+    # Windows: ensure Qt platform plugins (e.g. offscreen) are discoverable
+    if(WIN32 AND TARGET Qt6::Gui)
+        get_filename_component(_QT6_PLATFORMS_DIR
+            "${Qt6Gui_DIR}/../../../plugins/platforms" ABSOLUTE)
+        set_tests_properties(${ARG_TEST_NAME} PROPERTIES
+            ENVIRONMENT "QT_QPA_PLATFORM_PLUGIN_PATH=${_QT6_PLATFORMS_DIR}"
+        )
+    endif()
+
     # Log configuration
     log_info("${ARG_LOG_MODULE}" "  - ${ARG_TEST_NAME}")
 endfunction()

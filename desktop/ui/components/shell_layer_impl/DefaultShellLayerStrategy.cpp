@@ -23,7 +23,8 @@ void DefaultShellLayerStrategy::deactivate() {
 }
 
 void DefaultShellLayerStrategy::onGeometryChanged(const QRect& r) {
-    log::traceftag("DefaultShellStrategy", "Geometry changed: {}", r);
+    log::traceftag("DefaultShellStrategy", "Geometry changed: QRect({}, {}, {}, {})", r.x(), r.y(),
+                   r.width(), r.height());
     // The WidgetShellLayer::onAvailableGeometryChanged() already calls
     // setGeometry() and update(), so no additional action needed here.
 }

@@ -34,7 +34,8 @@ QRect WidgetShellLayer::geometry() const {
 }
 
 void WidgetShellLayer::onAvailableGeometryChanged(const QRect& rect) {
-    log::traceftag("WidgetShellLayer", "Available geometry changed: {}", rect);
+    log::traceftag("WidgetShellLayer", "Available geometry changed: QRect({}, {}, {}, {})",
+                   rect.x(), rect.y(), rect.width(), rect.height());
     setGeometry(rect);
     if (strategy_) {
         strategy_->onGeometryChanged(rect);
