@@ -1289,6 +1289,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#function-currentbackgroundimage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function currentBackgroundImage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-backgroundcolor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function backgroundColor
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1363,7 +1385,7 @@
 <h1 id="cfishelllayerstrategy">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:IShellLayerStrategy<a class="headerlink" href="#cfishelllayerstrategy" title="链接到此章节">&para;</a></h1>
 <p>Pluggable strategy for shell layer behavior.  <a href="#detailed-description">More...</a></p>
 <p><code>#include &lt;IShellLayerStrategy.h&gt;</code></p>
-<p>Inherited by <a href="../classcf_1_1desktop_1_1DefaultShellLayerStrategy/">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:DefaultShellLayerStrategy</a></p>
+<p>Inherited by <a href="../classcf_1_1desktop_1_1DefaultShellLayerStrategy/">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:DefaultShellLayerStrategy</a>, <a href="../classcf_1_1desktop_1_1WallpaperShellLayerStrategy/">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:WallpaperShellLayerStrategy</a></p>
 <h2 id="public-functions">Public Functions<a class="headerlink" href="#public-functions" title="链接到此章节">&para;</a></h2>
 <table>
 <thead>
@@ -1389,6 +1411,14 @@
 <td>virtual <a href="../classcf_1_1unexpected/">void</a></td>
 <td><strong><a href="./#function-ongeometrychanged">onGeometryChanged</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../classcf_1_1unexpected/">QRect</a> &amp; available) =0<br>Called when the available geometry changes.</td>
 </tr>
+<tr>
+<td>virtual <a href="../classcf_1_1unexpected/">QImage</a></td>
+<td><strong><a href="./#function-currentbackgroundimage">currentBackgroundImage</a></strong>() const<br>Returns the current background image, if any.</td>
+</tr>
+<tr>
+<td>virtual <a href="../classcf_1_1unexpected/">QColor</a></td>
+<td><strong><a href="./#function-backgroundcolor">backgroundColor</a></strong>() const<br>Returns the background fill color.</td>
+</tr>
 </tbody>
 </table>
 <h2 id="detailed-description">Detailed Description<a class="headerlink" href="#detailed-description" title="链接到此章节">&para;</a></h2>
@@ -1412,12 +1442,12 @@
 <li><strong>layer</strong> Weak reference to the shell layer. </li>
 <li><strong>wm</strong> Weak reference to the window manager. </li>
 </ul>
-<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1DefaultShellLayerStrategy/#function-activate">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:DefaultShellLayerStrategy::activate</a></p>
+<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1DefaultShellLayerStrategy/#function-activate">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:DefaultShellLayerStrategy::activate</a>, <a href="../classcf_1_1desktop_1_1WallpaperShellLayerStrategy/#function-activate">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:WallpaperShellLayerStrategy::activate</a></p>
 <h3 id="function-deactivate">function deactivate<a class="headerlink" href="#function-deactivate" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos="1 "></span></a><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">deactivate</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="mi">0</span>
 </span></code></pre></div>
 <p>Deactivates the strategy and releases resources. </p>
-<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1DefaultShellLayerStrategy/#function-deactivate">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:DefaultShellLayerStrategy::deactivate</a></p>
+<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1DefaultShellLayerStrategy/#function-deactivate">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:DefaultShellLayerStrategy::deactivate</a>, <a href="../classcf_1_1desktop_1_1WallpaperShellLayerStrategy/#function-deactivate">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:WallpaperShellLayerStrategy::deactivate</a></p>
 <h3 id="function-ongeometrychanged">function onGeometryChanged<a class="headerlink" href="#function-ongeometrychanged" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><a href="#__codelineno-4-1"><span class="linenos" data-linenos="1 "></span></a><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">onGeometryChanged</span><span class="p">(</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><a href="#__codelineno-4-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">constQRect</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">available</span>
@@ -1428,9 +1458,23 @@
 <ul>
 <li><strong>available</strong> The new available geometry rectangle. </li>
 </ul>
-<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1DefaultShellLayerStrategy/#function-ongeometrychanged">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:DefaultShellLayerStrategy::onGeometryChanged</a></p>
+<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1DefaultShellLayerStrategy/#function-ongeometrychanged">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:DefaultShellLayerStrategy::onGeometryChanged</a>, <a href="../classcf_1_1desktop_1_1WallpaperShellLayerStrategy/#function-ongeometrychanged">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:WallpaperShellLayerStrategy::onGeometryChanged</a></p>
+<h3 id="function-currentbackgroundimage">function currentBackgroundImage<a class="headerlink" href="#function-currentbackgroundimage" title="链接到此章节">&para;</a></h3>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos="1 "></span></a><span class="kr">inline</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">QImage</span><span class="w"> </span><span class="n">currentBackgroundImage</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
+</span></code></pre></div>
+<p>Returns the current background image, if any. </p>
+<p><strong>Return</strong>: Current background image, or null QImage for solid-color fallback. </p>
+<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1WallpaperShellLayerStrategy/#function-currentbackgroundimage">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:WallpaperShellLayerStrategy::currentBackgroundImage</a></p>
+<p>Default implementation returns a null QImage (no image). Strategies that provide a wallpaper image override this.</p>
+<h3 id="function-backgroundcolor">function backgroundColor<a class="headerlink" href="#function-backgroundcolor" title="链接到此章节">&para;</a></h3>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><a href="#__codelineno-6-1"><span class="linenos" data-linenos="1 "></span></a><span class="kr">inline</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">QColor</span><span class="w"> </span><span class="n">backgroundColor</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
+</span></code></pre></div>
+<p>Returns the background fill color. </p>
+<p><strong>Return</strong>: Background color. </p>
+<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1WallpaperShellLayerStrategy/#function-backgroundcolor">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:WallpaperShellLayerStrategy::backgroundColor</a></p>
+<p>Used as fallback when no image is available, or for letterbox bars.</p>
 <hr />
-<p>Updated on 2026-04-08 at 08:25:21 +0000</p>
+<p>Updated on 2026-04-09 at 16:26:57 +0000</p>
 
 
 
@@ -1453,7 +1497,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月8日 16:25:23 CST">2026年4月8日 16:25:23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
   </span>
 
     
@@ -1463,7 +1507,7 @@
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月8日 16:25:23 CST">2026年4月8日 16:25:23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
   </span>
 
     
