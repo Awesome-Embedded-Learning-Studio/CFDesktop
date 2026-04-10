@@ -1493,6 +1493,7 @@
 </li>
 <li><strong>dir <a href="../Files/dir_d6ed2cd2eb2451daa0d2ad7a1f62c538/#dir-desktop/main/early-session/impl">desktop/main/early_session/impl</a></strong> <ul>
 <li><strong>file <a href="../Files/console__signal__stage_8h/#file-console-signal-stage.h">h</a></strong> <br>Platform console signal handler stage for early boot sequence. </li>
+<li><strong>file <a href="../Files/desktop__backbone__setup_8h/#file-desktop-backbone-setup.h">h</a></strong> <br>Early-stage desktop backbone directory setup. </li>
 <li><strong>file <a href="../Files/early__config__stage_8h/#file-early-config-stage.h">h</a></strong> <br>Early configuration stage for boot sequence. </li>
 <li><strong>file <a href="../Files/early__welcome__impl_8h/#file-early-welcome-impl.h">h</a></strong> <br>Default EarlyWelcome Sessions. </li>
 <li><strong>file <a href="../Files/logger__stage_8h/#file-logger-stage.h">h</a></strong> <br>Logger initialization stage for early boot sequence. </li>
@@ -1505,13 +1506,16 @@
 </li>
 <li><strong>dir <a href="../Files/dir_faecbf50576f9432dac8c304801bca92/#dir-desktop/main/early-session/settings">desktop/main/early_session/settings</a></strong> <ul>
 <li><strong>file <a href="../Files/early__settings_8h/#file-early-settings.h">h</a></strong> <br>Early settings configuration loader and manager. </li>
-<li><strong>file <a href="../Files/path_8h/#file-path.h">h</a></strong> <br>Default paths and template for early settings configuration. </li>
 </ul>
 </li>
 </ul>
 </li>
 <li><strong>dir <a href="../Files/dir_af16f9ac70982843e094e741fef3bc99/#dir-desktop/main/init">desktop/main/init</a></strong> <ul>
 <li><strong>file <a href="../Files/boot__stage__info_8h/#file-boot-stage-info.h">h</a></strong> <br>Defines the boot stage information structure. </li>
+<li><strong>dir <a href="../Files/dir_ae589136b35408867c8469ba58a86f93/#dir-desktop/main/init/desktop-backbone-init">desktop/main/init/desktop_backbone_init</a></strong> <ul>
+<li><strong>file <a href="../Files/desktop__backbone__init_8h/#file-desktop-backbone-init.h">h</a></strong> <br>Initialization stage for desktop backbone setup. </li>
+</ul>
+</li>
 <li><strong>dir <a href="../Files/dir_56b509b36ded6b53b163df2fb2620ad2/#dir-desktop/main/init/early-gain">desktop/main/init/early_gain</a></strong> <ul>
 <li><strong>file <a href="../Files/early__pass__stage_8h/#file-early-pass-stage.h">h</a></strong> <br>Defines the early transfer initialization stage. </li>
 </ul>
@@ -1521,9 +1525,10 @@
 </ul>
 </li>
 <li><strong>file <a href="../Files/init_8h/#file-init.h">h</a></strong> <br>Provides early initialization functions for the desktop session. </li>
-<li><strong>file <a href="../Files/init__session__chain_8h/#file-init-session-chain.h">h</a></strong> <br>Init Session Chains - 基于DAG依赖图的初始化阶段执行链 </li>
+<li><strong>file <a href="../Files/init__session__chain_8h/#file-init-session-chain.h">h</a></strong> <br>Init Session Chains - DAG-based initialization stage execution chain. </li>
 <li><strong>file <a href="../Files/init__settings_8h/#file-init-settings.h">h</a></strong> <br>Init session settings and boot widget manager. </li>
 <li><strong>file <a href="../Files/init_2init__stage_8h/#file-init-stage.h">h</a></strong> <br>Defines the initialization stage interface for staged boot process. </li>
+<li><strong>file <a href="../Files/init__stage__name_8h/#file-init-stage-name.h">h</a></strong> <br>Defines compile-time constant names for initialization stages. </li>
 </ul>
 </li>
 <li><strong>dir <a href="../Files/dir_53759b7ed0a99832e7820107e5cc973d/#dir-desktop/main/log">desktop/main/log</a></strong> <ul>
@@ -1815,7 +1820,7 @@
 </li>
 </ul>
 <hr />
-<p>Updated on 2026-04-09 at 16:26:58 +0000</p>
+<p>Updated on 2026-04-10 at 14:46:24 +0000</p>
 
 
 
@@ -1838,7 +1843,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 22:46:26 CST">2026年4月10日 22:46:26</span>
   </span>
 
     
@@ -1848,7 +1853,7 @@
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 22:46:26 CST">2026年4月10日 22:46:26</span>
   </span>
 
     

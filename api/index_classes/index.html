@@ -1345,6 +1345,7 @@
 </li>
 <li><strong>namespace <a href="../Namespaces/namespacecf_1_1desktop_1_1early__stage/">early_stage</a></strong> <ul>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1early__stage_1_1ConsoleSignalStage/">ConsoleSignalStage</a></strong> <br>Console signal handler initialization stage. </li>
+<li><strong>class <a href="../Classes/classcf_1_1desktop_1_1early__stage_1_1DesktopBackboneEarlySetup/">DesktopBackboneEarlySetup</a></strong> <br>Sets up desktop backbone directories during early initialization. </li>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1early__stage_1_1EarlyConfigStage/">EarlyConfigStage</a></strong> <br>Early configuration stage. </li>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1early__stage_1_1EarlyHandle/">EarlyHandle</a></strong> <br><a href="../Classes/classcf_1_1Singleton/">Singleton</a> handle for managing early desktop settings. </li>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1early__stage_1_1EarlyInitRunner/">EarlyInitRunner</a></strong> <br>Runner for executing early initialization stages in sequence. </li>
@@ -1356,6 +1357,7 @@
 <li><strong>namespace <a href="../Namespaces/namespacecf_1_1desktop_1_1init__session/">init_session</a></strong> <ul>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1BootProgressWidget/">BootProgressWidget</a></strong> <br>Abstract base class for boot progress widgets. </li>
 <li><strong>struct <a href="../Classes/structcf_1_1desktop_1_1init__session_1_1BootStageInfo/">BootStageInfo</a></strong> <br>Encapsulates information about a boot stage. </li>
+<li><strong>class <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1DesktopBackboneSetupStage/">DesktopBackboneSetupStage</a></strong> <br>Initialization stage that sets up the desktop backbone structure. </li>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1EarlyTransferStage/">EarlyTransferStage</a></strong> <br>Early transfer initialization stage. </li>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1GuiLogoBootStage/">GuiLogoBootStage</a></strong> <br>GUI initialization stage that displays the boot progress widget. </li>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1IInitStage/">IInitStage</a></strong> <br>Interface for initialization stages in the boot process. <ul>
@@ -1363,8 +1365,8 @@
 </ul>
 </li>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1InitInfoHandle/">InitInfoHandle</a></strong> <br>Manages init session settings and boot widget ownership. </li>
-<li><strong>class <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1InitSessionChain/">InitSessionChain</a></strong> <br>初始化会话链，管理多个IInitStage的执行 <ul>
-<li><strong>struct <a href="../Classes/structcf_1_1desktop_1_1init__session_1_1InitSessionChain_1_1GraphNode/">GraphNode</a></strong> <br>依赖图节点，用于拓扑排序 </li>
+<li><strong>class <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1InitSessionChain/">InitSessionChain</a></strong> <br>Initialization session chain that manages multiple <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1IInitStage/">IInitStage</a> executions. <ul>
+<li><strong>struct <a href="../Classes/structcf_1_1desktop_1_1init__session_1_1InitSessionChain_1_1GraphNode/">GraphNode</a></strong> <br>Dependency graph node for topological sorting. </li>
 </ul>
 </li>
 <li><strong>class <a href="../Classes/classcf_1_1desktop_1_1init__session_1_1SimpleBootWidget/">SimpleBootWidget</a></strong> <br>A modern, minimalist startup screen widget. </li>
@@ -1382,10 +1384,7 @@
 </ul>
 </li>
 <li><strong>namespace <a href="../Namespaces/namespacecf_1_1desktop_1_1path/">path</a></strong> <ul>
-<li><strong>class <a href="../Classes/classcf_1_1desktop_1_1path_1_1DesktopMainPathProvider/">DesktopMainPathProvider</a></strong> <br>Provider for desktop main directory paths. <ul>
-<li><strong>struct <a href="../Classes/structcf_1_1desktop_1_1path_1_1DesktopMainPathProvider_1_1PathComponents/">PathComponents</a></strong> <br>String constants for path component names. </li>
-</ul>
-</li>
+<li><strong>class <a href="../Classes/classcf_1_1desktop_1_1path_1_1DesktopMainPathProvider/">DesktopMainPathProvider</a></strong> <br>Provider for desktop main directory paths. </li>
 </ul>
 </li>
 <li><strong>namespace <a href="../Namespaces/namespacecf_1_1desktop_1_1platform/">platform</a></strong> <ul>
@@ -1634,7 +1633,7 @@
 </li>
 </ul>
 <hr />
-<p>Updated on 2026-04-09 at 16:26:58 +0000</p>
+<p>Updated on 2026-04-10 at 14:46:24 +0000</p>
 
 
 
@@ -1657,7 +1656,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 22:46:26 CST">2026年4月10日 22:46:26</span>
   </span>
 
     
@@ -1667,7 +1666,7 @@
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 22:46:26 CST">2026年4月10日 22:46:26</span>
   </span>
 
     

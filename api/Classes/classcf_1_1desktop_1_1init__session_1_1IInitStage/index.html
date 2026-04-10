@@ -1350,6 +1350,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#function-get_weak_ptr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function get_weak_ptr
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1424,7 +1435,7 @@
 <h1 id="cfinit_sessioniinitstage">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::IInitStage<a class="headerlink" href="#cfinit_sessioniinitstage" title="链接到此章节">&para;</a></h1>
 <p>Interface for initialization stages in the boot process.  <a href="#detailed-description">More...</a></p>
 <p><code>#include &lt;init_stage.h&gt;</code></p>
-<p>Inherited by <a href="../classcf_1_1desktop_1_1init__session_1_1EarlyTransferStage/">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::EarlyTransferStage</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1GuiLogoBootStage/">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::GuiLogoBootStage</a></p>
+<p>Inherited by <a href="../classcf_1_1desktop_1_1init__session_1_1DesktopBackboneSetupStage/">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::DesktopBackboneSetupStage</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1EarlyTransferStage/">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::EarlyTransferStage</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1GuiLogoBootStage/">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::GuiLogoBootStage</a></p>
 <h2 id="public-classes">Public Classes<a class="headerlink" href="#public-classes" title="链接到此章节">&para;</a></h2>
 <table>
 <thead>
@@ -1466,7 +1477,7 @@
 <tbody>
 <tr>
 <td></td>
-<td><strong><a href="./#function-iinitstage">IInitStage</a></strong>() =default</td>
+<td><strong><a href="./#function-iinitstage">IInitStage</a></strong>()</td>
 </tr>
 <tr>
 <td>virtual</td>
@@ -1483,6 +1494,10 @@
 <tr>
 <td>virtual <a href="../structcf_1_1desktop_1_1init__session_1_1IInitStage_1_1StageResult/">StageResult</a></td>
 <td><strong><a href="./#function-run-session">run_session</a></strong>() =0<br>Executes the initialization logic for this stage.</td>
+</tr>
+<tr>
+<td>virtual <a href="../classcf_1_1WeakPtr/">WeakPtr</a>&lt; <a href="./">IInitStage</a> &gt;</td>
+<td><strong><a href="./#function-get-weak-ptr">get_weak_ptr</a></strong>() const<br>Gets a weak pointer to this stage.</td>
 </tr>
 </tbody>
 </table>
@@ -1529,7 +1544,7 @@
 <p>Indicates the outcome of an initialization stage execution. </p>
 <h2 id="public-functions-documentation">Public Functions Documentation<a class="headerlink" href="#public-functions-documentation" title="链接到此章节">&para;</a></h2>
 <h3 id="function-iinitstage">function IInitStage<a class="headerlink" href="#function-iinitstage" title="链接到此章节">&para;</a></h3>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">IInitStage</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="k">default</span>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos="1 "></span></a><span class="kr">inline</span><span class="w"> </span><span class="n">IInitStage</span><span class="p">()</span>
 </span></code></pre></div>
 <h3 id="function-iinitstage_1">function ~IInitStage<a class="headerlink" href="#function-iinitstage_1" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos="1 "></span></a><span class="k">virtual</span><span class="w"> </span><span class="o">~</span><span class="n">IInitStage</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="k">default</span>
@@ -1546,7 +1561,7 @@
 <p><strong>Since</strong>: N/A </p>
 <p><strong>Note</strong>: Each concrete stage must provide a unique name. </p>
 <p><strong>Warning</strong>: None </p>
-<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1init__session_1_1EarlyTransferStage/#function-name">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::EarlyTransferStage::name</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1GuiLogoBootStage/#function-name">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::GuiLogoBootStage::name</a></p>
+<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1init__session_1_1DesktopBackboneSetupStage/#function-name">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::DesktopBackboneSetupStage::name</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1EarlyTransferStage/#function-name">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::EarlyTransferStage::name</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1GuiLogoBootStage/#function-name">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::GuiLogoBootStage::name</a></p>
 <h3 id="function-request_before_actions_init">function request_before_actions_init<a class="headerlink" href="#function-request_before_actions_init" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos="1 "></span></a><span class="k">virtual</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="w"> </span><span class="n">WeakPtr</span><span class="o">&lt;</span><span class="w"> </span><span class="n">IInitStage</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">request_before_actions_init</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
 </span></code></pre></div>
@@ -1559,7 +1574,7 @@
 <p><strong>Since</strong>: N/A </p>
 <p><strong>Note</strong>: Used to build the dependency graph for stage execution order. </p>
 <p><strong>Warning</strong>: Default implementation returns an empty vector (no dependencies). </p>
-<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1init__session_1_1EarlyTransferStage/#function-request-before-actions-init">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::EarlyTransferStage::request_before_actions_init</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1GuiLogoBootStage/#function-request-before-actions-init">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::GuiLogoBootStage::request_before_actions_init</a></p>
+<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1init__session_1_1DesktopBackboneSetupStage/#function-request-before-actions-init">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::DesktopBackboneSetupStage::request_before_actions_init</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1EarlyTransferStage/#function-request-before-actions-init">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::EarlyTransferStage::request_before_actions_init</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1GuiLogoBootStage/#function-request-before-actions-init">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::GuiLogoBootStage::request_before_actions_init</a></p>
 <h3 id="function-run_session">function run_session<a class="headerlink" href="#function-run_session" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><a href="#__codelineno-6-1"><span class="linenos" data-linenos="1 "></span></a><span class="k">virtual</span><span class="w"> </span><span class="n">StageResult</span><span class="w"> </span><span class="n">run_session</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="mi">0</span>
 </span></code></pre></div>
@@ -1572,9 +1587,21 @@
 <p><strong>Since</strong>: N/A </p>
 <p><strong>Note</strong>: Must be implemented by each concrete stage. </p>
 <p><strong>Warning</strong>: None </p>
-<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1init__session_1_1EarlyTransferStage/#function-run-session">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::EarlyTransferStage::run_session</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1GuiLogoBootStage/#function-run-session">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::GuiLogoBootStage::run_session</a></p>
+<p><strong>Reimplemented by</strong>: <a href="../classcf_1_1desktop_1_1init__session_1_1DesktopBackboneSetupStage/#function-run-session">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::DesktopBackboneSetupStage::run_session</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1EarlyTransferStage/#function-run-session">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::EarlyTransferStage::run_session</a>, <a href="../classcf_1_1desktop_1_1init__session_1_1GuiLogoBootStage/#function-run-session">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::GuiLogoBootStage::run_session</a></p>
+<h3 id="function-get_weak_ptr">function get_weak_ptr<a class="headerlink" href="#function-get_weak_ptr" title="链接到此章节">&para;</a></h3>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><a href="#__codelineno-7-1"><span class="linenos" data-linenos="1 "></span></a><span class="kr">inline</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="n">WeakPtr</span><span class="o">&lt;</span><span class="w"> </span><span class="n">IInitStage</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">get_weak_ptr</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
+</span></code></pre></div>
+<p>Gets a weak pointer to this stage. </p>
+<p><strong>Exceptions</strong>: </p>
+<ul>
+<li><strong>None</strong> </li>
+</ul>
+<p><strong>Return</strong>: WeakPtr<IInitStage> pointing to this stage, or invalid if unsupported. </p>
+<p><strong>Since</strong>: N/A </p>
+<p><strong>Note</strong>: Default returns an invalid <a href="../classcf_1_1WeakPtr/">WeakPtr</a>. Concrete stages with a <a href="../classcf_1_1WeakPtrFactory/">WeakPtrFactory</a> should override this method. </p>
+<p><strong>Warning</strong>: None </p>
 <hr />
-<p>Updated on 2026-04-09 at 16:26:57 +0000</p>
+<p>Updated on 2026-04-10 at 14:46:24 +0000</p>
 
 
 
@@ -1597,7 +1624,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 22:46:26 CST">2026年4月10日 22:46:26</span>
   </span>
 
     
@@ -1607,7 +1634,7 @@
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 22:46:26 CST">2026年4月10日 22:46:26</span>
   </span>
 
     

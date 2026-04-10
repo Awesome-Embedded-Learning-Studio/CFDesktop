@@ -1384,6 +1384,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#function-find_stage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function find_stage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#function-size" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1477,7 +1488,7 @@
 
 
 <h1 id="cfinit_sessioninitsessionchain">cf:<img alt="🖥" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f5a5.svg" title=":desktop:" />:init_session::InitSessionChain<a class="headerlink" href="#cfinit_sessioninitsessionchain" title="链接到此章节">&para;</a></h1>
-<p>初始化会话链，管理多个IInitStage的执行  <a href="#detailed-description">More...</a></p>
+<p>Initialization session chain that manages multiple <a href="../classcf_1_1desktop_1_1init__session_1_1IInitStage/">IInitStage</a> executions.  <a href="#detailed-description">More...</a></p>
 <p><code>#include &lt;init_session_chain.h&gt;</code></p>
 <p>Inherits from QObject</p>
 <h2 id="public-signals">Public Signals<a class="headerlink" href="#public-signals" title="链接到此章节">&para;</a></h2>
@@ -1491,19 +1502,19 @@
 <tbody>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#signal-stage-start">stage_start</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../structcf_1_1desktop_1_1init__session_1_1BootStageInfo/">BootStageInfo</a> &amp; bs_info)<br>Stage开始执行信号</td>
+<td><strong><a href="./#signal-stage-start">stage_start</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../structcf_1_1desktop_1_1init__session_1_1BootStageInfo/">BootStageInfo</a> &amp; bs_info)<br>Signal emitted when a stage starts execution.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#signal-stage-completed">stage_completed</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../classcf_1_1unexpected/">QString</a> &amp; stage_name, <a href="../classcf_1_1unexpected/">bool</a> success)<br>Stage完成执行信号</td>
+<td><strong><a href="./#signal-stage-completed">stage_completed</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../classcf_1_1unexpected/">QString</a> &amp; stage_name, <a href="../classcf_1_1unexpected/">bool</a> success)<br>Signal emitted when a stage completes execution.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#signal-stage-partial-failed">stage_partial_failed</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../classcf_1_1unexpected/">QString</a> &amp; stage_name, <a href="../classcf_1_1unexpected/">const</a><a href="../classcf_1_1unexpected/">QString</a> &amp; message, <a href="../classcf_1_1unexpected/">const</a><a href="../classcf_1_1unexpected/">QString</a> &amp; detail)<br>Stage部分失败信号</td>
+<td><strong><a href="./#signal-stage-partial-failed">stage_partial_failed</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../classcf_1_1unexpected/">QString</a> &amp; stage_name, <a href="../classcf_1_1unexpected/">const</a><a href="../classcf_1_1unexpected/">QString</a> &amp; message, <a href="../classcf_1_1unexpected/">const</a><a href="../classcf_1_1unexpected/">QString</a> &amp; detail)<br>Signal emitted when a stage partially fails.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#signal-chain-finished">chain_finished</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../structcf_1_1desktop_1_1init__session_1_1IInitStage_1_1StageResult/">IInitStage::StageResult</a> &amp; final_result)<br>Chain执行完成信号</td>
+<td><strong><a href="./#signal-chain-finished">chain_finished</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../structcf_1_1desktop_1_1init__session_1_1IInitStage_1_1StageResult/">IInitStage::StageResult</a> &amp; final_result)<br>Signal emitted when the chain execution finishes.</td>
 </tr>
 </tbody>
 </table>
@@ -1526,40 +1537,44 @@
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#function-add-stage-back">add_stage_back</a></strong>(std::unique_ptr&lt; <a href="../classcf_1_1desktop_1_1init__session_1_1IInitStage/">IInitStage</a> &gt; stage)<br>添加一个初始化阶段到链尾部</td>
+<td><strong><a href="./#function-add-stage-back">add_stage_back</a></strong>(std::unique_ptr&lt; <a href="../classcf_1_1desktop_1_1init__session_1_1IInitStage/">IInitStage</a> &gt; stage)<br>Adds an initialization stage to the end of the chain.</td>
 </tr>
 <tr>
 <td><a href="../structcf_1_1desktop_1_1init__session_1_1IInitStage_1_1StageResult/">IInitStage::StageResult</a></td>
-<td><strong><a href="./#function-execute">execute</a></strong>()<br>执行初始化链</td>
+<td><strong><a href="./#function-execute">execute</a></strong>()<br>Executes the initialization chain.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">QString</a></td>
-<td><strong><a href="./#function-get-dependency-graph-debug-string">get_dependency_graph_debug_string</a></strong>() const<br>获取依赖图的调试字符串（用于调试和日志）</td>
+<td><strong><a href="./#function-get-dependency-graph-debug-string">get_dependency_graph_debug_string</a></strong>() const<br>Gets the dependency graph debug string (for debugging and logging)</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#function-reset">reset</a></strong>()<br>重置链状态，允许重新执行</td>
+<td><strong><a href="./#function-reset">reset</a></strong>()<br>Resets the chain state, allowing re-execution.</td>
+</tr>
+<tr>
+<td><a href="../classcf_1_1WeakPtr/">cf::WeakPtr</a>&lt; <a href="../classcf_1_1desktop_1_1init__session_1_1IInitStage/">IInitStage</a> &gt;</td>
+<td><strong><a href="./#function-find-stage">find_stage</a></strong>(std::string_view stage_name) const<br>Finds a Stage by name and returns its <a href="../classcf_1_1WeakPtr/">WeakPtr</a>.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">size_t</a></td>
-<td><strong><a href="./#function-size">size</a></strong>() const<br>获取链中的Stage数量</td>
+<td><strong><a href="./#function-size">size</a></strong>() const<br>Gets the number of stages in the chain.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1WeakPtr/">cf::WeakPtr</a>&lt; <a href="./">InitSessionChain</a> &gt;</td>
-<td><strong><a href="./#function-getchainref">GetChainRef</a></strong>()<br>获取全局Chain的WeakPtr引用（单例模式）</td>
+<td><strong><a href="./#function-getchainref">GetChainRef</a></strong>()<br>Gets the global Chain's <a href="../classcf_1_1WeakPtr/">WeakPtr</a> reference (singleton pattern)</td>
 </tr>
 </tbody>
 </table>
 <h2 id="detailed-description">Detailed Description<a class="headerlink" href="#detailed-description" title="链接到此章节">&para;</a></h2>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><a href="#__codelineno-0-1"><span class="linenos" data-linenos="1 "></span></a><span class="k">class</span><span class="w"> </span><span class="nc">cf</span><span class="o">::</span><span class="n">desktop</span><span class="o">::</span><span class="n">init_session</span><span class="o">::</span><span class="n">InitSessionChain</span><span class="p">;</span>
 </span></code></pre></div>
-<p>初始化会话链，管理多个IInitStage的执行 </p>
-<p>功能特性：</p>
+<p>Initialization session chain that manages multiple <a href="../classcf_1_1desktop_1_1init__session_1_1IInitStage/">IInitStage</a> executions. </p>
+<p>Features:</p>
 <ul>
-<li>基于DAG自动解析依赖关系并拓扑排序</li>
-<li>检测循环依赖并报错</li>
-<li>OK/PartialFailed继续执行，CriticalFailed立即停止</li>
-<li>提供详细的执行调试信息 </li>
+<li>Automatic DAG-based dependency resolution with topological sorting</li>
+<li>Circular dependency detection and error reporting</li>
+<li>OK/PartialFailed continues execution, CriticalFailed stops immediately</li>
+<li>Detailed execution debug information </li>
 </ul>
 <h2 id="public-signals-documentation">Public Signals Documentation<a class="headerlink" href="#public-signals-documentation" title="链接到此章节">&para;</a></h2>
 <h3 id="signal-stage_start">signal stage_start<a class="headerlink" href="#signal-stage_start" title="链接到此章节">&para;</a></h3>
@@ -1567,18 +1582,18 @@
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><a href="#__codelineno-1-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">constBootStageInfo</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">bs_info</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><a href="#__codelineno-1-3"><span class="linenos" data-linenos="3 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Stage开始执行信号 </p>
+<p>Signal emitted when a stage starts execution. </p>
 <h3 id="signal-stage_completed">signal stage_completed<a class="headerlink" href="#signal-stage_completed" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">void</span><span class="w"> </span><span class="n">stage_completed</span><span class="p">(</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><a href="#__codelineno-2-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">constQString</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">stage_name</span><span class="p">,</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><a href="#__codelineno-2-3"><span class="linenos" data-linenos="3 "></span></a><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">success</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><a href="#__codelineno-2-4"><span class="linenos" data-linenos="4 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Stage完成执行信号 </p>
+<p>Signal emitted when a stage completes execution. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>stage_name</strong> Stage名称 </li>
-<li><strong>success</strong> 是否成功（包括部分成功） </li>
+<li><strong>stage_name</strong> Stage name </li>
+<li><strong>success</strong> Whether the stage succeeded (including partial success) </li>
 </ul>
 <h3 id="signal-stage_partial_failed">signal stage_partial_failed<a class="headerlink" href="#signal-stage_partial_failed" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">void</span><span class="w"> </span><span class="n">stage_partial_failed</span><span class="p">(</span>
@@ -1587,22 +1602,22 @@
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><a href="#__codelineno-3-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">    </span><span class="n">constQString</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">detail</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5"></a><a href="#__codelineno-3-5"><span class="linenos" data-linenos="5 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Stage部分失败信号 </p>
+<p>Signal emitted when a stage partially fails. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>stage_name</strong> Stage名称 </li>
-<li><strong>message</strong> 失败消息 </li>
-<li><strong>detail</strong> 错误详情 </li>
+<li><strong>stage_name</strong> Stage name </li>
+<li><strong>message</strong> Failure message </li>
+<li><strong>detail</strong> Error detail </li>
 </ul>
 <h3 id="signal-chain_finished">signal chain_finished<a class="headerlink" href="#signal-chain_finished" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><a href="#__codelineno-4-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">void</span><span class="w"> </span><span class="n">chain_finished</span><span class="p">(</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><a href="#__codelineno-4-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">constIInitStage</span><span class="o">::</span><span class="n">StageResult</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">final_result</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a><a href="#__codelineno-4-3"><span class="linenos" data-linenos="3 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Chain执行完成信号 </p>
+<p>Signal emitted when the chain execution finishes. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>final_result</strong> 最终结果 </li>
+<li><strong>final_result</strong> Final result </li>
 </ul>
 <h2 id="public-functions-documentation">Public Functions Documentation<a class="headerlink" href="#public-functions-documentation" title="链接到此章节">&para;</a></h2>
 <h3 id="function-initsessionchain">function InitSessionChain<a class="headerlink" href="#function-initsessionchain" title="链接到此章节">&para;</a></h3>
@@ -1618,43 +1633,54 @@
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a><a href="#__codelineno-7-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="w"> </span><span class="n">IInitStage</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">stage</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3"></a><a href="#__codelineno-7-3"><span class="linenos" data-linenos="3 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>添加一个初始化阶段到链尾部 </p>
+<p>Adds an initialization stage to the end of the chain. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>stage</strong> 唯一指针管理的Stage对象 </li>
+<li><strong>stage</strong> Unique pointer to the Stage object </li>
 </ul>
 <h3 id="function-execute">function execute<a class="headerlink" href="#function-execute" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><a href="#__codelineno-8-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">IInitStage</span><span class="o">::</span><span class="n">StageResult</span><span class="w"> </span><span class="n">execute</span><span class="p">()</span>
 </span></code></pre></div>
-<p>执行初始化链 </p>
-<p><strong>Return</strong>: 最终执行结果（OK/PartialFailed/CriticalFailed）</p>
-<p>执行逻辑：</p>
+<p>Executes the initialization chain. </p>
+<p><strong>Return</strong>: Final execution result (OK/PartialFailed/CriticalFailed)</p>
+<p>Execution logic:</p>
 <ol>
-<li>解析依赖图并生成拓扑排序</li>
-<li>按顺序执行各Stage</li>
-<li>遇到CriticalFailed立即停止并返回</li>
-<li>PartialFailed记录但继续执行 </li>
+<li>Resolve dependency graph and generate topological sort</li>
+<li>Execute stages in order</li>
+<li>Stop immediately on CriticalFailed</li>
+<li>Log PartialFailed but continue execution </li>
 </ol>
 <h3 id="function-get_dependency_graph_debug_string">function get_dependency_graph_debug_string<a class="headerlink" href="#function-get_dependency_graph_debug_string" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><a href="#__codelineno-9-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">QString</span><span class="w"> </span><span class="n">get_dependency_graph_debug_string</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
 </span></code></pre></div>
-<p>获取依赖图的调试字符串（用于调试和日志） </p>
-<p><strong>Return</strong>: 描述依赖关系的可读字符串 </p>
+<p>Gets the dependency graph debug string (for debugging and logging) </p>
+<p><strong>Return</strong>: Human-readable string describing dependency relationships </p>
 <h3 id="function-reset">function reset<a class="headerlink" href="#function-reset" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><a href="#__codelineno-10-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">void</span><span class="w"> </span><span class="n">reset</span><span class="p">()</span>
 </span></code></pre></div>
-<p>重置链状态，允许重新执行 </p>
+<p>Resets the chain state, allowing re-execution. </p>
+<h3 id="function-find_stage">function find_stage<a class="headerlink" href="#function-find_stage" title="链接到此章节">&para;</a></h3>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><a href="#__codelineno-11-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">cf</span><span class="o">::</span><span class="n">WeakPtr</span><span class="o">&lt;</span><span class="w"> </span><span class="n">IInitStage</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">find_stage</span><span class="p">(</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2"></a><a href="#__codelineno-11-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string_view</span><span class="w"> </span><span class="n">stage_name</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3"></a><a href="#__codelineno-11-3"><span class="linenos" data-linenos="3 "></span></a><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+</span></code></pre></div>
+<p>Finds a Stage by name and returns its <a href="../classcf_1_1WeakPtr/">WeakPtr</a>. </p>
+<p><strong>Parameters</strong>: </p>
+<ul>
+<li><strong>stage_name</strong> Stage name </li>
+</ul>
+<p><strong>Return</strong>: Valid WeakPtr<IInitStage> if found, invalid <a href="../classcf_1_1WeakPtr/">WeakPtr</a> otherwise </p>
 <h3 id="function-size">function size<a class="headerlink" href="#function-size" title="链接到此章节">&para;</a></h3>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><a href="#__codelineno-11-1"><span class="linenos" data-linenos="1 "></span></a><span class="kr">inline</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><a href="#__codelineno-12-1"><span class="linenos" data-linenos="1 "></span></a><span class="kr">inline</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
 </span></code></pre></div>
-<p>获取链中的Stage数量 </p>
-<p><strong>Return</strong>: Stage数量 </p>
+<p>Gets the number of stages in the chain. </p>
+<p><strong>Return</strong>: Number of stages </p>
 <h3 id="function-getchainref">function GetChainRef<a class="headerlink" href="#function-getchainref" title="链接到此章节">&para;</a></h3>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><a href="#__codelineno-12-1"><span class="linenos" data-linenos="1 "></span></a><span class="k">static</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">WeakPtr</span><span class="o">&lt;</span><span class="w"> </span><span class="n">InitSessionChain</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetChainRef</span><span class="p">()</span>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1"></a><a href="#__codelineno-13-1"><span class="linenos" data-linenos="1 "></span></a><span class="k">static</span><span class="w"> </span><span class="n">cf</span><span class="o">::</span><span class="n">WeakPtr</span><span class="o">&lt;</span><span class="w"> </span><span class="n">InitSessionChain</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetChainRef</span><span class="p">()</span>
 </span></code></pre></div>
-<p>获取全局Chain的WeakPtr引用（单例模式） </p>
+<p>Gets the global Chain's <a href="../classcf_1_1WeakPtr/">WeakPtr</a> reference (singleton pattern) </p>
 <hr />
-<p>Updated on 2026-04-09 at 16:26:57 +0000</p>
+<p>Updated on 2026-04-10 at 14:46:24 +0000</p>
 
 
 
@@ -1677,7 +1703,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 22:46:26 CST">2026年4月10日 22:46:26</span>
   </span>
 
     
@@ -1687,7 +1713,7 @@
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 00:27:00 CST">2026年4月10日 00:27:00</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月10日 22:46:26 CST">2026年4月10日 22:46:26</span>
   </span>
 
     
