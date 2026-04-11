@@ -729,11 +729,23 @@
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1config_1_1IConfigBackend/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1config_1_1IConfigStorePathProvider/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1config_1_1JsonConfigBackend/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1config_1_1KeyHelper/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/classcf_1_1config_1_1QSettingsBackend/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
@@ -1413,6 +1425,10 @@
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/structcf_1_1desktop_1_1platform_1_1ShellLayerFactoryAPI/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Classes/structcf_1_1desktop_1_1platform__strategy_1_1PlatformFactoryAPI/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
@@ -1977,6 +1993,14 @@
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/config__backend_8h/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/config__backend__factory_8h/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/config__impl_8h/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
@@ -2261,6 +2285,10 @@
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/dir_6efcebc8f0b536c56733f0878eddfff1/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/dir_70f51bf039704ae1ab82ee713a72cfe5/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
@@ -2366,6 +2394,10 @@
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/dir_a76bb42a93260d9890ff873bdd80e3de/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/dir_aadb44c65d0a8ea1b30081b3420db83a/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
@@ -2657,6 +2689,10 @@
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/json__backend_8h/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/label_8h/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
@@ -2797,6 +2833,10 @@
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/qsettings__backend_8h/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/qt__backend_8h/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
@@ -2838,6 +2878,10 @@
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/separator_8h/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/shell__layer__helper_8h/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>
@@ -2942,6 +2986,10 @@
     </url>
     <url>
          <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/ui_2export_8h/</loc>
+         <lastmod>2026-04-11</lastmod>
+    </url>
+    <url>
+         <loc>https://awesome-embedded-learning-studio.github.io/CFDesktop/api/Files/wallpaper__setup_8h/</loc>
          <lastmod>2026-04-11</lastmod>
     </url>
     <url>

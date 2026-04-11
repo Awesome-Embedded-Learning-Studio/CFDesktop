@@ -1299,11 +1299,14 @@
 <li><strong>class <a href="../Classes/classcf_1_1config_1_1ConfigStoreImpl/">ConfigStoreImpl</a></strong> <br>Internal implementation of <a href="../Classes/classcf_1_1config_1_1ConfigStore/">ConfigStore</a>. </li>
 <li><strong>struct <a href="../Classes/structcf_1_1config_1_1DeferredWatcherEvent/">DeferredWatcherEvent</a></strong> <br>Deferred watcher event for callback execution after lock release. </li>
 <li><strong>class <a href="../Classes/classcf_1_1config_1_1DesktopConfigStorePathProvider/">DesktopConfigStorePathProvider</a></strong> <br>Default path provider for CFDesktop project. </li>
+<li><strong>class <a href="../Classes/classcf_1_1config_1_1IConfigBackend/">IConfigBackend</a></strong> <br>Abstract backend for persistent key-value storage. </li>
 <li><strong>class <a href="../Classes/classcf_1_1config_1_1IConfigStorePathProvider/">IConfigStorePathProvider</a></strong> <br>Abstract interface for providing config store file paths. </li>
+<li><strong>class <a href="../Classes/classcf_1_1config_1_1JsonConfigBackend/">JsonConfigBackend</a></strong> <br>Config backend backed by a JSON file. </li>
 <li><strong>struct <a href="../Classes/structcf_1_1config_1_1Key/">Key</a></strong> <br>Owning container for a configuration key. </li>
 <li><strong>class <a href="../Classes/classcf_1_1config_1_1KeyHelper/">KeyHelper</a></strong> <br>Base helper class for key representation conversions. </li>
 <li><strong>struct <a href="../Classes/structcf_1_1config_1_1KeyView/">KeyView</a></strong> <br>Non-owning view of a configuration key. </li>
 <li><strong>struct <a href="../Classes/structcf_1_1config_1_1PendingChange/">PendingChange</a></strong> <br>Pending change for manual notification. </li>
+<li><strong>class <a href="../Classes/classcf_1_1config_1_1QSettingsBackend/">QSettingsBackend</a></strong> <br>Config backend backed by QSettings (INI format). </li>
 <li><strong>struct <a href="../Classes/structcf_1_1config_1_1WatcherEntry/">WatcherEntry</a></strong> <br>Watcher entry for pattern matching. </li>
 <li><strong>namespace <a href="../Namespaces/namespacecf_1_1config_1_1detail/">detail</a></strong> </li>
 </ul>
@@ -1389,6 +1392,7 @@
 </li>
 <li><strong>namespace <a href="../Namespaces/namespacecf_1_1desktop_1_1platform/">platform</a></strong> <ul>
 <li><strong>struct <a href="../Classes/structcf_1_1desktop_1_1platform_1_1DisplayBackendFactoryAPI/">DisplayBackendFactoryAPI</a></strong> <br>Platform factory API for display server backend creation and destruction. </li>
+<li><strong>struct <a href="../Classes/structcf_1_1desktop_1_1platform_1_1ShellLayerFactoryAPI/">ShellLayerFactoryAPI</a></strong> <br>Platform factory API for shell layer and strategy creation. </li>
 </ul>
 </li>
 <li><strong>namespace <a href="../Namespaces/namespacecf_1_1desktop_1_1platform__strategy/">platform_strategy</a></strong> <ul>
@@ -1633,7 +1637,7 @@
 </li>
 </ul>
 <hr />
-<p>Updated on 2026-04-11 at 01:25:49 +0000</p>
+<p>Updated on 2026-04-11 at 04:35:17 +0000</p>
 
 
 
@@ -1656,7 +1660,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 09:25:50 CST">2026年4月11日 09:25:50</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 12:35:18 CST">2026年4月11日 12:35:18</span>
   </span>
 
     
@@ -1666,7 +1670,7 @@
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 09:25:50 CST">2026年4月11日 09:25:50</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 12:35:18 CST">2026年4月11日 12:35:18</span>
   </span>
 
     

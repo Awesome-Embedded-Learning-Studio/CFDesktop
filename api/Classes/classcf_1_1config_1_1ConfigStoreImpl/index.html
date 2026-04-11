@@ -1600,7 +1600,7 @@
 </tr>
 <tr>
 <td>std::any</td>
-<td><strong><a href="./#function-query">query</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; key, <a href="../classcf_1_1unexpected/">const</a> std::any &amp; default_value)<br>Query a configuration value by priority.</td>
+<td><strong><a href="./#function-query">query</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; key, <a href="../classcf_1_1unexpected/">const</a> std::any &amp; default_value)<br>Query a configuration value with a fallback default.</td>
 </tr>
 <tr>
 <td>std::any</td>
@@ -1608,27 +1608,27 @@
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">bool</a></td>
-<td><strong><a href="./#function-has-key">has_key</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; key)<br>Check if a key exists (searches all layers by priority).</td>
+<td><strong><a href="./#function-has-key">has_key</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; key)<br>Check whether a key exists in any layer.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">bool</a></td>
-<td><strong><a href="./#function-has-key">has_key</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; key, <a href="../../Namespaces/namespacecf_1_1config/#enum-layer">Layer</a> layer)<br>Check if a key exists in a specific layer.</td>
+<td><strong><a href="./#function-has-key">has_key</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; key, <a href="../../Namespaces/namespacecf_1_1config/#enum-layer">Layer</a> layer)<br>Check whether a key exists in a specific layer.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">bool</a></td>
-<td><strong><a href="./#function-set">set</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; key, <a href="../classcf_1_1unexpected/">const</a> std::any &amp; value, <a href="../../Namespaces/namespacecf_1_1config/#enum-layer">Layer</a> layer, <a href="../../Namespaces/namespacecf_1_1config/#enum-notifypolicy">NotifyPolicy</a> notify_policy)<br>Set a configuration value.</td>
+<td><strong><a href="./#function-set">set</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; key, <a href="../classcf_1_1unexpected/">const</a> std::any &amp; value, <a href="../../Namespaces/namespacecf_1_1config/#enum-layer">Layer</a> layer, <a href="../../Namespaces/namespacecf_1_1config/#enum-notifypolicy">NotifyPolicy</a> notify_policy)<br>Set a key-value pair in the specified layer.</td>
 </tr>
 <tr>
 <td><a href="../../Namespaces/namespacecf_1_1config/#enum-registerresult">RegisterResult</a></td>
-<td><strong><a href="./#function-register-key">register_key</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../structcf_1_1config_1_1Key/">Key</a> &amp; key, <a href="../classcf_1_1unexpected/">const</a> std::any &amp; init_value, <a href="../../Namespaces/namespacecf_1_1config/#enum-layer">Layer</a> layer, <a href="../../Namespaces/namespacecf_1_1config/#enum-notifypolicy">NotifyPolicy</a> notify_policy)<br>Register a key with an initial value.</td>
+<td><strong><a href="./#function-register-key">register_key</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../structcf_1_1config_1_1Key/">Key</a> &amp; key, <a href="../classcf_1_1unexpected/">const</a> std::any &amp; init_value, <a href="../../Namespaces/namespacecf_1_1config/#enum-layer">Layer</a> layer, <a href="../../Namespaces/namespacecf_1_1config/#enum-notifypolicy">NotifyPolicy</a> notify_policy)<br>Register a new key with an initial value in a layer.</td>
 </tr>
 <tr>
 <td><a href="../../Namespaces/namespacecf_1_1config/#enum-unregisterresult">UnRegisterResult</a></td>
-<td><strong><a href="./#function-unregister-key">unregister_key</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../structcf_1_1config_1_1Key/">Key</a> &amp; key, <a href="../../Namespaces/namespacecf_1_1config/#enum-layer">Layer</a> layer, <a href="../../Namespaces/namespacecf_1_1config/#enum-notifypolicy">NotifyPolicy</a> notify_policy)<br>Unregister (remove) a key.</td>
+<td><strong><a href="./#function-unregister-key">unregister_key</a></strong>(<a href="../classcf_1_1unexpected/">const</a><a href="../structcf_1_1config_1_1Key/">Key</a> &amp; key, <a href="../../Namespaces/namespacecf_1_1config/#enum-layer">Layer</a> layer, <a href="../../Namespaces/namespacecf_1_1config/#enum-notifypolicy">NotifyPolicy</a> notify_policy)<br>Unregister a key from a layer.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#function-clear">clear</a></strong>()<br>Clear all layers (including Temp).</td>
+<td><strong><a href="./#function-clear">clear</a></strong>()<br>Clear all layers and cache.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
@@ -1636,27 +1636,27 @@
 </tr>
 <tr>
 <td><a href="../../Namespaces/namespacecf_1_1config/#using-watcherhandle">WatcherHandle</a></td>
-<td><strong><a href="./#function-watch">watch</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; pattern, <a href="../../Namespaces/namespacecf_1_1config/#using-watcher">Watcher</a> callback, <a href="../../Namespaces/namespacecf_1_1config/#enum-notifypolicy">NotifyPolicy</a> policy)<br>Add a watcher for a key pattern.</td>
+<td><strong><a href="./#function-watch">watch</a></strong>(<a href="../classcf_1_1unexpected/">const</a> std::string &amp; pattern, <a href="../../Namespaces/namespacecf_1_1config/#using-watcher">Watcher</a> callback, <a href="../../Namespaces/namespacecf_1_1config/#enum-notifypolicy">NotifyPolicy</a> policy)<br>Register a watcher callback for keys matching a pattern.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#function-unwatch">unwatch</a></strong>(<a href="../../Namespaces/namespacecf_1_1config/#using-watcherhandle">WatcherHandle</a> handle)<br>Remove a watcher.</td>
+<td><strong><a href="./#function-unwatch">unwatch</a></strong>(<a href="../../Namespaces/namespacecf_1_1config/#using-watcherhandle">WatcherHandle</a> handle)<br>Remove a previously registered watcher.</td>
 </tr>
 <tr>
 <td><a href="../../Namespaces/namespacecf_1_1config/#enum-notifyresult">NotifyResult</a></td>
-<td><strong><a href="./#function-notify">notify</a></strong>()<br>Trigger all Manual watchers.</td>
+<td><strong><a href="./#function-notify">notify</a></strong>()<br>Manually trigger all pending watcher notifications.</td>
 </tr>
 <tr>
 <td>std::size_t</td>
-<td><strong><a href="./#function-pending-changes">pending_changes</a></strong>() const<br>Get count of pending changes.</td>
+<td><strong><a href="./#function-pending-changes">pending_changes</a></strong>() const<br>Get the number of pending changes awaiting notification.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#function-sync">sync</a></strong>(<a href="../classcf_1_1unexpected/">bool</a> async)<br>Sync dirty layers to disk.</td>
+<td><strong><a href="./#function-sync">sync</a></strong>(<a href="../classcf_1_1unexpected/">bool</a> async)<br>Persist all dirty layers to disk.</td>
 </tr>
 <tr>
 <td><a href="../classcf_1_1unexpected/">void</a></td>
-<td><strong><a href="./#function-reload">reload</a></strong>()<br>Reload configuration from disk.</td>
+<td><strong><a href="./#function-reload">reload</a></strong>()<br>Re-read all layers from disk, discarding in-memory changes.</td>
 </tr>
 </tbody>
 </table>
@@ -1675,7 +1675,7 @@
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><a href="#__codelineno-1-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">ConfigStoreImpl</span><span class="p">()</span>
 </span></code></pre></div>
 <p>Constructs a new <a href="./">ConfigStoreImpl</a> with default path provider. </p>
-<p>Initializes QSettings for each layer using <a href="../classcf_1_1config_1_1DesktopConfigStorePathProvider/">DesktopConfigStorePathProvider</a>:</p>
+<p>Initializes backends for each layer using <a href="../classcf_1_1config_1_1DesktopConfigStorePathProvider/">DesktopConfigStorePathProvider</a>:</p>
 <ul>
 <li>System: /etc/cfdesktop/system.ini (read-write, may not exist)</li>
 <li>User: ~/.config/cfdesktop/user.ini (read-write, created if needed)</li>
@@ -1692,14 +1692,6 @@
 <ul>
 <li><strong>path_provider</strong> Custom path provider for config file locations. Allows tests and other projects to customize paths. </li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: None </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
 <h3 id="function-configstoreimpl_2">function ~ConfigStoreImpl<a class="headerlink" href="#function-configstoreimpl_2" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><a href="#__codelineno-3-1"><span class="linenos" data-linenos="1 "></span></a><span class="o">~</span><span class="n">ConfigStoreImpl</span><span class="p">()</span>
 </span></code></pre></div>
@@ -1731,21 +1723,14 @@
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3"></a><a href="#__codelineno-8-3"><span class="linenos" data-linenos="3 "></span></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">any</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">default_value</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4"></a><a href="#__codelineno-8-4"><span class="linenos" data-linenos="4 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Query a configuration value by priority. </p>
+<p>Query a configuration value with a fallback default. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>key</strong> The full key to query </li>
-<li><strong>default_value</strong> Value to return if key not found </li>
+<li><strong>key</strong> The configuration key to look up. </li>
+<li><strong>default_value</strong> The value to return if the key is not found.</li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: The found value or default_value </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
-<p>Searches layers in order: Temp → App → User → System</p>
+<p><strong>Return</strong>: The queried value, or <code>default_value</code> if the key is absent. </p>
+<p>Searches all layers (merged view) for the given key and returns the first match found. If the key does not exist in any layer, <code>default_value</code> is returned instead.</p>
 <h3 id="function-query_1">function query<a class="headerlink" href="#function-query_1" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><a href="#__codelineno-9-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">std</span><span class="o">::</span><span class="n">any</span><span class="w"> </span><span class="n">query</span><span class="p">(</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2"></a><a href="#__codelineno-9-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">,</span>
@@ -1755,55 +1740,34 @@
 <p>Query a configuration value from a specific layer. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>key</strong> The full key to query </li>
-<li><strong>layer</strong> The specific layer to query </li>
+<li><strong>key</strong> The configuration key to look up. </li>
+<li><strong>layer</strong> The layer to search.</li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: std::any with the value, or std::any() if not found </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
+<p><strong>Return</strong>: The value stored in the specified layer. </p>
 <h3 id="function-has_key">function has_key<a class="headerlink" href="#function-has_key" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><a href="#__codelineno-10-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">bool</span><span class="w"> </span><span class="n">has_key</span><span class="p">(</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2"></a><a href="#__codelineno-10-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3"></a><a href="#__codelineno-10-3"><span class="linenos" data-linenos="3 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Check if a key exists (searches all layers by priority). </p>
+<p>Check whether a key exists in any layer. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>key</strong> The full key to check </li>
+<li><strong>key</strong> The configuration key to check.</li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: true if the key exists in any layer, false otherwise </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
+<p><strong>Return</strong>: True if the key exists in at least one layer, false otherwise. </p>
 <h3 id="function-has_key_1">function has_key<a class="headerlink" href="#function-has_key_1" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><a href="#__codelineno-11-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">bool</span><span class="w"> </span><span class="n">has_key</span><span class="p">(</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2"></a><a href="#__codelineno-11-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">,</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3"></a><a href="#__codelineno-11-3"><span class="linenos" data-linenos="3 "></span></a><span class="w">    </span><span class="n">Layer</span><span class="w"> </span><span class="n">layer</span>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4"></a><a href="#__codelineno-11-4"><span class="linenos" data-linenos="4 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Check if a key exists in a specific layer. </p>
+<p>Check whether a key exists in a specific layer. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>key</strong> The full key to check </li>
-<li><strong>layer</strong> The specific layer to check </li>
+<li><strong>key</strong> The configuration key to check. </li>
+<li><strong>layer</strong> The layer to search.</li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: true if the key exists in the specified layer, false otherwise </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
+<p><strong>Return</strong>: True if the key exists in the specified layer, false otherwise. </p>
 <h3 id="function-set">function set<a class="headerlink" href="#function-set" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><a href="#__codelineno-12-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">bool</span><span class="w"> </span><span class="n">set</span><span class="p">(</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2"></a><a href="#__codelineno-12-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">,</span>
@@ -1812,22 +1776,15 @@
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5"></a><a href="#__codelineno-12-5"><span class="linenos" data-linenos="5 "></span></a><span class="w">    </span><span class="n">NotifyPolicy</span><span class="w"> </span><span class="n">notify_policy</span>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6"></a><a href="#__codelineno-12-6"><span class="linenos" data-linenos="6 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Set a configuration value. </p>
+<p>Set a key-value pair in the specified layer. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>key</strong> The full key to set </li>
-<li><strong>value</strong> The value to set </li>
-<li><strong>layer</strong> The target layer </li>
-<li><strong>notify_policy</strong> Whether to notify immediately </li>
+<li><strong>key</strong> The configuration key to set. </li>
+<li><strong>value</strong> The value to store. </li>
+<li><strong>layer</strong> The target layer. </li>
+<li><strong>notify_policy</strong> Controls when watchers are notified.</li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: true if successful, false otherwise </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
+<p><strong>Return</strong>: True if the value was set successfully, false otherwise. </p>
 <h3 id="function-register_key">function register_key<a class="headerlink" href="#function-register_key" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1"></a><a href="#__codelineno-13-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">RegisterResult</span><span class="w"> </span><span class="n">register_key</span><span class="p">(</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2"></a><a href="#__codelineno-13-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">constKey</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">,</span>
@@ -1836,22 +1793,15 @@
 </span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5"></a><a href="#__codelineno-13-5"><span class="linenos" data-linenos="5 "></span></a><span class="w">    </span><span class="n">NotifyPolicy</span><span class="w"> </span><span class="n">notify_policy</span>
 </span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6"></a><a href="#__codelineno-13-6"><span class="linenos" data-linenos="6 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Register a key with an initial value. </p>
+<p>Register a new key with an initial value in a layer. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>key</strong> The key to register </li>
-<li><strong>init_value</strong> The initial value for the key </li>
-<li><strong>layer</strong> The target layer </li>
-<li><strong>notify_policy</strong> Whether to notify immediately </li>
+<li><strong>key</strong> The key descriptor to register. </li>
+<li><strong>init_value</strong> The initial value for the key. </li>
+<li><strong>layer</strong> The target layer. </li>
+<li><strong>notify_policy</strong> Controls when watchers are notified.</li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: RegisterResult indicating success or failure </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
+<p><strong>Return</strong>: The result of the registration attempt. </p>
 <h3 id="function-unregister_key">function unregister_key<a class="headerlink" href="#function-unregister_key" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1"></a><a href="#__codelineno-14-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">UnRegisterResult</span><span class="w"> </span><span class="n">unregister_key</span><span class="p">(</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2"></a><a href="#__codelineno-14-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">constKey</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">key</span><span class="p">,</span>
@@ -1859,31 +1809,28 @@
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4"></a><a href="#__codelineno-14-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">    </span><span class="n">NotifyPolicy</span><span class="w"> </span><span class="n">notify_policy</span>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5"></a><a href="#__codelineno-14-5"><span class="linenos" data-linenos="5 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Unregister (remove) a key. </p>
+<p>Unregister a key from a layer. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>key</strong> The key to unregister </li>
-<li><strong>layer</strong> The target layer </li>
-<li><strong>notify_policy</strong> Whether to notify immediately </li>
+<li><strong>key</strong> The key descriptor to unregister. </li>
+<li><strong>layer</strong> The layer to remove the key from. </li>
+<li><strong>notify_policy</strong> Controls when watchers are notified.</li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: UnRegisterResult indicating success or failure </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
+<p><strong>Return</strong>: The result of the unregistration attempt. </p>
 <h3 id="function-clear">function clear<a class="headerlink" href="#function-clear" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1"></a><a href="#__codelineno-15-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">void</span><span class="w"> </span><span class="n">clear</span><span class="p">()</span>
 </span></code></pre></div>
-<p>Clear all layers (including Temp). </p>
+<p>Clear all layers and cache. </p>
 <h3 id="function-clear_layer">function clear_layer<a class="headerlink" href="#function-clear_layer" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1"></a><a href="#__codelineno-16-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">void</span><span class="w"> </span><span class="n">clear_layer</span><span class="p">(</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2"></a><a href="#__codelineno-16-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">Layer</span><span class="w"> </span><span class="n">layer</span>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3"></a><a href="#__codelineno-16-3"><span class="linenos" data-linenos="3 "></span></a><span class="p">)</span>
 </span></code></pre></div>
 <p>Clear a specific layer. </p>
+<p><strong>Parameters</strong>: </p>
+<ul>
+<li><strong>layer</strong> The layer to clear. </li>
+</ul>
 <h3 id="function-watch">function watch<a class="headerlink" href="#function-watch" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1"></a><a href="#__codelineno-17-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">WatcherHandle</span><span class="w"> </span><span class="n">watch</span><span class="p">(</span>
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2"></a><a href="#__codelineno-17-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">pattern</span><span class="p">,</span>
@@ -1891,69 +1838,50 @@
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4"></a><a href="#__codelineno-17-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">    </span><span class="n">NotifyPolicy</span><span class="w"> </span><span class="n">policy</span>
 </span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5"></a><a href="#__codelineno-17-5"><span class="linenos" data-linenos="5 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Add a watcher for a key pattern. </p>
+<p>Register a watcher callback for keys matching a pattern. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>pattern</strong> <a href="../structcf_1_1config_1_1Key/">Key</a> pattern (supports * wildcard) </li>
-<li><strong>callback</strong> Callback function </li>
-<li><strong>policy</strong> When to trigger </li>
+<li><strong>pattern</strong> The key pattern to watch (supports * wildcard). </li>
+<li><strong>callback</strong> The function to call when a matching key changes. </li>
+<li><strong>policy</strong> When to trigger this watcher.</li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: Watcher handle for removal </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
+<p><strong>Return</strong>: A handle that can be used to remove the watcher later. </p>
 <h3 id="function-unwatch">function unwatch<a class="headerlink" href="#function-unwatch" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1"></a><a href="#__codelineno-18-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">void</span><span class="w"> </span><span class="n">unwatch</span><span class="p">(</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2"></a><a href="#__codelineno-18-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">WatcherHandle</span><span class="w"> </span><span class="n">handle</span>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3"></a><a href="#__codelineno-18-3"><span class="linenos" data-linenos="3 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Remove a watcher. </p>
+<p>Remove a previously registered watcher. </p>
+<p><strong>Parameters</strong>: </p>
+<ul>
+<li><strong>handle</strong> The watcher handle returned by <a href="./#function-watch">watch()</a>. </li>
+</ul>
 <h3 id="function-notify">function notify<a class="headerlink" href="#function-notify" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1"></a><a href="#__codelineno-19-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">NotifyResult</span><span class="w"> </span><span class="n">notify</span><span class="p">()</span>
 </span></code></pre></div>
-<p>Trigger all Manual watchers. </p>
-<p><strong>Return</strong>: NotifyResult indicating success/failure </p>
+<p>Manually trigger all pending watcher notifications. </p>
+<p><strong>Return</strong>: The result of the notification dispatch. </p>
 <h3 id="function-pending_changes">function pending_changes<a class="headerlink" href="#function-pending_changes" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1"></a><a href="#__codelineno-20-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">pending_changes</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
 </span></code></pre></div>
-<p>Get count of pending changes. </p>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: The number of pending changes </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
+<p>Get the number of pending changes awaiting notification. </p>
+<p><strong>Return</strong>: The count of pending changes. </p>
 <h3 id="function-sync">function sync<a class="headerlink" href="#function-sync" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1"></a><a href="#__codelineno-21-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">void</span><span class="w"> </span><span class="n">sync</span><span class="p">(</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2"></a><a href="#__codelineno-21-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">async</span>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3"></a><a href="#__codelineno-21-3"><span class="linenos" data-linenos="3 "></span></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Sync dirty layers to disk. </p>
+<p>Persist all dirty layers to disk. </p>
 <p><strong>Parameters</strong>: </p>
 <ul>
-<li><strong>async</strong> If true, sync asynchronously (not implemented, always sync) </li>
+<li><strong>async</strong> If true, perform the write asynchronously; otherwise block until complete. </li>
 </ul>
-<p><strong>Exceptions</strong>: </p>
-<ul>
-<li><strong>None</strong> </li>
-</ul>
-<p><strong>Return</strong>: None </p>
-<p><strong>Since</strong>: 1.0 </p>
-<p><strong>Note</strong>: None </p>
-<p><strong>Warning</strong>: None </p>
 <h3 id="function-reload">function reload<a class="headerlink" href="#function-reload" title="链接到此章节">&para;</a></h3>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1"></a><a href="#__codelineno-22-1"><span class="linenos" data-linenos="1 "></span></a><span class="kt">void</span><span class="w"> </span><span class="n">reload</span><span class="p">()</span>
 </span></code></pre></div>
-<p>Reload configuration from disk. </p>
-<p>Clears Temp layer and cache, reloads from QSettings. </p>
+<p>Re-read all layers from disk, discarding in-memory changes. </p>
 <hr />
-<p>Updated on 2026-04-11 at 01:25:48 +0000</p>
+<p>Updated on 2026-04-11 at 04:35:16 +0000</p>
 
 
 
@@ -1976,7 +1904,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 09:25:50 CST">2026年4月11日 09:25:50</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 12:35:18 CST">2026年4月11日 12:35:18</span>
   </span>
 
     
@@ -1986,7 +1914,7 @@
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 09:25:50 CST">2026年4月11日 09:25:50</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 12:35:18 CST">2026年4月11日 12:35:18</span>
   </span>
 
     

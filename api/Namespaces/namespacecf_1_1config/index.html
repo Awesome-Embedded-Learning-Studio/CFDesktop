@@ -1245,6 +1245,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#types-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1327,6 +1338,34 @@
     <span class="md-ellipsis">
       
         using WatcherHandle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions Documentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-createbackend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        function createBackend
       
     </span>
   </a>
@@ -1445,7 +1484,15 @@
 </tr>
 <tr>
 <td>class</td>
+<td><strong><a href="../../Classes/classcf_1_1config_1_1IConfigBackend/">cf::config::IConfigBackend</a></strong> <br>Abstract backend for persistent key-value storage.</td>
+</tr>
+<tr>
+<td>class</td>
 <td><strong><a href="../../Classes/classcf_1_1config_1_1IConfigStorePathProvider/">cf::config::IConfigStorePathProvider</a></strong> <br>Abstract interface for providing config store file paths.</td>
+</tr>
+<tr>
+<td>class</td>
+<td><strong><a href="../../Classes/classcf_1_1config_1_1JsonConfigBackend/">cf::config::JsonConfigBackend</a></strong> <br>Config backend backed by a JSON file.</td>
 </tr>
 <tr>
 <td>struct</td>
@@ -1462,6 +1509,10 @@
 <tr>
 <td>struct</td>
 <td><strong><a href="../../Classes/structcf_1_1config_1_1PendingChange/">cf::config::PendingChange</a></strong> <br>Pending change for manual notification.</td>
+</tr>
+<tr>
+<td>class</td>
+<td><strong><a href="../../Classes/classcf_1_1config_1_1QSettingsBackend/">cf::config::QSettingsBackend</a></strong> <br>Config backend backed by QSettings (INI format).</td>
 </tr>
 <tr>
 <td>struct</td>
@@ -1505,6 +1556,21 @@
 <tr>
 <td>using std::size_t</td>
 <td><strong><a href="./#using-watcherhandle">WatcherHandle</a></strong> <br>Watcher management handle.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="链接到此章节">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>std::unique_ptr&lt; <a href="../../Classes/classcf_1_1config_1_1IConfigBackend/">IConfigBackend</a> &gt;</td>
+<td><strong><a href="./#function-createbackend">createBackend</a></strong>(<a href="../../Classes/classcf_1_1unexpected/">const</a><a href="../../Classes/classcf_1_1unexpected/">QString</a> &amp; filePath)<br>Create a config backend appropriate for the given file path.</td>
 </tr>
 </tbody>
 </table>
@@ -1670,8 +1736,25 @@
 </span></code></pre></div>
 <p>Watcher management handle. </p>
 <p>Opaque handle type used to cancel a watcher. Returned by <a href="../../Classes/classcf_1_1config_1_1ConfigStore/#function-watch">ConfigStore::watch()</a> and used with <a href="../../Classes/classcf_1_1config_1_1ConfigStore/#function-unwatch">ConfigStore::unwatch()</a>. </p>
+<h2 id="functions-documentation">Functions Documentation<a class="headerlink" href="#functions-documentation" title="链接到此章节">&para;</a></h2>
+<h3 id="function-createbackend">function createBackend<a class="headerlink" href="#function-createbackend" title="链接到此章节">&para;</a></h3>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><a href="#__codelineno-2-1"><span class="linenos" data-linenos="1 "></span></a><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="w"> </span><span class="n">IConfigBackend</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">createBackend</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><a href="#__codelineno-2-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">    </span><span class="n">constQString</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">filePath</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><a href="#__codelineno-2-3"><span class="linenos" data-linenos="3 "></span></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Create a config backend appropriate for the given file path. </p>
+<p><strong>Parameters</strong>: </p>
+<ul>
+<li><strong>filePath</strong> Full path to the config file. </li>
+</ul>
+<p><strong>Return</strong>: Backend instance, or nullptr if path is empty. </p>
+<p>Detects format from file extension:</p>
+<ul>
+<li>".json" → <a href="../../Classes/classcf_1_1config_1_1JsonConfigBackend/">JsonConfigBackend</a></li>
+<li>otherwise → <a href="../../Classes/classcf_1_1config_1_1QSettingsBackend/">QSettingsBackend</a> (INI)</li>
+</ul>
 <hr />
-<p>Updated on 2026-04-11 at 01:25:48 +0000</p>
+<p>Updated on 2026-04-11 at 04:35:16 +0000</p>
 
 
 
@@ -1694,7 +1777,7 @@
     <span class="md-icon" title="最后更新">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 09:25:51 CST">2026年4月11日 09:25:51</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 12:35:19 CST">2026年4月11日 12:35:19</span>
   </span>
 
     
@@ -1704,7 +1787,7 @@
     <span class="md-icon" title="创建日期">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 09:25:51 CST">2026年4月11日 09:25:51</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="2026年4月11日 12:35:19 CST">2026年4月11日 12:35:19</span>
   </span>
 
     
