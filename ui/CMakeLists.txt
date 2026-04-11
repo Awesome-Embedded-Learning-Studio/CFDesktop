@@ -2,6 +2,10 @@ project(UI DESCRIPTION "CFDesktop UI Components" LANGUAGES CXX)
 
 log_info("UI" "Start UI Components Configurations")
 
+# All sources under ui/ are compiled into cfui.dll, so define cfui_EXPORTS
+# so that CF_UI_EXPORT expands to __declspec(dllexport) instead of dllimport.
+add_compile_definitions(cfui_EXPORTS)
+
 # Base Supports the UI Components Needs
 add_subdirectory(base)
 
@@ -24,21 +28,29 @@ add_subdirectory(models)
 
 add_library(cfui SHARED)
 
-# Link against STATIC libraries from sub-modules
-# Order: dependencies first (left), then dependents (right)
-# Static libraries are linked left-to-right, so dependents must come after their dependencies
-target_link_libraries(cfui PUBLIC
+# Force all objects into cfui.dll (PRIVATE: only affects cfui's own link step).
+# cfui has no own sources, so the linker would otherwise skip static lib objects.
+# Note: cf_ui_widget is an INTERFACE library — use its actual static lib deps instead.
+target_link_libraries(cfui PRIVATE
+    -Wl,--whole-archive
     cf_ui_base
     cf_ui_core
-    cf_ui_widget
+    cf_ui_core_material
+    cf_ui_widget_material
+    cf_ui_application_support
     cf_ui_components_material
     cf_ui_components
+    -Wl,--no-whole-archive
 )
 
 # Set include directories
 target_include_directories(cfui PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/base>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/components>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/components/material>
     $<INSTALL_INTERFACE:include>
 )
 

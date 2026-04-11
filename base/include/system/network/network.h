@@ -103,7 +103,7 @@ struct IpAddress {
      * @since N/A
      * @ingroup none
      */
-    std::string toString() const;
+    CF_BASE_EXPORT std::string toString() const;
 };
 
 /**
@@ -282,7 +282,7 @@ struct InterfaceInfo {
      * @since N/A
      * @ingroup none
      */
-    std::optional<IpAddress> firstIPv4() const noexcept;
+    CF_BASE_EXPORT std::optional<IpAddress> firstIPv4() const noexcept;
 
     /**
      * @brief  Retrieves the first IPv6 address on this interface.
@@ -293,7 +293,7 @@ struct InterfaceInfo {
      * @since N/A
      * @ingroup none
      */
-    std::optional<IpAddress> firstIPv6() const noexcept;
+    CF_BASE_EXPORT std::optional<IpAddress> firstIPv6() const noexcept;
 };
 
 /**
@@ -392,6 +392,6 @@ cf::expected<NetworkInfo, NetworkQueryError> CF_BASE_EXPORT getNetworkInfo() noe
  * @since       N/A
  * @ingroup     none
  */
-const char* interfaceTypeName(InterfaceType t);
+CF_BASE_EXPORT const char* interfaceTypeName(InterfaceType t);
 
 } // namespace cf

@@ -3,9 +3,10 @@
 # =============================================================================
 
 # Common link libraries for widget tests
-# Note: No gtest_main — each test provides its own main() with QGuiApplication
+# Note: Use cfui shared library to match __declspec(dllimport) in headers.
+# No gtest_main — each test provides its own main() with QGuiApplication
 set(WIDGET_TEST_LIBS
-    cf_ui_widget_material;cf_ui_application_support;cf_ui_components;cf_ui_core;Qt6::Gui;Qt6::Widgets;GTest::gtest
+    cfui;Qt6::Widgets;GTest::gtest
 )
 
 # =============================================================================

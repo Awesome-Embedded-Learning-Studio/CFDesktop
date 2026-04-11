@@ -13,7 +13,6 @@
  */
 #pragma once
 
-#include "base/singleton/simple_singleton.hpp"
 #include "cflog_export.h"
 #include "cflog_level.hpp"
 #include <atomic>
@@ -69,10 +68,7 @@ class CFLOG_API Logger {
      *
      * @return Logger&
      */
-    static Logger& instance() {
-        static Logger* inst = new Logger();
-        return *inst;
-    }
+    static Logger& instance();
 
     /**
      * @brief  Logs a message with the specified level and metadata.

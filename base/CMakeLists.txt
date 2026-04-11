@@ -21,13 +21,18 @@ add_subdirectory(device)
 # Create the unified shared library
 add_library(cfbase SHARED)
 
-# Link static libraries from sub-modules
-target_link_libraries(cfbase PUBLIC
+# Link static libraries from sub-modules with --whole-archive to ensure
+# all symbols (including dllexport) are included in cfbase.dll.
+# Without this, the linker skips static lib objects since cfbase has no own sources.
+# Force all objects into cfbase.dll (PRIVATE: only affects cfbase's link step)
+target_link_libraries(cfbase PRIVATE
+    -Wl,--whole-archive
     cfbase_cpu
     cfbase_memory
     cfbase_network
     cfbase_gpu
     cfbase_console
+    -Wl,--no-whole-archive
 )
 
 # Set include directories

@@ -12,6 +12,7 @@
  * @ingroup ui
  */
 #pragma once
+#include "export.h"
 #include <QtTypes>
 
 namespace cf::ui::base {
@@ -32,7 +33,7 @@ namespace device {
  *
  * @ingroup ui
  */
-struct CanvasUnitHelper {
+struct CF_UI_EXPORT CanvasUnitHelper {
     /**
      * @brief Constructs a CanvasUnitHelper with the specified device pixel ratio.
      *

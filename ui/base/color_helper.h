@@ -13,6 +13,7 @@
  */
 #pragma once
 #include "color.h"
+#include "export.h"
 #include <QList>
 
 namespace cf::ui::base {
@@ -30,7 +31,7 @@ namespace cf::ui::base {
  * @since 0.1
  * @ingroup ui
  */
-CFColor blend(const CFColor& base, CFColor& overlay, float ratio);
+CF_UI_EXPORT CFColor blend(const CFColor& base, CFColor& overlay, float ratio);
 
 /**
  * @brief Applies elevation overlay to a surface color.
@@ -45,7 +46,7 @@ CFColor blend(const CFColor& base, CFColor& overlay, float ratio);
  * @since 0.1
  * @ingroup ui
  */
-CFColor elevationOverlay(CFColor& surface, CFColor& primary, int elevation);
+CF_UI_EXPORT CFColor elevationOverlay(CFColor& surface, CFColor& primary, int elevation);
 
 /**
  * @brief Calculates the contrast ratio between two colors.
@@ -59,7 +60,7 @@ CFColor elevationOverlay(CFColor& surface, CFColor& primary, int elevation);
  * @since 0.1
  * @ingroup ui
  */
-float contrastRatio(CFColor& a, CFColor& b);
+CF_UI_EXPORT float contrastRatio(CFColor& a, CFColor& b);
 
 /**
  * @brief Generates a tonal palette from a key color.
@@ -72,6 +73,6 @@ float contrastRatio(CFColor& a, CFColor& b);
  * @since 0.1
  * @ingroup ui
  */
-QList<CFColor> tonalPalette(CFColor keyColor);
+CF_UI_EXPORT QList<CFColor> tonalPalette(CFColor keyColor);
 
 } // namespace cf::ui::base

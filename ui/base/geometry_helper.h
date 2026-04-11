@@ -12,6 +12,7 @@
  * @ingroup ui
  */
 #pragma once
+#include "export.h"
 #include <QPainterPath>
 
 namespace cf::ui::base {
@@ -47,7 +48,7 @@ enum class ShapeScale {
  * @since 0.1
  * @ingroup ui
  */
-QPainterPath roundedRect(const QRectF& rect, ShapeScale scale);
+CF_UI_EXPORT QPainterPath roundedRect(const QRectF& rect, ShapeScale scale);
 
 /**
  * @brief Creates a rounded rectangle path with uniform corner radius.
@@ -61,7 +62,7 @@ QPainterPath roundedRect(const QRectF& rect, ShapeScale scale);
  * @since 0.1
  * @ingroup ui
  */
-QPainterPath roundedRect(const QRectF& rect, float radius);
+CF_UI_EXPORT QPainterPath roundedRect(const QRectF& rect, float radius);
 
 /**
  * @brief Creates a rounded rectangle path with individual corner radii.
@@ -78,8 +79,8 @@ QPainterPath roundedRect(const QRectF& rect, float radius);
  * @since 0.1
  * @ingroup ui
  */
-QPainterPath roundedRect(const QRectF& rect, float topLeft, float topRight, float bottomLeft,
-                         float bottomRight);
+CF_UI_EXPORT QPainterPath roundedRect(const QRectF& rect, float topLeft, float topRight,
+                                      float bottomLeft, float bottomRight);
 
 } // namespace geometry
 } // namespace cf::ui::base

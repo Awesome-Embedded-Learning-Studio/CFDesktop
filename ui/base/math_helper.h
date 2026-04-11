@@ -13,6 +13,7 @@
  */
 
 #pragma once
+#include "export.h"
 #include <utility>
 
 namespace cf::ui {
@@ -47,7 +48,7 @@ namespace math {
  * @since        0.1
  * @ingroup      ui
  */
-float lerp(float a, float b, float t);
+CF_UI_EXPORT float lerp(float a, float b, float t);
 
 /**
  * @brief  Clamps a value to the specified range.
@@ -65,7 +66,7 @@ float lerp(float a, float b, float t);
  * @since           0.1
  * @ingroup         ui
  */
-float clamp(float value, float min, float max);
+CF_UI_EXPORT float clamp(float value, float min, float max);
 
 /**
  * @brief  Remaps a value from one range to another.
@@ -87,7 +88,7 @@ float clamp(float value, float min, float max);
  * @since           0.1
  * @ingroup         ui
  */
-float remap(float value, float inMin, float inMax, float outMin, float outMax);
+CF_UI_EXPORT float remap(float value, float inMin, float inMax, float outMin, float outMax);
 
 /**
  * @brief  Evaluates a cubic Bezier easing curve.
@@ -109,7 +110,7 @@ float remap(float value, float inMin, float inMax, float outMin, float outMax);
  * @since        0.1
  * @ingroup      ui
  */
-float cubicBezier(float x1, float y1, float x2, float y2, float t);
+CF_UI_EXPORT float cubicBezier(float x1, float y1, float x2, float y2, float t);
 
 /**
  * @brief  Performs a single step of spring physics simulation.
@@ -134,8 +135,8 @@ float cubicBezier(float x1, float y1, float x2, float y2, float t);
  * @since               0.1
  * @ingroup             ui
  */
-std::pair<float, float> springStep(float position, float velocity, float target, float stiffness,
-                                   float damping, float dt);
+CF_UI_EXPORT std::pair<float, float> springStep(float position, float velocity, float target,
+                                                float stiffness, float damping, float dt);
 
 /**
  * @brief  Performs linear interpolation between two angles.
@@ -154,7 +155,7 @@ std::pair<float, float> springStep(float position, float velocity, float target,
  * @since        0.1
  * @ingroup      ui
  */
-float lerpAngle(float a, float b, float t);
+CF_UI_EXPORT float lerpAngle(float a, float b, float t);
 
 } // namespace math
 

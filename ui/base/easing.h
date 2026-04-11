@@ -13,6 +13,7 @@
  * @ingroup ui
  */
 #pragma once
+#include "export.h"
 #include <QEasingCurve>
 
 namespace cf::ui::base {
@@ -55,7 +56,7 @@ enum class Type {
  * @since 0.1
  * @ingroup ui
  */
-QEasingCurve fromEasingType(const Type t);
+CF_UI_EXPORT QEasingCurve fromEasingType(const Type t);
 
 /**
  * @brief Creates a custom cubic bezier easing curve.
@@ -71,7 +72,7 @@ QEasingCurve fromEasingType(const Type t);
  * @since 0.1
  * @ingroup ui
  */
-QEasingCurve custom(float x1, float y1, float x2, float y2);
+CF_UI_EXPORT QEasingCurve custom(float x1, float y1, float x2, float y2);
 
 /**
  * @brief Spring physics preset for animations.
@@ -81,7 +82,7 @@ QEasingCurve custom(float x1, float y1, float x2, float y2);
  *
  * @ingroup ui
  */
-struct SpringPreset {
+struct CF_UI_EXPORT SpringPreset {
     float stiffness; ///< Spring stiffness coefficient.
     float damping;   ///< Spring damping coefficient.
 };
@@ -96,7 +97,7 @@ struct SpringPreset {
  * @since 0.1
  * @ingroup ui
  */
-SpringPreset springGentle();
+CF_UI_EXPORT SpringPreset springGentle();
 
 /**
  * @brief Returns a bouncy spring preset.
@@ -108,7 +109,7 @@ SpringPreset springGentle();
  * @since 0.1
  * @ingroup ui
  */
-SpringPreset springBouncy();
+CF_UI_EXPORT SpringPreset springBouncy();
 
 /**
  * @brief Returns a stiff spring preset.
@@ -120,7 +121,7 @@ SpringPreset springBouncy();
  * @since 0.1
  * @ingroup ui
  */
-SpringPreset springStiff();
+CF_UI_EXPORT SpringPreset springStiff();
 
 } // namespace Easing
 

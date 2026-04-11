@@ -13,6 +13,7 @@
  */
 
 #pragma once
+#include "export.h"
 #include <QColor>
 #include <QString>
 
@@ -41,7 +42,7 @@ namespace cf::ui::base {
  * float t = color.tone();
  * @endcode
  */
-class CFColor {
+class CF_UI_EXPORT CFColor {
   public:
     /**
      * @brief  Default constructor.

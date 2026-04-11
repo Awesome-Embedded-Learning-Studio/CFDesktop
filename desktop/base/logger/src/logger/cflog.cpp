@@ -8,6 +8,11 @@ namespace cf::log {
 // Logger Implementation
 // ============================================================================
 
+Logger& Logger::instance() {
+    static Logger* inst = new Logger();
+    return *inst;
+}
+
 Logger::Logger() : logger_impl(std::make_shared<LoggerImpl>()) {
     // No default sink - user must configure sinks explicitly
 }
