@@ -38,7 +38,7 @@ CFDesktopEntity::CFDesktopEntity()
 }
 
 CFDesktopEntity::~CFDesktopEntity() {
-    log::tracef("Dekstop Entuty is released");
+    log::tracef("Desktop Entity is released, and never available again!");
 }
 
 void CFDesktopEntity::release() {

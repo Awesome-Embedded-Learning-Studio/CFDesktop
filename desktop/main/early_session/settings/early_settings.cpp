@@ -1,6 +1,6 @@
 #include "settings/early_settings.h"
+#include "cffundamental/log_helper.h"
 #include "file_op.h"
-#include "log/log_helper.h"
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -69,6 +69,20 @@ QString EarlySettings::get_desktop_root() const {
 
     desktop_root = (*early_settings_obj_)["desktop"].toObject()["root"].toString();
     return desktop_root;
+}
+
+QString EarlySettings::get_config_folder() const {
+    if (!valid() || !early_settings_obj_) {
+        return {};
+    }
+
+    if (!config_folder_cache.isEmpty()) {
+        return config_folder_cache;
+    }
+
+    config_folder_cache =
+        (*early_settings_obj_)["desktop"].toObject()["config_folder"].toString("settings/desktop/");
+    return config_folder_cache;
 }
 
 std::unique_ptr<QJsonObject> EarlySettings::unlock_early_settings() {

@@ -1,4 +1,4 @@
-#include "desktop_main_path_resolvers.h"
+#include "cfpath/desktop_main_path_resolvers.h"
 #include "cflog.h"
 #include <QDir>
 

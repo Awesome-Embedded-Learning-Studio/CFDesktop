@@ -32,4 +32,11 @@ QString InitInfoHandle::root_position() const {
     return (*early_settings_)["desktop"].toObject()["root"].toString();
 }
 
+QString InitInfoHandle::config_folder() const {
+    if (!early_settings_) {
+        return {};
+    }
+    return (*early_settings_)["desktop"].toObject()["config_folder"].toString("settings/desktop/");
+}
+
 } // namespace cf::desktop::init_session

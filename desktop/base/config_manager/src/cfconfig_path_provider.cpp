@@ -57,4 +57,33 @@ bool DesktopConfigStorePathProvider::is_layer_enabled(int layer_index) const {
     return true;
 }
 
+QString DesktopConfigStorePathProvider::domain_path(int layer_index,
+                                                    const QString& domain_name) const {
+    if (domain_name == "default") {
+        switch (layer_index) {
+            case 0:
+                return system_path_;
+            case 1:
+                return user_dir_ + "/" + user_filename_;
+            case 2:
+                return app_dir_ + "/" + app_filename_;
+        }
+        return QString();
+    }
+
+    // Named domain: one file per domain in each layer's directory
+    QString filename = domain_name + ".json";
+    switch (layer_index) {
+        case 0: {
+            QString dir = QFileInfo(system_path_).absolutePath();
+            return dir + "/" + filename;
+        }
+        case 1:
+            return user_dir_ + "/" + filename;
+        case 2:
+            return app_dir_ + "/" + filename;
+    }
+    return QString();
+}
+
 } // namespace cf::config

@@ -1,15 +1,13 @@
 /**
- * @file    desktop/base/config_manager/include/impl/config_impl.h
- * @brief   Internal implementation of ConfigStore (Pimpl).
+ * @file    desktop/base/config_manager/include/impl/config_domain.h
+ * @brief   Per-domain configuration storage engine.
  *
- * ConfigStoreImpl acts as a multi-domain container. Each domain is a
- * ConfigDomain instance with its own backends, cache, and watchers.
- * Existing ConfigStore methods delegate to the "default" domain for
- * backward compatibility.
+ * Each ConfigDomain owns its own backends, cache, watchers, and dirty flags,
+ * providing complete isolation between configuration domains.
  *
  * @author  N/A
- * @date    2026-03-17
- * @version 2.0
+ * @date    2026-04-12
+ * @version 1.0
  * @since   N/A
  * @ingroup none
  */
@@ -23,7 +21,6 @@
 #include "cfconfig_layer.h"
 #include "cfconfig_notify_policy.h"
 #include "impl/config_backend.h"
-#include "impl/config_domain.h"
 #include <QString>
 #include <any>
 #include <atomic>
@@ -36,10 +33,43 @@
 namespace cf::config {
 
 /**
- * @brief  Internal implementation of ConfigStore.
+ * @brief Watcher entry for pattern matching.
+ */
+struct WatcherEntry {
+    std::string pattern;
+    Watcher callback;
+    NotifyPolicy policy;
+    WatcherHandle handle;
+};
+
+/**
+ * @brief Pending change for manual notification.
+ */
+struct PendingChange {
+    Key key;
+    std::any old_value;
+    std::any new_value;
+    Layer from_layer;
+};
+
+/**
+ * @brief Deferred watcher event for callback execution after lock release.
+ */
+struct DeferredWatcherEvent {
+    Watcher callback;
+    Key key;
+    std::any old_value;
+    std::any new_value;
+    Layer from_layer;
+    bool has_old_value;
+    bool has_new_value;
+};
+
+/**
+ * @brief  Per-domain configuration storage engine.
  *
- * Manages multiple named ConfigDomain instances and dispatches
- * all operations to the appropriate domain.
+ * Manages four-layer configuration storage, caching, watchers,
+ * and persistence operations for a single named domain.
  *
  * @note   Thread-safe for all operations.
  * @note   Not part of the public API.
@@ -47,71 +77,29 @@ namespace cf::config {
  * @since  N/A
  * @ingroup none
  */
-class ConfigStoreImpl {
+class ConfigDomain {
   public:
     /**
-     * @brief  Default-constructs a ConfigStoreImpl.
-     * @throws None
-     * @note   None
-     * @warning None
-     * @since  N/A
-     * @ingroup none
-     */
-    ConfigStoreImpl();
-    /**
-     * @brief  Constructs with a custom path provider.
+     * @brief  Construct with path provider and domain name.
+     *
+     * For domain "default", uses the original path provider methods
+     * (system_path, user_dir/filename, app_dir/filename).
+     * For other domains, uses domain_path() from the provider.
+     *
      * @param[in] path_provider Path provider for config file locations.
-     * @throws None
-     * @note   None
-     * @warning None
-     * @since  N/A
-     * @ingroup none
+     * @param[in] domain_name   Name of this domain.
      */
-    explicit ConfigStoreImpl(std::shared_ptr<IConfigStorePathProvider> path_provider);
-    /**
-     * @brief  Destructs the ConfigStoreImpl and releases all domains.
-     * @throws None
-     * @note   None
-     * @warning None
-     * @since  N/A
-     * @ingroup none
-     */
-    ~ConfigStoreImpl();
+    ConfigDomain(std::shared_ptr<IConfigStorePathProvider> path_provider,
+                 const std::string& domain_name);
 
-    ConfigStoreImpl(const ConfigStoreImpl&) = delete;
-    ConfigStoreImpl& operator=(const ConfigStoreImpl&) = delete;
-    ConfigStoreImpl(ConfigStoreImpl&&) = delete;
-    ConfigStoreImpl& operator=(ConfigStoreImpl&&) = delete;
+    ~ConfigDomain();
 
-    /* ========== Domain management ========== */
+    ConfigDomain(const ConfigDomain&) = delete;
+    ConfigDomain& operator=(const ConfigDomain&) = delete;
+    ConfigDomain(ConfigDomain&&) = delete;
+    ConfigDomain& operator=(ConfigDomain&&) = delete;
 
-    /**
-     * @brief  Get or lazily create a named domain.
-     *
-     * Thread-safe. Uses double-checked locking for fast path.
-     *
-     * @param[in] name Domain name.
-     * @return     Pointer to the domain (never null after creation).
-     * @throws None
-     * @note   None
-     * @warning None
-     * @since  N/A
-     * @ingroup none
-     */
-    ConfigDomain* get_domain(const std::string& name);
-
-    /**
-     * @brief  Get the default domain (for backward-compat fast path).
-     * @return     Pointer to the default domain.
-     * @throws None
-     * @note   None
-     * @warning None
-     * @since  N/A
-     * @ingroup none
-     */
-    ConfigDomain* default_domain() const;
-
-    /* ========== Delegated operations (default domain) ========== */
+    /* ========== Query operations ========== */
 
     /**
      * @brief  Queries a configuration value by key with a fallback.
@@ -163,6 +151,8 @@ class ConfigStoreImpl {
      * @ingroup none
      */
     bool has_key(const std::string& key, Layer layer);
+
+    /* ========== Write operations ========== */
 
     /**
      * @brief  Sets a configuration value in the specified layer.
@@ -231,6 +221,8 @@ class ConfigStoreImpl {
      */
     void clear_layer(Layer layer);
 
+    /* ========== Watcher operations ========== */
+
     /**
      * @brief  Registers a watcher for keys matching a pattern.
      * @param[in] pattern  Glob-like pattern to match key names.
@@ -278,6 +270,8 @@ class ConfigStoreImpl {
      */
     std::size_t pending_changes() const;
 
+    /* ========== Persistence operations ========== */
+
     /**
      * @brief  Persists dirty layers to disk.
      * @param[in] async If true, performs the write asynchronously.
@@ -299,10 +293,66 @@ class ConfigStoreImpl {
      */
     void reload();
 
+    /**
+     * @brief  Gets the domain name.
+     * @return Reference to the domain name string.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
+     */
+    const std::string& domain_name() const { return domain_name_; }
+
+  private:
+    /**
+     * @brief  Tests whether a key matches a glob-like pattern.
+     * @param[in] pattern The glob pattern to test against.
+     * @param[in] key     The key string to test.
+     * @return     true if the key matches the pattern.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
+     */
+    static bool match_pattern(const std::string& pattern, const std::string& key);
+    IConfigBackend* get_backend(Layer layer);
+    void mark_dirty(Layer layer);
+    static QVariant anyToQVariant(const std::any& value);
+
+    bool set_impl(const std::string& key, const std::any& value, Layer layer,
+                  NotifyPolicy notify_policy);
+    RegisterResult register_key_impl(const Key& key, const std::any& init_value, Layer layer,
+                                     NotifyPolicy notify_policy);
+    UnRegisterResult unregister_key_impl(const Key& key, Layer layer, NotifyPolicy notify_policy);
+    void clear_layer_impl(Layer layer);
+    void clear_impl();
+
+    void trigger_watchers(const Key& key, const std::any* old_value, const std::any* new_value,
+                          Layer layer);
+    void execute_deferred_watchers();
+
   private:
     mutable std::shared_mutex mutex_;
+    std::mutex deferred_mutex_;
+
     std::shared_ptr<IConfigStorePathProvider> path_provider_;
-    std::unordered_map<std::string, std::unique_ptr<ConfigDomain>> domains_;
+    std::string domain_name_;
+
+    std::unordered_map<std::string, std::any> cache_;
+
+    std::unique_ptr<IConfigBackend> settings_system_;
+    std::unique_ptr<IConfigBackend> settings_user_;
+    std::unique_ptr<IConfigBackend> settings_app_;
+
+    std::array<bool, 4> dirty_flags_{false, false, false, false};
+
+    std::vector<WatcherEntry> watchers_;
+    std::atomic<WatcherHandle> next_handle_{1};
+
+    std::vector<PendingChange> pending_changes_;
+    std::vector<DeferredWatcherEvent> deferred_events_;
 };
 
 } // namespace cf::config

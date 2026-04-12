@@ -1,7 +1,6 @@
 log_info("Desktop Main" "Creating unified CFDesktopMain library")
 
 # Collect source variables from subdirectories
-add_subdirectory(log)
 add_subdirectory(early_session/impl)
 # CFDesktopEarlySession sources (merged from early_session/CMakeLists.txt)
 set(EARLY_SESSION_SOURCES
@@ -20,13 +19,12 @@ set(INIT_SOURCES
     init/gui_progress/gui_init_stage.cpp
     init/early_gain/early_pass_stage.cpp
     init/desktop_backbone_init/desktop_backbone_init.cpp
+    init/desktop_config_init/desktop_config_init.cpp
 )
 
 add_library(CFDesktopMain STATIC)
 
 target_sources(CFDesktopMain PRIVATE
-    path/desktop_main_path_resolvers.cpp
-    path/desktop_self_path_resolvers.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/desktop_entry.cpp
     ${EARLY_SESSION_SOURCES}
     ${INIT_SOURCES}
@@ -42,7 +40,7 @@ target_include_directories(CFDesktopMain PUBLIC
 )
 
 target_link_libraries(CFDesktopMain PUBLIC
-    cfbase cflogger cfasciiart cffilesystem CFDesktopLog
+    cfbase cflogger cfasciiart cffilesystem cffundamental cfpath cfconfig
     cf_desktop_ui_widget_init_session
     Qt6::Core Qt6::Gui Qt6::Widgets
 )

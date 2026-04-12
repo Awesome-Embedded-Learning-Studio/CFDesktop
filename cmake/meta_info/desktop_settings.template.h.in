@@ -20,8 +20,17 @@ static constexpr const char* EARLY_SETTINGS_TEMPLATE = R"({
         "dirent": "logger/"
     },
     "desktop": {
-        "root": "@CFDESKTOP_DEFAULT_ROOT@"
+        "root": "@CFDESKTOP_DEFAULT_ROOT@",
+        "config_folder": "settings/desktop/"
     }
+}
+)";
+
+/// @brief Default wallpaper config template written to <config_folder>/wallpaper.json.
+static constexpr const char* WALLPAPER_CONFIG_TEMPLATE = R"({
+    "source_path": "",
+    "scaling": "fill",
+    "background_color": "#1c1b1f"
 }
 )";
 } // namespace cf::desktop::early_stage

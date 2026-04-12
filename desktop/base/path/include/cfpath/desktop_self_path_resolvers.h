@@ -1,5 +1,5 @@
 /**
- * @file    desktop/main/path/desktop_self_path_resolvers.h
+ * @file    desktop/base/path/include/cfpath/desktop_self_path_resolvers.h
  * @brief   Provides path resolution utilities for desktop self-referential paths.
  *
  * Contains declarations for resolving paths related to the desktop
@@ -9,7 +9,7 @@
  * @date    <git:last-commit-date or "N/A">
  * @version <git:last-tag-or-commit or "N/A">
  * @since   N/A
- * @ingroup desktop_main
+ * @ingroup desktop_base
  */
 
 #pragma once

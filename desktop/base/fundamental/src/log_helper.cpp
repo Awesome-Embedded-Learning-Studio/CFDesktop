@@ -1,4 +1,4 @@
-#include "log_helper.h"
+#include "cffundamental/log_helper.h"
 #include <QDateTime>
 
 namespace cf::desktop::logger_helper {

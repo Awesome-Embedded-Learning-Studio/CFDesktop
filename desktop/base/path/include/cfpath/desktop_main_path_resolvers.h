@@ -1,5 +1,5 @@
 /**
- * @file    desktop/main/path/desktop_main_path_resolvers.h
+ * @file    desktop/base/path/include/cfpath/desktop_main_path_resolvers.h
  * @brief   Provides path resolution for desktop main directories and resources.
  *
  * Contains DesktopMainPathProvider class for managing and resolving paths
@@ -9,7 +9,7 @@
  * @date    <git:last-commit-date or "N/A">
  * @version <git:last-tag-or-commit or "N/A">
  * @since   N/A
- * @ingroup desktop_main
+ * @ingroup desktop_base
  */
 
 #pragma once
@@ -24,7 +24,7 @@ namespace cf::desktop::path {
  * Manages resolution of standard desktop directory paths including Home,
  * Desktop, Documents, Downloads, Music, Pictures, Videos, Apps, and Runtime.
  *
- * @ingroup desktop_main
+ * @ingroup desktop_base
  */
 class DesktopMainPathProvider : public cf::Singleton<DesktopMainPathProvider> {
   public:
@@ -50,7 +50,7 @@ class DesktopMainPathProvider : public cf::Singleton<DesktopMainPathProvider> {
      *
      * Defines enumeration values for common desktop directory types.
      *
-     * @ingroup desktop_main
+     * @ingroup desktop_base
      */
     enum class PathType {
 #define X(name) name,
@@ -81,7 +81,7 @@ class DesktopMainPathProvider : public cf::Singleton<DesktopMainPathProvider> {
      * @note    None
      * @warning None
      * @since   N/A
-     * @ingroup desktop_main
+     * @ingroup desktop_base
      */
     bool setup();
 
@@ -96,7 +96,7 @@ class DesktopMainPathProvider : public cf::Singleton<DesktopMainPathProvider> {
      * @note        None
      * @warning     None
      * @since       N/A
-     * @ingroup     desktop_main
+     * @ingroup     desktop_base
      */
     QString absolutePath(const PathType p);
 
@@ -127,7 +127,7 @@ class DesktopMainPathProvider : public cf::Singleton<DesktopMainPathProvider> {
      * @note       None
      * @warning    None
      * @since      N/A
-     * @ingroup    desktop_main
+     * @ingroup    desktop_base
      */
     DesktopMainPathProvider(const QString& desktop_active_root);
     /// @brief View of the root directory path. Ownership: observer.
