@@ -75,6 +75,23 @@ class WallPaperAccessStorage : public QObject {
     void addToken(std::unique_ptr<WallPaperToken> token);
 
     /**
+     * @brief  Appends multiple wallpaper tokens to the storage.
+     *
+     * Ownership of all tokens transfers to this storage.
+     *
+     * @param[in] tokens  The wallpaper tokens to add.  Moved from; empty on
+     *                    return.
+     *
+     * @throws            None.
+     *
+     * @note              None.
+     * @warning           None.
+     * @since             0.18
+     * @ingroup           wallpaper
+     */
+    void addTokens(std::vector<std::unique_ptr<WallPaperToken>> tokens);
+
+    /**
      * @brief  Inserts a wallpaper token at the given index.
      *
      * Ownership of the token transfers to this storage.
@@ -106,6 +123,20 @@ class WallPaperAccessStorage : public QObject {
      * @ingroup          wallpaper
      */
     size_t indexOf(const wallpaper_token_id_t& token) const;
+
+    /**
+     * @brief  Returns the number of wallpaper tokens in the storage.
+     *
+     * @return         Number of stored tokens.
+     *
+     * @throws         None.
+     *
+     * @note           None.
+     * @warning        None.
+     * @since          0.15
+     * @ingroup        wallpaper
+     */
+    size_t size() const;
 
     enum class OverFlowType { OverFlow, UnderFlow };
   signals:

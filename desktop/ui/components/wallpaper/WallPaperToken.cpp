@@ -1,5 +1,6 @@
 #include "WallPaperToken.h"
 #include "base/weak_ptr/weak_ptr_factory.h"
+#include <QStringList>
 #include <QUuid>
 
 namespace cf::desktop::wallpaper {
@@ -65,19 +66,18 @@ WeakPtr<WallPaperToken> WallPaperToken::getWeakPtr() const {
     return d->weak_ptr_factory.GetWeakPtr();
 }
 
-// ============================================================
-// WallPaperTokenFactory (no Pimpl — only 2 fields)
-// ============================================================
-
-WallPaperTokenFactory& WallPaperTokenFactory::fromFile(const QString& path) {
-    static WallPaperTokenFactory factory;
-    factory.stored_path_ = path;
-    factory.stored_type_ = WallPaperToken::SourceType::File;
-    return factory;
+WallPaperTokenFactory::WallPaperToken_t WallPaperTokenFactory::fromFile(const QString& path) {
+    return std::unique_ptr<WallPaperToken>(
+        new WallPaperToken(path, WallPaperToken::SourceType::File));
 }
 
-std::unique_ptr<WallPaperToken> WallPaperTokenFactory::create() {
-    return std::unique_ptr<WallPaperToken>(new WallPaperToken(stored_path_, stored_type_));
+std::vector<WallPaperTokenFactory::WallPaperToken_t>
+WallPaperTokenFactory::fromFiles(const QStringList& paths) {
+    std::vector<WallPaperTokenFactory::WallPaperToken_t> v;
+    for (const auto& p : paths) {
+        v.emplace_back(std::move(fromFile(p)));
+    }
+    return v;
 }
 
 } // namespace cf::desktop::wallpaper

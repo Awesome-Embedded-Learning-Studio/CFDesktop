@@ -39,6 +39,10 @@ void ImageWallPaperLayer::setTokenStorage(std::unique_ptr<WallPaperAccessStorage
     }
 }
 
+WallPaperAccessStorage& ImageWallPaperLayer::tokenStorage() const {
+    return *d->storage; // OK, Deref
+}
+
 bool ImageWallPaperLayer::showNextOne() {
     if (!d->storage) {
         return false;

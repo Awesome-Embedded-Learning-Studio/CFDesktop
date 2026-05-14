@@ -1,6 +1,7 @@
 #include "wallpaper_src_chain.h"
 #include "base/policy_chain/policy_chain.hpp"
 #include "cfconfig.hpp"
+#include "cflog.h"
 #include "cfpath/desktop_main_path_resolvers.h"
 #include <QDir>
 #include <QFileInfo>
@@ -10,11 +11,13 @@ PolicyChain<QString> WallpaperImages() {
     return policy_chain_builder<QString>()
         .then([]() -> std::optional<QString> {
             // Policy 1: Load from ConfigStore wallpaper domain
+            log::trace("Scanning from the config file to load wallpaper");
             auto wp = cf::config::ConfigStore::instance().domain("wallpaper");
             auto path = wp.query<std::string>(
                 cf::config::KeyView{.group = "wallpaper", .key = "source_path"}, "");
             if (!path.empty()) {
                 QString qpath = QString::fromStdString(path);
+                log::tracef("scan out the dirent: {}", qpath.toStdString());
                 if (QFileInfo::exists(qpath)) {
                     return qpath;
                 }
@@ -22,16 +25,9 @@ PolicyChain<QString> WallpaperImages() {
             return std::nullopt;
         })
         .then([]() -> std::optional<QString> {
-            // Policy 2: Scan Pictures directory for any image
-            auto pictures = path::DesktopMainPathProvider::instance().absolutePath(
+            /* If not, we use the pictures in Picture Dirent */
+            return path::DesktopMainPathProvider::instance().absolutePath(
                 path::DesktopMainPathProvider::PathType::Pictures);
-            QDir dir(pictures);
-            QStringList files = dir.entryList({"*.png", "*.jpg", "*.jpeg", "*.bmp", "*.webp"},
-                                              QDir::Files, QDir::Name);
-            if (!files.isEmpty()) {
-                return dir.absoluteFilePath(files.first());
-            }
-            return std::nullopt;
         })
         .build();
 }

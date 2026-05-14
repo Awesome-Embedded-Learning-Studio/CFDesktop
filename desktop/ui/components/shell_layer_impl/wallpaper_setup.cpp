@@ -1,4 +1,6 @@
 #include "wallpaper_setup.h"
+#include "cflog.h"
+#include "filter_target.h"
 #include "shell_layer_impl/WallpaperShellLayerStrategy.h"
 #include "wallpaper/ImageWallPaperLayer.h"
 #include "wallpaper/WallPaperAccessStorage.h"
@@ -14,19 +16,20 @@ namespace {
  * @return std::unique_ptr<WallPaperLayer>
  */
 std::unique_ptr<WallPaperLayer> make_layer() {
+    using namespace base::filesystem;
+
     auto layer = std::make_unique<ImageWallPaperLayer>();
-
-    // Resolve wallpaper source through policy chain
-    auto chain = WallpaperImages();
-    auto source = chain.execute();
-
-    if (source.has_value() && !source->isEmpty()) {
-        auto storage = std::make_unique<WallPaperAccessStorage>();
-        auto token = WallPaperTokenFactory::fromFile(*source).create();
-        storage->addToken(std::move(token));
-        layer->setTokenStorage(std::move(storage));
+    // Resolve wallpaper pictures through policy chain
+    auto picture_dirent = WallpaperImages().execute();
+    if (!picture_dirent.has_value() || picture_dirent->isEmpty()) {
+        return layer; // return out!
     }
 
+    auto pictures = filter_target(picture_dirent.value(), request_filterlist(FilterType::Pictures));
+    auto storage = std::make_unique<WallPaperAccessStorage>();
+    storage->addTokens(WallPaperTokenFactory::fromFiles(pictures));
+    log::tracef("Initialized with {} files", storage->size());
+    layer->setTokenStorage(std::move(storage));
     return layer;
 }
 

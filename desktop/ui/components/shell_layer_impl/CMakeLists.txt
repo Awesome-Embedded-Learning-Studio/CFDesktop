@@ -21,4 +21,5 @@ target_link_libraries(
     cfdesktop_wallpaper
     cfpath
     cfconfig
+    cffilesystem
 )

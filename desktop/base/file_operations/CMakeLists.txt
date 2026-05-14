@@ -4,6 +4,7 @@ add_library(cffilesystem STATIC)
 # Sources
 target_sources(cffilesystem PRIVATE
     file_op.cpp
+    filter_target.cpp
 )
 
 # Include directories
