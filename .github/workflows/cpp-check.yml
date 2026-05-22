@@ -68,6 +68,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Normalize Docker image name
+        run: echo "GHCR_IMAGE=$(echo '${{ env.GHCR_IMAGE }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
       - name: Pull pre-built Docker image
         run: docker pull ${{ env.GHCR_IMAGE }}:latest 2>/dev/null || echo "GHCR_PULL_FAILED=true" >> "$GITHUB_ENV"
 
@@ -101,6 +104,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Normalize Docker image name
+        run: echo "GHCR_IMAGE=$(echo '${{ env.GHCR_IMAGE }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
 
       - name: Pull pre-built Docker image
         run: docker pull ${{ env.GHCR_IMAGE }}:latest 2>/dev/null || echo "GHCR_PULL_FAILED=true" >> "$GITHUB_ENV"

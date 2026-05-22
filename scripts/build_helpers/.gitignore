@@ -3,3 +3,5 @@
 !build_ci_config.ini
 !build_ci_aarch64_config.ini
 !build_ci_armhf_config.ini
+!build_ci_clang_config.ini
+!build_ci_windows_config.ini
