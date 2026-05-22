@@ -1,0 +1,14 @@
+{
+  "name": "cfdesktop-docs",
+  "version": "0.18.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev document",
+    "docs:build": "vitepress build document",
+    "docs:preview": "vitepress preview document"
+  },
+  "devDependencies": {
+    "vitepress": "1.6.4"
+  }
+}
