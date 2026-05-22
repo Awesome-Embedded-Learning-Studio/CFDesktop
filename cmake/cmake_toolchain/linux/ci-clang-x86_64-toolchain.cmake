@@ -1,24 +1,30 @@
 # =============================================================================
-# CI Build Toolchain Configuration (Windows MSVC)
+# CI Build Toolchain Configuration (Clang x86_64/AMD64)
 # =============================================================================
-# MSVC toolchain for Windows CI on github-actions runners
+# Clang toolchain for CI Docker x86_64 builds
 #
-# Qt installation path: C:/Qt/6.8.1/msvc2022_64
-# Compiler: auto-detected by Visual Studio generator (MSVC v143)
+# Qt installation path: /opt/Qt/6.8.1/gcc_64 (same as GCC, compatible)
 #
 # Usage:
-#   cmake -DUSE_TOOLCHAIN=windows/ci-msvc -S . -B build
+#   cmake -DUSE_TOOLCHAIN=linux/ci-clang-x86_64 -S . -B build
 # =============================================================================
 
-set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_NAME Linux)
 
 # -----------------------------------------------------------------------------
-# Qt6 search path (Windows CI runner with aqtinstall)
+# Compiler configuration
+# Ubuntu 24.04 ships Clang 18 with full C++23 support
 # -----------------------------------------------------------------------------
-set(QT6_BASE_DIR "C:/Qt/6.8.1/msvc2022_64")
+set(CMAKE_C_COMPILER "clang" CACHE FILEPATH "C compiler")
+set(CMAKE_CXX_COMPILER "clang++" CACHE FILEPATH "C++ compiler")
+
+# -----------------------------------------------------------------------------
+# Qt6 search path (same as GCC CI toolchain)
+# Qt pre-built binaries from aqtinstall are compiler-agnostic on Linux
+# -----------------------------------------------------------------------------
+set(QT6_BASE_DIR "/opt/Qt/6.8.1/gcc_64")
 set(QT6_CMAKE_DIR "${QT6_BASE_DIR}/lib/cmake/Qt6")
 
-# Allow environment variable overrides for local testing
 if(DEFINED ENV{Qt6_DIR})
     set(QT6_CMAKE_DIR "$ENV{Qt6_DIR}")
     get_filename_component(QT6_BASE_DIR "${QT6_CMAKE_DIR}/../.." ABSOLUTE)
@@ -32,8 +38,7 @@ set(CMAKE_PREFIX_PATH "${QT6_BASE_DIR}")
 list(APPEND CMAKE_PREFIX_PATH "${QT6_BASE_DIR}")
 
 # -----------------------------------------------------------------------------
-# ccache acceleration
-# GitHub Actions installs ccache before configuring this toolchain.
+# ccache acceleration (available in Docker container)
 # -----------------------------------------------------------------------------
 find_program(CCACHE_PROGRAM ccache CACHE)
 if(CCACHE_PROGRAM)

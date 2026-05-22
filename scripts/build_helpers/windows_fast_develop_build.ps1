@@ -77,17 +77,36 @@ if (!(Test-Path $ConfigFile)) {
     exit 1
 }
 
-$Config = Get-IniConfig -FilePath $ConfigFile
-$BuildDir = $Config["paths"]["build_dir"]
+try {
+    $ConfigData = Get-IniConfig -FilePath $ConfigFile
+}
+catch {
+    Write-LogError "Failed to load configuration: $_"
+    Stop-BuildTimer
+    exit 1
+}
+
+if (-not $ConfigData -or -not $ConfigData.ContainsKey("paths")) {
+    Write-LogError "Configuration error: [paths] section is missing in config file"
+    Write-LogError "Please check: $ConfigFile"
+    Stop-BuildTimer
+    exit 1
+}
+
+$BuildDir = $ConfigData["paths"]["build_dir"]
 
 # Safety check: BUILD_DIR must not be empty
 if ([string]::IsNullOrWhiteSpace($BuildDir)) {
     Write-LogError "Configuration error: build_dir is not set in config file"
     Write-LogError "Please check the [paths] section in: $ConfigFile"
+    Stop-BuildTimer
     exit 1
 }
 
-$Jobs = if ($Config["options"] -and $Config["options"]["jobs"]) { $Config["options"]["jobs"] } else { "" }
+$Jobs = ""
+if ($ConfigData.ContainsKey("options") -and $ConfigData["options"].ContainsKey("jobs")) {
+    $Jobs = $ConfigData["options"]["jobs"]
+}
 
 # Step 3: Build with CMake
 Write-LogSeparator
