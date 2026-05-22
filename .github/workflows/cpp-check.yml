@@ -81,6 +81,7 @@ jobs:
           docker build \
             --platform linux/amd64 \
             --build-arg QT_ARCH=linux_gcc_64 \
+            --build-arg CI=true \
             -f scripts/docker/Dockerfile.build \
             -t ${{ env.GHCR_IMAGE }}:latest \
             .
@@ -118,6 +119,7 @@ jobs:
           docker build \
             --platform linux/amd64 \
             --build-arg QT_ARCH=linux_gcc_64 \
+            --build-arg CI=true \
             -f scripts/docker/Dockerfile.build \
             -t ${{ env.GHCR_IMAGE }}:latest \
             .
@@ -146,6 +148,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup MSVC developer environment
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Setup Python
         uses: actions/setup-python@v5
