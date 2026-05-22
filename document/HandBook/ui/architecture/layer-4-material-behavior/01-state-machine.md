@@ -1,3 +1,8 @@
+---
+title: 状态机设计——Material 交互状态的核心管理器
+description: 在 Layer 3 里，我们讲了动画引擎的完整实现。但动画不会凭空触发——它们需要响应鼠标悬停、点击
+---
+
 # 状态机设计——Material 交互状态的核心管理器
 
 在 Layer 3 里，我们讲了动画引擎的完整实现。但动画不会凭空触发——它们需要响应鼠标悬停、点击、焦点变化等交互事件。
@@ -29,7 +34,7 @@ enum class State {
     StateChecked = 0x10,  // 选中状态
     StateDragged = 0x20   // 拖拽状态
 };
-```
+```text
 
 注意这里使用了位掩码设计，每个状态是一个 2 的幂次方。这样多个状态可以通过按位或运算组合。
 
@@ -37,9 +42,9 @@ enum class State {
 
 Material Design 3 定义了状态的优先级顺序：
 
-```
+```text
 Disabled > Pressed > Dragged > Focused > Hovered > Normal
-```
+```bash
 
 这意味着如果一个控件同时是 Disabled 和 Hovered， Disabled 状态会"赢"，透明度由 Disabled 决定（通常是 0.00）。
 
@@ -73,7 +78,7 @@ void onFocusOut();
 void onEnable();
 void onDisable();
 void onCheckedChanged(bool checked);
-```
+```text
 
 这些方法对应 Qt 的各种事件，控件在事件处理函数中调用它们：
 
@@ -87,7 +92,7 @@ void Button::mousePressEvent(QMouseEvent* event) {
     QPushButton::mousePressEvent(event);
     m_stateMachine->onPress(event->pos());
 }
-```
+```text
 
 注意这里的一个关键点：必须先调用父类方法。否则 Qt 的信号机制会被破坏，比如 `clicked()` 信号可能不会发出。
 
@@ -108,14 +113,14 @@ void StateMachine::animateOpacityTo(float from, float to) {
         anim->start();
     }
 }
-```
+```text
 
 如果动画系统被禁用，会直接设置目标透明度：
 
 ```cpp
 m_opacity = to;
 emit stateLayerOpacityChanged(m_opacity);
-```
+```text
 
 ## 状态优先级的实现
 
@@ -132,7 +137,7 @@ float StateMachine::targetOpacityForState(States s) const {
     if (s & StateChecked) return 0.08f;
     return 0.00f;  // Normal
 }
-```
+```text
 
 使用按位与运算（`&`）来检查状态是否被设置。这意味着多个状态可以同时存在，但只有一个决定透明度。
 
@@ -145,7 +150,7 @@ void CheckBox::setChecked(bool checked) {
     QCheckBox::setChecked(checked);
     m_stateMachine->onCheckedChanged(checked);
 }
-```
+```text
 
 ## Disabled 状态的特殊处理
 
@@ -158,7 +163,7 @@ void StateMachine::onPress(const QPoint& pos) {
     }
     // ... 正常处理
 }
-```
+```text
 
 ## 信号通知
 
@@ -167,14 +172,14 @@ StateMachine 发出两个信号：
 ```cpp
 void stateChanged(States newState, States oldState);
 void stateLayerOpacityChanged(float opacity);
-```
+```text
 
 控件可以连接这些信号来触发重绘：
 
 ```cpp
 connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged,
         this, [this](float) { update(); });
-```
+```yaml
 
 ## 总结
 

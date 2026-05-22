@@ -1,8 +1,8 @@
 #include "desktop_backbone_init.h"
+#include "cfpath/desktop_main_path_resolvers.h"
 #include "init_session_chain.h"
 #include "init_settings.h"
 #include "init_stage_name.h"
-#include "path/desktop_main_path_resolvers.h"
 
 namespace cf::desktop::init_session {
 

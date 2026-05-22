@@ -109,6 +109,24 @@ class IConfigStorePathProvider {
      * @ingroup none
      */
     virtual bool is_layer_enabled(int layer_index) const = 0;
+
+    /**
+     * @brief Get the full file path for a named domain in a specific layer.
+     *
+     * Used by non-default config domains to resolve their file paths.
+     * Return empty QString to disable that layer for the domain.
+     *
+     * @param[in] layer_index 0=System, 1=User, 2=App (Temp is memory-only).
+     * @param[in] domain_name Name of the config domain.
+     * @return Full file path for the domain's config file in that layer.
+     * @throws None
+     * @since 1.1
+     */
+    virtual QString domain_path(int layer_index, const QString& domain_name) const {
+        (void)layer_index;
+        (void)domain_name;
+        return QString();
+    }
 };
 
 /**
@@ -234,6 +252,19 @@ class DesktopConfigStorePathProvider : public IConfigStorePathProvider {
      * @ingroup none
      */
     bool is_layer_enabled(int layer_index) const override;
+
+    /**
+     * @brief Get file path for a named domain in a specific layer.
+     *
+     * For "default" domain, returns the original single-file paths.
+     * For other domains, returns {base_dir}/{domain_name}.ini per layer.
+     *
+     * @param[in] layer_index 0=System, 1=User, 2=App.
+     * @param[in] domain_name Name of the config domain.
+     * @return Full file path for the domain.
+     * @since 1.1
+     */
+    QString domain_path(int layer_index, const QString& domain_name) const override;
 
   private:
     QString system_path_;

@@ -1,101 +1,106 @@
-# Quick Start Guide
+---
+title: 快速开始指南
+description: 30 分钟内搭建 CFDesktop 开发环境
+---
 
-> Get up and running with CFDesktop in 30 minutes
+# 快速开始指南
 
-## Table of Contents
+> 30 分钟内搭建 CFDesktop 开发环境
 
-- [Prerequisites](#prerequisites)
-- [5-Step Quick Start](#5-step-quick-start)
-- [Windows Users](#windows-users)
-- [Verification](#verification)
-- [Next Steps](#next-steps)
-- [Troubleshooting](#troubleshooting)
+## 目录
+
+- [前置条件](#前置条件)
+- [五步快速开始](#五步快速开始)
+- [Windows 用户](#windows-用户)
+- [验证](#验证)
+- [后续步骤](#后续步骤)
+- [常见问题排查](#常见问题排查)
 
 ---
 
-## Prerequisites
+## 前置条件
 
-Before starting, ensure you have the following installed:
+在开始之前，请确保已安装以下工具：
 
-| Requirement | Minimum Version | Recommended | How to Check |
-|:------------|----------------:|:------------|:-------------|
-| **Git** | 2.30+ | Latest | `git --version` |
+| 需求 | 最低版本 | 推荐版本 | 检查命令 |
+|:-----|---------:|:---------|:---------|
+| **Git** | 2.30+ | 最新版 | `git --version` |
 | **CMake** | 3.16 | 3.20+ | `cmake --version` |
-| **Qt6** | 6.8.3 | 6.8+ | Check Qt Installation |
-| **Compiler** | LLVM/Clang or GCC | Latest | `clang --version` or `gcc --version` |
-| **Docker** (optional) | 20.10+ | Latest | `docker --version` |
+| **Qt6** | 6.8.3 | 6.8+ | 检查 Qt 安装目录 |
+| **编译器** | LLVM/Clang 或 GCC | 最新版 | `clang --version` 或 `gcc --version` |
+| **Docker**（可选） | 20.10+ | 最新版 | `docker --version` |
 
-### Platform-Specific Requirements
+### 平台特定要求
 
-**Windows:**
-- Git Bash or WSL2 for running build scripts
-- Qt6 installed with MinGW or LLVM-MinGW toolchain
-- PowerShell 5.1+ for Windows-specific scripts
+**Windows：**
+- 需要使用 Git Bash 或 WSL2 来运行构建脚本
+- 需要安装 Qt6，并配置 MinGW 或 LLVM-MinGW 工具链
+- Windows 专用脚本需要 PowerShell 5.1+
 
-**Linux:**
-- GCC 12+ or Clang 16+
-- Qt6 development packages
-- Ninja build system (optional but recommended)
+**Linux：**
+- GCC 12+ 或 Clang 16+
+- Qt6 开发包
+- Ninja 构建系统（可选，但推荐安装）
 
 ---
 
-## 5-Step Quick Start
+## 五步快速开始
 
-### Step 1: Clone the Repository
+### 第 1 步：克隆仓库
 
 ```bash
 git clone https://github.com/Awesome-Embedded-Learning-Studio/CFDesktop.git
 cd CFDesktop
-```
+```bash
 
-### Step 2: Install VSCode Extensions
+### 第 2 步：安装 VSCode 扩展
 
-Install the following VSCode extensions for optimal development experience:
+安装以下 VSCode 扩展以获得最佳开发体验：
 
-| Extension | Purpose | Required |
-|:----------|:--------|:--------:|
-| [Clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd) | C++ language server | Yes |
-| [CMake](https://marketplace.visualstudio.com/items?itemName=twxs.cmake) | CMake syntax highlighting | Recommended |
-| [CMake Tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools) | CMake integration | Recommended |
-| [Qt for Python](https://marketplace.visualstudio.com/items?itemName=seanwu.vscode-qt-for-python) | Qt support | Optional |
+| 扩展 | 用途 | 是否必需 |
+|:-----|:-----|:--------:|
+| [Clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd) | C++ 语言服务器 | 是 |
+| [CMake](https://marketplace.visualstudio.com/items?itemName=twxs.cmake) | CMake 语法高亮 | 推荐 |
+| [CMake Tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools) | CMake 集成 | 推荐 |
+| [Qt for Python](https://marketplace.visualstudio.com/items?itemName=seanwu.vscode-qt-for-python) | Qt 支持 | 可选 |
 
-**Quick Install (Command Palette):**
+**快速安装（命令面板）：**
 
-1. Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS)
-2. Type "Extensions: Install Extensions"
-3. Search for each extension name above
+1. 按 `Ctrl+Shift+P`（Windows/Linux）或 `Cmd+Shift+P`（macOS）
+2. 输入 "Extensions: Install Extensions"
+3. 搜索上方的每个扩展名称
 
-### Step 3: Docker First Build (Recommended)
+### 第 3 步：Docker 首次构建（推荐）
 
-The fastest way to get started is using Docker, which provides a pre-configured build environment:
+最快的上手方式是使用 Docker，它提供了预配置的构建环境：
 
 ```bash
 # Fast build (reuses existing image if available)
 bash scripts/build_helpers/docker_start.sh --fast-build --build-project-fast
-```
+```bash
 
-**What this does:**
-1. Builds (or reuses) the Docker image with all dependencies
-2. Configures the project with CMake
-3. Builds all modules (base, ui, examples)
-4. Places outputs in `out/build_develop/`
+**此命令会执行以下操作：**
+1. 构建（或复用）包含所有依赖的 Docker 镜像
+2. 使用 CMake 配置项目
+3. 构建所有模块（base、ui、examples）
+4. 将输出放置在 `out/build_develop/` 目录中
 
-**Docker Options:**
+**Docker 选项：**
 
-| Option | Description |
-|:-------|:------------|
-| `--fast-build` | Skip image cleanup, reuse existing image |
-| `--build-project` | Full clean build |
-| `--build-project-fast` | Fast incremental build |
-| `--run-project-test` | Build and run tests |
-| `--arch arm64` | Build for ARM64 architecture |
-| `--verify` | Run CI-style verification build |
+| 选项 | 说明 |
+|:-----|:-----|
+| `--fast-build` | 跳过镜像清理，复用已有镜像 |
+| `--build-project` | 完整的干净构建 |
+| `--build-project-fast` | 快速增量构建 |
+| `--run-project-test` | 构建并运行测试 |
+| `--arch arm64` | 为 ARM64 架构构建 |
+| `--verify` | 运行 CI 风格的验证构建 |
 
-### Step 4: Run Example Programs
+### 第 4 步：运行示例程序
 
-After successful build, run the example programs:
+构建成功后，运行示例程序：
 
-**Windows:**
+**Windows：**
 ```powershell
 # Material Design Gallery
 .\out\build_develop\examples\gui\material_gallery.exe
@@ -105,9 +110,9 @@ After successful build, run the example programs:
 
 # CPU Information Demo
 .\out\build_develop\examples\base\cpu_info.exe
-```
+```text
 
-**Linux:**
+**Linux：**
 ```bash
 # Material Design Gallery
 ./out/build_develop/examples/gui/material_gallery
@@ -117,80 +122,80 @@ After successful build, run the example programs:
 
 # CPU Information Demo
 ./out/build_develop/examples/base/cpu_info
-```
+```bash
 
-**Available Examples:**
+**可用示例：**
 
-| Category | Examples | Description |
-|:---------|:---------|:------------|
-| **base/** | cpu_info, memory_info | System information demos |
-| **ui/** | button, label, textfield, checkbox, radiobutton, textarea, groupbox | Material Design widgets |
-| **gui/** | material_gallery, theme | Complete UI demos |
+| 分类 | 示例 | 说明 |
+|:-----|:-----|:-----|
+| **base/** | cpu_info, memory_info | 系统信息演示 |
+| **ui/** | button, label, textfield, checkbox, radiobutton, textarea, groupbox | Material Design 控件 |
+| **gui/** | material_gallery, theme | 完整 UI 演示 |
 
-### Step 5: Run Tests
+### 第 5 步：运行测试
 
-Verify your build by running the test suite:
+通过运行测试套件验证构建：
 
-**Windows:**
+**Windows：**
 ```powershell
 .\scripts\build_helpers\windows_run_tests.ps1
-```
+```text
 
-**Linux:**
+**Linux：**
 ```bash
 bash scripts/build_helpers/linux_run_tests.sh
-```
+```text
 
-**Docker:**
+**Docker：**
 ```bash
 bash scripts/build_helpers/docker_start.sh --run-project-test
-```
+```bash
 
 ---
 
-## Windows Users
+## Windows 用户
 
-### Using Git Bash
+### 使用 Git Bash
 
-CFDesktop build scripts are designed for Unix-style shells. On Windows, use **Git Bash**:
+CFDesktop 的构建脚本为 Unix 风格的 shell 设计。在 Windows 上，请使用 **Git Bash**：
 
-1. Install [Git for Windows](https://git-scm.com/download/win)
-2. Open Git Bash from the Start Menu
-3. Navigate to your project directory:
+1. 安装 [Git for Windows](https://git-scm.com/download/win)
+2. 从开始菜单打开 Git Bash
+3. 导航到项目目录：
    ```bash
    cd /d/ProjectHome/CFDesktop
    ```
 
-### Using WSL2 (Alternative)
+### 使用 WSL2（替代方案）
 
-For better performance, use Windows Subsystem for Linux:
+为了获得更好的性能，可以使用 Windows Subsystem for Linux：
 
-1. Install WSL2:
+1. 安装 WSL2：
    ```powershell
    wsl --install
    ```
 
-2. Access your Windows files from WSL:
+2. 从 WSL 中访问 Windows 文件：
    ```bash
    cd /mnt/d/ProjectHome/CFDesktop
    ```
 
-### Path Format Conversion
+### 路径格式转换
 
-When running scripts on Windows, be aware of path formats:
+在 Windows 上运行脚本时，请注意路径格式的差异：
 
-| Type | Format | Example |
-|:-----|:-------|:--------|
+| 类型 | 格式 | 示例 |
+|:-----|:-----|:-----|
 | **Windows** | `D:\Path\To\File` | `D:/ProjectHome/CFDesktop` |
 | **Git Bash** | `/d/Path/To/File` | `/d/ProjectHome/CFDesktop` |
-| **Docker Mount** | `/d/Path/To/File` | `/d/ProjectHome/CFDesktop` |
+| **Docker 挂载** | `/d/Path/To/File` | `/d/ProjectHome/CFDesktop` |
 | **PowerShell** | `D:\Path\To\File` | `D:\ProjectHome\CFDesktop` |
 
-The build scripts automatically handle path conversion for Docker mounts.
+构建脚本会自动处理 Docker 挂载的路径转换。
 
-### Windows Build Scripts
+### Windows 构建脚本
 
-For native Windows builds (without Docker), use PowerShell scripts:
+对于原生 Windows 构建（不使用 Docker），请使用 PowerShell 脚本：
 
 ```powershell
 # Configure and build (fast)
@@ -204,13 +209,13 @@ For native Windows builds (without Docker), use PowerShell scripts:
 
 # Run tests
 .\scripts\build_helpers\windows_run_tests.ps1
-```
+```yaml
 
 ---
 
-## Verification
+## 验证
 
-### Check Docker Installation
+### 检查 Docker 安装
 
 ```bash
 # Verify Docker is installed
@@ -218,20 +223,20 @@ docker --version
 
 # Verify Docker daemon is running
 docker info
-```
+```text
 
-Expected output:
-```
+预期输出：
+```text
 Docker version 20.10.x
 ...
 Server Version: 20.10.x
-```
+```text
 
-### Check Build Success
+### 检查构建是否成功
 
-A successful build will create the following directory structure:
+构建成功后会创建以下目录结构：
 
-```
+```text
 out/build_develop/
 ├── bin/
 │   ├── cfbase.dll          # Base library (Windows)
@@ -246,11 +251,11 @@ out/build_develop/
 │   └── gui/                # GUI examples
 ├── runtimes/               # Qt runtime DLLs (Windows)
 └── test/                   # Test executables
-```
+```text
 
-### Check Build Logs
+### 检查构建日志
 
-Build logs are saved to `scripts/docker/logger/` when using Docker:
+使用 Docker 时，构建日志保存在 `scripts/docker/logger/` 中：
 
 ```bash
 # List recent build logs
@@ -258,62 +263,62 @@ ls -lt scripts/docker/logger/
 
 # View the latest log
 cat scripts/docker/logger/ci_build_*.log | tail -50
-```
+```bash
 
 ---
 
-## Next Steps
+## 后续步骤
 
-After completing the quick start:
+完成快速开始后：
 
-1. **Read the Build System Documentation**: [`03_build_system.md`](03_build_system.md)
-2. **Explore the Examples**: Browse `example/` directory for sample code
-3. **Review Project Structure**: Check the [Project Skeleton Design](../design_stage/00_phase0_project_skeleton.md)
-4. **Set Up Your Development Environment**: See [VSCode Configuration](../design_stage/00_phase0_project_skeleton.md#五开发环境配置)
-
----
-
-## Troubleshooting
-
-### Docker Build Failures
-
-| Issue | Solution |
-|:------|:----------|
-| Docker daemon not running | Start Docker Desktop |
-| Permission denied | Use `sudo` on Linux or run terminal as Administrator on Windows |
-| Port conflicts | Ensure no other containers are using required ports |
-| Out of memory | Increase Docker memory limit in settings |
-
-### Build Errors
-
-| Issue | Solution |
-|:------|----------|
-| Qt not found | Set `Qt6_DIR` environment variable or use Docker |
-| Compiler not found | Install LLVM/Clang or GCC, or use Docker build |
-| CMake version too old | Upgrade CMake to 3.16+ |
-| Missing dependencies | Use Docker build which includes all dependencies |
-
-### Windows-Specific Issues
-
-| Issue | Solution |
-|:------|----------|
-| Path too long | Enable long path support in Windows or move project closer to drive root |
-| PowerShell execution policy | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` |
-| Git Bash path issues | Use `/d/` format for D: drive |
-
-### Getting Help
-
-If you encounter issues not covered here:
-
-1. Check the [Design Documentation](../../design_stage/) for detailed information
-2. Review the [Build System Documentation](03_build_system.md)
-3. Open an issue on [GitHub](https://github.com/Awesome-Embedded-Learning-Studio/CFDesktop/issues)
+1. **阅读构建系统文档**：[`03_build_system.md`](03_build_system.md)
+2. **探索示例程序**：浏览 `example/` 目录中的示例代码
+3. **了解项目结构**：查看[项目骨架设计](../design_stage/00_phase0_project_skeleton.md)
+4. **配置开发环境**：参考 [VSCode 配置](../design_stage/00_phase0_project_skeleton.md#五开发环境配置)
 
 ---
 
-## Quick Reference
+## 常见问题排查
 
-### Essential Commands
+### Docker 构建失败
+
+| 问题 | 解决方案 |
+|:-----|:---------|
+| Docker 守护进程未运行 | 启动 Docker Desktop |
+| 权限不足 | 在 Linux 上使用 `sudo`，或在 Windows 上以管理员身份运行终端 |
+| 端口冲突 | 确保没有其他容器占用所需端口 |
+| 内存不足 | 在设置中增加 Docker 内存限制 |
+
+### 构建错误
+
+| 问题 | 解决方案 |
+|:-----|---------|
+| 未找到 Qt | 设置 `Qt6_DIR` 环境变量，或使用 Docker 构建 |
+| 未找到编译器 | 安装 LLVM/Clang 或 GCC，或使用 Docker 构建 |
+| CMake 版本过低 | 将 CMake 升级到 3.16+ |
+| 缺少依赖 | 使用 Docker 构建，其中包含所有依赖 |
+
+### Windows 特定问题
+
+| 问题 | 解决方案 |
+|:-----|---------|
+| 路径过长 | 在 Windows 中启用长路径支持，或将项目移到更靠近驱动器根目录的位置 |
+| PowerShell 执行策略限制 | 运行 `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` |
+| Git Bash 路径问题 | 使用 `/d/` 格式表示 D: 盘 |
+
+### 获取帮助
+
+如果遇到本文未涵盖的问题：
+
+1. 查看[设计文档](../../design_stage/)获取详细信息
+2. 参考[构建系统文档](03_build_system.md)
+3. 在 [GitHub](https://github.com/Awesome-Embedded-Learning-Studio/CFDesktop/issues) 上提交 issue
+
+---
+
+## 快速参考
+
+### 常用命令
 
 ```bash
 # Clone and setup
@@ -331,22 +336,22 @@ bash scripts/build_helpers/docker_start.sh
 
 # Build specific architecture
 bash scripts/build_helpers/docker_start.sh --arch arm64 --verify
-```
+```bash
 
-### Configuration Files
+### 配置文件
 
-| File | Purpose |
-|:-----|:---------|
-| `build_develop_config.ini` | Development build configuration |
-| `build_deploy_config.ini` | Deployment build configuration |
-| `build_ci_config.ini` | CI build configuration |
+| 文件 | 用途 |
+|:-----|:-----|
+| `build_develop_config.ini` | 开发构建配置 |
+| `build_deploy_config.ini` | 部署构建配置 |
+| `build_ci_config.ini` | CI 构建配置 |
 
-### Output Locations
+### 输出目录
 
-| Build Type | Output Directory |
-|:-----------|:-----------------|
-| Development | `out/build_develop/` |
-| Deployment | `out/build_deploy/` |
+| 构建类型 | 输出目录 |
+|:---------|:---------|
+| 开发 | `out/build_develop/` |
+| 部署 | `out/build_deploy/` |
 | CI | `out/build_ci/` |
 
 ---

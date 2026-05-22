@@ -1,3 +1,8 @@
+---
+title: "CallOnceInit - 懒加载初始化"
+description: 是线程安全的懒加载模板，资源只在首次访问时初始化一次。我们用它来缓存那些获取开销大但不会变化的数据—
+---
+
 # CallOnceInit - 懒加载初始化
 
 `CallOnceInit<T>` 是线程安全的懒加载模板，资源只在首次访问时初始化一次。我们用它来缓存那些获取开销大但不会变化的数据——比如 CPU 型号、内存大小这些系统信息。
@@ -24,7 +29,7 @@ protected:
         return init_resources();
     }
 };
-```
+```text
 
 首次调用 `get_resources()` 时，`init_resources()` 会被自动调用。后续调用直接返回缓存的资源，不会再执行初始化。
 
@@ -46,7 +51,7 @@ void print_cpu_info() {
     auto& info2 = g_cpu_cache.get_resources();
     assert(&info == &info2);  // 同一个对象
 }
-```
+```text
 
 ## 重新初始化
 
@@ -55,7 +60,7 @@ void print_cpu_info() {
 ```cpp
 // 强制重新初始化
 g_cpu_cache.force_reinit();
-```
+```text
 
 带参数的版本可以在重新初始化时传入新参数：
 
@@ -79,7 +84,7 @@ private:
 
 // 使用
 config.force_reinit("/etc/app/new_config.json");
-```
+```text
 
 ⚠️ `force_reinit()` 不是线程安全的。如果可能和 `get_resources()` 并发调用，需要自己加锁保护。
 
@@ -100,7 +105,7 @@ protected:
 SystemInfoCache sys_info;
 auto& info = sys_info.get_resources();
 std::cout << "CPU 核心数: " << info.cpu_count << std::endl;
-```
+```text
 
 ### 延迟加载配置
 
@@ -123,7 +128,7 @@ ConfigCache config;
 if (config.get_resources().debug_mode) {
     // ...
 }
-```
+```text
 
 ## 线程安全保证
 
@@ -137,7 +142,7 @@ std::thread t2([&]() { auto& info = cache.get_resources(); });
 t1.join();
 t2.join();
 // init_resources() 只被执行一次
-```
+```text
 
 但 `force_reinit()` 不是线程安全的。如果需要在线程间重新初始化，必须加锁：
 
@@ -145,7 +150,7 @@ t2.join();
 std::mutex cache_mutex;
 std::lock_guard<std::mutex> lock(cache_mutex);
 cache.force_reinit();  // 现在安全了
-```
+```text
 
 ## 注意事项
 

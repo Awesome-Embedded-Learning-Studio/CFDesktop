@@ -1,10 +1,11 @@
-# Optimize
+---
+title: 优化指南
+description: 本目录提供 CFDesktop 项目的代码优化指南与最佳实践，重点关注 C++23 零开销抽象、编译
+---
 
-> Welcome to the Optimize section.
+# 优化指南
 
-## Overview
-
-Documentation and resources for Optimize.
+本目录提供 CFDesktop 项目的代码优化指南与最佳实践，重点关注 C++23 零开销抽象、编译期计算、内存布局优化以及 Qt 与标准库的高效使用方式，帮助开发者在保持代码可读性的同时获得最佳运行时性能。
 
 ---
 

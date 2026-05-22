@@ -1,3 +1,8 @@
+---
+title: dockerstart.sh
+description: "文档编写日期: 2026-03-20，是CFDesktop项目的Docker构建环境包装脚本，提供C"
+---
+
 # docker_start.sh
 
 > 文档编写日期: 2026-03-20
@@ -8,7 +13,7 @@
 
 ```bash
 bash scripts/build_helpers/docker_start.sh [options]
-```
+```bash
 
 ### 参数说明
 
@@ -50,7 +55,7 @@ bash scripts/build_helpers/docker_start.sh [options]
 
 ```bash
 bash scripts/build_helpers/docker_start.sh
-```
+```text
 
 启动一个交互式bash shell，可以手动执行命令。
 
@@ -58,7 +63,7 @@ bash scripts/build_helpers/docker_start.sh
 
 ```bash
 bash scripts/build_helpers/docker_start.sh --verify
-```
+```text
 
 在容器中运行完整的CI构建流程。
 
@@ -70,13 +75,13 @@ bash scripts/build_helpers/docker_start.sh --build-project
 
 # 快速构建
 bash scripts/build_helpers/docker_start.sh --build-project-fast
-```
+```text
 
 #### 测试模式
 
 ```bash
 bash scripts/build_helpers/docker_start.sh --run-project-test
-```
+```text
 
 ### 使用示例
 
@@ -101,11 +106,11 @@ bash scripts/build_helpers/docker_start.sh --no-log
 
 # 跳过依赖安装（手动设置）
 bash scripts/build_helpers/docker_start.sh --no-deps
-```
+```text
 
 ### 输出示例
 
-```
+```text
 
 ══════════════════════════════════════════════════════════════════════════
 CFDesktop Docker Build Environment
@@ -132,7 +137,7 @@ CFDesktop Docker Build Environment
 
 [●] RUN - Starting interactive shell
   → Type 'exit' to leave the container
-```
+```bash
 
 ### Docker镜像
 
@@ -156,9 +161,9 @@ CFDesktop Docker Build Environment
 
 日志默认保存在 `scripts/docker/logger/` 目录：
 
-```
+```text
 scripts/docker/logger/ci_build_YYYYMMDD_HHMMSS.log
-```
+```text
 
 日志包含：
 - 开始时间
@@ -172,14 +177,14 @@ scripts/docker/logger/ci_build_YYYYMMDD_HHMMSS.log
 
 ```bash
 bash scripts/build_helpers/docker_start.sh --verify --stay-on-error
-```
+```text
 
 失败后会显示：
 
-```
+```text
 === Build failed, staying in container for debugging ===
 Type "exit" to leave the container
-```
+```bash
 
 ### 路径处理
 
@@ -220,11 +225,11 @@ Type "exit" to leave the container
 # .github/workflows/ci.yml 示例
 - name: Build in Docker
   run: bash scripts/build_helpers/docker_start.sh --verify
-```
+```text
 
 或调用测试入口：
 
 ```yaml
 - name: Run Tests
   run: bash scripts/build_helpers/docker_start.sh --run-project-test
-```
+```text

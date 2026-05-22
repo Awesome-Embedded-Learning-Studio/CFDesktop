@@ -1,3 +1,8 @@
+---
+title: Button 控件深度解析——七步绘制流程的完整实现
+description: "在上一篇文章里，我们聊了控件适配层的\"薄包装\"设计理念。这篇文章以 Button 控件为例，完整展示"
+---
+
 # Button 控件深度解析——七步绘制流程的完整实现
 
 在上一篇文章里，我们聊了控件适配层的"薄包装"设计理念。这篇文章以 Button 控件为例，完整展示这个理念如何付诸实践。
@@ -26,7 +31,7 @@ enum class ButtonVariant {
     Text,
     Elevated
 };
-```
+```text
 
 ## 构造函数中的组件初始化
 
@@ -60,7 +65,7 @@ Button::Button(ButtonVariant variant, QWidget* parent)
     connect(&ThemeManager::instance(), &ThemeManager::themeChanged,
             this, [this](const ICFTheme&) { update(); });
 }
-```
+```text
 
 ## 事件处理的标准实现
 
@@ -100,7 +105,7 @@ void Button::focusOutEvent(QFocusEvent* event) {
     m_stateMachine->onFocusOut();
     m_focusIndicator->onFocusOut();
 }
-```
+```text
 
 ## 七步绘制流程
 
@@ -132,7 +137,7 @@ void Button::paintEvent(QPaintEvent* event) {
     drawContent(painter, contentRect);           // 6. 内容（图标+文本）
     drawFocusIndicator(painter, shape);         // 7. 焦点环
 }
-```
+```text
 
 让我们逐步拆解这个流程。
 
@@ -147,7 +152,7 @@ void Button::drawShadow(QPainter& p, const QRectF& contentRect, const QPainterPa
     }
     // 其他变体没有阴影（或只有轻微阴影）
 }
-```
+```text
 
 ### 第二步：绘制背景
 
@@ -174,7 +179,7 @@ QColor Button::containerColor() const {
     }
     return Qt::black;  // fallback
 }
-```
+```text
 
 ### 第三步：绘制状态层
 
@@ -205,7 +210,7 @@ QColor Button::stateLayerColor() const {
     }
     return Qt::white;
 }
-```
+```text
 
 ### 第四步：绘制涟漪
 
@@ -215,7 +220,7 @@ QColor Button::stateLayerColor() const {
 void Button::drawRipple(QPainter& p, const QPainterPath& shape) {
     m_ripple->paint(&p, shape);
 }
-```
+```text
 
 ### 第五步：绘制边框
 
@@ -237,7 +242,7 @@ void Button::drawOutline(QPainter& p, const QPainterPath& shape) {
     p.setBrush(Qt::NoBrush);
     p.drawPath(shape);
 }
-```
+```text
 
 ### 第六步：绘制内容
 
@@ -261,7 +266,7 @@ void Button::drawContent(QPainter& p, const QRectF& contentRect) {
     // 绘制文本
     p.drawText(textRect, Qt::AlignCenter, text());
 }
-```
+```text
 
 ### 第七步：绘制焦点环
 
@@ -271,7 +276,7 @@ void Button::drawContent(QPainter& p, const QRectF& contentRect) {
 void Button::drawFocusIndicator(QPainter& p, const QPainterPath& shape) {
     m_focusIndicator->paint(&p, rect(), cornerRadius());
 }
-```
+```yaml
 
 ## 总结
 

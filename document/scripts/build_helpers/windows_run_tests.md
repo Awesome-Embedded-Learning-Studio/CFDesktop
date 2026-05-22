@@ -1,3 +1,8 @@
+---
+title: windowsruntests.ps1
+description: "文档编写日期: 2026-03-20，本脚本使用CTest运行项目的测试套件。它会："
+---
+
 # windows_run_tests.ps1
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 基本语法
 ```powershell
 .\scripts\build_helpers\windows_run_tests.ps1 [-Config <develop|deploy>]
-```
+```bash
 
 ### 参数说明
 | 参数 | 类型 | 默认值 | 说明 |
@@ -21,7 +26,7 @@
 
 # 使用部署配置运行测试
 .\scripts\build_helpers\windows_run_tests.ps1 -Config deploy
-```
+```text
 
 ## Scripts详解
 
@@ -60,7 +65,7 @@
 #### 4. 执行测试
 ```bash
 ctest --test-dir <test_dir> --output-on-failure
-```
+```text
 
 ### CTest参数说明
 - `--test-dir`: 指定测试目录

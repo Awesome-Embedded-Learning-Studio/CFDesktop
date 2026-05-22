@@ -1,10 +1,11 @@
-# examples
+---
+title: 示例代码
+description: 本目录包含演示 CFDesktop API 用法的示例代码，覆盖硬件探测、UI 组件使用、配置管理以
+---
 
-> Welcome to the examples section.
+# 示例代码
 
-## Overview
-
-Documentation and resources for examples.
+本目录包含演示 CFDesktop API 用法的示例代码，覆盖硬件探测、UI 组件使用、配置管理以及日志系统等典型场景，帮助开发者快速理解项目各模块的集成方式与调用约定。
 
 ---
 

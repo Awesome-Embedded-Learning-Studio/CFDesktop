@@ -1,3 +1,8 @@
+---
+title: "CFMaterialFadeAnimation - Material 淡入淡出动画"
+description: 是 Material Design 3 运动系统中的透明度动画实现，负责按照 Material 规范
+---
+
 # CFMaterialFadeAnimation - Material 淡入淡出动画
 
 `CFMaterialFadeAnimation` 是 Material Design 3 运动系统中的透明度动画实现，负责按照 Material 规范控制 widget 的不透明度变化。淡入淡出是 UI 中最基础的过渡效果，我们实现这个动画不仅是为了视觉美观，更重要的是在元素出现、消失或状态切换时给用户清晰的心理预期。
@@ -32,7 +37,7 @@ fadeAnim->setTargetWidget(myDialog);
 
 // 开始动画（Forward = 淡入，Backward = 淡出）
 fadeAnim->start(Direction::Forward);
-```
+```text
 
 动画通过 `QGraphicsOpacityEffect` 作用于 widget，这意味着它适用于所有继承自 `QWidget` 的控件，包括那些本身不直接支持透明度属性的组件。
 
@@ -47,7 +52,7 @@ connect(fadeAnim.get(), &ICFAbstractAnimation::finished, this, [widget]() {
     // 设置为某个中间透明度值
     widget->setWindowOpacity(0.8);
 });
-```
+```bash
 
 ## 时序控制
 
@@ -74,14 +79,14 @@ widget->setGraphicsEffect(blurEffect);
 // 淡入动画会创建独立的 opacity effect
 // 不会影响已有的模糊效果
 fadeAnim->setTargetWidget(widget);
-```
+```text
 
 第二，effect 的生命周期由动画管理。当动画销毁时，如果 effect 是它创建的，也会一并销毁。如果你需要在动画结束后保留最终的透明度状态，需要注意 effect 的所有权问题：
 
 ```cpp
 // 动画结束后 effect 会被清理，widget 会恢复到不透明状态
 // 如果需要保持半透明，考虑监听 finished 信号并手动设置样式
-```
+```text
 
 ## 生命周期控制
 
@@ -97,7 +102,7 @@ fadeAnim->pause();   // 暂停在当前状态
 fadeAnim->reverse(); // 从当前状态反向播放（淡出）
 
 fadeAnim->stop();    // 停止并重置到初始状态
-```
+```text
 
 `reverse()` 是一个很方便的操作，它会让动画从当前进度开始反向播放，而不是跳回起点。这在实现"鼠标悬停显示，移开隐藏"这类交互时特别好用。
 
@@ -122,7 +127,7 @@ void showModalDialog(QWidget* dialog) {
     fadeAnim->setTargetWidget(dialog);
     fadeAnim->start(Direction::Forward);
 }
-```
+```text
 
 ### 加载状态切换
 
@@ -140,7 +145,7 @@ void hideLoadingIndicator() {
     fadeAnim->setTargetWidget(loadingLabel);
     fadeAnim->start();
 }
-```
+```text
 
 ### 组合动画
 
@@ -156,7 +161,7 @@ fadeAnim->setTargetWidget(widget);
 
 slideAnim->start();
 fadeAnim->start();
-```
+```text
 
 ## 相关文档
 

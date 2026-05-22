@@ -1,3 +1,8 @@
+---
+title: 绘制管道优化——从单一控件到批量渲染的性能考量
+description: 在上一篇文章里，我们深入分析了 Button 控件的七步绘制流程。每个步骤看起来都很简单，但当页面上
+---
+
 # 绘制管道优化——从单一控件到批量渲染的性能考量
 
 在上一篇文章里，我们深入分析了 Button 控件的七步绘制流程。每个步骤看起来都很简单，但当页面上有几十个控件时，性能问题就会显现。
@@ -16,7 +21,7 @@ void Button::paintEvent(QPaintEvent* event) {
 
     // ... 绘制代码
 }
-```
+```text
 
 这两个设置会影响绘制质量：
 
@@ -43,7 +48,7 @@ void setChecked(bool checked) {
         update();  // 只在状态改变时重绘
     }
 }
-```
+```text
 
 状态机已经做了这个优化——只有当透明度值真正改变时，才会发出 `stateLayerOpacityChanged` 信号。
 
@@ -66,7 +71,7 @@ private:
     QColor cachedLabelColor_;
     float cachedCornerRadius_;
 };
-```
+```text
 
 在 `themeChanged` 信号处理中刷新缓存：
 
@@ -76,7 +81,7 @@ connect(&ThemeManager::instance(), &ThemeManager::themeChanged,
             refreshThemeCache();
             update();
         });
-```
+```text
 
 这样每次绘制时就不需要查询主题了。
 
@@ -89,13 +94,13 @@ void Button::drawRipple(QPainter& p, const QPainterPath& shape) {
     QPainterPath clipPath = geometry::roundedRect(rect(), cornerRadius());
     m_ripple->paint(&p, clipPath);
 }
-```
+```text
 
 Qt 的 `setClipPath` 操作比较昂贵，因为需要计算复杂的几何。如果控件形状简单（比如矩形），可以考虑用 `setClipRect` 替代：
 
 ```cpp
 painter.setClipRect(rect(), Qt::IntersectClip);  // 更高效的矩形裁剪
-```
+```text
 
 ## 静态内容的预渲染
 
@@ -118,7 +123,7 @@ void Button::paintEvent(QPaintEvent* event) {
     painter.drawPixmap(0, 0, cachedBackground_);  // 直接绘制缓存的图像
     // ... 绘制动态内容
 }
-```
+```text
 
 但对于大多数控件来说，这个优化可能不值得——因为背景色会随主题切换而改变。
 
@@ -139,7 +144,7 @@ QTimer::singleShot(0, this, []() {
         widget->update();
     }
 });
-```
+```text
 
 这样可以将多次重绘合并为一次。
 
@@ -175,7 +180,7 @@ void Button::paintEvent(QPaintEvent* event) {
     // Desktop 配置：绘制所有效果
     // ... 完整的七步流程
 }
-```
+```yaml
 
 ## 总结
 

@@ -1,3 +1,8 @@
+---
+title: Token 系统设计——字符串字面量的编译时魔法
+description: 在上一篇文章里，我们讲了主题系统的整体架构：ICFTheme 接口定义了主题包含什么，ThemeFa
+---
+
 # Token 系统设计——字符串字面量的编译时魔法
 
 在上一篇文章里，我们讲了主题系统的整体架构：ICFTheme 接口定义了主题包含什么，ThemeFactory 负责创建主题，ThemeManager 管理多个主题并处理切换。
@@ -26,7 +31,7 @@ auto result = PrimaryToken::get();
 if (result) {
     QColor color = *result;
 }
-```
+```text
 
 这样有几个好处：
 
@@ -51,7 +56,7 @@ public:
     // 静态方法获取值
     static cf::expected<T*, TokenError> get();
 };
-```
+```text
 
 注意这里的设计技巧：StaticToken 的所有构造函数都被删除了。这意味着你不能创建 StaticToken 的实例——它只是一个"类型"，用来承载编译时信息。
 
@@ -75,14 +80,14 @@ constexpr uint64_t fnv1a64(std::string_view str) {
 constexpr uint64_t operator""_hash(const char* str, size_t len) {
     return fnv1a64(std::string_view(str, len));
 }
-```
+```text
 
 这样你就可以在编译时计算字符串的哈希：
 
 ```cpp
 constexpr uint64_t PRIMARY_HASH = fnv1a64("md.primary");  // 编译时常量
 using PrimaryToken = StaticToken<QColor, PRIMARY_HASH>;
-```
+```text
 
 ## TokenRegistry：运行时存储
 
@@ -112,7 +117,7 @@ private:
     mutable std::shared_mutex registry_mutex_;
     std::unordered_map<uint64_t, detail::TokenSlot> slot_map_;
 };
-```
+```text
 
 TokenRegistry 是一个单例，内部用 `unordered_map<uint64_t, TokenSlot>` 存储数据，键是哈希值。
 
@@ -126,7 +131,7 @@ struct TokenSlot {
     const std::type_info* type_info; // 用于类型检查
     std::string name;                // 调试用
 };
-```
+```text
 
 注册时，我们创建一个 `std::any` 存储 `T` 类型的值，同时保存 `typeid(T)` 用于后续的类型检查。
 
@@ -151,7 +156,7 @@ auto TokenRegistry::get() -> Result<typename TokenToken::value_type*> {
 
     return std::any_cast<T>(slot->data.get());
 }
-```
+```text
 
 ## 线程安全设计
 
@@ -163,7 +168,7 @@ std::shared_lock<std::shared_mutex> lock(registry_mutex_);
 
 // 写操作（register_token）：独占锁
 std::unique_lock<std::shared_mutex> lock(registry_mutex_);
-```
+```text
 
 这个设计适合"读多写少"的场景——token 注册通常发生在初始化阶段，之后大部分时候都是读取。
 
@@ -188,7 +193,7 @@ inline constexpr const char* const ALL_TOKENS[] = {
 inline constexpr size_t TOKEN_COUNT = 26;
 
 } // namespace cf::ui::core::token::literals
-```
+```text
 
 这些 `constexpr` 字面量可以在编译时使用，而且避免了字符串字面量的重复。
 
@@ -204,7 +209,7 @@ struct ICFColorScheme {
         return const_cast<ICFColorScheme*>(this)->queryExpectedColor(name);
     }
 };
-```
+```text
 
 MaterialColorScheme 的实现内部会用 TokenRegistry 来查找颜色。虽然这里还是用了字符串参数，但内部实现可以复用 Token 系统，保持一致性。
 
@@ -221,7 +226,7 @@ auto result = TokenRegistry::get().get_dynamic<QColor>("custom.color");
 if (result) {
     QColor color = *result;
 }
-```
+```yaml
 
 DynamicToken 用的是运行时字符串查找，没有编译时检查，但更加灵活。适合插件系统、用户自定义主题等场景。
 

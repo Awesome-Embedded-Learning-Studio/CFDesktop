@@ -1,3 +1,8 @@
+---
+title: "docker-compose.yml"
+description: "文档编写日期: 2026-03-20，所有服务挂载项目根目录到容器的"
+---
+
 # docker-compose.yml
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 基本语法
 ```bash
 docker-compose -f scripts/docker/docker-compose.yml [COMMAND]
-```
+```text
 
 ### 常用命令
 ```bash
@@ -22,7 +27,7 @@ docker-compose -f scripts/docker/docker-compose.yml run build-arm64
 
 # 运行验证服务
 docker-compose -f scripts/docker/docker-compose.yml run verify
-```
+```bash
 
 ## Scripts详解
 
@@ -57,4 +62,4 @@ docker-compose -f scripts/docker/docker-compose.yml run verify
 verify服务目前使用`/bin/bash`作为默认命令。在完成Phase 3后，可取消注释以下命令以使用`ci_build_entry.sh`：
 ```bash
 command: bash scripts/build_helpers/ci_build_entry.sh ci
-```
+```text

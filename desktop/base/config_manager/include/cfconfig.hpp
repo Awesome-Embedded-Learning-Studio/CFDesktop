@@ -12,6 +12,7 @@
 #pragma once
 
 #include "base/singleton/simple_singleton.hpp"
+#include "cfconfig/cfconfig_domain_handle.h"
 #include "cfconfig/cfconfig_result.h"
 #include "cfconfig/cfconfig_watcher.h"
 #include "cfconfig_key.h"
@@ -80,6 +81,23 @@ class ConfigStore : public SimpleSingleton<ConfigStore> {
      * @endcode
      */
     void initialize(std::shared_ptr<IConfigStorePathProvider> path_provider);
+
+    /**
+     * @brief Get a handle to a named config domain.
+     *
+     * Each domain has its own set of backend files per layer.
+     * The "default" domain is used by all non-domain operations.
+     * Domains are lazily created on first access.
+     *
+     * @param[in] name Domain name (e.g., "wallpaper", "ui", "network").
+     * @return ConfigDomainHandle scoped to the named domain.
+     *
+     * @code
+     * auto wallpaper = ConfigStore::instance().domain("wallpaper");
+     * wallpaper.set(KeyView{.group="source", .key="path"}, std::string("/pics/bg.jpg"));
+     * @endcode
+     */
+    ConfigDomainHandle domain(const std::string& name);
 
     /* ========== Query operations ========== */
 
@@ -421,3 +439,6 @@ RegisterResult ConfigStore::register_key(const Key& key, const Value& init_value
 }
 
 } // namespace cf::config
+
+// Include ConfigDomainHandle template implementations (needs detail::any_cast above)
+#include "impl/config_domain_handle_impl.h"

@@ -1,10 +1,11 @@
-# release
+---
+title: 发布脚本
+description: 本目录包含正式发布流程所使用的脚本，负责版本号更新、变更日志生成、二进制包打包以及 Git Tag
+---
 
-> Welcome to the release section.
+# 发布脚本
 
-## Overview
-
-Documentation and resources for release.
+本目录包含正式发布流程所使用的脚本，负责版本号更新、变更日志生成、二进制包打包以及 Git Tag 创建等发布步骤的自动化执行。
 
 ---
 

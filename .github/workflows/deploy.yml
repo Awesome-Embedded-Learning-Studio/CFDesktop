@@ -1,94 +1,61 @@
-# 工作流名称
-name: 自动部署 MkDocs
+name: Deploy VitePress
 
-# 触发条件：推送到 main 分支
 on:
   push:
     branches:
       - main
-  
-  # 允许手动触发
   workflow_dispatch:
 
-# 设置权限
 permissions:
-  contents: write  # 允许推送到 gh-pages 分支
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    
+
     steps:
-      # 1. 检出代码
-      - name: 检出仓库
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          fetch-depth: 0  # 获取完整历史，显示文章修改时间
-      
-      # 2. 设置 Python
-      - name: 设置 Python
-        uses: actions/setup-python@v5
+          version: 10.33.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.11"
-          # cache: 'pip'  # 缓存依赖，加速构建
-      
-      # 3. 安装依赖
-      - name: 安装依赖
-        run: |
-          pip install mkdocs-material
-          pip install mkdocs-awesome-pages-plugin
-          pip install mkdocs-git-revision-date-localized-plugin
-      
-      # 4. 安装 Doxygen
-      - name: 安装 Doxygen
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y doxygen
+          node-version: 24
+          cache: pnpm
 
-      # 5. 安装 doxybook2
-      - name: 安装 doxybook2
-        run: |
-          # 下载最新版本的 doxybook2
-          DOXYBOOK2_VERSION="1.5.0"
-          wget https://github.com/matusnovak/doxybook2/releases/download/v${DOXYBOOK2_VERSION}/doxybook2-linux-amd64-v${DOXYBOOK2_VERSION}.zip
-          unzip doxybook2-linux-amd64-v${DOXYBOOK2_VERSION}.zip
-          sudo mv bin/doxybook2 /usr/local/bin/
-          sudo chmod +x /usr/local/bin/doxybook2
-          doxybook2 --version
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      # 6. 生成 API 文档(Doxygen → Markdown)
-      - name: 生成 API 文档
-        run: |
-          doxygen Doxyfile
-          rm -rf document/api
-          mkdir -p document/api
-          doxybook2 --input ./xml \
-                    --output ./document/api \
-                    --config doxybook.json
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      # 6.5. 为自动生成的 API 文档配置导航
-      - name: 配置 API 导航
-        run: |
-          cat > document/api/.pages <<'EOF'
-          title: API 自动文档
-          icon: material/file-document
-          nav:
-            - 命名空间: Namespaces
-            - 类: Classes
-            - 文件: Files
-          EOF
+      - name: Build docs
+        run: pnpm build
 
-      # 6.6. 修复 doxybook2 生成的相对链接路径
-      - name: 修复 API 文档链接
-        run: python3 scripts/document/fix_doxybook_links.py
-
-      # 7. 构建网站
-      - name: 构建网站
-        run: mkdocs build --clean
-      
-      # 8. 自动部署到 gh-pages 分支（这一步会自动触发 GitHub Pages）
-      - name: 部署到 GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动提供的 token
-          publish_dir: ./site  # MkDocs 构建输出目录
+          path: site/.vitepress/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

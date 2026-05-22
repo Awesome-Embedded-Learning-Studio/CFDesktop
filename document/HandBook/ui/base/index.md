@@ -1,10 +1,11 @@
-# base
+---
+title: UI 基础工具
+description: 本章节涵盖 UI 框架的基础工具层，包括  颜色管理、 几何计算辅助以及  缓动函数等核心工具类。这
+---
 
-> Welcome to the base section.
+# UI 基础工具
 
-## Overview
-
-Documentation and resources for base.
+本章节涵盖 UI 框架的基础工具层，包括 `CFColor` 颜色管理、`GeometryHelper` 几何计算辅助以及 `Easing` 缓动函数等核心工具类。这些工具为上层主题引擎和组件系统提供数学与渲染基础支持。
 
 ---
 

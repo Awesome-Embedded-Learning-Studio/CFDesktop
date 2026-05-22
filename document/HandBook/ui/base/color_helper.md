@@ -1,3 +1,8 @@
+---
+title: "colorhelper - 颜色助手"
+description: 提供了 Material Design 3 颜色系统常用的颜色操作函数，包括混合、高程叠加、对比度计
+---
+
 # color_helper - 颜色助手
 
 `color_helper` 提供了 Material Design 3 颜色系统常用的颜色操作函数，包括混合、高程叠加、对比度计算和色调板生成。这些本来应该是色彩理论的实现细节，但在做动态主题系统时反复出现，所以抽出来作为独立工具。
@@ -19,7 +24,7 @@ CFColor result = blend(base, overlay, 0.5f);
 
 // 半透明遮罩效果
 CFColor dimmed = blend(originalColor, CFColor(0, 0, 0), 0.3f);
-```
+```text
 
 混合是在 RGB 空间线性进行的，不是 alpha 混合。ratio = 0 返回 base，ratio = 1 返回 overlay，中间值按比例线性组合。
 
@@ -39,7 +44,7 @@ CFColor card = elevationOverlay(surface, primary, 4);
 
 // 高程 8dp 的对话框
 CFColor dialog = elevationOverlay(surface, primary, 8);
-```
+```text
 
 高程越大，surface 颜色会越向 primary 靠近，模拟阴影和光照效果。这是 Material Design 3 的标准做法，比单纯用 alpha 叠加黑色要精致一些。
 
@@ -63,7 +68,7 @@ if (contrastRatio(foreground, background) < 4.5f) {
 // 自动选择深色/浅色文字
 CFColor textColor = contrastRatio(darkText, bgColor) > contrastRatio(lightText, bgColor)
                     ? darkText : lightText;
-```
+```text
 
 对比度是基于相对亮度计算的，返回值范围是 1.0 到 21.0。1.0 表示两个颜色亮度相同，21.0 是黑白之间的最大对比度。
 
@@ -85,7 +90,7 @@ QList<CFColor> palette = tonalPalette(keyColor);
 CFColor surface = palette[4];    // 浅色表面
 CFColor surfaceVariant = palette[6];  // 变体表面
 CFColor onSurface = palette[10]; // 表面上的文字
-```
+```text
 
 色调板是 Material Design 3 主题系统的核心——整个颜色系统都是从单个"种子颜色"衍生出来的。生成的色调遵循 Material 规范，确保视觉和谐度。
 

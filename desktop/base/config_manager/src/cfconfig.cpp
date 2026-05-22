@@ -106,4 +106,8 @@ void ConfigStore::reload() {
     impl->reload();
 }
 
+ConfigDomainHandle ConfigStore::domain(const std::string& name) {
+    return ConfigDomainHandle(impl, name);
+}
+
 } // namespace cf::config

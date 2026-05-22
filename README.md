@@ -42,7 +42,7 @@
 | Phase 0 | 工程骨架 | 100% | CMake 构建系统、代码规范、CI/CD、Docker 多架构构建 |
 | Phase 1 | 硬件探针 | 90% | CPU/Memory/GPU/网络检测完成，缺HWTier/Policy |
 | Phase 2 | Base 库核心 | 85% | ConfigStore(85%)、Logger(90%)、DPI基础转换(ui/base)、ASCII Art、File Operations |
-| Phase 5 | 测试体系 | 55% | Google Test 集成，base/logger/ui基础有覆盖 |
+| Phase 5 | 测试体系 | 65% | Google Test/CTest 集成，本地基线 47 个测试通过 |
 | Phase 6 | UI 框架核心 | 95% | Material Design 3 分层架构 (Layer 1-4 全部完成)，缺布局/手势 |
 | Phase 6 | P0 核心控件 | 100% | Button, TextField, TextArea, Label, CheckBox, RadioButton, GroupBox |
 | Phase 6 | P1 控件 | 100% | Slider, ProgressBar, Switch, ToggleButton, etc. (12个) |
@@ -69,7 +69,7 @@
 | Phase 6 | P2 控件 | 27个高级控件 (DatePicker, MenuBar, Dialog, etc.) |
 | Phase 6 | P3 控件 | 25个专业控件 (SplitView, ChartView, etc.) |
 | Phase 5 | 测试完善 | desktop 模块、性能基准、UI 自动化 |
-| 文档 | API/示例补充 | 约40%文档缺失，50%示例缺失 |
+| 文档 | VitePress 重排 | 已迁移到 VitePress，API 自动文档二期处理 |
 
 ### 快速统计 (2026-03-27 更新)
 
@@ -79,10 +79,10 @@
 | UI 控件 (P2+P3) | 0% (52个) | 待开发 |
 | 文档覆盖 | 60% | ~268个文档 |
 | 示例覆盖 | 50% | ~80个示例 |
-| 测试覆盖 | 55% | Base/Logger良好，UI控件缺失 |
+| 测试覆盖 | 65% | CTest 47 项通过，P0/P1 Widget 已有基础测试 |
 
-📋 **完整待办清单**: [TODO.md](TODO.md)
-📊 **详细状态报告**: [document/todo/done/PROJECT_STATUS_REPORT.md](document/todo/done/PROJECT_STATUS_REPORT.md)
+📋 **完整待办清单**: [document/todo/](document/todo/)
+📊 **当前状态**: [document/status/current.md](document/status/current.md)
 
 ---
 
@@ -150,7 +150,7 @@ CFDesktop 通过 `IDisplayServerBackend` 接口抽象了三种显示模式，使
 - **框架**: Qt 6.8.3
 - **构建**: CMake 3.16+, Ninja
 - **测试**: Google Test
-- **文档**: MkDocs + Doxygen
+- **文档**: VitePress + Doxygen
 
 ---
 
@@ -198,14 +198,22 @@ cd CFDesktop
 
 📚 **项目文档站**: [https://awesome-embedded-learning-studio.github.io/CFDesktop/](https://awesome-embedded-learning-studio.github.io/CFDesktop/)
 
+本地预览文档:
+
+```bash
+pnpm install
+pnpm dev
+pnpm build
+```
+
 ### 开发文档
 
 | 文档 | 说明 | 链接 |
 |:---|:---|:---|
 | 开发环境设置 | 前置要求、快速开始、构建系统 | [development/](https://awesome-embedded-learning-studio.github.io/CFDesktop/development/) |
-| API 参考手册 | 基础库 API 文档 | [HandBook/api/](https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/api/) |
+| 当前状态 | 开发重启事实源 | [status/current](https://awesome-embedded-learning-studio.github.io/CFDesktop/status/current) |
 | UI 框架文档 | Material Design 实现架构 | [HandBook/ui/](https://awesome-embedded-learning-studio.github.io/CFDesktop/HandBook/ui/) |
-| 代码示例 | 各模块使用示例 | [example/](https://awesome-embedded-learning-studio.github.io/CFDesktop/examples/) |
+| AI 辅助开发 | 通用 AI 协作指南 | [development/ai-assistant-guide](https://awesome-embedded-learning-studio.github.io/CFDesktop/development/ai-assistant-guide) |
 
 ### 设计文档
 
@@ -217,9 +225,9 @@ cd CFDesktop
 
 ### TODO 跟踪
 
-- [**待办清单**](TODO.md) - 按优先级分类的待办事项 (P0-P3)
+- [**待办清单**](document/todo/) - 按优先级分类的待办事项
 - [任务看板](document/todo/README.md) - 当前开发任务列表
-- [状态报告](document/todo/done/PROJECT_STATUS_REPORT.md) - 项目整体进度报告
+- [当前状态](document/status/current.md) - 项目重启事实源
 
 ---
 

@@ -1,10 +1,11 @@
-# application
+---
+title: 应用框架
+description: 本章节介绍应用级别的 UI 工具与窗口管理功能，包括主窗口（）接口、显示服务后端（）以及跨平台窗口管
+---
 
-> Welcome to the application section.
+# 应用框架
 
-## Overview
-
-Documentation and resources for application.
+本章节介绍应用级别的 UI 工具与窗口管理功能，包括主窗口（`IWindow`）接口、显示服务后端（`IDisplayServerBackend`）以及跨平台窗口管理的适配层。应用框架为桌面环境的完整运行提供顶层支撑。
 
 ---
 

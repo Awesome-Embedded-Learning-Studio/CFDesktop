@@ -1,3 +1,8 @@
+---
+title: "Milestone 2: 状态栏"
+description: "预计周期: 3-5 天，前置依赖: Milestone 1: 桌面骨架可见"
+---
+
 # Milestone 2: 状态栏
 
 > **状态**: ⬜ 待开始

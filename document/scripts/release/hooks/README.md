@@ -1,3 +1,8 @@
+---
+title: Git Hooks
+description: "文档编写日期: 2026-03-20，CFDesktop项目的Git hooks配置目录。"
+---
+
 # Git Hooks
 
 > 文档编写日期: 2026-03-20
@@ -12,7 +17,7 @@ bash scripts/release/hooks/install_hooks.sh
 
 # Windows PowerShell
 .\scripts\release\hooks\install_hooks.ps1
-```
+```bash
 
 ## 文件说明
 

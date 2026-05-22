@@ -1,3 +1,8 @@
+---
+title: "scopeguard - 作用域守卫"
+description: 是 RAII（Resource Acquisition Is Initialization）模式的轻
+---
+
 # scope_guard - 作用域守卫
 
 `ScopeGuard` 是 RAII（Resource Acquisition Is Initialization）模式的轻量级实现，确保一段代码在作用域结束时执行，无论是因为正常返回还是抛出异常。这个看似简单的工具在实际代码里非常好用——它能把"清理资源"和"业务逻辑"分开，让代码更清晰，也更容易避免资源泄漏。
@@ -29,7 +34,7 @@ void process_file(const std::string& path) {
     free(buffer);  // 三个出口，三个地方写清理代码
     fclose(f);
 }
-```
+```text
 
 每个可能的返回路径都要记得清理所有资源，漏一个就泄漏。用 `ScopeGuard` 就简单多了：
 
@@ -48,7 +53,7 @@ void process_file(const std::string& path) {
 
     // 更多代码...
 }
-```
+```text
 
 无论从哪个路径退出，`ScopeGuard` 都会执行对应的清理代码。你不需要在每个返回点都写一遍，也不容易漏。
 
@@ -69,7 +74,7 @@ void process_file(const std::string& path) {
     // 做一些事情...
     // 离开作用域时 counter 变成 42
 }
-```
+```text
 
 lambda 按引用捕获 `counter`，所以在守卫内部可以修改它。你也可以按值捕获，看具体需求。
 
@@ -95,7 +100,7 @@ void save_config(const std::string& path) {
         cleanup.dismiss();  // 成功，不需要删除临时文件
     }
 }
-```
+```text
 
 `dismiss()` 是不可逆的，一旦调用就不能再恢复。多次调用 `dismiss()` 是安全的，不会有额外效果。
 
@@ -112,7 +117,7 @@ void save_config(const std::string& path) {
     cf::ScopeGuard guard3([&order]() { order.push_back(3); });
 }
 // order = {3, 2, 1}
-```
+```text
 
 这和 C++ 局部变量的析构顺序一致——后创建的先析构。这个顺序很重要，如果多个守卫之间有依赖，你需要知道哪个先执行。比如先分配的资源应该后释放（LIFO），正好符合这个顺序。
 
@@ -131,7 +136,7 @@ try {
 } catch (...) {
     // 异常被捕获，但清理已经执行
 }
-```
+```text
 
 ⚠️ 如果清理代码本身抛出异常，这个异常会传播出去。如果在栈展开过程中（已经有一个异常在处理）清理代码又抛出异常，程序会调用 `std::terminate`。所以确保清理代码不会抛异常，或者把可能抛异常的代码用 `try-catch` 包起来。
 
@@ -148,7 +153,7 @@ void read_config(const std::string& path) {
     // 使用文件...
     // 离开作用域自动关闭
 }
-```
+```text
 
 ### 状态回滚
 
@@ -164,7 +169,7 @@ void update_state(State& s) {
 
     rollback.dismiss();  // 成功，不需要回滚
 }
-```
+```text
 
 ### 锁的释放
 
@@ -175,7 +180,7 @@ void critical_section() {
 
     // 临界区代码...
 }
-```
+```text
 
 当然更推荐直接用 `std::lock_guard` 或 `std::unique_lock`，但 `ScopeGuard` 可以处理更复杂的场景。
 
@@ -195,7 +200,7 @@ void process_item(Item& item) {
 
     // 离开作用域自动恢复
 }
-```
+```text
 
 ## 限制和注意事项
 
@@ -206,7 +211,7 @@ cf::ScopeGuard guard1([]() {});
 
 cf::ScopeGuard guard2 = guard1;  // 编译错误
 cf::ScopeGuard guard3 = std::move(guard1);  // 编译错误
-```
+```text
 
 这个设计是为了确保清理代码只执行一次。如果允许复制，同一个守卫可能被复制到多个地方，不清楚应该由谁负责清理。如果允许移动，移动后原守卫的清理代码就不应该再执行，但这会让语义变得复杂。
 
@@ -220,7 +225,7 @@ cf::ScopeGuard guard([ptr]() {});  // 编译错误
 // 可以这样
 auto ptr = std::make_unique<int>(42);
 cf::ScopeGuard guard([&ptr]() {});  // 按引用捕获
-```
+```text
 
 ## 性能考虑
 
@@ -253,7 +258,7 @@ for (int i = 0; i < 10; ++i) {
 end:;
 }
 // 守卫仍然执行
-```
+```text
 
 无论控制流怎么跳转，只要离开了守卫所在的作用域，清理代码就会执行。这得益于 C++ 的 RAII 机制——析构函数总会在作用域结束时被调用。
 

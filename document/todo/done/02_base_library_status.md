@@ -1,3 +1,8 @@
+---
+title: "Phase 2: 基础库核心 - 状态文档"
+description: "模块ID: Phase 2，总体进度: 100%"
+---
+
 # Phase 2: 基础库核心 - 状态文档
 
 > **模块ID**: Phase 2
@@ -83,7 +88,7 @@ signals:
     void themeChanged(const ICFTheme& new_theme);
 };
 }
-```
+```bash
 
 #### 测试
 
@@ -148,7 +153,7 @@ class ICFAnimationManagerFactory : public QObject {
 enum class State { Idle, Running, Paused, Finished };
 enum class Direction { Forward, Backward };
 }
-```
+```bash
 
 #### 示例
 
@@ -189,7 +194,7 @@ struct CanvasUnitHelper {
     BreakPoint breakPoint(qreal widthDp);
 };
 }
-```
+```bash
 
 #### 测试
 
@@ -275,7 +280,7 @@ public:
 };
 
 }
-```
+```bash
 
 #### 测试
 
@@ -351,7 +356,7 @@ public:
 };
 
 }
-```
+```yaml
 
 #### 测试
 
@@ -373,7 +378,7 @@ public:
 
 auto& manager = cf::ui::core::ThemeManager::instance();
 manager.setThemeTo("theme.material.light");
-```
+```text
 
 ### 动画使用
 
@@ -385,7 +390,7 @@ auto anim = factory->getAnimation("md.animation.fadeIn");
 if (anim) {
     anim->start();
 }
-```
+```text
 
 ### DPI 转换
 
@@ -394,7 +399,7 @@ if (anim) {
 
 cf::ui::base::device::CanvasUnitHelper helper(2.0);
 qreal pixels = helper.dpToPx(16.0);  // 16dp -> 32px
-```
+```text
 
 ### 配置读写
 
@@ -422,7 +427,7 @@ ConfigStore::instance().watch("app.theme.*",
 
 // 同步到磁盘
 ConfigStore::instance().sync(SyncMethod::Async);
-```
+```text
 
 ### 日志记录
 
@@ -445,7 +450,7 @@ logger.log(level::Info, "Message", "Tag", std::source_location::current());
 
 // 刷新
 flush();
-```
+```bash
 
 ---
 
@@ -492,7 +497,7 @@ flush();
 
 #### ui/ 目录 (主题、动画、DPI)
 
-```
+```text
 ui/
 ├── core/
 │   ├── theme_manager.h         # 主题管理器 (核心)
@@ -515,11 +520,11 @@ ui/
     ├── easing.h                # 缓动曲线
     ├── geometry_helper.h       # 几何工具
     └── math_helper.h           # 数学工具
-```
+```text
 
 #### desktop/base/config_manager/ (配置中心) ✅
 
-```
+```text
 desktop/base/config_manager/
 ├── include/
 │   ├── cfconfig.hpp                    # 主配置存储接口
@@ -535,11 +540,11 @@ desktop/base/config_manager/
     └── impl/
         ├── config_impl.h               # 内部实现
         └── config_impl.cpp
-```
+```text
 
 #### desktop/base/logger/ (日志系统) ✅
 
-```
+```text
 desktop/base/logger/
 ├── include/
 │   ├── cflog.h                         # 便捷日志函数
@@ -558,16 +563,16 @@ desktop/base/logger/
     └── impl/
         ├── cflog_impl.h                # 内部实现
         └── cflog_impl.cpp
-```
+```text
 
 ### 待创建文件 (可选增强)
 
-```
+```text
 ui/core/
 ├── theme_loader.h             # 主题加载器 (待创建)
 ├── qss_processor.h            # QSS处理器 (待创建)
 └── variable_resolver.h        # 变量解析器 (待创建)
-```
+```yaml
 
 ---
 

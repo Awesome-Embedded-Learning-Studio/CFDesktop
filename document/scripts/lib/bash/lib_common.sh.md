@@ -1,3 +1,8 @@
+---
+title: libcommon.sh
+description: libcommon.sh 的详细文档
+---
+
 # lib_common.sh
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 加载方式
 ```bash
 source scripts/lib/bash/lib_common.sh
-```
+```bash
 
 ## Scripts详解
 
@@ -54,7 +59,7 @@ log "构建开始" "INFO"
 log "操作成功" "SUCCESS"
 log "警告信息" "WARNING"
 log "发生错误" "ERROR"
-```
+```text
 
 ### log_info(message)
 
@@ -66,7 +71,7 @@ log "发生错误" "ERROR"
 **示例：**
 ```bash
 log_info "正在处理文件..."
-```
+```text
 
 ### log_success(message)
 
@@ -78,7 +83,7 @@ log_info "正在处理文件..."
 **示例：**
 ```bash
 log_success "构建完成！"
-```
+```text
 
 ### log_warn(message)
 
@@ -90,7 +95,7 @@ log_success "构建完成！"
 **示例：**
 ```bash
 log_warn "配置文件不存在，使用默认值"
-```
+```text
 
 ### log_error(message)
 
@@ -102,7 +107,7 @@ log_warn "配置文件不存在，使用默认值"
 **示例：**
 ```bash
 log_error "构建失败，请检查日志"
-```
+```text
 
 ### log_cyan(message)
 
@@ -114,7 +119,7 @@ log_error "构建失败，请检查日志"
 **示例：**
 ```bash
 log_cyan "这是重要提示"
-```
+```text
 
 ### log_separator(char, width)
 
@@ -128,7 +133,7 @@ log_cyan "这是重要提示"
 ```bash
 log_separator              # 输出 40 个 =
 log_separator "-" 60       # 输出 60 个 -
-```
+```text
 
 ### log_debug(message)
 
@@ -140,7 +145,7 @@ log_separator "-" 60       # 输出 60 个 -
 **示例：**
 ```bash
 DEBUG=true log_debug "调试信息"
-```
+```text
 
 ### log_progress(current, total, message)
 
@@ -155,7 +160,7 @@ DEBUG=true log_debug "调试信息"
 ```bash
 log_progress 5 10 "处理文件中"
 # 输出: [5/10] (50%) 处理文件中
-```
+```yaml
 
 ---
 
@@ -178,4 +183,4 @@ done
 
 log_success "所有文件处理完成！"
 log_separator
-```
+```text

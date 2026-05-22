@@ -1,3 +1,8 @@
+---
+title: UI 框架
+description: CFDesktop 的 UI 框架是一套基于 Material Design 3 规范的完整实现，采
+---
+
 # UI 框架
 
 CFDesktop 的 UI 框架是一套基于 Material Design 3 规范的完整实现，采用五层架构设计，每一层职责明确、可独立测试。

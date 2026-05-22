@@ -45,6 +45,20 @@ class ImageWallPaperLayer : public WallPaperLayer {
     void setTokenStorage(std::unique_ptr<WallPaperAccessStorage> storage) override;
 
     /**
+     * @brief  Returns a reference to the current token storage.
+     *
+     * @return         Reference to the active WallPaperAccessStorage.
+     *
+     * @throws         None.
+     *
+     * @note           None.
+     * @warning        None.
+     * @since          0.15
+     * @ingroup        wallpaper
+     */
+    WallPaperAccessStorage& tokenStorage() const override;
+
+    /**
      * @brief  Switches to the next wallpaper in the collection.
      *
      * @return  True if the switch succeeded, false if at the end or

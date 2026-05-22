@@ -1,3 +1,8 @@
+---
+title: "Phase 3: 输入抽象层 - 状态文档"
+description: "模块ID: Phase 3，状态: <img src=\"x-data:image/svg+xml,%"
+---
+
 # Phase 3: 输入抽象层 - 状态文档
 
 > **模块ID**: Phase 3
@@ -116,7 +121,7 @@ signals:
 };
 
 } // namespace cf::base::input
-```
+```text
 
 ### 3.2 TouchInputHandler - 触摸处理器 (0%)
 
@@ -172,7 +177,7 @@ private:
 };
 
 } // namespace cf::base::input
-```
+```text
 
 ### 3.3 KeyInputHandler - 按键处理器 (0%)
 
@@ -222,7 +227,7 @@ private:
 };
 
 } // namespace cf::base::input
-```
+```text
 
 ### 3.4 RotaryInputHandler - 旋钮处理器 (0%)
 
@@ -268,7 +273,7 @@ private:
 };
 
 } // namespace cf::base::input
-```
+```text
 
 ### 3.5 GestureRecognizer - 手势识别器 (0%)
 
@@ -317,7 +322,7 @@ private:
 };
 
 } // namespace cf::base::input
-```
+```text
 
 ### 3.6 FocusNavigator - 焦点导航器 (0%)
 
@@ -366,7 +371,7 @@ private:
 };
 
 } // namespace cf::base::input
-```
+```bash
 
 ---
 
@@ -425,7 +430,7 @@ private:
 
 ### 待创建文件
 
-```
+```text
 include/CFDesktop/Base/Input/
 ├── InputManager.h           # 统一分发层
 ├── InputEvent.h             # 输入事件定义
@@ -457,7 +462,7 @@ tests/unit/base/input/
 ├── test_rotary_handler.cpp
 ├── test_gesture_recognizer.cpp
 └── test_focus_navigator.cpp
-```
+```yaml
 
 ---
 

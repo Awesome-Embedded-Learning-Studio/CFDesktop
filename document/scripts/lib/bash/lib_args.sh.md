@@ -1,3 +1,8 @@
+---
+title: libargs.sh
+description: "文档编写日期: 2026-03-20，提供命令行参数解析的辅助函数，包括："
+---
+
 # lib_args.sh
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 加载方式
 ```bash
 source scripts/lib/bash/lib_args.sh
-```
+```text
 
 ### 基本用法示例
 ```bash
@@ -31,7 +36,7 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-```
+```bash
 
 ## Scripts详解
 
@@ -64,7 +69,7 @@ done
 ```bash
 parse_config_mode "develop"  # 输出: develop, 返回: 0
 parse_config_mode "invalid"  # 无输出, 返回: 1
-```
+```text
 
 #### is_valid_config_mode
 检查给定字符串是否为有效的配置模式。
@@ -72,7 +77,7 @@ parse_config_mode "invalid"  # 无输出, 返回: 1
 if is_valid_config_mode "$1"; then
     CONFIG="$1"
 fi
-```
+```text
 
 #### parse_config_file
 解析配置文件参数，仅对 `-c` 或 `--config` 有效。
@@ -80,7 +85,7 @@ fi
 parse_config_file "-c" "config.ini"    # 输出: config.ini, 返回: 0
 parse_config_file "--config" "a.conf"  # 输出: a.conf, 返回: 0
 parse_config_file "--verbose" "on"     # 无输出, 返回: 1
-```
+```text
 
 #### show_standard_usage
 显示一行标准用法信息。
@@ -90,16 +95,16 @@ show_standard_usage
 
 show_standard_usage "my_build.sh"
 # 输出: Usage: my_build.sh [develop|deploy|ci] [-c|--config <config_file>]
-```
+```text
 
 #### show_detailed_usage
 显示格式化的详细帮助信息。
 ```bash
 show_detailed_usage "build.sh" "这是一个构建工具脚本"
-```
+```text
 
 输出示例：
-```
+```yaml
 ========================================
   build.sh
 ========================================
@@ -118,7 +123,7 @@ Options:
 Examples:
   build.sh develop
   build.sh deploy -c custom_config.ini
-```
+```text
 
 #### validate_arg_count
 验证参数数量是否满足最小要求。
@@ -127,7 +132,7 @@ if ! validate_arg_count "$#" 2; then
     echo "错误: 参数不足"
     exit 1
 fi
-```
+```text
 
 #### is_help_arg
 检查参数是否为帮助请求。
@@ -136,7 +141,7 @@ if is_help_arg "$1"; then
     show_detailed_usage "$(basename "$0")"
     exit 0
 fi
-```
+```text
 
 支持的格式：`-h`, `--help`, `help`
 
@@ -147,7 +152,7 @@ show_unknown_arg_error "--invalid" "build.sh"
 # 输出到 stderr:
 # ERROR: Unknown argument '--invalid'
 # Run 'build.sh --help' for usage information.
-```
+```text
 
 #### show_missing_value_error
 显示参数值缺失的错误信息。
@@ -155,7 +160,7 @@ show_unknown_arg_error "--invalid" "build.sh"
 show_missing_value_error "--config"
 # 输出到 stderr:
 # ERROR: Missing value for argument '--config'
-```
+```text
 
 ### 依赖关系
 - Bash 内置命令

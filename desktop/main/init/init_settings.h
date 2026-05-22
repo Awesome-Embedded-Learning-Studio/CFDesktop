@@ -98,6 +98,15 @@ class InitInfoHandle : public SimpleSingleton<InitInfoHandle> {
      */
     QString root_position() const;
 
+    /**
+     * @brief Get the desktop config folder path (relative to app runtime dir).
+     *
+     * Reads desktop.config_folder from early settings, defaults to "settings/desktop/".
+     *
+     * @return QString
+     */
+    QString config_folder() const;
+
   private:
     /// @brief Pointer to the boot widget. Ownership: owner; may be nullptr.
     QWidget* boot_widget_{nullptr};

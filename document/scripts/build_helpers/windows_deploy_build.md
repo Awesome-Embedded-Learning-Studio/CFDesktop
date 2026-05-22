@@ -1,3 +1,8 @@
+---
+title: windowsdeploybuild.ps1
+description: "文档编写日期: 2026-03-20，本脚本执行完整的部署构建流程，包含以下步骤："
+---
+
 # windows_deploy_build.ps1
 
 > 文档编写日期: 2026-03-20
@@ -7,13 +12,13 @@
 ### 基本语法
 ```powershell
 .\scripts\build_helpers\windows_deploy_build.ps1
-```
+```text
 
 ### 使用示例
 ```powershell
 # 执行完整的部署构建 (清理 + 配置 + 编译 + 测试)
 .\scripts\build_helpers\windows_deploy_build.ps1
-```
+```bash
 
 ## Scripts详解
 

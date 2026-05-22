@@ -1,3 +1,8 @@
+---
+title: "Phase 6: 多平台模拟器详细设计文档"
+description: "完成 Phase 6 后，进入 Phase 4: Shell UI 主体 或 Phase 5: SD"
+---
+
 # Phase 6: 多平台模拟器详细设计文档
 
 ## 文档信息
@@ -30,7 +35,7 @@
 
 ### 2.1 整体架构图
 
-```
+```text
 ┌───────────────────────────────────────────────────────────────┐
 │                    Simulator Window                            │
 │  ┌─────────────────────────────────────────────────────────┐  │
@@ -63,11 +68,11 @@
 │                   Shared Base & Shell                         │
 │              (与真实设备完全相同的代码)                         │
 └───────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### 2.2 文件结构
 
-```
+```text
 src/simulator/
 ├── include/CFDesktop/Simulator/
 │   ├── SimulatorWindow.h           # 模拟器主窗口
@@ -108,7 +113,7 @@ assets/simulator/
 │   └── generic-1080p.json
 └── effects/
     └── touch-ripple.png            # 触摸涟漪效果
-```
+```yaml
 
 ---
 
@@ -233,11 +238,11 @@ private:
 };
 
 } // namespace CFDesktop::Simulator
-```
+```text
 
 ### 3.2 窗口布局
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ Simulator Window                                            │
 ├─────────────────────────────────────────────────────────────┤
@@ -263,7 +268,7 @@ private:
 │ │ [Device▼] [800×480▼] [Low▼] [Touch:ON] [Screenshot]    │ │
 │ └─────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
-```
+```yaml
 
 ---
 
@@ -346,7 +351,7 @@ struct DeviceProfile {
 };
 
 } // namespace CFDesktop::Simulator
-```
+```text
 
 ### 4.2 设备配置 JSON 示例
 
@@ -387,7 +392,7 @@ struct DeviceProfile {
     "description": "4.3 inch WVGA panel with IMX6ULL",
     "version": "1.0"
 }
-```
+```bash
 
 ### 4.3 预设设备配置列表
 
@@ -466,7 +471,7 @@ private:
 };
 
 } // namespace CFDesktop::Simulator
-```
+```text
 
 ### 5.2 矢量绘制示例
 
@@ -504,7 +509,7 @@ void DeviceFrame::drawFrameVector(QPainter& painter) {
         drawHardwareButtons(painter);
     }
 }
-```
+```yaml
 
 ---
 
@@ -594,7 +599,7 @@ private:
 };
 
 } // namespace CFDesktop::Simulator
-```
+```yaml
 
 ---
 
@@ -698,7 +703,7 @@ private:
 };
 
 } // namespace CFDesktop::Simulator
-```
+```text
 
 ### 7.2 硬件档位选择器 (HWTierSelector)
 
@@ -738,7 +743,7 @@ private:
 };
 
 } // namespace CFDesktop::Simulator
-```
+```yaml
 
 ---
 
@@ -786,7 +791,7 @@ private:
 };
 
 } // namespace CFDesktop::Simulator
-```
+```text
 
 ### 8.2 硬件 Mock
 
@@ -832,7 +837,7 @@ private:
 };
 
 } // namespace CFDesktop::Simulator
-```
+```text
 
 ### 8.3 输入模拟器
 
@@ -883,7 +888,7 @@ private:
 };
 
 } // namespace CFDesktop::Simulator
-```
+```yaml
 
 ---
 
@@ -996,7 +1001,7 @@ int main(int argc, char* argv[]) {
 
     return app.exec();
 }
-```
+```text
 
 ### 11.2 切换设备配置
 
@@ -1006,7 +1011,7 @@ simulator.loadDeviceProfile("/path/to/imx6ull-7.0.json");
 
 // 或者通过控制面板选择
 simulator.controlPanel()->setCurrentProfile("IMX6ULL 7.0 inch");
-```
+```yaml
 
 ---
 

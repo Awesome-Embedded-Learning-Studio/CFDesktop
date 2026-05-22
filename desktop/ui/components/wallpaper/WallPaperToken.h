@@ -17,6 +17,7 @@
 #include "base/weak_ptr/weak_ptr.h"
 #include <QString>
 #include <memory>
+#include <vector>
 
 namespace cf::desktop::wallpaper {
 
@@ -169,12 +170,38 @@ class WallPaperToken {
 
 class WallPaperTokenFactory {
   public:
-    static WallPaperTokenFactory& fromFile(const QString& path);
-    std::unique_ptr<WallPaperToken> create();
+    using WallPaperToken_t = std::unique_ptr<WallPaperToken>;
 
-  private:
-    QString stored_path_;
-    WallPaperToken::SourceType stored_type_{WallPaperToken::SourceType::File};
+    /**
+     * @brief  Creates a wallpaper token from a file path.
+     *
+     * @param[in] path  Filesystem path to the wallpaper image.
+     *
+     * @return          A unique_ptr to the newly created WallPaperToken.
+     *
+     * @throws          None.
+     *
+     * @note            None.
+     * @warning         None.
+     * @since           0.15
+     * @ingroup         wallpaper
+     */
+    static WallPaperToken_t fromFile(const QString& path);
+    /**
+     * @brief  Creates wallpaper tokens from multiple file paths.
+     *
+     * @param[in] paths  List of filesystem paths to wallpaper images.
+     *
+     * @return           Vector of unique_ptrs to newly created tokens.
+     *
+     * @throws           None.
+     *
+     * @note             None.
+     * @warning          None.
+     * @since            0.15
+     * @ingroup          wallpaper
+     */
+    static std::vector<WallPaperToken_t> fromFiles(const QStringList& paths);
 };
 
 } // namespace cf::desktop::wallpaper

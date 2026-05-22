@@ -1,3 +1,8 @@
+---
+title: Git Hooks 使用指南
+description: 本项目配置了 Git hooks，在本地进行代码质量检查和构建验证，确保远程 main 分支始终保持
+---
+
 # Git Hooks 使用指南
 
 本项目配置了 Git hooks，在本地进行代码质量检查和构建验证，确保远程 main 分支始终保持可构建状态。
@@ -21,12 +26,12 @@
 **Linux/macOS:**
 ```bash
 bash scripts/release/hooks/install_hooks.sh
-```
+```text
 
 **Windows (PowerShell):**
 ```powershell
 .\scripts\release\hooks\install_hooks.ps1
-```
+```text
 
 ### 验证安装
 
@@ -36,7 +41,7 @@ ls -la .git/hooks/pre-commit .git/hooks/pre-push
 
 # Windows
 dir .git\hooks\pre-commit.*
-```
+```bash
 
 ---
 
@@ -87,7 +92,7 @@ dir .git\hooks\pre-commit.*
 **绕过方法**:
 ```bash
 git commit --no-verify -m "message"
-```
+```bash
 
 ---
 
@@ -104,7 +109,7 @@ git commit --no-verify -m "message"
 **绕过方法**:
 ```bash
 git push --no-verify
-```
+```bash
 
 ---
 
@@ -118,7 +123,7 @@ git push --no-verify
 
 **工作流程**:
 
-```
+```bash
 1. 创建 feat 分支开发
    $ git checkout -b feat/my-feature
    # ... 编码 ...
@@ -131,7 +136,7 @@ git push --no-verify
 
 3. 验证失败时回退
    $ git reset --hard origin/main
-```
+```yaml
 
 ---
 
@@ -144,7 +149,7 @@ git push --no-verify
 ```bash
 # 等价于执行
 docker_start.sh --verify --fast-build --arch amd64
-```
+```bash
 
 ### release 分支
 
@@ -158,7 +163,7 @@ docker_start.sh --verify --fast-build --arch amd64
 
 **示例**:
 
-```
+```text
 远程 main: 1.2.3
 
 推送 release/1.2.4 (标签 1.2.4)
@@ -169,7 +174,7 @@ docker_start.sh --verify --fast-build --arch amd64
 
 推送 release/2.0.0 (标签 2.0.0)
   → Major 变化 → X64 + ARM64 完整构建
-```
+```yaml
 
 ---
 
@@ -181,7 +186,7 @@ docker_start.sh --verify --fast-build --arch amd64
 
 ```bash
 git push --no-verify
-```
+```yaml
 
 更好的做法是确保本地代码通过测试后再推送。
 
@@ -198,7 +203,7 @@ git push --no-verify
 # Linux
 sudo systemctl start docker
 sudo systemctl enable docker
-```
+```yaml
 
 ---
 
@@ -206,9 +211,9 @@ sudo systemctl enable docker
 
 **A**: pre-commit 会跳过格式检查并显示警告：
 
-```
+```text
 ⚠ clang-format 未安装，跳过格式检查
-```
+```text
 
 不影响提交，但建议安装：
 
@@ -221,7 +226,7 @@ brew install clang-format
 
 # Windows
 # 通过 LLVM 或包管理器安装
-```
+```yaml
 
 ---
 
@@ -235,7 +240,7 @@ echo "int x;" >> src/some_file.cpp
 git add src/some_file.cpp
 git commit -m "test"
 # 应该被阻止
-```
+```text
 
 测试 pre-push：
 
@@ -244,7 +249,7 @@ git checkout main
 # 合并一些更改
 git push
 # 应该触发 Docker 验证
-```
+```yaml
 
 ---
 
@@ -255,7 +260,7 @@ git push
 ```bash
 git fetch origin
 git reset --hard origin/main
-```
+```yaml
 
 **注意**: 这会丢弃本地所有未推送的更改，请确保已备份重要内容。
 
@@ -273,7 +278,7 @@ git reset --hard origin/main
 ```bash
 git tag 1.2.4
 git push origin release/1.2
-```
+```yaml
 
 ---
 
@@ -297,7 +302,7 @@ rm .git/hooks/pre-commit .git/hooks/pre-push
 
 # Windows
 Remove-Item .git\hooks\pre-commit, .git\hooks\pre-push
-```
+```text
 
 ### 重新安装
 
@@ -309,13 +314,13 @@ bash scripts/release/hooks/install_hooks.sh
 
 # Windows
 .\scripts\release\hooks\install_hooks.ps1
-```
+```yaml
 
 ---
 
 ## 文件结构
 
-```
+```text
 scripts/release/hooks/
 ├── install_hooks.sh       # Linux/macOS 安装脚本
 ├── install_hooks.ps1      # Windows 安装脚本
@@ -325,14 +330,14 @@ scripts/release/hooks/
 
 document/release_rule/
 └── git_hooks_guide.md     # 本文档
-```
+```text
 
 安装后：
-```
+```text
 .git/hooks/
 ├── pre-commit             # 从 pre-commit.sample 复制
 └── pre-push               # 从 pre-push.sample 复制
-```
+```yaml
 
 ---
 

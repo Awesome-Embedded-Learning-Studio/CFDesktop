@@ -1,3 +1,8 @@
+---
+title: CFDesktop 项目 TODO 看板
+description: 本目录包含 CFDesktop 项目各模块的详细 TODO 清单，基于  设计文档和  架构规范整理
+---
+
 # CFDesktop 项目 TODO 看板
 
 ## 概述

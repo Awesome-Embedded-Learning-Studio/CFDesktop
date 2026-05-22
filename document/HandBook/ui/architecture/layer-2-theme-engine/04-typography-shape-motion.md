@@ -1,3 +1,8 @@
+---
+title: 字体、形状与动效——完整的设计规范系统
+description: 前面几篇文章我们聊了主题系统的架构、Token 的设计、颜色的实现。但 Material Desig
+---
+
 # 字体、形状与动效——完整的设计规范系统
 
 前面几篇文章我们聊了主题系统的架构、Token 的设计、颜色的实现。但 Material Design 3 不只是颜色，它是一套完整的设计规范系统，包括字体、形状、动效等维度。
@@ -21,7 +26,7 @@ protected:
     std::unique_ptr<IRadiusScale> radius_scale_;
     std::unique_ptr<IFontType> font_type_;
 };
-```
+```bash
 
 这四个组件相互独立，但通过主题聚合在一起。控件可以根据需要选择性地使用这些组件。
 
@@ -57,7 +62,7 @@ IFontType 是一个简单的接口，只有一个方法：
 struct IFontType {
     virtual QFont queryTargetFont(const char* name) = 0;
 };
-```
+```text
 
 使用方式：
 
@@ -67,7 +72,7 @@ QFont bodyLarge = theme->font_type().queryTargetFont("bodyLarge");
 
 // 设置到控件
 label->setFont(bodyLarge);
-```
+```bash
 
 MaterialTypography 的实现内部维护了一个 QFont 的映射表，用 Token 名称作为键。为了保证性能，QFont 对象被缓存起来，避免重复创建。
 
@@ -93,7 +98,7 @@ IRadiusScale 接口也很简单：
 struct IRadiusScale {
     virtual float queryRadiusScale(const char* name) = 0;
 };
-```
+```text
 
 返回值是 dp 单位，控件需要根据 devicePixelRatio 转换成像素：
 
@@ -101,7 +106,7 @@ struct IRadiusScale {
 float radiusDp = theme->radius_scale().queryRadiusScale("cornerMedium");
 CanvasUnitHelper helper(qApp->devicePixelRatio());
 float radiusPx = helper.dpToPx(radiusDp);
-```
+```text
 
 注意这里有个设计细节：IRadiusScale 返回的是 dp，不是 px。原因是圆角应该在所有 DPI 下保持一致的"视觉大小"，所以应该由控件根据当前的 devicePixelRatio 进行转换。
 
@@ -121,7 +126,7 @@ struct IMotionSpec {
     virtual int queryEasing(const char* name) = 0;
     virtual int queryDelay(const char* name) = 0;
 };
-```
+```text
 
 使用方式：
 
@@ -130,7 +135,7 @@ struct IMotionSpec {
 int duration = theme->motion_spec().queryDuration("md.motion.shortEnter");
 int easing = theme->motion_spec().queryEasing("md.motion.shortEnter");
 int delay = theme->motion_spec().queryDelay("md.motion.shortEnter");
-```
+```bash
 
 Material Design 3 定义了几种标准动画：
 
@@ -166,7 +171,7 @@ void Button::paintEvent(QPaintEvent* event) {
 
     // ... 使用这些值绘制
 }
-```
+```yaml
 
 ## 扩展性
 

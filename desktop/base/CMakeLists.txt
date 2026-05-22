@@ -1,3 +1,5 @@
+add_subdirectory(fundamental)
+add_subdirectory(path)
 add_subdirectory(logger)
 add_subdirectory(file_operations)
 add_subdirectory(config_manager)

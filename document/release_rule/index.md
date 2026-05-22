@@ -1,10 +1,11 @@
-# Release Rule
+---
+title: 发布规范
+description: 本目录定义了 CFDesktop 项目的发布流程与版本管理规则，包括语义化版本号（SemVer）策略
+---
 
-> Welcome to the Release Rule section.
+# 发布规范
 
-## Overview
-
-Documentation and resources for Release Rule.
+本目录定义了 CFDesktop 项目的发布流程与版本管理规则，包括语义化版本号（SemVer）策略、分支管理规范、变更日志（Changelog）格式要求以及正式发布的检查清单。
 
 ---
 

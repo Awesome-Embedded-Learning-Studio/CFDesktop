@@ -1,3 +1,8 @@
+---
+title: 开发工具配置
+description: 本文档介绍 CFDesktop 项目推荐的开发工具配置，包括 VSCode 设置、clangd 配置
+---
+
 # 开发工具配置
 
 本文档介绍 CFDesktop 项目推荐的开发工具配置，包括 VSCode 设置、clangd 配置、代码格式化和调试配置。
@@ -32,7 +37,7 @@
         "--ranking-model=decision_forest"
     ]
 }
-```
+```bash
 
 **参数说明：**
 
@@ -54,7 +59,7 @@
 # Windows (Develop 配置)
 cmake -B out/build_develop -DCMAKE_BUILD_TYPE=Develop
 # 生成 out/build_develop/compile_commands.json
-```
+```cpp
 
 ---
 
@@ -115,7 +120,7 @@ code --install-extension llvm-vs-code-extensions.vscode-clangd
 code --install-extension ms-vscode.cmake-tools
 code --install-extension twxs.cmake
 code --install-extension qt-labs.qt-all
-```
+```yaml
 
 ---
 
@@ -145,7 +150,7 @@ DerivePointerAlignment: false
 Language: Cpp
 Standard: c++17
 SortIncludes: true
-```
+```cmake
 
 ### 格式化规则摘要
 
@@ -156,7 +161,7 @@ SortIncludes: true
 | 列宽 | 100 字符 |
 | 大括号 | 附加式 (`if (x) {` |
 | 指针星号 | 左侧 (`int* a`) |
-| C++ 标准 | C++17 |
+| C++ 标准 | C++23 |
 | 头文件排序 | 启用 |
 
 ### 手动格式化命令
@@ -169,7 +174,7 @@ clang-format -i path/to/file.cpp
 
 # 格式化整个项目
 find . -name "*.cpp" -o -name "*.h" | xargs clang-format -i
-```
+```cpp
 
 **VSCode 快捷键：**
 
@@ -183,7 +188,7 @@ find . -name "*.cpp" -o -name "*.h" | xargs clang-format -i
 ```bash
 # 检查格式是否正确（不修改文件）
 clang-format --dry-run --Werror path/to/file.cpp
-```
+```yaml
 
 ---
 
@@ -219,7 +224,7 @@ clang-format --dry-run --Werror path/to/file.cpp
         }
     ]
 }
-```
+```cpp
 
 ### 断点设置
 
@@ -261,7 +266,7 @@ cmake --build out/build_develop
 
 # 使用 gdb 调试
 gdb out/build_develop/bin/your_app
-```
+```yaml
 
 ---
 

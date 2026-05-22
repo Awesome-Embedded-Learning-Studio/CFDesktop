@@ -1,3 +1,8 @@
+---
+title: Material Token 字面量
+description: 定义了 Material Design 3 色彩系统的全部 Token 字面量。Material Y
+---
+
 # Material Token 字面量
 
 `cfmaterial_token_literals.h` 定义了 Material Design 3 色彩系统的全部 Token 字面量。Material You 的核心思想是让 UI 从用户的壁纸中提取颜色来生成主题，这些 Token 就是这套动态色彩系统的基础锚点。
@@ -30,7 +35,7 @@ const char* onTertiary = ON_TERTIARY;
 // Error 色系 - 错误状态和危险操作
 const char* error = ERROR;
 const char* onError = ON_ERROR;
-```
+```text
 
 注意那个 "On" 前缀——这不是"打开"的意思，而是"绘制在...之上"（On）。`ON_PRIMARY` 就是绘制在 Primary 颜色上的文字和图标的颜色，Material 的配色算法会自动计算对比度，保证可读性。
 
@@ -50,7 +55,7 @@ Container 色是 Material You 新增的概念。它们是基色的"调色版本"
 // 场景：一个强调区域
 // area_bg 使用 tertiaryContainer
 // area_icon 使用 onTertiaryContainer
-```
+```text
 
 这样设计的好处是，组件的颜色关系由语义决定，而不是由具体的颜色值决定。动态换肤时，整个应用的颜色关系依然保持一致。
 
@@ -74,7 +79,7 @@ const char* onSurfaceVariant = ON_SURFACE_VARIANT; // 表面变体上的文字
 // 边框颜色
 const char* outline = OUTLINE;                   // 边框和分割线
 const char* outlineVariant = OUTLINE_VARIANT;    // 微差分的边框色
-```
+```text
 
 `surfaceVariant` 和 `outlineVariant` 这两个名字确实有点拗口。它们的作用是在深色模式下提供"不那么突兀"的边框和背景，避免视觉噪音过多。
 
@@ -91,7 +96,7 @@ const char* scrim = SCRIM;                       // 模态背景遮罩
 const char* inverseSurface = INVERSE_SURFACE;    // 反转的表面色
 const char* inverseOnSurface = INVERSE_ON_SURFACE; // 反转表面上的文字
 const char* inversePrimary = INVERSE_PRIMARY;     // 反转的主色
-```
+```text
 
 `scrim` 是当弹出模态对话框时，后面那层半透明的黑色遮罩。深色模式下它可能是半透明的白色，取决于主题的动态生成逻辑。
 
@@ -114,7 +119,7 @@ auto buttonBg = theme.resolve(PRIMARY);
 auto buttonText = theme.resolve(ON_PRIMARY);
 auto cardBg = theme.resolve(SURFACE);
 auto cardBorder = theme.resolve(OUTLINE);
-```
+```text
 
 ## 批量遍历
 
@@ -129,7 +134,7 @@ size_t count = TOKEN_COUNT;  // 26 个
 for (size_t i = 0; i < TOKEN_COUNT; ++i) {
     printf("Token %zu: %s\n", i, ALL_TOKENS[i]);
 }
-```
+```text
 
 ## Token 命名规则
 

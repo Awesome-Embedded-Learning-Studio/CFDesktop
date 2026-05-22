@@ -1,3 +1,8 @@
+---
+title: "MaterialTypography - Material 字体系统"
+description: 实现 Material Design 3 的 Type Scale 系统。Material 把字体规
+---
+
 # MaterialTypography - Material 字体系统
 
 `MaterialTypography` 实现 Material Design 3 的 Type Scale 系统。Material 把字体规格分成 5 大类、15 个具体样式，每个样式都有精确的大小、字重和行高规定。我们用嵌入式 Token 注册表存储这些 QFont 对象，每个排版实例独立管理自己的字体配置。
@@ -37,7 +42,7 @@ auto typography = cf::ui::core::material::defaultTypography();
 // 查询字体
 QFont titleFont = typography.queryTargetFont("md.typography.titleLarge");
 QFont bodyFont = typography.queryTargetFont("md.typography.bodyMedium");
-```
+```text
 
 字体名称采用 `md.typography.` 前缀，后跟 Material 官方定义的样式名称。
 
@@ -54,7 +59,7 @@ TitleFonts title = typography.title();
 
 // 获取正文组
 BodyFonts body = typography.body();
-```
+```text
 
 字体组结构体（`DisplayFonts`、`HeadlineFonts` 等）主要是为了类型安全和代码可读性。
 
@@ -67,7 +72,7 @@ MaterialTypography typography = material::defaultTypography();
 
 float lineHeight = typography.getLineHeight("md.typography.bodyLarge");
 // 返回 24.0（单位 sp）
-```
+```bash
 
 行高在多行文本布局时特别重要，确保行与行之间有合适的呼吸空间。
 
@@ -89,7 +94,7 @@ MaterialTypography typography = material::defaultTypography();
 QFont customFont("Roboto");
 customFont.setPointSize(16);
 typography.registry().set("md.typography.bodyMedium", customFont);
-```
+```text
 
 ## 缓存机制
 
@@ -101,7 +106,7 @@ QFont font1 = typography.queryTargetFont("md.typography.titleLarge");
 
 // 后续查询从缓存返回
 QFont font2 = typography.queryTargetFont("md.typography.titleLarge");
-```
+```text
 
 缓存在 `MaterialTypography` 对象生命周期内有效。
 
@@ -117,7 +122,7 @@ void MyLabel::updateFont() {
     QFont titleFont = typography->queryTargetFont("md.typography.titleLarge");
     setFont(titleFont);
 }
-```
+```text
 
 也可以直接设置到 `QPainter`：
 
@@ -131,7 +136,7 @@ void paintEvent(QPaintEvent*) {
 
     painter.drawText(rect(), "Hello Material");
 }
-```
+```text
 
 ## 大小单位说明
 
@@ -141,7 +146,7 @@ Material 规范使用 `sp`（Scale-independent Pixels）作为字体大小单位
 // Material 规范：16sp
 QFont font;
 font.setPointSize(16); // Qt 中用 pointSize 近似
-```
+```text
 
 这个近似在实际使用中效果足够好，因为 Qt 的字体系统已经有良好的 DPI 处理。
 

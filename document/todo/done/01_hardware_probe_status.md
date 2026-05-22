@@ -1,3 +1,8 @@
+---
+title: "Phase 1: 硬件探针与能力分级 - 状态文档"
+description: "模块ID: Phase 1，状态: 🚧 部分完成"
+---
+
 # Phase 1: 硬件探针与能力分级 - 状态文档
 
 > **模块ID**: Phase 1
@@ -178,7 +183,7 @@ if (mem_info) {
     qDebug() << "Total:" << mem_info.value().totalBytes;
     qDebug() << "Available:" << mem_info.value().availableBytes;
 }
-```
+```yaml
 
 ---
 
@@ -209,7 +214,7 @@ QString tierToString(HWTier tier);
 HWTier tierFromString(const QString& str);
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -260,7 +265,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -325,7 +330,7 @@ signals:
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -356,7 +361,7 @@ VideoDecoder=auto
 
 [Logging]
 LogLevel=Info
-```
+```yaml
 
 ---
 
@@ -407,7 +412,7 @@ private slots:
     void testMalformedConfig();
     void testTierOverride();
 };
-```
+```text
 
 ### 6.2 评分算法
 
@@ -443,7 +448,7 @@ void HardwareProbe::calculateTier(HardwareInfo& info) {
 
     info.tier = calculatedTier;
 }
-```
+```yaml
 
 ---
 
@@ -451,7 +456,7 @@ void HardwareProbe::calculateTier(HardwareInfo& info) {
 
 ### 已实现文件
 
-```
+```text
 base/
 ├── system/
 │   ├── cpu/
@@ -469,11 +474,11 @@ base/
 └── include/
     ├── system/cpu/                    # CPU 公共头文件
     └── system/memory/                 # 内存公共头文件
-```
+```text
 
 ### 待创建文件
 
-```
+```text
 base/
 ├── hardware/
 │   ├── HWTier.h                       # 档位枚举
@@ -487,18 +492,18 @@ base/
 │   └── platform/
 │       ├── LinuxDetector.cpp          # Linux 平台实现
 │       └── WindowsDetector.cpp        # Windows 平台实现
-```
+```text
 
 ### 测试文件
 
-```
+```text
 tests/
 ├── hardware/
 │   ├── test_hardware_probe.cpp        # 主测试
 │   ├── test_capability_policy.cpp     # 策略测试
 │   └── mock/
 │       └── proc/                      # Mock 数据
-```
+```yaml
 
 ---
 

@@ -1,3 +1,8 @@
+---
+title: "Phase 6: UI Material 框架 - 状态文档"
+description: "模块ID: Phase 6，状态: 🚧 P1 控件完成，核心架构缺失"
+---
+
 # Phase 6: UI Material 框架 - 状态文档
 
 > **模块ID**: Phase 6
@@ -11,7 +16,7 @@
 
 ### 1.1 分层架构
 
-```
+```text
 Layer 6: Performance Profile (0%)
 Layer 5: Material Widget Adapter (P0: 100%, P1: 100%, P2: 0%, P3: 0%)
 Layer 4: Material Behavior Layer (100%)
@@ -19,7 +24,7 @@ Layer 3: Animation Engine Layer (90%) - 缺Rotate/Path动画
 Layer 2: Theme Engine Layer (100%)
 Layer 1: Core Math & Utility Layer (100%)
 Layer 0: Layout System (0%) - **新增：布局系统完全缺失**
-```
+```cpp
 
 ### 1.2 设计规则 (RULE-01 to RULE-09)
 
@@ -37,12 +42,12 @@ Layer 0: Layout System (0%) - **新增：布局系统完全缺失**
 
 ### 1.3 层级依赖规则
 
-```
+```cpp
 ui/widget/material  -> ui/components, ui/core, ui/base
 ui/components       -> ui/core, ui/base
 ui/core             -> ui/base
 ui/base             -> QtCore only (no QtWidgets/QtGui)
-```
+```bash
 
 ---
 
@@ -86,7 +91,7 @@ ui/base             -> QtCore only (no QtWidgets/QtGui)
 
 #### Token 系统架构
 
-```
+```bash
 Reference Token (MD3 spec)
        |
        v
@@ -94,7 +99,7 @@ System Token (cfmaterial scheme)
        |
        v
 Component Token (widget-specific)
-```
+```text
 
 #### 已完成文件
 
@@ -138,12 +143,12 @@ Component Token (widget-specific)
 
 #### 动画状态
 
-```
+```cpp
 Idle -> Running -> (Paused | Finished)
          |
          v
      Stopped
-```
+```bash
 
 #### 支持的 Token 类型
 - `md.animation.fadeIn`
@@ -318,7 +323,7 @@ enum class PerformanceProfile {
     Embedded,  // 降级: 30fps, 无阴影, 无涟漪, 仅状态动画
     UltraLow   // 最小: 无动画, 无阴影, 仅颜色
 };
-```
+```bash
 
 #### 降级策略
 
@@ -359,7 +364,7 @@ private:
     MdElevationController* m_elevation;
     MdFocusIndicator* m_focusIndicator;
 };
-```
+```text
 
 ### 5.2 事件处理模式
 
@@ -369,7 +374,7 @@ void Widget::enterEvent(QEnterEvent* event) {
     m_stateMachine->onHoverEnter();
     update();
 }
-```
+```text
 
 ### 5.3 标准绘制模式
 
@@ -395,7 +400,7 @@ void Widget::paintEvent(QPaintEvent* event) {
         m_focusIndicator->paint(&painter, rect());
     }
 }
-```
+```bash
 
 ---
 
@@ -446,7 +451,7 @@ void Widget::paintEvent(QPaintEvent* event) {
 ### 已实现文件
 
 **基础层 (Layer 1):**
-```
+```text
 d:\ProjectHome\CFDesktop\ui\base\
 ├── math_helper.h/cpp
 ├── color.h/cpp
@@ -454,10 +459,10 @@ d:\ProjectHome\CFDesktop\ui\base\
 ├── easing.h/cpp
 ├── geometry_helper.h/cpp
 └── device_pixel.h/cpp
-```
+```text
 
 **核心层 (Layer 2):**
-```
+```text
 d:\ProjectHome\CFDesktop\ui\core\
 ├── theme_manager.h/cpp
 ├── color_scheme.h
@@ -474,10 +479,10 @@ d:\ProjectHome\CFDesktop\ui\core\
     ├── radius_scale/
     ├── typography/
     └── theme_name/
-```
+```text
 
 **动画层 (Layer 3):**
-```
+```text
 d:\ProjectHome\CFDesktop\ui\components\
 ├── animation.h/cpp
 ├── timing_animation.h/cpp
@@ -490,20 +495,20 @@ d:\ProjectHome\CFDesktop\ui\components\
     ├── cfmaterial_slide_animation.h/cpp
     ├── cfmaterial_property_animation.h/cpp
     └── token/
-```
+```text
 
 **行为层 (Layer 4):**
-```
+```text
 d:\ProjectHome\CFDesktop\ui\widget\material\base\
 ├── state_machine.h/cpp
 ├── painter_layer.h/cpp
 ├── ripple_helper.h/cpp
 ├── elevation_controller.h/cpp
 └── focus_ring.h/cpp
-```
+```text
 
 **控件层 (Layer 5 - P0 + P1):**
-```
+```text
 /home/charliechen/CFDesktop/ui/widget/material/widget/
 ├── button/button.h/cpp ✅
 ├── textfield/textfield.h/cpp ✅
@@ -524,12 +529,12 @@ d:\ProjectHome\CFDesktop\ui\widget\material\base\
 ├── separator/separator.h/cpp ✅ (P1)
 ├── spinbox/spinbox.h/cpp ✅ (P1)
 └── doublespinbox/doublespinbox.h/cpp ✅ (P1)
-```
+```text
 
 ### 待创建文件
 
 **Layer 5 - P2 高级控件 (27个):**
-```
+```text
 ui/widget/material/widget/
 ├── datepicker/          # 日期选择器
 ├── timepicker/          # 时间选择器
@@ -558,13 +563,13 @@ ui/widget/material/widget/
 ├── bottomsheet/         # 底部面板
 ├── alertdialog/         # 警告对话框
 └── menu/                # 菜单
-```
+```text
 
 **Layer 6 - 性能配置:**
-```
+```text
 d:\ProjectHome\CFDesktop\ui\core\
 └── performance_profile.h/cpp
-```
+```bash
 
 ---
 

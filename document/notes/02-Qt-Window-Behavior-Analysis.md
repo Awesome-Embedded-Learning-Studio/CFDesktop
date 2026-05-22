@@ -1,3 +1,8 @@
+---
+title: Qt 窗口行为解析：QWidget 到 DesktopBehaviors
+description: 1. 引言：为什么需要从 Qt 状态反推行为
+---
+
 # Qt 窗口行为解析：QWidget 到 DesktopBehaviors
 
 ## 目录
@@ -38,7 +43,7 @@ Qt 的窗口标志（Window Flags）由两部分组成：
 
 ```cpp
 Qt::WindowFlags flags = Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint;
-```
+```cpp
 
 ### 反推行为的挑战
 
@@ -76,7 +81,7 @@ Qt::WindowFlags flags = Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOn
 ```cpp
 // 直接查询 API
 bool isFullscreen = widget->isFullScreen();
-```
+```text
 
 **注意事项**：
 - `isFullScreen()` 返回窗口当前是否处于全屏状态
@@ -95,7 +100,7 @@ bool isFullscreen = widget->isFullScreen();
 // 通过窗口标志查询
 Qt::WindowFlags flags = widget->windowFlags();
 bool isFrameless = (flags & Qt::FramelessWindowHint) != 0;
-```
+```text
 
 **相关标志**：
 - `Qt::FramelessWindowHint`：无边框窗口
@@ -117,7 +122,7 @@ bool isFrameless = (flags & Qt::FramelessWindowHint) != 0;
 
 ```cpp
 bool isStayOnTop = (widget->windowFlags() & Qt::WindowStaysOnTopHint) != 0;
-```
+```text
 
 **相关标志**：
 - `Qt::WindowStaysOnTopHint`：保持在其他窗口之上
@@ -133,7 +138,7 @@ bool isStayOnTop = (widget->windowFlags() & Qt::WindowStaysOnTopHint) != 0;
 
 ```cpp
 bool isStayOnBottom = (widget->windowFlags() & Qt::WindowStaysOnBottomHint) != 0;
-```
+```text
 
 **平台差异**：
 - **Windows**：完全支持
@@ -149,7 +154,7 @@ QSize minSize = widget->minimumSize();
 QSize maxSize = widget->maximumSize();
 bool isResizable = (minSize.isEmpty() || minSize.width() == 0) &&
                    (maxSize.isEmpty() || maxSize.width() == QWIDGETSIZE_MAX);
-```
+```text
 
 **更精确的判断**：
 
@@ -171,7 +176,7 @@ bool isResizable(QWidget* widget) {
 
     return widthResizable && heightResizable;
 }
-```
+```text
 
 **相关 API**：
 - `setFixedSize()`：设置固定大小
@@ -212,7 +217,7 @@ bool hasAvoidSystemUI(QWidget* widget) {
 
     return false;
 }
-```
+```yaml
 
 ---
 
@@ -387,7 +392,7 @@ QString behaviorDescription(const DesktopBehaviors& behaviors) {
 }
 
 } // namespace cf::desktop::platform_strategy
-```
+```bash
 
 ---
 
@@ -432,7 +437,7 @@ QString behaviorDescription(const DesktopBehaviors& behaviors) {
     // Windows 特有的无边框处理
     // 需要处理 WM_NCHITTEST 消息实现窗口拖动
 #endif
-```
+```bash
 
 **参考**：[MSDN Window Styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles)
 
@@ -471,7 +476,7 @@ QString behaviorDescription(const DesktopBehaviors& behaviors) {
         }
     }
 #endif
-```
+```text
 
 #### Wayland 平台
 
@@ -507,7 +512,7 @@ QString behaviorDescription(const DesktopBehaviors& behaviors) {
         }
     }
 #endif
-```
+```yaml
 
 **Wayland 协议扩展**：
 某些 compositor 提供扩展协议：
@@ -606,7 +611,7 @@ bool inferAvoidSystemUI(QWidget* widget) {
 
     return false;
 }
-```
+```text
 
 ### AllowResize 推断详解
 
@@ -645,7 +650,7 @@ bool inferAllowResize(QWidget* widget) {
     // 默认允许调整
     return true;
 }
-```
+```text
 
 ### 状态变化监听
 
@@ -682,7 +687,7 @@ private:
     QWidget* m_widget;
     DesktopBehaviors m_behaviors = DesktopBehaviorFlag::None;
 };
-```
+```yaml
 
 ---
 
@@ -717,7 +722,7 @@ std::unique_ptr<IDesktopDisplaySizeStrategy> createPlatformStrategy() {
 #endif
     return std::make_unique<DefaultDisplaySizePolicy>();
 }
-```
+```text
 
 ### 平台特定实现
 
@@ -740,7 +745,7 @@ public:
         return true;
     }
 };
-```
+```text
 
 #### Wayland 策略
 
@@ -766,7 +771,7 @@ public:
         return true;
     }
 };
-```
+```yaml
 
 ---
 
@@ -890,7 +895,7 @@ private:
 };
 
 } // namespace cf::desktop::platform_strategy
-```
+```text
 
 ### 使用示例
 
@@ -915,7 +920,7 @@ void logWidgetBehaviors(QWidget* widget) {
         qDebug() << "Unsupported on this platform:" << result.unsupported;
     }
 }
-```
+```text
 
 ### 最佳实践总结
 
@@ -944,7 +949,7 @@ void debugWindowInfo(QWidget* widget) {
     qDebug() << "Size policy:" << widget->sizePolicy();
     qDebug() << "========================";
 }
-```
+```yaml
 
 ---
 

@@ -1,3 +1,8 @@
+---
+title: HCT 色彩空间实战——Material 动态主题的数学基础
+description: 在上一篇文章里，我们聊了为什么需要自己实现一套数学工具。现在我们来深入其中一个核心问题：颜色。
+---
+
 # HCT 色彩空间实战——Material 动态主题的数学基础
 
 在上一篇文章里，我们聊了为什么需要自己实现一套数学工具。现在我们来深入其中一个核心问题：颜色。
@@ -55,13 +60,13 @@ HSL hsl = rgbToHsl(r, g, b);
 outH = hsl.h;  // 色相直接沿用
 outT = perceivedLightness * 100.0f;  // 感知亮度
 outC = (hsl.s / toneFactor) * 100.0f;  // 色度从饱和度推导
-```
+```text
 
 这里有几个细节需要注意。首先是"感知亮度"，它不是简单的 (R+G+B)/3，而是加权平均：
 
 ```cpp
 float perceivedLightness = 0.299f * r + 0.587f * g + 0.114f * b;
-```
+```text
 
 这个权重来源于人眼对不同颜色的敏感度——绿色看起来最亮，蓝色最暗。
 
@@ -71,7 +76,7 @@ float perceivedLightness = 0.299f * r + 0.587f * g + 0.114f * b;
 float toneFactor = 1.0f - std::abs(hsl.l - 0.5f) * 1.5f;
 toneFactor = math::clamp(toneFactor, 0.2f, 1.0f);
 outC = (hsl.s / toneFactor) * 100.0f;
-```
+```text
 
 ## 从 HCT 到 RGB 的回转
 
@@ -88,7 +93,7 @@ toneSaturationFactor = toneSaturationFactor * toneSaturationFactor;
 
 outS = chromaFactor * (0.3f + 0.7f * toneSaturationFactor);
 outL = t - chromaFactor * 0.05f;  // 高色度会让颜色看起来更暗
-```
+```text
 
 然后再用标准的 HSL → RGB 算法转回 RGB。
 
@@ -114,7 +119,7 @@ QList<CFColor> tonalPalette(CFColor keyColor) {
     }
     return palette;
 }
-```
+```text
 
 就这么简单。你固定 Hue 和 Chroma，只变 Tone，就能得到 13 个颜色，它们的"颜色感"是一致的，只有亮度不同。
 
@@ -141,7 +146,7 @@ float relativeLuminance() const {
 
     return 0.2126f * r + 0.7152f * g + 0.0722f * b;
 }
-```
+```text
 
 为什么需要 gamma 校正？因为 sRGB 是非线性编码的，直接用 RGB 值计算亮度会得到错误的结果。gamma 校正后，RGB 值才与实际的物理光强成正比。
 
@@ -157,7 +162,7 @@ float contrastRatio(CFColor& a, CFColor& b) {
 
     return (lighter + 0.05f) / (darker + 0.05f);
 }
-```
+```yaml
 
 加 0.05 是 WCAG 标准的规定，用于避免极端情况的数值问题。
 

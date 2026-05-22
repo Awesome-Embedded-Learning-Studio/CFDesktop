@@ -1,3 +1,8 @@
+---
+title: "DoubleSpinBox - Material 双精度数值调节框"
+description: 是 Material Design 3 双精度数值调节框控件的完整实现，支持浮点数输入、增减按钮、描
+---
+
 # DoubleSpinBox - Material 双精度数值调节框
 
 `DoubleSpinBox` 是 Material Design 3 双精度数值调节框控件的完整实现，支持浮点数输入、增减按钮、描边样式、焦点指示器和状态层效果。
@@ -10,7 +15,7 @@ namespace cf::ui::widget::material;
 class DoubleSpinBox : public QDoubleSpinBox {
     Q_OBJECT
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/doublespinbox/doublespinbox.h`
 
@@ -35,7 +40,7 @@ spin->setSuffix(" mm");
 // 连接信号（与 QDoubleSpinBox 兼容）
 connect(spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
         this, &MyClass::onValueChanged);
-```
+```bash
 
 ## 与 SpinBox 的区别
 
@@ -56,7 +61,7 @@ connect(spin, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
 // 增加按钮（incrementButtonRect）
 // 减少按钮（decrementButtonRect）
 // 每个按钮有独立的 hover/pressed 状态追踪
-```
+```bash
 
 ## 交互状态
 
@@ -88,7 +93,7 @@ DoubleSpinBox 的 `paintEvent` 实现 7 步 Material Design 绘制流程：
 ```cpp
 // 将内部 lineEdit 限制在文本区域
 // 避免输入框覆盖增减按钮区域
-```
+```bash
 
 ## 颜色系统
 

@@ -1,3 +1,8 @@
+---
+title: Bash库文档
+description: "文档编写日期: 2026-03-20，本目录包含CFDesktop构建系统使用的Bash库文件。"
+---
+
 # Bash库文档
 
 > 文档编写日期: 2026-03-20
@@ -28,15 +33,15 @@ SCRIPT_LIB="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_LIB/lib_common.sh"
 source "$SCRIPT_LIB/lib_config.sh"
 source "$SCRIPT_LIB/lib_build.sh"
-```
+```text
 
 ## 依赖关系
 
-```
+```text
 lib_common.sh
     ├── (被依赖) lib_config.sh
     └── (被依赖) lib_build.sh
-```
+```text
 
 - **lib_common.sh** 是基础库，不依赖其他库
 - **lib_config.sh** 依赖 lib_common.sh（用于日志输出）
@@ -59,7 +64,7 @@ log_warn "警告消息"
 log_error "错误消息"
 log_separator
 log_progress 5 10 "处理中"
-```
+```text
 
 ### 配置解析 (lib_config.sh)
 
@@ -69,7 +74,7 @@ echo "$config_cmake_generator"
 
 value=$(get_ini_value config.ini "cmake" "generator")
 has_ini_value config.ini "cmake" "generator" && echo "存在"
-```
+```text
 
 ### 构建操作 (lib_build.sh)
 
@@ -77,4 +82,4 @@ has_ini_value config.ini "cmake" "generator" && echo "存在"
 clean_build_dir "$BUILD_DIR"
 run_cmake_configure "Ninja" "Release" "$SOURCE_DIR" "$BUILD_DIR"
 run_cmake_build "$BUILD_DIR" "--all" $(get_parallel_job_count)
-```
+```text

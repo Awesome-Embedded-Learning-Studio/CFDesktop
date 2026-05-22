@@ -1,8 +1,13 @@
+---
+title: 基础工具库
+description: 基础工具库是 CFDesktop 最底层的模块，提供了一套零 Qt 依赖的跨平台工具。选择把这些工具
+---
+
 # 基础工具库
 
 基础工具库是 CFDesktop 最底层的模块，提供了一套零 Qt 依赖的跨平台工具。选择把这些工具独立出来，是因为上层 UI 框架可能需要在不同的上下文中复用——比如单元测试里不想链接整个 Qt 库，或者某些底层模块只需要一个轻量的错误处理机制。
 
-这些工具大多是标准库特性的"降级实现"或"便利封装"。项目基于 C++17，但我们需要 C++20 的 `std::span` 和 C++23 的 `std::expected`，所以自己实现了一份。另外也有一些实战中总结的实用工具，比如 RAII 风格的资源管理。
+这些工具大多是标准库特性的"降级实现"或"便利封装"。项目基于 C++23，部分编译器尚未完整支持 `std::expected` 等特性，所以自己实现了一份 backport。另外也有一些实战中总结的实用工具，比如 RAII 风格的资源管理。
 
 ## 错误处理
 
@@ -27,7 +32,7 @@ if (result.has_value()) {
 } else {
     // 根据 error() 的值决定怎么恢复
 }
-```
+```text
 
 ## 容器视图
 
@@ -43,7 +48,7 @@ int arr[] = {1, 2, 3};
 
 process(vec);  // OK
 process(arr);  // 也 OK
-```
+```text
 
 ## 资源管理
 
@@ -58,7 +63,7 @@ process(arr);  // 也 OK
 
     // 使用文件，无论中间发生什么，离开作用域都会自动关闭
 }
-```
+```text
 
 ## 懒加载初始化
 
@@ -78,7 +83,7 @@ protected:
 
 // 首次调用 get_resources() 时才执行初始化
 auto& info = cache.get_resources();
-```
+```text
 
 ⚠️ `force_reinit()` 不是线程安全的，如果需要在运行时重新初始化，记得自己加锁。
 
@@ -94,7 +99,7 @@ std::string_view model = cf::parse_cpuinfo_field(line, "model name");
 
 // 直接读单个数字值的文件
 auto freq = cf::read_uint32_file("/sys/devices/system/cpu/cpu0/cpufreq/max_freq");
-```
+```text
 
 ## 弱引用
 
@@ -118,7 +123,7 @@ auto weak = manager.GetWeakPtr();
 if (weak) {
     weak->ApplyTheme();  // 安全访问
 }
-```
+```text
 
 ## 平台检测
 
@@ -132,7 +137,7 @@ if (weak) {
 #elif defined(CFDESKTOP_OS_LINUX)
     // Linux 特定代码
 #endif
-```
+```text
 
 ## 相关文档
 

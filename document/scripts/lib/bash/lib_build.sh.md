@@ -1,3 +1,8 @@
+---
+title: libbuild.sh
+description: "文档编写日期: 2026-03-20，注意： 此模块依赖 ，会自动加载。"
+---
+
 # lib_build.sh
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 加载方式
 ```bash
 source scripts/lib/bash/lib_build.sh
-```
+```bash
 
 **注意：** 此模块依赖 `lib_common.sh`，会自动加载。
 
@@ -52,7 +57,7 @@ source scripts/lib/bash/lib_build.sh
 **示例：**
 ```bash
 clean_build_dir "$BUILD_DIR"
-```
+```text
 
 ### ensure_build_dir(build_path)
 
@@ -64,7 +69,7 @@ clean_build_dir "$BUILD_DIR"
 **示例：**
 ```bash
 ensure_build_dir "$BUILD_DIR"
-```
+```text
 
 ### run_cmake_configure(generator, build_type, source_dir, build_dir, [extra_args])
 
@@ -85,7 +90,7 @@ ensure_build_dir "$BUILD_DIR"
 ```bash
 run_cmake_configure "Ninja" "Release" "$SOURCE_DIR" "$BUILD_DIR"
 run_cmake_configure "Unix Makefiles" "Debug" "$SOURCE_DIR" "$BUILD_DIR" "-DENABLE_TESTS=ON"
-```
+```text
 
 ### run_cmake_build(build_dir, [target], [jobs])
 
@@ -104,7 +109,7 @@ run_cmake_configure "Unix Makefiles" "Debug" "$SOURCE_DIR" "$BUILD_DIR" "-DENABL
 ```bash
 run_cmake_build "$BUILD_DIR"
 run_cmake_build "$BUILD_DIR" "mytarget" 4
-```
+```text
 
 ### has_cmake_cache(build_dir)
 
@@ -122,7 +127,7 @@ run_cmake_build "$BUILD_DIR" "mytarget" 4
 if has_cmake_cache "$BUILD_DIR"; then
     log_info "CMake 已配置，跳过配置步骤"
 fi
-```
+```text
 
 ### get_cmake_cache_var(build_dir, var_name)
 
@@ -138,7 +143,7 @@ fi
 **示例：**
 ```bash
 generator=$(get_cmake_cache_var "$BUILD_DIR" "CMAKE_GENERATOR")
-```
+```text
 
 ### get_parallel_job_count()
 
@@ -151,7 +156,7 @@ generator=$(get_cmake_cache_var "$BUILD_DIR" "CMAKE_GENERATOR")
 ```bash
 jobs=$(get_parallel_job_count)
 run_cmake_build "$BUILD_DIR" "--all" "$jobs"
-```
+```text
 
 ### build_timer_start()
 
@@ -160,7 +165,7 @@ run_cmake_build "$BUILD_DIR" "--all" "$jobs"
 **示例：**
 ```bash
 build_timer_start
-```
+```text
 
 ### build_timer_end()
 
@@ -172,7 +177,7 @@ build_timer_start
 # ... 执行构建 ...
 build_timer_end
 # 输出: Build time: 2m 15s
-```
+```yaml
 
 ---
 
@@ -203,4 +208,4 @@ run_cmake_build "$BUILD_DIR" "--all" "$jobs"
 
 # 构建计时结束
 build_timer_end
-```
+```text

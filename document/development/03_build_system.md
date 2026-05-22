@@ -1,33 +1,38 @@
-# Build System Documentation
+---
+title: 构建系统文档
+description: CFDesktop CMake 构建系统完整指南
+---
 
-> Comprehensive guide to the CFDesktop CMake build system
+# 构建系统文档
 
-## Table of Contents
+> CFDesktop CMake 构建系统完整指南
 
-- [Overview](#overview)
-- [CMake Architecture](#cmake-architecture)
-- [Project Modules](#project-modules)
-- [Build Types](#build-types)
-- [Toolchain Configuration](#toolchain-configuration)
-- [Build Scripts](#build-scripts)
-- [Output Directories](#output-directories)
-- [Common Build Options](#common-build-options)
-- [Advanced Usage](#advanced-usage)
+## 目录
+
+- [概述](#概述)
+- [CMake 架构](#cmake-架构)
+- [项目模块](#项目模块)
+- [构建类型](#构建类型)
+- [工具链配置](#工具链配置)
+- [构建脚本](#构建脚本)
+- [输出目录](#输出目录)
+- [常用构建选项](#常用构建选项)
+- [高级用法](#高级用法)
 
 ---
 
-## Overview
+## 概述
 
-CFDesktop uses a modular CMake-based build system designed for cross-platform development and embedded deployment. The build system supports:
+CFDesktop 使用基于 CMake 的模块化构建系统，专为跨平台开发和嵌入式部署而设计。该构建系统支持：
 
-- **Multiple platforms**: Windows (MinGW/LLVM), Linux (GCC/Clang)
-- **Multiple architectures**: x86_64, ARM64, ARMhf
-- **Build types**: Debug, Release, RelWithDebInfo
-- **Containerized builds**: Docker with multi-architecture support
+- **多平台**：Windows（MinGW/LLVM）、Linux（GCC/Clang）
+- **多架构**：x86_64、ARM64、ARMhf
+- **构建类型**：Debug、Release、RelWithDebInfo
+- **容器化构建**：Docker 多架构支持
 
-### Build System Diagram
+### 构建系统示意图
 
-```
+```text
 CFDesktop Build System
 ├── Configuration Files (.ini)
 │   ├── build_develop_config.ini    (Debug builds)
@@ -49,15 +54,15 @@ CFDesktop Build System
     ├── windows/gcc-toolchain.cmake
     ├── linux/ci-x86_64-toolchain.cmake
     └── linux/ci-aarch64-toolchain.cmake
-```
+```yaml
 
 ---
 
-## CMake Architecture
+## CMake 架构
 
-### Root CMakeLists.txt
+### 根 CMakeLists.txt
 
-The root `CMakeLists.txt` is the entry point for the build system:
+根 `CMakeLists.txt` 是构建系统的入口点：
 
 ```cmake
 cmake_minimum_required(VERSION 3.16)
@@ -87,11 +92,11 @@ add_subdirectory(base)
 add_subdirectory(ui)
 add_subdirectory(example)
 add_subdirectory(test)
-```
+```text
 
-### CMake Module Structure
+### CMake 模块结构
 
-```
+```text
 cmake/
 ├── build_log_helper.cmake         # Logging utilities
 ├── check_toolchain.cmake          # Toolchain selection
@@ -100,26 +105,26 @@ cmake/
 ├── ExampleLauncher.cmake          # Windows launcher generation
 ├── QtDeployUtils.cmake            # Qt deployment utilities
 └── generate_develop_helpers.cmake # IDE configuration generation
-```
+```bash
 
 ---
 
-## Project Modules
+## 项目模块
 
-### Module Overview
+### 模块概览
 
-| Module | Description | Output | Dependencies |
-|:-------|:------------|:-------|:-------------|
-| **base/** | Base utilities and platform abstractions | `cfbase.dll` / `libcfbase.so` | Qt6::Core |
-| **ui/** | UI framework and components | `cfui.dll` / `libcfui.so` | base, Qt6::Core, Qt6::Gui |
-| **example/** | Example programs | `examples/{category}/` | base, ui |
-| **test/** | Unit tests | `test/` | base, ui, GoogleTest |
+| 模块 | 描述 | 输出 | 依赖 |
+|:-----|:-----|:-----|:-----|
+| **base/** | 基础工具和平台抽象 | `cfbase.dll` / `libcfbase.so` | Qt6::Core |
+| **ui/** | UI 框架和组件 | `cfui.dll` / `libcfui.so` | base、Qt6::Core、Qt6::Gui |
+| **example/** | 示例程序 | `examples/{category}/` | base、ui |
+| **test/** | 单元测试 | `test/` | base、ui、GoogleTest |
 
-### Base Module
+### Base 模块
 
-The base module provides fundamental utilities:
+Base 模块提供基础工具：
 
-```
+```text
 base/
 ├── include/                    # Header-only utilities
 │   ├── cfbase/
@@ -134,10 +139,10 @@ base/
 └── system/
     ├── cpu/CMakeLists.txt      # CPU module
     └── memory/CMakeLists.txt   # Memory module
-```
+```text
 
-**Unified Base Library:**
-All base components are linked into a single shared library (`cfbase.dll` on Windows, `libcfbase.so` on Linux).
+**统一 Base 库：**
+所有 base 组件链接为一个单独的共享库（Windows 上为 `cfbase.dll`，Linux 上为 `libcfbase.so`）。
 
 ```cmake
 # base/CMakeLists.txt
@@ -147,13 +152,13 @@ target_sources(cfbase PRIVATE
     $<TARGET_OBJECTS:cfbase_memory>
 )
 target_link_libraries(cfbase PUBLIC Qt6::Core)
-```
+```text
 
-### UI Module
+### UI 模块
 
-The UI module provides the Material Design framework:
+UI 模块提供 Material Design 框架：
 
-```
+```text
 ui/
 ├── base/                       # Math utilities
 │   ├── math_helper.hpp
@@ -175,10 +180,10 @@ ui/
         ├── label/
         ├── textfield/
         └── ...
-```
+```text
 
-**Unified UI Library:**
-All UI components are linked into a single shared library (`cfui.dll` on Windows, `libcfui.so` on Linux).
+**统一 UI 库：**
+所有 UI 组件链接为一个单独的共享库（Windows 上为 `cfui.dll`，Linux 上为 `libcfui.so`）。
 
 ```cmake
 # ui/CMakeLists.txt
@@ -192,65 +197,65 @@ target_link_libraries(cfui PUBLIC
     Qt6::Core
     Qt6::Gui
 )
-```
+```bash
 
 ---
 
-## Build Types
+## 构建类型
 
-### Available Build Types
+### 可用的构建类型
 
-| Build Type | Optimization | Debug Info | Use Case |
-|:-----------|:------------|:----------:|:---------|
-| **Debug** | `-O0` | Full (`-g`) | Development and debugging |
-| **Release** | `-O3` | None | Production deployment |
-| **RelWithDebInfo** | `-O2` | Full (`-g`) | Profiling and testing |
+| 构建类型 | 优化级别 | 调试信息 | 使用场景 |
+|:---------|:---------|:--------:|:---------|
+| **Debug** | `-O0` | 完整（`-g`） | 开发与调试 |
+| **Release** | `-O3` | 无 | 生产部署 |
+| **RelWithDebInfo** | `-O2` | 完整（`-g`） | 性能分析和测试 |
 
-### Build Type Selection
+### 构建类型选择
 
-Build types are configured via `.ini` files:
+构建类型通过 `.ini` 文件进行配置：
 
 ```ini
 [cmake]
 build_type=Debug    # or Release, RelWithDebInfo
-```
+```bash
 
-**Configuration Files:**
+**配置文件：**
 
-| File | Build Type | Use Case |
-|:-----|:-----------|:---------|
-| `build_develop_config.ini` | Debug | Daily development |
-| `build_deploy_config.ini` | Release | Production builds |
-| `build_ci_config.ini` | Release | CI/CD pipeline |
+| 文件 | 构建类型 | 使用场景 |
+|:-----|:---------|:---------|
+| `build_develop_config.ini` | Debug | 日常开发 |
+| `build_deploy_config.ini` | Release | 生产构建 |
+| `build_ci_config.ini` | Release | CI/CD 流水线 |
 
 ---
 
-## Toolchain Configuration
+## 工具链配置
 
-### Toolchain Shorthand
+### 工具链简写
 
-CFDesktop supports a shorthand notation for toolchain selection:
+CFDesktop 支持工具链选择的简写表示法：
 
 ```bash
 cmake -DUSE_TOOLCHAIN=windows/llvm -S . -B build
 cmake -DUSE_TOOLCHAIN=windows/gcc -S . -B build
 cmake -DUSE_TOOLCHAIN=linux/ci-x86_64 -S . -B build
-```
+```bash
 
-### Available Toolchains
+### 可用工具链
 
-| Platform | Toolchain | Shorthand | Compiler |
-|:---------|:----------|:----------|:---------|
+| 平台 | 工具链 | 简写 | 编译器 |
+|:-----|:-------|:-----|:-------|
 | **Windows** | LLVM-MinGW | `windows/llvm` | clang/LLVM |
 | **Windows** | MinGW-GCC | `windows/gcc` | gcc/MinGW |
 | **Linux** | CI x86_64 | `linux/ci-x86_64` | gcc (Docker) |
 | **Linux** | CI ARM64 | `linux/ci-aarch64` | aarch64 gcc (Docker) |
 
-### Toolchain File Structure
+### 工具链文件结构
 
-Toolchain files are located in `cmake/cmake_toolchain/{platform}/`:
+工具链文件位于 `cmake/cmake_toolchain/{platform}/`：
 
-```
+```text
 cmake/cmake_toolchain/
 ├── windows/
 │   ├── llvm-toolchain.cmake
@@ -258,18 +263,18 @@ cmake/cmake_toolchain/
 └── linux/
     ├── ci-x86_64-toolchain.cmake
     └── ci-aarch64-toolchain.cmake
-```
+```text
 
-### Windows LLVM-MinGW Toolchain
+### Windows LLVM-MinGW 工具链
 
 ```cmake
 # cmake/cmake_toolchain/windows/llvm-toolchain.cmake
 set(CMAKE_PREFIX_PATH "D:/QT/Qt6.6.0/6.8.3/llvm-mingw_64")
 set(CMAKE_C_COMPILER "D:/QT/Qt6.6.0/Tools/llvm-mingw1706_64/bin/gcc.exe")
 set(CMAKE_CXX_COMPILER "D:/QT/Qt6.6.0/Tools/llvm-mingw1706_64/bin/g++.exe")
-```
+```text
 
-### Linux CI Toolchain
+### Linux CI 工具链
 
 ```cmake
 # cmake/cmake_toolchain/linux/ci-x86_64-toolchain.cmake
@@ -277,17 +282,17 @@ set(CMAKE_SYSTEM_NAME Linux)
 set(QT6_BASE_DIR "/opt/Qt/6.8.1/gcc_64")
 set(Qt6_DIR "${QT6_BASE_DIR}/lib/cmake/Qt6")
 set(CMAKE_PREFIX_PATH "${QT6_BASE_DIR}")
-```
+```yaml
 
 ---
 
-## Build Scripts
+## 构建脚本
 
-### Script Overview
+### 脚本概览
 
-Build scripts are organized by platform and purpose:
+构建脚本按平台和用途组织：
 
-```
+```text
 scripts/build_helpers/
 ├── windows_*.ps1              # Windows PowerShell scripts
 │   ├── windows_configure.ps1
@@ -300,71 +305,71 @@ scripts/build_helpers/
 │   ├── linux_develop_build.sh
 │   └── linux_run_tests.sh
 └── docker_start.sh            # Docker wrapper script
-```
+```text
 
-### Windows Build Scripts
+### Windows 构建脚本
 
-#### Configure Script
+#### 配置脚本
 
 ```powershell
 # Configure only (no build)
 .\scripts\build_helpers\windows_configure.ps1 [-Config <develop|deploy>]
-```
+```text
 
-**What it does:**
-1. Loads configuration from `.ini` file
-2. Validates build type
-3. Runs CMake configuration
-4. Generates build files
+**该脚本执行以下操作：**
+1. 从 `.ini` 文件加载配置
+2. 验证构建类型
+3. 运行 CMake 配置
+4. 生成构建文件
 
-#### Fast Build Script
+#### 快速构建脚本
 
 ```powershell
 # Fast incremental build
 .\scripts\build_helpers\windows_fast_develop_build.ps1
-```
+```text
 
-**What it does:**
-1. Calls configure script
-2. Builds with CMake (no clean)
-3. Uses parallel jobs
+**该脚本执行以下操作：**
+1. 调用配置脚本
+2. 使用 CMake 构建（不清理）
+3. 使用并行任务
 
-#### Full Build Script
+#### 完整构建脚本
 
 ```powershell
 # Full clean build
 .\scripts\build_helpers\windows_develop_build.ps1
-```
+```text
 
-**What it does:**
-1. Cleans build directory
-2. Calls fast build script
-3. Runs tests
+**该脚本执行以下操作：**
+1. 清理构建目录
+2. 调用快速构建脚本
+3. 运行测试
 
-### Linux Build Scripts
+### Linux 构建脚本
 
-#### Configure Script
+#### 配置脚本
 
 ```bash
 # Configure only
 bash scripts/build_helpers/linux_configure.sh [develop|deploy|ci] [-c <config_file>]
-```
+```text
 
-#### Fast Build Script
+#### 快速构建脚本
 
 ```bash
 # Fast incremental build
 bash scripts/build_helpers/linux_fast_develop_build.sh [develop|deploy|ci]
-```
+```text
 
-#### Full Build Script
+#### 完整构建脚本
 
 ```bash
 # Full clean build
 bash scripts/build_helpers/linux_develop_build.sh [develop|deploy|ci]
-```
+```text
 
-### Docker Build Script
+### Docker 构建脚本
 
 ```bash
 # Interactive shell
@@ -384,29 +389,29 @@ bash scripts/build_helpers/docker_start.sh --verify
 
 # ARM64 build
 bash scripts/build_helpers/docker_start.sh --arch arm64 --verify
-```
+```bash
 
-**Docker Options:**
+**Docker 选项：**
 
-| Option | Description |
-|:-------|:------------|
-| `--arch amd64|arm64` | Target architecture |
-| `--fast-build` | Reuse existing image |
-| `--verify` | Run CI verification |
-| `--build-project` | Full clean build |
-| `--build-project-fast` | Fast incremental build |
-| `--run-project-test` | Run tests |
-| `--stay-on-error` | Keep container on error |
-| `--no-log` | Disable file logging |
-| `--no-deps` | Skip dependency installation |
+| 选项 | 描述 |
+|:-----|:-----|
+| `--arch amd64\|arm64` | 目标架构 |
+| `--fast-build` | 复用已有镜像 |
+| `--verify` | 运行 CI 验证 |
+| `--build-project` | 完整清理构建 |
+| `--build-project-fast` | 快速增量构建 |
+| `--run-project-test` | 运行测试 |
+| `--stay-on-error` | 出错时保留容器 |
+| `--no-log` | 禁用文件日志 |
+| `--no-deps` | 跳过依赖安装 |
 
 ---
 
-## Output Directories
+## 输出目录
 
-### Output Directory Structure
+### 输出目录结构
 
-```
+```text
 out/build_{config}/
 ├── bin/                        # Executables and shared libraries
 │   ├── cfbase.dll              # Base library (Windows)
@@ -433,11 +438,11 @@ out/build_{config}/
     ├── base_test
     ├── ui_test
     └── ...
-```
+```text
 
-### Output Directory Configuration
+### 输出目录配置
 
-Output directories are configured in `cmake/OutputDirectoryConfig.cmake`:
+输出目录在 `cmake/OutputDirectoryConfig.cmake` 中配置：
 
 ```cmake
 # Global output directories
@@ -451,15 +456,15 @@ function(cf_set_example_output_dir TARGET_NAME CATEGORY)
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/${CATEGORY}"
     )
 endfunction()
-```
+```yaml
 
 ---
 
-## Common Build Options
+## 常用构建选项
 
-### Configuration File Options
+### 配置文件选项
 
-Configuration files use INI format:
+配置文件使用 INI 格式：
 
 ```ini
 [cmake]
@@ -482,199 +487,199 @@ build_dir=out/build_develop
 [options]
 # Parallel jobs for compilation
 jobs=16
-```
+```bash
 
-### CMake Options
+### CMake 选项
 
-| Option | Description | Default |
-|:-------|:------------|:--------|
-| `CMAKE_BUILD_TYPE` | Build type (Debug/Release/RelWithDebInfo) | Required |
-| `CMAKE_PREFIX_PATH` | Qt installation path | From toolchain |
-| `USE_TOOLCHAIN` | Toolchain shorthand | Required |
-| `CMAKE_EXPORT_COMPILE_COMMANDS` | Generate compile_commands.json | ON |
-| `BUILD_TESTING` | Build tests | ON |
+| 选项 | 描述 | 默认值 |
+|:-----|:-----|:-------|
+| `CMAKE_BUILD_TYPE` | 构建类型（Debug/Release/RelWithDebInfo） | 必填 |
+| `CMAKE_PREFIX_PATH` | Qt 安装路径 | 由工具链提供 |
+| `USE_TOOLCHAIN` | 工具链简写 | 必填 |
+| `CMAKE_EXPORT_COMPILE_COMMANDS` | 生成 compile_commands.json | ON |
+| `BUILD_TESTING` | 构建测试 | ON |
 
 ---
 
-## Advanced Usage
+## 高级用法
 
-### Custom Toolchain Configuration
+### 自定义工具链配置
 
-To use a custom toolchain:
+要使用自定义工具链：
 
-1. Create a toolchain file in `cmake/cmake_toolchain/{platform}/`
-2. Use the shorthand notation:
+1. 在 `cmake/cmake_toolchain/{platform}/` 中创建工具链文件
+2. 使用简写表示法：
 
 ```bash
 cmake -DUSE_TOOLCHAIN=windows/mytoolchain -S . -B build
-```
+```text
 
-Or use the full path:
+或使用完整路径：
 
 ```bash
 cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake -S . -B build
-```
+```text
 
-### Incremental Builds
+### 增量构建
 
-For faster development, use incremental builds:
+为了加速开发，可使用增量构建：
 
-**Linux:**
+**Linux：**
 ```bash
 bash scripts/build_helpers/linux_fast_develop_build.sh
-```
+```text
 
-**Windows:**
+**Windows：**
 ```powershell
 .\scripts\build_helpers\windows_fast_develop_build.ps1
-```
+```text
 
-### Parallel Builds
+### 并行构建
 
-Control the number of parallel jobs via the configuration file:
+通过配置文件控制并行任务数：
 
 ```ini
 [options]
 jobs=8                          # Use 8 parallel jobs
-```
+```text
 
-Or via CMake:
+或通过 CMake：
 
 ```bash
 cmake --build build --parallel 8
-```
+```text
 
-### Building Specific Targets
+### 构建特定目标
 
-To build specific targets:
+要构建特定目标：
 
 ```bash
 cmake --build build --target cfbase
 cmake --build build --target cfui
 cmake --build build --target material_gallery
-```
+```text
 
-### Clean Builds
+### 清理构建
 
-For a completely clean build:
+要执行完全清理构建：
 
-**Linux:**
+**Linux：**
 ```bash
 bash scripts/build_helpers/linux_develop_build.sh
-```
+```text
 
-**Windows:**
+**Windows：**
 ```powershell
 .\scripts\build_helpers\windows_develop_build.ps1
-```
+```text
 
-Or manually:
+或手动执行：
 
 ```bash
 rm -rf out/build_develop
 cmake -DUSE_TOOLCHAIN=windows/llvm -DCMAKE_BUILD_TYPE=Debug -S . -B out/build_develop
 cmake --build out/build_develop
-```
+```cpp
 
 ---
 
-## Cross-Platform Build Matrix
+## 跨平台构建矩阵
 
-### Supported Platforms
+### 支持的平台
 
-| Platform | Architecture | Toolchain | Status |
-|:---------|:------------:|:----------|:------:|
-| Windows 10+ | x86_64 | LLVM-MinGW | Supported |
-| Windows 10+ | x86_64 | MinGW-GCC | Supported |
-| Linux | x86_64 | GCC | Supported |
-| Linux | x86_64 | Clang | Supported |
-| Linux (Docker) | x86_64 | GCC | Supported |
-| Linux (Docker) | ARM64 | aarch64 gcc | Supported |
+| 平台 | 架构 | 工具链 | 状态 |
+|:-----|:----:|:-------|:----:|
+| Windows 10+ | x86_64 | LLVM-MinGW | 已支持 |
+| Windows 10+ | x86_64 | MinGW-GCC | 已支持 |
+| Linux | x86_64 | GCC | 已支持 |
+| Linux | x86_64 | Clang | 已支持 |
+| Linux (Docker) | x86_64 | GCC | 已支持 |
+| Linux (Docker) | ARM64 | aarch64 gcc | 已支持 |
 
-### Build Command Reference
+### 构建命令参考
 
-| Platform | Command |
-|:---------|:---------|
+| 平台 | 命令 |
+|:-----|:-----|
 | **Windows (LLVM)** | `.\scripts\build_helpers\windows_fast_develop_build.ps1` |
-| **Windows (GCC)** | Edit `build_develop_config.ini`: `toolchain=windows/gcc` |
-| **Linux (Native)** | `bash scripts/build_helpers/linux_fast_develop_build.sh` |
+| **Windows (GCC)** | 编辑 `build_develop_config.ini`：`toolchain=windows/gcc` |
+| **Linux（原生）** | `bash scripts/build_helpers/linux_fast_develop_build.sh` |
 | **Linux (Docker)** | `bash scripts/build_helpers/docker_start.sh --build-project-fast` |
 | **ARM64 (Docker)** | `bash scripts/build_helpers/docker_start.sh --arch arm64 --build-project-fast` |
 
 ---
 
-## IDE Integration
+## IDE 集成
 
-### VSCode Configuration
+### VSCode 配置
 
-The build system automatically generates VSCode configuration files:
+构建系统会自动生成 VSCode 配置文件：
 
-- `.vscode/launch.json` - Debug configurations
-- `.clangd` - Clangd language server configuration
-- `compile_commands.json` - Compilation database
+- `.vscode/launch.json` - 调试配置
+- `.clangd` - Clangd 语言服务器配置
+- `compile_commands.json` - 编译数据库
 
-These are generated by `cmake/generate_develop_helpers.cmake` during CMake configuration.
+这些文件由 `cmake/generate_develop_helpers.cmake` 在 CMake 配置阶段生成。
 
 ### QtCreator
 
-QtCreator can open the project directly:
+QtCreator 可以直接打开项目：
 
-1. File -> Open File or Project
-2. Select `CMakeLists.txt`
-3. Configure the build directory
-4. Choose the toolchain
-5. Click "Run CMake"
+1. 文件 -> 打开文件或项目
+2. 选择 `CMakeLists.txt`
+3. 配置构建目录
+4. 选择工具链
+5. 点击"运行 CMake"
 
 ---
 
-## Troubleshooting
+## 常见问题排查
 
-### Common Issues
+### 常见问题
 
-| Issue | Solution |
-|:------|:----------|
-| CMake not found | Install CMake 3.16+ or add to PATH |
-| Qt not found | Set `Qt6_DIR` or use correct toolchain |
-| Compiler not found | Install compiler or use Docker build |
-| Permission denied | Use `sudo` on Linux or run as admin on Windows |
-| Out of memory during build | Reduce parallel jobs in `.ini` file |
+| 问题 | 解决方案 |
+|:-----|:---------|
+| 找不到 CMake | 安装 CMake 3.16+ 或将其添加到 PATH |
+| 找不到 Qt | 设置 `Qt6_DIR` 或使用正确的工具链 |
+| 找不到编译器 | 安装编译器或使用 Docker 构建 |
+| 权限被拒绝 | 在 Linux 上使用 `sudo`，或在 Windows 上以管理员身份运行 |
+| 构建时内存不足 | 在 `.ini` 文件中减少并行任务数 |
 
-### Debug Mode Builds
+### Debug 模式构建
 
-For debugging, ensure you're using the Debug build type:
+用于调试时，请确保使用 Debug 构建类型：
 
 ```ini
 [cmake]
 build_type=Debug
-```
+```text
 
-This will:
-- Disable optimizations (`-O0`)
-- Include full debug symbols (`-g`)
-- Enable assertions
+这将：
+- 禁用优化（`-O0`）
+- 包含完整的调试符号（`-g`）
+- 启用断言
 
-### Release Builds
+### Release 构建
 
-For production:
+用于生产部署：
 
 ```ini
 [cmake]
 build_type=Release
-```
+```yaml
 
-This will:
-- Enable maximum optimizations (`-O3`)
-- Disable debug info
-- Define `NDEBUG`
+这将：
+- 启用最大优化（`-O3`）
+- 禁用调试信息
+- 定义 `NDEBUG`
 
 ---
 
-## Related Documentation
+## 相关文档
 
-- [Quick Start Guide](02_quick_start.md) - Get started in 30 minutes
-- [Project Skeleton Design](../design_stage/00_phase0_project_skeleton.md) - Detailed project architecture
-- [Base Library Design](../design_stage/02_phase2_base_library.md) - Base module documentation
-- [UI Framework Design](../todo/base/99_ui_material_framework.md) - UI module documentation
+- [快速入门指南](02_quick_start.md) - 30 分钟上手
+- [项目骨架设计](../design_stage/00_phase0_project_skeleton.md) - 详细的项目架构
+- [Base 库设计](../design_stage/02_phase2_base_library.md) - Base 模块文档
+- [UI 框架设计](../todo/base/99_ui_material_framework.md) - UI 模块文档
 
 ---
 

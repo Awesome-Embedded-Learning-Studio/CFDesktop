@@ -1,3 +1,8 @@
+---
+title: "Phase 13: Widget 与桌面应用 TODO"
+description: "预计周期: 4~5 周，依赖阶段: Phase 9, Phase 12"
+---
+
 # Phase 13: Widget 与桌面应用 TODO
 
 > **状态**: ⬜ 待开始

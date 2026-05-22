@@ -2,7 +2,7 @@
 #include "IDesktopPropertyStrategy.h"
 #include "components/IShellLayerStrategy.h"
 #include "components/shell_layer_impl/WidgetShellLayer.h"
-#include "components/wallpaper/wallpaper_setup.h"
+#include "components/shell_layer_impl/wallpaper_setup.h"
 #include "display_backend_helper.h"
 #include "linux_wsl_factory.h"
 #include "platform_helper.h"

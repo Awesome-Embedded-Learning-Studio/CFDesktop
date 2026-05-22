@@ -1,3 +1,8 @@
+---
+title: "MaterialMotionScheme - Material 动画系统"
+description: 实现 Material Design 3 的动画规范。Material 把动画分成 9 种预设，每种
+---
+
 # MaterialMotionScheme - Material 动画系统
 
 `MaterialMotionScheme` 实现 Material Design 3 的动画规范。Material 把动画分成 9 种预设，每种都有精确的时长和缓动曲线。这套系统的核心思想是"自然运动"——模仿真实物理世界的运动规律，让界面感觉更"真实"。
@@ -38,7 +43,7 @@ int easing = motion.queryEasing("shortEnter");
 MotionSpec spec = motion.getMotionSpec("mediumEnter");
 // spec.durationMs = 300
 // spec.easing = Easing::Type::EmphasizedDecelerate
-```
+```text
 
 ## 运动规格结构
 
@@ -50,7 +55,7 @@ struct MotionSpec {
     cf::ui::base::Easing::Type easing; // 缓动类型
     int delayMs = 0;                   // 延迟（毫秒）
 };
-```
+```text
 
 这个结构可以直接用于动画设置：
 
@@ -66,7 +71,7 @@ void MyWidget::animateIn() {
     anim->setEndValue(targetPos());
     anim->start(QAbstractAnimation::DeleteWhenStopped);
 }
-```
+```text
 
 ## 静态预设函数
 
@@ -84,7 +89,7 @@ MotionSpec spec = MotionPresets::mediumExit();
 // 状态切换动画
 MotionSpec spec = MotionPresets::stateChange();
 // durationMs = 200, easing = Standard
-```
+```text
 
 静态函数在编译期就能确定值，没有字符串查找开销，性能更好。
 
@@ -100,7 +105,7 @@ auto all = motion.presets();
 useSpec(all.shortEnter);
 useSpec(all.mediumExit);
 useSpec(all.rippleExpand);
-```
+```bash
 
 这个设计方便在需要同时使用多个预设时减少代码重复。
 
@@ -132,7 +137,7 @@ if (size.width() < 200) {
 } else {
     spec = MotionPresets::longEnter();    // 大元素
 }
-```
+```text
 
 这个对应关系能保证动画速度和元素大小匹配——大物体运动慢，小物体运动快，符合物理直觉。
 
@@ -146,7 +151,7 @@ animateIn(MotionPresets::shortEnter());
 
 // 退出：150ms（短）
 animateOut(MotionPresets::shortExit());
-```
+```text
 
 同样的"短"级别，进入比退出慢 50ms。
 
@@ -166,7 +171,7 @@ void RippleEffect::start() {
     m_fadeSpec = motion->getMotionSpec("rippleFade");
     // 150ms, Linear
 }
-```
+```text
 
 水波纹淡出用 Linear 是有原因的——淡出是透明度变化，用线性曲线更自然。
 
@@ -179,7 +184,7 @@ MotionSpec customSpec;
 customSpec.durationMs = 500;
 customSpec.easing = cf::ui::base::Easing::Type::Emphasized;
 customSpec.delayMs = 100;
-```
+```text
 
 或者基于预设修改：
 
@@ -187,7 +192,7 @@ customSpec.delayMs = 100;
 MotionSpec spec = MotionPresets::mediumEnter();
 spec.delayMs = 200;  // 添加延迟
 spec.durationMs = 400;  // 延长时长
-```
+```text
 
 ## 相关文档
 

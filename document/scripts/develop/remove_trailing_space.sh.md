@@ -1,3 +1,8 @@
+---
+title: removetrailingspace.sh
+description: "文档编写日期: 2026-03-20，删除项目中所有文本文件的行尾空格和制表符，保持代码库整洁。"
+---
+
 # remove_trailing_space.sh
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 基本语法
 ```bash
 ./scripts/develop/remove_trailing_space.sh [OPTIONS]
-```
+```bash
 
 ### 参数说明
 | 参数 | 说明 |
@@ -31,7 +36,7 @@
 
 # 检查模式（CI/CD场景）
 ./scripts/develop/remove_trailing_space.sh --check
-```
+```bash
 
 ## Scripts详解 (Detailed Explanation)
 
@@ -61,7 +66,7 @@
 - 每个文件最多显示5行有问题内容（dry-run/check模式）
 
 ### 输出格式
-```
+```yaml
 === Remove Trailing Whitespace ===
 Project: /path/to/project
 Mode: Staged files only
@@ -73,7 +78,7 @@ src/main.cpp:
 === Summary ===
 Processed: 150 files
 Fixed: 2 files
-```
+```bash
 
 ### 退出码
 | 退出码 | 说明 |

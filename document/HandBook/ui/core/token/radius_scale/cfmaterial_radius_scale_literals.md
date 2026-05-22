@@ -1,3 +1,8 @@
+---
+title: Radius Scale Token 字面量
+description: 定义了 Material Design 3 圆角系统的全部 Token 字面量。Material 的
+---
+
 # Radius Scale Token 字面量
 
 `cfmaterial_radius_scale_literals.h` 定义了 Material Design 3 圆角系统的全部 Token 字面量。Material 的圆角不是随便选的数字，而是一套精心设计的 7 级标尺，从 0dp（完全直角）到 32dp（大圆角）。
@@ -33,7 +38,7 @@ const char* cornerXL = CORNER_EXTRA_LARGE;  // "md.shape.cornerExtraLarge"
 
 // 超超大圆角 - 32dp
 const char* cornerXXL = CORNER_EXTRA_EXTRA_LARGE;  // "md.shape.cornerExtraExtraLarge"
-```
+```text
 
 注意这里用的是 XS/XL 这种缩写，而不是 ExtraSmall/ExtraLarge。常量名为了可读性用的完整拼写，但命名空间内提供别名是个不错的实践（不过当前实现里还没加，需要的话可以自己补）。
 
@@ -74,7 +79,7 @@ const char* modalRadius = CORNER_EXTRA_LARGE;
 // 32dp - 超超大圆角
 // 用于：导航抽屉、全屏模态
 const char* drawerRadius = CORNER_EXTRA_EXTRA_LARGE;
-```
+```text
 
 ## 在主题系统中使用
 
@@ -102,7 +107,7 @@ card.setCornerRadius(cardRadius);
 // 设置 FAB 圆角
 float fabRadius = theme.resolveRadius(CORNER_EXTRA_LARGE);
 fab.setCornerRadius(fabRadius);
-```
+```text
 
 ## 圆角选择指南
 
@@ -124,7 +129,7 @@ const char* largeComponentRadius = CORNER_LARGE;
 // 正圆形组件（如 FAB）
 // 用 28dp 或 32dp，接近半圆
 const char* circularComponentRadius = CORNER_EXTRA_LARGE;
-```
+```text
 
 ⚠️ 一个常见的错误是给小型组件用太大的圆角。比如一个高度只有 32dp 的按钮用 16dp 圆角，结果圆角占了一半高度，看起来会很奇怪。圆角值应该和组件尺寸成比例。
 
@@ -139,7 +144,7 @@ const char* circularComponentRadius = CORNER_EXTRA_LARGE;
 // 方式 2：直接使用数值（不推荐，但现实）
 // 对于特别的设计需求，有时候直接传值更实际
 button.setCornerRadius(20.0f);  // 自定义值
-```
+```text
 
 如果团队有统一的设计规范，建议把常用的自定义圆角也加到 Token 系统里，保持代码的语义化。
 
@@ -152,7 +157,7 @@ button.setCornerRadius(20.0f);  // 自定义值
 for (size_t i = 0; i < RADIUS_TOKEN_COUNT; ++i) {
     printf("Radius Token %zu: %s\n", i, ALL_RADIUS_TOKENS[i]);
 }
-```
+```text
 
 ## 响应式考虑
 
@@ -163,7 +168,7 @@ for (size_t i = 0; i < RADIUS_TOKEN_COUNT; ++i) {
 float scale = getDeviceDensity();
 float radiusInPx = theme.resolveRadius(CORNER_MEDIUM) * scale;
 view.setCornerRadiusPx(radiusInPx);
-```
+```text
 
 ## 相关文档
 

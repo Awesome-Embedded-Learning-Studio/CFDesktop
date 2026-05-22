@@ -1,3 +1,8 @@
+---
+title: "Phase 12: 主题、设置与锁屏 TODO"
+description: "预计周期: 4~5 周，依赖阶段: Phase 6, Phase 10, Phase 11"
+---
+
 # Phase 12: 主题、设置与锁屏 TODO
 
 > **状态**: ⬜ 待开始

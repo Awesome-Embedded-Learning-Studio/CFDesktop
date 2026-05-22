@@ -1,3 +1,8 @@
+---
+title: "TextArea - Material 多行文本框"
+description: 是 Material Design 3 多行文本输入框控件的完整实现，支持填充（Filled）和描边
+---
+
 # TextArea - Material 多行文本框
 
 `TextArea` 是 Material Design 3 多行文本输入框控件的完整实现，支持填充（Filled）和描边（Outlined）两种变体。包含浮动标签、字符计数器、帮助/错误文本和自动调整高度功能。
@@ -19,7 +24,7 @@ class TextArea : public QTextEdit {
     Q_PROPERTY(int minLines READ minLines WRITE setMinLines)
     Q_PROPERTY(int maxLines READ maxLines WRITE setMaxLines)
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/textarea/textarea.h`
 
@@ -30,7 +35,7 @@ enum class TextAreaVariant {
     Filled,    // 填充变体 - 背景填充色，底部指示线
     Outlined,  // 描边变体 - 圆角边框，无背景填充
 };
-```
+```text
 
 ## 基本用法
 
@@ -54,7 +59,7 @@ textarea->setShowCharacterCounter(true);
 
 // 连接信号
 connect(textarea, &QTextEdit::textChanged, this, &MyClass::onContentChanged);
-```
+```text
 
 ## 自动调整高度
 
@@ -69,7 +74,7 @@ textarea->setMaxLines(6);
 
 // 当内容增加时，文本框会从 minLines 增长到 maxLines
 // 超过 maxLines 后，内部会出现滚动条
-```
+```text
 
 `keyPressEvent` 会在达到 `maxLines` 限制时阻止 Enter 键产生新行。
 
@@ -82,7 +87,7 @@ textarea->setLabel("Comments");
 
 // 浮动动画由 CFMaterialAnimationFactory 驱动
 // floatingProgress 从 0.0（静止）到 1.0（浮动）
-```
+```text
 
 ## 帮助文本与错误文本
 
@@ -92,7 +97,7 @@ textarea->setHelperText("Maximum 500 characters");
 // 错误文本优先级高于帮助文本
 textarea->setErrorText("Content exceeds maximum length");
 textarea->setErrorText("");  // 清除错误
-```
+```bash
 
 ## 与 TextField 的区别
 

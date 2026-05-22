@@ -1,10 +1,11 @@
-# Build Helpers
+---
+title: 构建辅助脚本
+description: 本目录包含平台相关的构建辅助脚本，提供 Linux（Bash）和 Windows（PowerShel
+---
 
-> Welcome to the Build Helpers section.
+# 构建辅助脚本
 
-## Overview
-
-Documentation and resources for Build Helpers.
+本目录包含平台相关的构建辅助脚本，提供 Linux（Bash）和 Windows（PowerShell）双平台的 CMake 配置、快速开发构建、完整构建以及测试运行等标准化构建流程。同时提供 Docker 环境下的构建脚本以确保跨平台一致性。
 
 ---
 

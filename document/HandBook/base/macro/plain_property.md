@@ -1,3 +1,8 @@
+---
+title: "plainproperty - 简单属性宏"
+description: 是一个用来自动生成 getter 和 setter 方法的宏，减少手写样板代码的重复劳动。我们经常需
+---
+
 # plain_property - 简单属性宏
 
 `CF_PLAIN_PROPERTY` 是一个用来自动生成 getter 和 setter 方法的宏，减少手写样板代码的重复劳动。我们经常需要一些简单的数据持有类，它们只包含一些带默认值的成员变量和对应的访问器——这种代码写多了既无聊又容易出错，用宏来生成是更务实的选择。
@@ -23,7 +28,7 @@ class WidgetConfig {
 public:
     // 其他成员方法...
 };
-```
+```text
 
 ## 宏展开结果
 
@@ -43,7 +48,7 @@ public:
 
 private:
     val_type val_name{default_value};
-```
+```text
 
 注意成员变量直接在 `private` 区域声明，而访问器在 `public` 区域。这是因为宏本身包含了访问修饰符，所以使用时不需要额外考虑这些。
 
@@ -78,7 +83,7 @@ int main() {
 
     return 0;
 }
-```
+```text
 
 ## 方法命名
 
@@ -121,7 +126,7 @@ public:
     void method();
     CF_PLAIN_PROPERTY(int, x, 0)  // 会插入 public:/private:，破坏原有结构
 };
-```
+```text
 
 ## 适用场景
 

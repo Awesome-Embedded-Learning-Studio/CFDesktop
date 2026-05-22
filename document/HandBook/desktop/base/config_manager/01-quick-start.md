@@ -1,3 +1,8 @@
+---
+title: 快速入门
+description: 本文档将引导您从零开始使用 ConfigStore 配置管理中心。
+---
+
 # 快速入门
 
 本文档将引导您从零开始使用 ConfigStore 配置管理中心。
@@ -12,7 +17,7 @@
 #include <QString>                         // Qt 字符串类型
 
 using namespace cf::config;
-```
+```text
 
 ### 获取单例实例
 
@@ -21,7 +26,7 @@ ConfigStore 使用单例模式，首次访问时自动初始化：
 ```cpp
 // 获取单例实例
 auto& config = ConfigStore::instance();
-```
+```text
 
 ### 自定义路径配置
 
@@ -59,7 +64,7 @@ public:
 // 在首次使用前初始化
 auto provider = std::make_shared<CustomPathProvider>();
 ConfigStore::instance().initialize(provider);
-```
+```text
 
 ## 基础操作
 
@@ -93,7 +98,7 @@ bool auto_save = ConfigStore::instance().query<bool>(
     KeyView{.group = "app", .key = "auto_save"},
     true
 );
-```
+```text
 
 #### Optional 查询
 
@@ -116,7 +121,7 @@ if (auto value = ConfigStore::instance().query<int>(
         KeyView{.group = "network", .key = "port"})) {
     std::cout << "端口: " << *value << std::endl;
 }
-```
+```text
 
 #### 指定层查询
 
@@ -132,7 +137,7 @@ auto user_theme = ConfigStore::instance().query<std::string>(
 if (user_theme.has_value()) {
     std::cout << "用户设置的主题: " << user_theme.value() << std::endl;
 }
-```
+```text
 
 ### 写入配置
 
@@ -164,7 +169,7 @@ ConfigStore::instance().set(
     KeyView{.group = "app", .key = "auto_save"},
     false
 );
-```
+```text
 
 #### 选择目标层
 
@@ -184,7 +189,7 @@ ConfigStore::instance().set(
     std::string("abc123"),
     Layer::Temp  // 写入 Temp 层，重启后丢失
 );
-```
+```text
 
 #### 通知策略
 
@@ -214,7 +219,7 @@ ConfigStore::instance().set(
 );
 // 批量操作完成后，一次性触发所有 Watcher
 ConfigStore::instance().notify();
-```
+```text
 
 ### 键管理
 
@@ -242,7 +247,7 @@ if (result == RegisterResult::KeyRegisteredSuccess) {
 } else {
     std::cout << "键已存在" << std::endl;
 }
-```
+```text
 
 #### 注销键
 
@@ -263,7 +268,7 @@ auto result = ConfigStore::instance().unregister_key(
 if (result == UnRegisterResult::KeyUnRegisteredSuccess) {
     std::cout << "键注销成功" << std::endl;
 }
-```
+```text
 
 #### 检查键存在
 
@@ -278,7 +283,7 @@ bool in_user = ConfigStore::instance().has_key(
     KeyView{.group = "app", .key = "theme"},
     Layer::User
 );
-```
+```text
 
 ## 监听配置变更
 
@@ -298,7 +303,7 @@ auto handle = ConfigStore::instance().watch(
         }
     }
 );
-```
+```text
 
 ### 通配符监听
 
@@ -320,7 +325,7 @@ auto theme_watcher = ConfigStore::instance().watch(
         std::cout << "主题配置变更: " << k.full_key << std::endl;
     }
 );
-```
+```text
 
 ### 取消监听
 
@@ -330,7 +335,7 @@ WatcherHandle handle = ConfigStore::instance().watch("app.*", callback);
 
 // 取消监听
 ConfigStore::instance().unwatch(handle);
-```
+```text
 
 ### 手动通知模式
 
@@ -350,7 +355,7 @@ ConfigStore::instance().set(KeyView{.group = "batch", .key = "b"}, 2,
 
 // 手动触发通知
 ConfigStore::instance().notify();
-```
+```text
 
 ## 持久化操作
 
@@ -362,7 +367,7 @@ ConfigStore::instance().sync(SyncMethod::Async);
 
 // 同步同步（阻塞直到写入完成）
 ConfigStore::instance().sync(SyncMethod::Sync);
-```
+```text
 
 ### 重新加载配置
 
@@ -370,7 +375,7 @@ ConfigStore::instance().sync(SyncMethod::Sync);
 // 从磁盘重新加载所有配置
 // 注意：这会清空 Temp 层的所有临时配置
 ConfigStore::instance().reload();
-```
+```text
 
 ### 查看待写入变更
 
@@ -378,7 +383,7 @@ ConfigStore::instance().reload();
 // 获取待同步的变更数量
 size_t pending = ConfigStore::instance().pending_changes();
 std::cout << "待同步变更数: " << pending << std::endl;
-```
+```text
 
 ## 完整示例：应用程序配置管理
 
@@ -512,7 +517,7 @@ int main() {
 
     return 0;
 }
-```
+```text
 
 ## 下一步
 

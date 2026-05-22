@@ -52,6 +52,12 @@ void WallPaperAccessStorage::addToken(std::unique_ptr<WallPaperToken> token) {
     wallpaper_images.push_back(std::move(token));
 }
 
+void WallPaperAccessStorage::addTokens(std::vector<std::unique_ptr<WallPaperToken>> tokens) {
+    wallpaper_images.reserve(wallpaper_images.size() + tokens.size());
+    for (auto& t : tokens)
+        wallpaper_images.push_back(std::move(t));
+}
+
 void WallPaperAccessStorage::insertToken(size_t index, std::unique_ptr<WallPaperToken> token) {
     wallpaper_images.insert(wallpaper_images.begin() + static_cast<std::ptrdiff_t>(index),
                             std::move(token));
@@ -63,6 +69,10 @@ size_t WallPaperAccessStorage::indexOf(const wallpaper_token_id_t& token) const 
     if (it == wallpaper_images.end())
         throw std::out_of_range("WallPaperAccessStorage::indexOf: token not found");
     return static_cast<size_t>(it - wallpaper_images.begin());
+}
+
+size_t WallPaperAccessStorage::size() const {
+    return wallpaper_images.size();
 }
 
 } // namespace cf::desktop::wallpaper

@@ -1,3 +1,8 @@
+---
+title: "Phase 0: 工程骨架搭建 - 状态文档"
+description: "模块ID: Phase 0，总体进度: 100%"
+---
+
 # Phase 0: 工程骨架搭建 - 状态文档
 
 > **模块ID**: Phase 0
@@ -66,7 +71,7 @@ add_subdirectory(base)   # 基础库
 add_subdirectory(ui)     # UI 框架
 add_subdirectory(example) # 示例程序
 add_subdirectory(test)    # 测试代码
-```
+```text
 
 **依赖文件**:
 - `cmake/build_log_helper.cmake` - 构建日志辅助
@@ -100,7 +105,7 @@ PointerAlignment: Left
 BreakBeforeBraces: Attach
 Standard: c++17
 SortIncludes: true
-```
+```text
 
 ### 3.3 开发工具集成 (70%)
 
@@ -209,7 +214,7 @@ SortIncludes: true
 ### 3.5 目录结构
 
 **已建立的目录结构**:
-```
+```text
 CFDesktop/
 ├── base/           # 基础库模块
 │   ├── system/     # 系统检测 (CPU, 内存)
@@ -223,7 +228,7 @@ CFDesktop/
 ├── cmake/          # CMake 模块
 ├── .github/        # GitHub 配置
 └── .vscode/        # VSCode 配置
-```
+```bash
 
 ---
 
@@ -324,19 +329,19 @@ CFDesktop/
 ### 5.2 src/base/sdk/shell 三层结构 - 已调整
 
 **原计划**:
-```
+```text
 src/
 ├── base/    # 基础库
 ├── sdk/     # SDK 层
 └── shell/   # Shell UI
-```
+```text
 
 **实际采用**:
-```
+```text
 base/        # 基础库
 ui/          # UI 框架
 example/     # 示例程序
-```
+```yaml
 
 **原因**: 更简洁的模块划分
 
@@ -368,7 +373,7 @@ example/     # 示例程序
 
 ### 已实现文件
 
-```
+```text
 CFDesktop/
 ├── CMakeLists.txt                    # 主 CMake 配置
 ├── .clang-format                     # 代码格式化配置
@@ -402,11 +407,11 @@ CFDesktop/
     ├── generate_develop_helpers.cmake # 开发辅助生成
     ├── ExampleLauncher.cmake         # 启动脚本生成
     └── QtDeployUtils.cmake           # Qt 部署工具
-```
+```text
 
 ### 待创建文件
 
-```
+```text
 CFDesktop/
 ├── .clang-tidy                       # 静态分析配置 (不考虑)
 ├── .github/
@@ -416,7 +421,7 @@ CFDesktop/
     └── toolchains/
         ├── arm-linux-gnueabihf.cmake # ARMv7 工具链 (推迟)
         └── aarch64-linux-gnu.cmake   # ARM64 工具链 (推迟)
-```
+```bash
 
 ---
 

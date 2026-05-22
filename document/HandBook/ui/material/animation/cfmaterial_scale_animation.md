@@ -1,3 +1,8 @@
+---
+title: "CFMaterialScaleAnimation - Material 缩放动画"
+description: 是 Material Design 3 运动系统中的尺寸变换实现，控制 widget 以缩放方式出现
+---
+
 # CFMaterialScaleAnimation - Material 缩放动画
 
 `CFMaterialScaleAnimation` 是 Material Design 3 运动系统中的尺寸变换实现，控制 widget 以缩放方式出现或消失。与淡入淡出和滑动相比，缩放动画有更强的"强调"意味——它让元素感觉像是"从某个点生长出来"，适合用于需要抓住用户注意力的重要交互。
@@ -32,7 +37,7 @@ scaleAnim->setTargetWidget(myDialog);
 
 // 开始动画（Forward = 放大，Backward = 缩小）
 scaleAnim->start(Direction::Forward);
-```
+```text
 
 默认的缩放范围是 0.8 到 1.0（从 80% 放大到 100%），这是 Material 推荐的"弹出"效果参数。
 
@@ -48,14 +53,14 @@ scaleAnim->setTargetWidget(widget);
 scaleAnim->start();
 
 // widget 会保持中心位置不变，四周同时收缩/扩张
-```
+```text
 
 如果需要从左上角或其他位置缩放，可以关闭中心缩放模式：
 
 ```cpp
 scaleAnim->setScaleFromCenter(false);
 // 此时缩放会以 widget 几何原点（左上角）为锚点
-```
+```bash
 
 ⚠️ 非中心缩放在某些布局下可能会导致 widget 位置发生明显偏移，使用时需要谨慎测试。
 
@@ -75,7 +80,7 @@ scaleAnim->start();
 // ... 动画进行中 ...
 qDebug() << widget->width();   // 当前缩放后的宽度
 qDebug() << widget->height();  // 当前缩放后的高度
-```
+```bash
 
 ## 时序参数
 
@@ -110,7 +115,7 @@ void showDialog(QWidget* dialog) {
     scaleAnim->setTargetWidget(dialog);
     scaleAnim->start(Direction::Forward);
 }
-```
+```text
 
 ### 按钮按下效果
 
@@ -133,7 +138,7 @@ public:
         QPushButton::mouseReleaseEvent(event);
     }
 };
-```
+```text
 
 ### 菜单展开
 
@@ -149,7 +154,7 @@ void showMenu(QWidget* menu) {
     scaleAnim->setTargetWidget(menu);
     scaleAnim->start();
 }
-```
+```text
 
 ### 组合动画：弹出 + 淡入
 
@@ -168,7 +173,7 @@ void showCard(QWidget* card) {
     scaleAnim->start();
     fadeAnim->start();
 }
-```
+```text
 
 两个动画同步运行能产生"从无到有"的完整视觉体验——缩放负责空间维度，透明度负责视觉维度。
 
@@ -190,7 +195,7 @@ void showCard(QWidget* card) {
 
 // 微妙的强调：从 0.95 开始
 // 适合小元素或需要低调的场景
-```
+```text
 
 缩放到 1.0 以上（放大效果）在 Material Design 中比较少见，通常用于特殊交互如图片预览。这种场景下可能需要配合淡入淡出来避免突兀。
 
@@ -208,7 +213,7 @@ layout->addWidget(myWidget);
 auto scaleAnim = std::make_unique<CFMaterialScaleAnimation>(&motionSpec);
 scaleAnim->setTargetWidget(myWidget);
 scaleAnim->start();  // 可能导致布局抖动
-```
+```cpp
 
 解决这个问题有几种方案：
 

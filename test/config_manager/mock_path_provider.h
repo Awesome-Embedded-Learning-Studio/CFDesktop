@@ -66,6 +66,30 @@ class MockPathProvider : public IConfigStorePathProvider {
         return true;
     }
 
+    QString domain_path(int layer_index, const QString& domain_name) const override {
+        if (domain_name == "default") {
+            switch (layer_index) {
+                case 0:
+                    return system_path();
+                case 1:
+                    return user_dir() + "/" + user_filename();
+                case 2:
+                    return app_dir() + "/" + app_filename();
+            }
+            return QString();
+        }
+        QString filename = domain_name + "_test.ini";
+        switch (layer_index) {
+            case 0:
+                return temp_dir_ + "/" + filename;
+            case 1:
+                return temp_dir_ + "/user/" + filename;
+            case 2:
+                return temp_dir_ + "/app/" + filename;
+        }
+        return QString();
+    }
+
     /**
      * @brief Get the temp directory for cleanup.
      */
@@ -107,6 +131,8 @@ class LayerControlMockProvider : public MockPathProvider {
         return !(disabled_layers_ & (1 << layer_index));
     }
 
+    using MockPathProvider::domain_path;
+
   private:
     int disabled_layers_;
 };
@@ -138,6 +164,30 @@ class JsonMockPathProvider : public IConfigStorePathProvider {
     bool is_layer_enabled(int layer_index) const override {
         (void)layer_index;
         return true;
+    }
+
+    QString domain_path(int layer_index, const QString& domain_name) const override {
+        if (domain_name == "default") {
+            switch (layer_index) {
+                case 0:
+                    return system_path();
+                case 1:
+                    return user_dir() + "/" + user_filename();
+                case 2:
+                    return app_dir() + "/" + app_filename();
+            }
+            return QString();
+        }
+        QString filename = domain_name + "_test.json";
+        switch (layer_index) {
+            case 0:
+                return temp_dir_ + "/" + filename;
+            case 1:
+                return temp_dir_ + "/user/" + filename;
+            case 2:
+                return temp_dir_ + "/app/" + filename;
+        }
+        return QString();
     }
 
     const QString& temp_dir() const { return temp_dir_; }

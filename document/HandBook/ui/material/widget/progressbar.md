@@ -1,3 +1,8 @@
+---
+title: "ProgressBar - Material 进度条"
+description: 是 Material Design 3 进度条控件的完整实现，支持确定（Determinate）和不
+---
+
 # ProgressBar - Material 进度条
 
 `ProgressBar` 是 Material Design 3 进度条控件的完整实现，支持确定（Determinate）和不确定（Indeterminate）两种模式。包含平滑动画、状态层和焦点指示器。
@@ -10,7 +15,7 @@ namespace cf::ui::widget::material;
 class ProgressBar : public QProgressBar {
     Q_OBJECT
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/progressbar/progressbar.h`
 
@@ -32,7 +37,7 @@ loading->setRange(0, 0);  // min=max 表示不确定模式
 
 // 连接信号（与 QProgressBar 兼容）
 connect(progress, &QProgressBar::valueChanged, this, &MyClass::onProgressChanged);
-```
+```bash
 
 ## 确定模式 vs 不确定模式
 
@@ -48,7 +53,7 @@ connect(progress, &QProgressBar::valueChanged, this, &MyClass::onProgressChanged
 ```cpp
 progress->setRange(0, 100);
 progress->setValue(75);  // 填充 75% 的宽度
-```
+```text
 
 ### 不确定模式
 
@@ -56,7 +61,7 @@ progress->setValue(75);  // 填充 75% 的宽度
 
 ```cpp
 progress->setRange(0, 0);  // 进入不确定模式
-```
+```bash
 
 动画通过 `m_indeterminatePosition`（0.0 到 1.0）控制位置，以循环方式运行。
 
@@ -106,7 +111,7 @@ ProgressBar 的 `paintEvent` 实现以下绘制步骤：
 // m_indeterminatePosition 从 0.0 循环到 1.0
 // 动画速度由 CFMaterialAnimationFactory 控制
 // startIndeterminateAnimation() / stopIndeterminateAnimation() 管理生命周期
-```
+```bash
 
 ## 主要方法
 

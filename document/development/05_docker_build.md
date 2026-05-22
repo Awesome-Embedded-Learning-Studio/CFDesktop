@@ -1,3 +1,8 @@
+---
+title: Docker 构建指南
+description: 本文档介绍如何使用 Docker 构建多架构的 CFDesktop 项目，包括镜像说明、命令速查、多
+---
+
 # Docker 构建指南
 
 本文档介绍如何使用 Docker 构建多架构的 CFDesktop 项目，包括镜像说明、命令速查、多架构构建和调试配置。
@@ -68,7 +73,7 @@ bash scripts/build_helpers/docker_start.sh
 
 # 指定架构
 bash scripts/build_helpers/docker_start.sh --arch arm64
-```
+```text
 
 #### CI 验证模式
 
@@ -78,7 +83,7 @@ bash scripts/build_helpers/docker_start.sh --verify
 
 # 失败时保持容器开启（用于调试）
 bash scripts/build_helpers/docker_start.sh --verify --stay-on-error
-```
+```text
 
 #### 完整构建
 
@@ -88,7 +93,7 @@ bash scripts/build_helpers/docker_start.sh --build-project
 
 # 指定架构
 bash scripts/build_helpers/docker_start.sh --build-project --arch arm64
-```
+```text
 
 #### 快速构建
 
@@ -98,7 +103,7 @@ bash scripts/build_helpers/docker_start.sh --build-project-fast
 
 # 快速构建 ARM64
 bash scripts/build_helpers/docker_start.sh --build-project-fast --arch arm64
-```
+```text
 
 #### 运行测试
 
@@ -108,14 +113,14 @@ bash scripts/build_helpers/docker_start.sh --run-project-test
 
 # 指定架构
 bash scripts/build_helpers/docker_start.sh --run-project-test --arch arm64
-```
+```text
 
 #### 快速模式
 
 ```bash
 # 复用现有镜像（跳过镜像重建）
 bash scripts/build_helpers/docker_start.sh --fast-build
-```
+```text
 
 #### 组合选项
 
@@ -125,7 +130,7 @@ bash scripts/build_helpers/docker_start.sh --verify --stay-on-error --no-log
 
 # 快速构建 + ARM64
 bash scripts/build_helpers/docker_start.sh --build-project-fast --arch arm64 --fast-build
-```
+```bash
 
 ---
 
@@ -144,7 +149,7 @@ bash scripts/build_helpers/docker_start.sh --build-project-fast --arch arm64 --f
 ```bash
 # 默认架构，无需指定
 bash scripts/build_helpers/docker_start.sh --verify
-```
+```text
 
 ### ARM64 构建
 
@@ -154,7 +159,7 @@ bash scripts/build_helpers/docker_start.sh --arch arm64 --verify
 
 # 完整构建
 bash scripts/build_helpers/docker_start.sh --arch arm64 --build-project
-```
+```text
 
 **ARM64 应用场景：**
 - Rockchip RK3568 (四核 ARM Cortex-A55)
@@ -165,7 +170,7 @@ bash scripts/build_helpers/docker_start.sh --arch arm64 --build-project
 ```bash
 # ARM32 交叉编译（在 amd64 容器中）
 bash scripts/build_helpers/docker_start.sh --arch armhf --verify
-```
+```text
 
 **ARMHF 应用场景：**
 - NXP i.MX 6ULL (ARM Cortex-A7)
@@ -181,7 +186,7 @@ docker run --rm --platform linux/arm64 ubuntu:24.04 uname -m
 
 # 如果失败，安装 binfmt 支持
 docker run --privileged --rm tonistiigi/binfmt --install all
-```
+```yaml
 
 ---
 
@@ -201,7 +206,7 @@ build_dir=out/build_ci
 
 [options]
 jobs=16
-```
+```text
 
 ### build_ci_aarch64_config.ini (ARM64)
 
@@ -217,7 +222,7 @@ build_dir=out/build_ci_aarch64
 
 [options]
 jobs=16
-```
+```text
 
 ### build_ci_armhf_config.ini (ARMHF)
 
@@ -233,7 +238,7 @@ build_dir=out/build_ci_armhf
 
 [options]
 jobs=16
-```
+```bash
 
 ### 配置文件说明
 
@@ -257,13 +262,13 @@ jobs=16
 ```bash
 # 日志文件命名格式
 ci_build_YYYYMMDD_HHMMSS.log
-```
+```text
 
 ### 日志内容
 
 日志文件包含以下信息：
 
-```
+```text
 ==============================================================================
 CFDesktop Docker Build Log
 ==============================================================================
@@ -273,7 +278,7 @@ Platform: linux/amd64
 Fast Build: false
 Verify Mode: true
 ==============================================================================
-```
+```text
 
 ### --stay-on-error 调试
 
@@ -281,7 +286,7 @@ Verify Mode: true
 
 ```bash
 bash scripts/build_helpers/docker_start.sh --verify --stay-on-error
-```
+```text
 
 **效果：**
 - 构建失败后不会退出容器
@@ -294,14 +299,14 @@ bash scripts/build_helpers/docker_start.sh --verify --stay-on-error
 cd /project
 ls -la out/build_ci/
 cat build.log
-```
+```text
 
 ### 禁用日志
 
 ```bash
 # 不生成日志文件（输出到终端）
 bash scripts/build_helpers/docker_start.sh --verify --no-log
-```
+```yaml
 
 ---
 
@@ -349,7 +354,7 @@ cmake --build out/build_ci
 
 # 运行程序
 ./out/build_ci/bin/your_app
-```
+```text
 
 ### Q: 如何修改 Qt 版本？
 
@@ -357,7 +362,7 @@ cmake --build out/build_ci
 
 ```dockerfile
 ARG QT_VERSION=6.8.1  # 修改为需要的版本
-```
+```text
 
 然后重新构建镜像。
 
@@ -371,7 +376,7 @@ docker run --rm ubuntu:24.04 ping -c 3 8.8.8.8
 
 # 检查 DNS
 docker run --rm ubuntu:24.4 cat /etc/resolv.conf
-```
+```yaml
 
 ---
 

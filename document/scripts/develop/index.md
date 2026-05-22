@@ -1,10 +1,11 @@
-# develop
+---
+title: 开发辅助脚本
+description: 本目录包含日常开发工作流辅助脚本，提供代码格式化、依赖快速更新、开发环境初始化等便捷工具，帮助开发者
+---
 
-> Welcome to the develop section.
+# 开发辅助脚本
 
-## Overview
-
-Documentation and resources for develop.
+本目录包含日常开发工作流辅助脚本，提供代码格式化、依赖快速更新、开发环境初始化等便捷工具，帮助开发者快速进入开发状态并保持代码风格一致。
 
 ---
 

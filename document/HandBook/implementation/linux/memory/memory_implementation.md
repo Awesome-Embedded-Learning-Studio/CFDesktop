@@ -1,3 +1,8 @@
+---
+title: Linux 平台实现细节
+description: Linux 下的内存信息查询主要通过解析  和  实现。这套方案不需要额外的库依赖，但需要理解 Li
+---
+
 # Linux 平台实现细节
 
 Linux 下的内存信息查询主要通过解析 `/proc/meminfo` 和 `/proc/self/status` 实现。这套方案不需要额外的库依赖，但需要理解 Linux 的内存模型——特别是缓存内存这部分，和 Windows 的概念差异还挺大的。
@@ -15,7 +20,7 @@ Buffers:          128000 kB
 Cached:          5120000 kB
 SwapTotal:       8388608 kB
 SwapFree:        8388608 kB
-```
+```text
 
 解析逻辑很简单：跳过字段名后的冒号和空格，用 `strtoul` 提取数字，然后乘以 1024 转换成字节。
 
@@ -46,7 +51,7 @@ bool parseMemInfoLine(const char* line, const char* fieldName, uint64_t& outKb) 
     outKb = static_cast<uint64_t>(value);
     return true;
 }
-```
+```text
 
 这个解析函数在所有基于 `/proc/meminfo` 的查询里都是共用的，避免了重复代码。只要找到需要的字段就返回，还能提前终止循环节省时间。
 
@@ -91,7 +96,7 @@ void queryPhysicalMemory(PhysicalMemory& physical) {
     physical.available_bytes = memAvailable * 1024;
     physical.free_bytes = memFree * 1024;
 }
-```
+```text
 
 文件打开失败时所有字段归零，而不是抛异常——这在内存查询这种场景下是合理的，因为调用方通常更希望拿到"空数据"而不是崩溃。
 
@@ -130,7 +135,7 @@ void queryCachedMemory(CachedMemory& cached) {
     cached.shared_bytes = shmem * 1024;
     cached.slab_bytes = slab * 1024;
 }
-```
+```text
 
 这些缓存内存都是可以被回收的，所以 `MemAvailable` 已经考虑了它们。如果你的程序只关心"还能分配多少内存"，看 `MemAvailable` 就够了；如果需要分析内存占用细节（比如排查内存去哪了），这些字段会很有用。
 
@@ -164,7 +169,7 @@ void querySwapMemory(SwapMemory& swap) {
     swap.total_bytes = swapTotal * 1024;
     swap.free_bytes = swapFree * 1024;
 }
-```
+```text
 
 如果系统没有配置交换空间，`SwapTotal` 会是 0，这种情况在服务器上挺常见的。
 
@@ -200,7 +205,7 @@ void queryProcessMemory(ProcessMemory& process) {
     process.vm_size_bytes = vmSize * 1024;
     process.vm_peak_bytes = vmPeak * 1024;
 }
-```
+```text
 
 `/proc/self` 是指向当前进程 `/proc/<pid>` 的符号链接，这样就不需要先获取自己的 PID 了。
 
@@ -220,7 +225,7 @@ void queryDimmInfo(std::vector<DimmInfo>& dimms) {
         queryDimmViaSysFs(dimms);
     }
 }
-```
+```text
 
 ### dmidecode 解析
 
@@ -276,7 +281,7 @@ bool parseDmidecode(const char* output, std::vector<DimmInfo>& dimms) {
 
     return !dimms.empty();
 }
-```
+```text
 
 内存类型字符串的匹配是大小写不敏感的，支持 DDR2/3/4/5、LPDDR3/4/4X/5 以及 SDRAM。如果遇到未知类型会返回 `UNKNOWN`。
 
@@ -302,7 +307,7 @@ uint64_t parseMemorySize(const char* sizeStr) {
 
     return 0;
 }
-```
+```text
 
 插槽编号从 `Locator` 字段提取，但这个字段格式不统一——可能是 "DIMM0"、"ChannelA-DIMM0"、"Slot 1" 之类的。我们用一个简单的启发式规则：找到最后一个数字，把它当作插槽号。这不是 100% 准确，但大多数情况下能工作。
 
@@ -332,7 +337,7 @@ bool queryDimmViaSysFs(std::vector<DimmInfo>& dimms) {
     dimms.push_back(dimm);
     return true;
 }
-```
+```text
 
 这个回退方案至少能保证不会返回空列表，但 `capacity_bytes` 会是 0，调用方需要处理这种情况。
 
@@ -340,7 +345,7 @@ bool queryDimmViaSysFs(std::vector<DimmInfo>& dimms) {
 
 下面是一个典型的 `/proc/meminfo` 内容，可以看到我们解析的字段在其中：
 
-```
+```text
 MemTotal:       16384000 kB
 MemFree:          256000 kB
 MemAvailable:    8192000 kB
@@ -386,11 +391,11 @@ HugePages_Surp:        0
 DirectMap4k:      256000 kB
 DirectMap2M:     5120000 kB
 DirectMap1G:    10485760 kB
-```
+```text
 
 而 `/proc/self/status` 是这样：
 
-```
+```text
 Name:   myprogram
 State:  S (sleeping)
 Tgid:   12345
@@ -403,7 +408,7 @@ VmSize:     123456 kB
 VmRSS:       67890 kB
 VmPeak:     234567 kB
 ...
-```
+```text
 
 ## 注意事项
 

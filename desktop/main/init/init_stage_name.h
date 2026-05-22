@@ -11,4 +11,5 @@
 namespace cf::desktop::init_session {
 static constexpr const char* CONFIG_PASS_STAGE = "Early Transform";
 static constexpr const char* DESKTOP_BACKBONE_SETUP = "Desktop Backbone setup";
+static constexpr const char* DESKTOP_CONFIG_INIT = "Desktop Config Init";
 } // namespace cf::desktop::init_session

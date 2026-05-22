@@ -60,6 +60,13 @@ class WallPaperLayer {
     virtual void setTokenStorage(std::unique_ptr<WallPaperAccessStorage> storage) = 0;
 
     /**
+     * @brief Get the token storage from wallpaper Layers
+     *
+     * @return WallPaperAccessStorage&
+     */
+    virtual WallPaperAccessStorage& tokenStorage() const = 0;
+
+    /**
      * @brief  Switches to the next wallpaper in the collection.
      *
      * @return True if the switch succeeded, false if at the end or no storage.

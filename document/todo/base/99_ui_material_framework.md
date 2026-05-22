@@ -1,3 +1,8 @@
+---
+title: UI Material Framework TODO
+description: "状态: ⬜ 高级控件待实现，预计周期: 持续迭代"
+---
+
 # UI Material Framework TODO
 
 > **状态**: ⬜ 高级控件待实现
@@ -18,14 +23,14 @@
 ## 一、架构概览
 
 ### 分层架构
-```
+```text
 Layer 6: Qt Native Widgets (QPushButton, QLineEdit, ...)
 Layer 5: Material Widget Adapter (Button, TextField, ...)
 Layer 4: Material Behavior Layer (StateMachine, Ripple, ...)
 Layer 3: Animation Engine Layer (TimingAnimation, SpringAnimation, ...)
 Layer 2: Theme Engine Layer (ThemeManager, ICFColorScheme, ...)
 Layer 1: Core Math & Utility Layer (math_helper, color, geometry, ...)
-```
+```cpp
 
 ### 核心约束（RULE-01 至 RULE-09）
 - [ ] RULE-01: 所有 Material 控件必须继承 Qt 原生控件

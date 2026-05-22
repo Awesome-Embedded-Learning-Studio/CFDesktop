@@ -1,5 +1,6 @@
 #include "cflog.h"
 #include "desktop_backbone_init/desktop_backbone_init.h"
+#include "desktop_config_init/desktop_config_init.h"
 #include "early_gain/early_pass_stage.h"
 #include "gui_progress/gui_init_stage.h"
 #include "init_session_chain.h"
@@ -14,6 +15,7 @@ void RunStageInit() {
     initSessionChain.add_stage_back(std::make_unique<GuiLogoBootStage>());
     initSessionChain.add_stage_back(std::make_unique<EarlyTransferStage>());
     initSessionChain.add_stage_back(std::make_unique<DesktopBackboneSetupStage>());
+    initSessionChain.add_stage_back(std::make_unique<DesktopConfigInitStage>());
 }
 
 void ReleaseStageInitOldResources() {

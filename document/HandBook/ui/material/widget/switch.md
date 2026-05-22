@@ -1,3 +1,8 @@
+---
+title: "Switch - Material 开关"
+description: 是 Material Design 3 开关（Toggle）控件的完整实现，带有动画滑块位置、轨道颜
+---
+
 # Switch - Material 开关
 
 `Switch` 是 Material Design 3 开关（Toggle）控件的完整实现，带有动画滑块位置、轨道颜色过渡和状态层。提供 CheckBox 的替代方案，适用于二进制开/关设置。
@@ -10,7 +15,7 @@ namespace cf::ui::widget::material;
 class Switch : public QCheckBox {
     Q_OBJECT
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/switch/switch.h`
 
@@ -30,7 +35,7 @@ wifiSwitch->setChecked(true);
 
 // 连接信号（与 QCheckBox 兼容）
 connect(wifiSwitch, &QCheckBox::toggled, this, &MyClass::onWifiToggled);
-```
+```bash
 
 ## 开关尺寸
 
@@ -53,7 +58,7 @@ Switch 遵循 Material Design 3 的尺寸规范：
 
 toggle->setChecked(true);   // 滑块从左滑到右
 toggle->setChecked(false);  // 滑块从右滑到左
-```
+```bash
 
 内部使用 `m_inNextCheckState` 标志防止 `setChecked()` 在状态切换时直接跳过动画。
 

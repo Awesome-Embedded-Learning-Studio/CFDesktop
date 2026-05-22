@@ -1,3 +1,8 @@
+---
+title: "Milestone 5: 窗口管理可见"
+description: "预计周期: 7-10 天，前置依赖: Milestone 3: 任务栏 (任务栏联动)"
+---
+
 # Milestone 5: 窗口管理可见
 
 > **状态**: ⬜ 待开始

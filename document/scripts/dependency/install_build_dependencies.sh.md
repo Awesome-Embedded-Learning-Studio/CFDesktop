@@ -1,3 +1,8 @@
+---
+title: installbuilddependencies.sh
+description: "文档编写日期: 2026-03-20，本脚本用于安装CFDesktop项目的构建依赖，主要包含："
+---
+
 # install_build_dependencies.sh
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 基本语法
 ```bash
 ./scripts/dependency/install_build_dependencies.sh
-```
+```bash
 
 ### 环境变量
 | 环境变量 | 默认值 | 说明 |
@@ -32,7 +37,7 @@ QT_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/qt ./scripts/dependency/install_b
 
 # 指定APT镜像
 QT_MIRROR_APT=https://mirrors.ustc.edu.cn/ubuntu ./scripts/dependency/install_build_dependencies.sh
-```
+```bash
 
 ## Scripts详解 (Detailed Explanation)
 
@@ -102,10 +107,10 @@ QT_MIRROR_APT=https://mirrors.ustc.edu.cn/ubuntu ./scripts/dependency/install_bu
 export Qt6_DIR=/opt/Qt/6.8.1/<arch>/lib/cmake/Qt6
 export PATH=$Qt6_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$Qt6_DIR/lib:$LD_LIBRARY_PATH
-```
+```text
 
 ### 安装目录结构
-```
+```text
 /opt/Qt/
 └── 6.8.1/
     ├── gcc_64/              # x86_64架构
@@ -117,7 +122,7 @@ export LD_LIBRARY_PATH=$Qt6_DIR/lib:$LD_LIBRARY_PATH
         ├── bin/
         ├── lib/
         └── ...
-```
+```text
 
 ### 注意事项
 - 需要 **root 权限** 执行

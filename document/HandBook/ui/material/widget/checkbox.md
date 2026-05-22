@@ -1,3 +1,8 @@
+---
+title: "CheckBox - Material 复选框"
+description: 是 Material Design 3 复选框控件的完整实现，支持选中、未选中和不确定（indete
+---
+
 # CheckBox - Material 复选框
 
 `CheckBox` 是 Material Design 3 复选框控件的完整实现，支持选中、未选中和不确定（indeterminate）三种状态。包含水波纹效果、状态层动画和焦点指示器，严格遵循 Material Design 3 规范。
@@ -11,7 +16,7 @@ class CheckBox : public QCheckBox {
     Q_OBJECT
     Q_PROPERTY(bool error READ hasError WRITE setError NOTIFY errorChanged)
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/checkbox/checkbox.h`
 
@@ -36,7 +41,7 @@ cb2->setCheckState(Qt::PartiallyChecked);
 
 // 连接信号（与 QCheckBox 兼容）
 connect(cb2, &QCheckBox::stateChanged, this, &MyClass::onStateChanged);
-```
+```text
 
 ## 错误状态
 
@@ -48,7 +53,7 @@ if (!agreedToTerms) {
 } else {
     checkBox->setError(false);
 }
-```
+```bash
 
 错误状态下，复选框边框使用 error 颜色，提供明确的视觉反馈。
 

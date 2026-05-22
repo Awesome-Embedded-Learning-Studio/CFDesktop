@@ -1,3 +1,8 @@
+---
+title: 焦点指示器——无障碍访问的视觉实现
+description: 在前面的文章里，我们聊了状态机、涟漪效果和海拔阴影。这些组件主要响应鼠标交互。但对于键盘导航和无障碍
+---
+
 # 焦点指示器——无障碍访问的视觉实现
 
 在前面的文章里，我们聊了状态机、涟漪效果和海拔阴影。这些组件主要响应鼠标交互。但对于键盘导航和无障碍访问来说，还需要一个重要的视觉元素——焦点指示器。
@@ -35,7 +40,7 @@ private:
     float m_progress = 0.0f;  // 0 = 隐藏，1 = 完全显示
     cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
 };
-```
+```text
 
 ## 焦点进入/离开
 
@@ -68,7 +73,7 @@ void MdFocusIndicator::onFocusOut() {
         m_progress = 0.0f;
     }
 }
-```
+```text
 
 注意淡出动画使用的是 `1.0f - progress`，因为我们希望透明度从 1 变到 0。
 
@@ -107,7 +112,7 @@ void MdFocusIndicator::paint(QPainter* painter, const QRectF& widgetRect,
     painter->drawPath(ringPath);
     painter->restore();
 }
-```
+```text
 
 ## 与控件的集成
 
@@ -130,7 +135,7 @@ void Button::paintEvent(QPaintEvent* event) {
     // 最后绘制焦点环
     m_focusIndicator->paint(&painter, rect(), cornerRadius());
 }
-```
+```yaml
 
 ## 无障碍考虑
 

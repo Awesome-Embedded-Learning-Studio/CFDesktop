@@ -1,3 +1,8 @@
+---
+title: 动画引擎架构——统一调度的生命线管理
+description: 在 Layer 2 里，我们聊了主题系统的各个组件。但有了颜色和字体还不够，Material Des
+---
+
 # 动画引擎架构——统一调度的生命线管理
 
 在 Layer 2 里，我们聊了主题系统的各个组件。但有了颜色和字体还不够，Material Design 3 的灵魂在于动效——那些流畅的过渡、自然的弹性运动。
@@ -43,7 +48,7 @@ protected:
     float m_progress = 0.0f;
     State m_state = State::Idle;
 };
-```
+```text
 
 这里有个关键设计：`GetWeakPtr()` 返回的是弱引用。原因我们后面会讲，但核心思想是：动画由工厂拥有所有权，用户只持有弱引用。
 
@@ -58,13 +63,13 @@ protected:
 
 状态转换遵循以下规则：
 
-```
+```text
 Idle → Running (start)
 Running → Paused (pause)
 Paused → Running (start)
 Running/Paused → Idle (stop)
 Running → Finished (自然结束)
-```
+```text
 
 ## Direction 方向控制
 
@@ -90,13 +95,13 @@ Running → Finished (自然结束)
 
 这是一个关键设计。动画的所有权结构是：
 
-```
+```text
 CFMaterialAnimationFactory (owner)
   └── unordered_map<string, unique_ptr<ICFAbstractAnimation>> animations_
 
 Controls
   └── WeakPtr<ICFAbstractAnimation>
-```
+```text
 
 工厂拥有动画的所有权（`unique_ptr`），控件只持有弱引用（`WeakPtr`）。这样设计的好处是：
 
@@ -115,7 +120,7 @@ if (anim) {  // 检查 WeakPtr 是否有效
             });
     anim->start();
 }
-```
+```text
 
 ## progressChanged 信号
 
@@ -134,7 +139,7 @@ ICFAnimationManagerFactory 提供了全局开关：
 ```cpp
 factory->setEnabledAll(false);  // 禁用所有动画
 factory->setEnabledAll(true);   // 启用所有动画
-```
+```text
 
 禁用时，`getAnimation()` 会返回无效的 WeakPtr，这样就不会创建新动画。已有的正在运行的动画不受影响，会自然完成。
 
@@ -150,7 +155,7 @@ factory->setEnabledAll(true);   // 启用所有动画
 
 ```cpp
 factory->setTargetFps(60.0f);  // 60 FPS
-```
+```yaml
 
 这会影响动画的定时器间隔。更高的 FPS 意味着更平滑的动画，但也意味着更多的 CPU 开销。
 

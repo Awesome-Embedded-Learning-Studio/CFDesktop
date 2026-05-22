@@ -1,3 +1,8 @@
+---
+title: "ConfigStore - 配置管理中心"
+description: ConfigStore 是 CFDesktop 桌面框架的配置管理中心，提供分层存储、结构化键名管理
+---
+
 # ConfigStore - 配置管理中心
 
 ## 简介
@@ -31,7 +36,7 @@ int width = ConfigStore::instance().query<int>(
 // 设置配置
 ConfigStore::instance().set(
     KeyView{.group = "ui", .key = "width"}, 1024);
-```
+```text
 
 支持的基础类型：
 - `int` / `unsigned` / `long` 等整数类型
@@ -51,7 +56,7 @@ auto handle = ConfigStore::instance().watch(
         std::cout << "UI 配置变更: " << k.full_key << std::endl;
     }
 );
-```
+```text
 
 支持两种通知策略：
 - **Immediate**: 每次变更立即触发 Watcher
@@ -99,7 +104,7 @@ int main() {
 
     return 0;
 }
-```
+```bash
 
 ## 文档导航
 
@@ -117,7 +122,7 @@ int main() {
 ```bash
 cd build/example/desktop/base/config_manager
 ./example_usage
-```
+```text
 
 ## 依赖模块
 

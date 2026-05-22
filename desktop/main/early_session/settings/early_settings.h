@@ -76,6 +76,13 @@ class EarlySettings {
     QString get_desktop_root() const;
 
     /**
+     * @brief Gets the desktop configuration folder path (relative to app runtime dir).
+     *
+     * @return Relative config folder path, defaults to "settings/desktop/".
+     */
+    QString get_config_folder() const;
+
+    /**
      * @brief Unlock the Early Settings, used in releasing the sessions.
      *
      * @return std::unique_ptr<QJsonObject> containing the early settings data.
@@ -89,6 +96,9 @@ class EarlySettings {
 
     /// @brief Cached Desktop Root; only changes when the desktop path is switched.
     mutable QString desktop_root{};
+
+    /// @brief Cached config folder path.
+    mutable QString config_folder_cache{};
 
     /// @brief Parsed JSON object containing the configuration data. Ownership: owner.
     std::unique_ptr<QJsonObject> early_settings_obj_;

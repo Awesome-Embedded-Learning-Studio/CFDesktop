@@ -1,3 +1,8 @@
+---
+title: "IFontType - 字体样式接口"
+description: 定义了按名称查询字体样式的抽象接口，是 Material Design 3 排版系统的 C++ 映射
+---
+
 # IFontType - 字体样式接口
 
 `IFontType` 定义了按名称查询字体样式的抽象接口，是 Material Design 3 排版系统的 C++ 映射层。选择用字符串键值而不是枚举来访问字体，是为了支持动态字体配置和运行时扩展——我们可以在不重新编译的情况下加载新的字体方案。
@@ -16,7 +21,7 @@ QFont bodyLarge = fonts.queryTargetFont("bodyLarge");
 QFont headlineMedium = fonts.queryTargetFont("headlineMedium");
 QFont titleSmall = fonts.queryTargetFont("titleSmall");
 QFont labelLarge = fonts.queryTargetFont("labelLarge");
-```
+```text
 
 `queryTargetFont()` 返回的是 `QFont` 的副本，适合直接使用。Qt 的 `QFont` 采用隐式共享（写时拷贝）机制，所以即使返回副本，实际拷贝开销也很小——只有在修改字体时才会真正复制数据。
 
@@ -43,7 +48,7 @@ QFont labelLarge = fonts.queryTargetFont("labelLarge");
 "labelLarge"      // 标签大号
 "labelMedium"     // 标签中号
 "labelSmall"      // 标签小号
-```
+```text
 
 具体的 token 列表由实现类决定，可以在运行时动态扩展。如果查询不存在的 token，实现类的行为取决于具体实现——我们推荐返回一个默认的 fallback 字体，比如系统等宽字体，方便调试。
 
@@ -70,7 +75,7 @@ protected:
         painter.drawText(rect().adjusted(0, 30, 0, 0), "Body text");
     }
 };
-```
+```text
 
 ⚠️ 不要在每次绘制时都查询字体——把字体对象缓存起来更好。`QFont` 的隐式共享机制让缓存几乎没有开销：
 
@@ -85,7 +90,7 @@ public:
         m_titleFont = fonts.queryTargetFont("headlineMedium");
     }
 };
-```
+```text
 
 ## 实现要点
 

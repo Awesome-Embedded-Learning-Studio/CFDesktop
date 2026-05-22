@@ -1,12 +1,17 @@
 /**
- * @file config_impl.h
- * @brief Internal implementation of ConfigStore (Pimpl).
+ * @file    desktop/base/config_manager/include/impl/config_impl.h
+ * @brief   Internal implementation of ConfigStore (Pimpl).
  *
- * Provides the ConfigStoreImpl class that manages configuration storage,
- * caching, layer management, and watcher notifications.
+ * ConfigStoreImpl acts as a multi-domain container. Each domain is a
+ * ConfigDomain instance with its own backends, cache, and watchers.
+ * Existing ConfigStore methods delegate to the "default" domain for
+ * backward compatibility.
  *
- * @date 2026-03-17
- * @version 1.0
+ * @author  N/A
+ * @date    2026-03-17
+ * @version 2.0
+ * @since   N/A
+ * @ingroup none
  */
 
 #pragma once
@@ -18,6 +23,7 @@
 #include "cfconfig_layer.h"
 #include "cfconfig_notify_policy.h"
 #include "impl/config_backend.h"
+#include "impl/config_domain.h"
 #include <QString>
 #include <any>
 #include <atomic>
@@ -30,299 +36,273 @@
 namespace cf::config {
 
 /**
- * @brief Watcher entry for pattern matching.
- */
-struct WatcherEntry {
-    std::string pattern;  ///< Pattern to match (supports * wildcard)
-    Watcher callback;     ///< Callback function
-    NotifyPolicy policy;  ///< When to trigger this watcher
-    WatcherHandle handle; ///< Unique handle for this watcher
-};
-
-/**
- * @brief Pending change for manual notification.
- */
-struct PendingChange {
-    Key key;
-    std::any old_value;
-    std::any new_value;
-    Layer from_layer;
-};
-
-/**
- * @brief Deferred watcher event for callback execution after lock release.
- */
-struct DeferredWatcherEvent {
-    Watcher callback;
-    Key key;
-    std::any old_value;
-    std::any new_value;
-    Layer from_layer;
-    bool has_old_value;
-    bool has_new_value;
-};
-
-/**
- * @brief Internal implementation of ConfigStore.
+ * @brief  Internal implementation of ConfigStore.
  *
- * Manages four-layer configuration storage, caching, watchers,
- * and persistence operations.
+ * Manages multiple named ConfigDomain instances and dispatches
+ * all operations to the appropriate domain.
  *
- * @note Thread-safe for all operations.
- * @note Not part of the public API.
+ * @note   Thread-safe for all operations.
+ * @note   Not part of the public API.
+ *
+ * @since  N/A
+ * @ingroup none
  */
 class ConfigStoreImpl {
   public:
     /**
-     * @brief Constructs a new ConfigStoreImpl with default path provider.
-     *
-     * Initializes backends for each layer using DesktopConfigStorePathProvider:
-     * - System: /etc/cfdesktop/system.ini (read-write, may not exist)
-     * - User: ~/.config/cfdesktop/user.ini (read-write, created if needed)
-     * - App: config/app.ini (read-write, relative path)
-     * - Temp: Memory only
+     * @brief  Default-constructs a ConfigStoreImpl.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     ConfigStoreImpl();
-
     /**
-     * @brief Constructs a new ConfigStoreImpl with custom path provider.
-     *
-     * @param[in] path_provider Custom path provider for config file locations.
-     *                           Allows tests and other projects to customize paths.
+     * @brief  Constructs with a custom path provider.
+     * @param[in] path_provider Path provider for config file locations.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     explicit ConfigStoreImpl(std::shared_ptr<IConfigStorePathProvider> path_provider);
-
     /**
-     * @brief Destroys the ConfigStoreImpl.
-     *
-     * Syncs all dirty layers before destruction.
+     * @brief  Destructs the ConfigStoreImpl and releases all domains.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     ~ConfigStoreImpl();
 
-    // Delete copy and move
     ConfigStoreImpl(const ConfigStoreImpl&) = delete;
     ConfigStoreImpl& operator=(const ConfigStoreImpl&) = delete;
     ConfigStoreImpl(ConfigStoreImpl&&) = delete;
     ConfigStoreImpl& operator=(ConfigStoreImpl&&) = delete;
 
-    /* ========== Query operations ========== */
+    /* ========== Domain management ========== */
 
     /**
-     * @brief Query a configuration value with a fallback default.
+     * @brief  Get or lazily create a named domain.
      *
-     * Searches all layers (merged view) for the given key and returns
-     * the first match found. If the key does not exist in any layer,
-     * @p default_value is returned instead.
+     * Thread-safe. Uses double-checked locking for fast path.
      *
+     * @param[in] name Domain name.
+     * @return     Pointer to the domain (never null after creation).
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
+     */
+    ConfigDomain* get_domain(const std::string& name);
+
+    /**
+     * @brief  Get the default domain (for backward-compat fast path).
+     * @return     Pointer to the default domain.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
+     */
+    ConfigDomain* default_domain() const;
+
+    /* ========== Delegated operations (default domain) ========== */
+
+    /**
+     * @brief  Queries a configuration value by key with a fallback.
      * @param[in] key           The configuration key to look up.
-     * @param[in] default_value The value to return if the key is not found.
-     *
-     * @return The queried value, or @p default_value if the key is absent.
+     * @param[in] default_value Value returned if the key is absent.
+     * @return     The stored value, or default_value if not found.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     std::any query(const std::string& key, const std::any& default_value);
 
     /**
-     * @brief Query a configuration value from a specific layer.
-     *
+     * @brief  Queries a configuration value from a specific layer.
      * @param[in] key   The configuration key to look up.
-     * @param[in] layer The layer to search.
-     *
-     * @return The value stored in the specified layer.
+     * @param[in] layer The configuration layer to query.
+     * @return     The stored value, or empty std::any if not found.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     std::any query(const std::string& key, Layer layer);
 
     /**
-     * @brief Check whether a key exists in any layer.
-     *
+     * @brief  Checks whether a key exists across all layers.
      * @param[in] key The configuration key to check.
-     *
-     * @return True if the key exists in at least one layer, false otherwise.
+     * @return     true if the key exists, false otherwise.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     bool has_key(const std::string& key);
 
     /**
-     * @brief Check whether a key exists in a specific layer.
-     *
+     * @brief  Checks whether a key exists in a specific layer.
      * @param[in] key   The configuration key to check.
-     * @param[in] layer The layer to search.
-     *
-     * @return True if the key exists in the specified layer, false otherwise.
+     * @param[in] layer The configuration layer to check.
+     * @return     true if the key exists in the layer, false otherwise.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     bool has_key(const std::string& key, Layer layer);
 
-    /* ========== Write operations ========== */
-
     /**
-     * @brief Set a key-value pair in the specified layer.
-     *
+     * @brief  Sets a configuration value in the specified layer.
      * @param[in] key            The configuration key to set.
      * @param[in] value          The value to store.
-     * @param[in] layer          The target layer.
-     * @param[in] notify_policy  Controls when watchers are notified.
-     *
-     * @return True if the value was set successfully, false otherwise.
+     * @param[in] layer          The target configuration layer.
+     * @param[in] notify_policy  How and when to notify watchers.
+     * @return     true if the value was set successfully.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     bool set(const std::string& key, const std::any& value, Layer layer,
              NotifyPolicy notify_policy);
 
     /**
-     * @brief Register a new key with an initial value in a layer.
-     *
+     * @brief  Registers a new configuration key with an initial value.
      * @param[in] key            The key descriptor to register.
      * @param[in] init_value     The initial value for the key.
-     * @param[in] layer          The target layer.
-     * @param[in] notify_policy  Controls when watchers are notified.
-     *
-     * @return The result of the registration attempt.
+     * @param[in] layer          The layer to store the initial value in.
+     * @param[in] notify_policy  How and when to notify watchers.
+     * @return     Result indicating success or the reason for failure.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     RegisterResult register_key(const Key& key, const std::any& init_value, Layer layer,
                                 NotifyPolicy notify_policy);
 
     /**
-     * @brief Unregister a key from a layer.
-     *
+     * @brief  Unregisters a previously registered configuration key.
      * @param[in] key            The key descriptor to unregister.
      * @param[in] layer          The layer to remove the key from.
-     * @param[in] notify_policy  Controls when watchers are notified.
-     *
-     * @return The result of the unregistration attempt.
+     * @param[in] notify_policy  How and when to notify watchers.
+     * @return     Result indicating success or the reason for failure.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     UnRegisterResult unregister_key(const Key& key, Layer layer, NotifyPolicy notify_policy);
 
     /**
-     * @brief Clear all layers and cache.
+     * @brief  Clears all configuration values across all layers.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     void clear();
 
     /**
-     * @brief Clear a specific layer.
-     *
-     * @param[in] layer The layer to clear.
+     * @brief  Clears all configuration values in the specified layer.
+     * @param[in] layer The configuration layer to clear.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     void clear_layer(Layer layer);
 
-    /* ========== Watcher operations ========== */
-
     /**
-     * @brief Register a watcher callback for keys matching a pattern.
-     *
-     * @param[in] pattern  The key pattern to watch (supports * wildcard).
-     * @param[in] callback The function to call when a matching key changes.
-     * @param[in] policy   When to trigger this watcher.
-     *
-     * @return A handle that can be used to remove the watcher later.
+     * @brief  Registers a watcher for keys matching a pattern.
+     * @param[in] pattern  Glob-like pattern to match key names.
+     * @param[in] callback Callback invoked on matching key changes.
+     * @param[in] policy   Notification policy for the watcher.
+     * @return     Handle identifying this watcher registration.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     WatcherHandle watch(const std::string& pattern, Watcher callback, NotifyPolicy policy);
 
     /**
-     * @brief Remove a previously registered watcher.
-     *
-     * @param[in] handle The watcher handle returned by watch().
+     * @brief  Removes a previously registered watcher.
+     * @param[in] handle Handle returned by watch().
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     void unwatch(WatcherHandle handle);
 
     /**
-     * @brief Manually trigger all pending watcher notifications.
-     *
-     * @return The result of the notification dispatch.
+     * @brief  Manually triggers pending watcher notifications.
+     * @return     Result indicating how many watchers were notified.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     NotifyResult notify();
 
     /**
-     * @brief Get the number of pending changes awaiting notification.
-     *
-     * @return The count of pending changes.
+     * @brief  Returns the number of pending, unnotified changes.
+     * @return     Count of pending changes.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     std::size_t pending_changes() const;
 
-    /* ========== Persistence operations ========== */
-
     /**
-     * @brief Persist all dirty layers to disk.
-     *
-     * @param[in] async If true, perform the write asynchronously; otherwise
-     *                  block until complete.
+     * @brief  Persists dirty layers to disk.
+     * @param[in] async If true, performs the write asynchronously.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     void sync(bool async);
 
     /**
-     * @brief Re-read all layers from disk, discarding in-memory changes.
+     * @brief  Reloads all layers from their persistent storage.
+     * @throws None
+     * @note   None
+     * @warning None
+     * @since  N/A
+     * @ingroup none
      */
     void reload();
 
   private:
-    /**
-     * @brief Match a key against a pattern.
-     *
-     * Supports * wildcard matching.
-     */
-    static bool match_pattern(const std::string& pattern, const std::string& key);
-
-    /**
-     * @brief Get backend for a layer.
-     *
-     * Returns nullptr for Temp layer (memory only).
-     */
-    IConfigBackend* get_backend(Layer layer);
-
-    /**
-     * @brief Mark a layer as dirty (needs syncing).
-     */
-    void mark_dirty(Layer layer);
-
-    /**
-     * @brief Convert std::any to QVariant for backend storage.
-     */
-    static QVariant anyToQVariant(const std::any& value);
-
-    /* ========== Internal lock-free implementations ========== */
-    bool set_impl(const std::string& key, const std::any& value, Layer layer,
-                  NotifyPolicy notify_policy);
-    RegisterResult register_key_impl(const Key& key, const std::any& init_value, Layer layer,
-                                     NotifyPolicy notify_policy);
-    UnRegisterResult unregister_key_impl(const Key& key, Layer layer, NotifyPolicy notify_policy);
-    void clear_layer_impl(Layer layer);
-    void clear_impl();
-
-    /**
-     * @brief Trigger watchers for a key change (called with lock held).
-     */
-    void trigger_watchers(const Key& key, const std::any* old_value, const std::any* new_value,
-                          Layer layer);
-
-    /**
-     * @brief Execute deferred watcher callbacks (called without lock).
-     */
-    void execute_deferred_watchers();
-
-  private:
-    // Thread safety
     mutable std::shared_mutex mutex_;
-    std::mutex deferred_mutex_; ///< Mutex for deferred watcher events
-
-    // Path provider for config file locations
     std::shared_ptr<IConfigStorePathProvider> path_provider_;
-
-    // Cache for all layers (Temp is cache-only)
-    std::unordered_map<std::string, std::any> cache_;
-
-    // Layer storage (format-agnostic backends)
-    std::unique_ptr<IConfigBackend> settings_system_;
-    std::unique_ptr<IConfigBackend> settings_user_;
-    std::unique_ptr<IConfigBackend> settings_app_;
-
-    // Dirty flags for each layer
-    std::array<bool, 4> dirty_flags_{false, false, false, false};
-
-    // Watchers
-    std::vector<WatcherEntry> watchers_;
-    std::atomic<WatcherHandle> next_handle_{1};
-
-    // Pending changes for Manual notification
-    std::vector<PendingChange> pending_changes_;
-
-    // Deferred watcher events (executed after lock release)
-    std::vector<DeferredWatcherEvent> deferred_events_;
+    std::unordered_map<std::string, std::unique_ptr<ConfigDomain>> domains_;
 };
 
 } // namespace cf::config

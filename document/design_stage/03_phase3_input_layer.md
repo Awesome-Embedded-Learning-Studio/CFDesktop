@@ -1,3 +1,8 @@
+---
+title: "Phase 3: 输入抽象层详细设计文档"
+description: "完成 Phase 3 后，进入 Phase 4: Shell UI 主体。"
+---
+
 # Phase 3: 输入抽象层详细设计文档
 
 ## 文档信息
@@ -30,7 +35,7 @@
 
 ### 2.1 整体架构图
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                      Application Layer                       │
 │                  (Widgets receive events)                   │
@@ -54,11 +59,11 @@
 │                    Kernel / Driver Layer                    │
 │  evdev, GPIO, I2C, SPI input drivers                       │
 └─────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### 2.2 文件结构
 
-```
+```text
 src/base/
 ├── include/CFDesktop/Base/Input/
 │   ├── InputManager.h              # 输入管理器主类
@@ -83,7 +88,7 @@ src/base/
     │   └── RotaryEncoder.cpp       # 旋转编码器
     └── simulator/                  # 模拟器支持
         └── SimulatedInput.cpp
-```
+```yaml
 
 ---
 
@@ -216,7 +221,7 @@ public:
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -339,7 +344,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -446,11 +451,11 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 5.2 触摸事件流程图
 
-```
+```text
 QTouchEvent
     │
     ├─> TouchPress
@@ -473,7 +478,7 @@ QTouchEvent
             ├─> 如果是第二次单击：双击
             ├─> 如果定时器触发：长按
             └─> 清理触摸点
-```
+```yaml
 
 ---
 
@@ -581,7 +586,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 6.2 预定义按键映射
 
@@ -633,7 +638,7 @@ struct StandardKeyMapping {
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -740,7 +745,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -900,7 +905,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -1034,7 +1039,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 9.2 焦点导航算法
 
@@ -1096,7 +1101,7 @@ bool FocusNavigator::isInDirection(
         return true;
     }
 }
-```
+```yaml
 
 ---
 
@@ -1184,7 +1189,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 10.2 GPIO 按键
 
@@ -1258,7 +1263,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 10.3 旋转编码器
 
@@ -1329,7 +1334,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -1367,7 +1372,7 @@ struct SimulatedInputConfig {
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 

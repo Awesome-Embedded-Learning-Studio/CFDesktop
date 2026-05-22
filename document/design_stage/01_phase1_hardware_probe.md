@@ -1,3 +1,8 @@
+---
+title: "Phase 1: 硬件探针与能力分级详细设计文档"
+description: "Phase 1: 硬件探针与能力分级详细设计文档 的详细文档"
+---
+
 # Phase 1: 硬件探针与能力分级详细设计文档
 
 ## 文档信息
@@ -29,7 +34,7 @@
 
 ### 2.1 整体架构图
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                    Application Layer                    │
 │                    (使用 HWTier 查询)                   │
@@ -54,11 +59,11 @@
 │           Platform Abstraction (平台抽象)               │
 │    /proc/cpuinfo  /sys/class/  /dev/dri/  evdev        │
 └─────────────────────────────────────────────────────────┘
-```
+```text
 
 ### 2.2 文件结构
 
-```
+```text
 src/base/
 ├── include/CFDesktop/Base/HardwareProbe/
 │   ├── HWTier.h              # 档位枚举定义
@@ -79,7 +84,7 @@ src/base/
     └── platform/             # 平台特定实现
         ├── LinuxDetector.cpp
         └── WindowsDetector.cpp
-```
+```yaml
 
 ---
 
@@ -147,7 +152,7 @@ QString tierToString(HWTier tier);
 HWTier tierFromString(const QString& str);
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 3.2 HardwareInfo 结构体
 
@@ -226,7 +231,7 @@ struct HardwareInfo {
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 3.3 CapabilityPolicy 配置结构
 
@@ -282,7 +287,7 @@ struct MemoryPolicy {
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -389,7 +394,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 4.2 CapabilityPolicy 策略引擎
 
@@ -481,7 +486,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 4.3 DeviceConfig 配置文件
 
@@ -542,7 +547,7 @@ public:
 };
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -622,7 +627,7 @@ QString CPUDetector::detectArchitecture(const QString& cpuInfoLine) {
     QString implementer = /* 从 cpuinfo 提取 */;
     return implementerMap.value(implementer, "Unknown");
 }
-```
+```text
 
 #### 5.1.2 Windows 平台
 
@@ -638,7 +643,7 @@ CPUInfo CPUDetector::detectCPUWindows() {
 
     return info;
 }
-```
+```text
 
 ### 5.2 GPU 检测
 
@@ -688,7 +693,7 @@ GPUInfo GPUDetector::detectGPU() {
 
     return info;
 }
-```
+```text
 
 ### 5.3 内存检测
 
@@ -717,7 +722,7 @@ MemoryInfo MemoryDetector::detectMemory() {
 
     return info;
 }
-```
+```text
 
 ### 5.4 网络检测
 
@@ -757,7 +762,7 @@ QList<NetworkInterface> NetworkDetector::detectNetwork() {
 
     return interfaces;
 }
-```
+```text
 
 ### 5.5 档位计算逻辑
 
@@ -794,7 +799,7 @@ void HardwareProbe::calculateTier(HardwareInfo& info) {
 
     info.tier = calculatedTier;
 }
-```
+```yaml
 
 ---
 
@@ -838,7 +843,7 @@ VideoDecoder=auto
 [Logging]
 # 硬件检测日志级别
 LogLevel=Info
-```
+```text
 
 ### 6.2 自定义检测脚本示例
 
@@ -853,7 +858,7 @@ if [ -e /sys/bus/i2c/devices/0-0050 ]; then
 else
     echo '{"tier": "low"}'
 fi
-```
+```yaml
 
 ---
 
@@ -861,7 +866,7 @@ fi
 
 ### 7.1 Mock 数据目录结构
 
-```
+```text
 tests/mock/
 └── proc/
     ├── cpuinfo_imx6ull          # IMX6ULL CPU 信息
@@ -873,7 +878,7 @@ tests/mock/
     └── devices/                 # 模拟设备文件
         └── dri/
             └── card0            # 模拟 GPU 设备
-```
+```text
 
 ### 7.2 测试用例清单
 
@@ -921,7 +926,7 @@ private slots:
     void testMalformedConfig();
     void testTierOverride();
 };
-```
+```text
 
 ### 7.3 示例测试用例
 
@@ -943,7 +948,7 @@ void TestHardwareProbe::testDetectCPU_IMX6ULL() {
     // 4. 验证档位
     QCOMPARE(info.tier, HWTier::Low);
 }
-```
+```bash
 
 ---
 

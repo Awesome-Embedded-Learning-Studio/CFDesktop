@@ -1,3 +1,8 @@
+---
+title: CFLogger 使用手册
+description: 欢迎使用 CFLogger 使用手册！CFLogger 是 CFDesktop 框架的异步日志系统，
+---
+
 # CFLogger 使用手册
 
 欢迎使用 CFLogger 使用手册！CFLogger 是 CFDesktop 框架的异步日志系统，专为现代桌面应用程序设计。
@@ -53,7 +58,7 @@ int main() {
     info("Hello, CFLogger!");
     return 0;
 }
-```
+```text
 
 ### 典型配置
 
@@ -74,21 +79,21 @@ void init_logger() {
 
     Logger::instance().setMininumLevel(level::INFO);
 }
-```
+```text
 
 ## 日志输出示例
 
 ### 默认格式输出
 
-```
+```text
 [14:23:45] [INFO] [CFLog] Application started
 [14:23:46] [WARNING] [Config] Config file not found
 [14:23:47] [ERROR] [Network] Connection failed
-```
+```text
 
 ### 彩色控制台输出
 
-```
+```text
 [14:23:45] [INFO] [CFLog] Application started
           ^^^^^^ 绿色
 
@@ -97,7 +102,7 @@ void init_logger() {
 
 [14:23:47] [ERROR] [Network] Connection failed
           ^^^^^ 红色
-```
+```bash
 
 ## 手册结构
 
@@ -117,7 +122,7 @@ void init_logger() {
 
 ## 学习路径
 
-```
+```text
 初学者路径：
 overview → quick_start → basic_logging → best_practices
 
@@ -126,7 +131,7 @@ overview → advanced_usage → formatters → sinks → configuration
 
 深入路径：
 overview → architecture → performance → troubleshooting
-```
+```text
 
 ## 相关资源
 
@@ -135,7 +140,7 @@ overview → architecture → performance → troubleshooting
 
 ## 版本要求
 
-- C++17 或更高
+- C++23 或更高
 - 支持的编译器：GCC 9+, Clang 10+, MSVC 2019+
 - 支持的平台：Linux, Windows, macOS
 

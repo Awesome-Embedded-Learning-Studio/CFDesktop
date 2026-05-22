@@ -1,3 +1,8 @@
+---
+title: LibConfig.psm1
+description: "文档编写日期: 2026-03-20，描述: 获取特定的配置值"
+---
+
 # LibConfig.psm1
 
 > 文档编写日期: 2026-03-20
@@ -8,13 +13,13 @@
 
 ```powershell
 Import-Module scripts/lib/powershell/LibConfig.psm1
-```
+```text
 
 或者：
 
 ```powershell
 . "$PSScriptRoot\LibConfig.psm1"
-```
+```bash
 
 ## Scripts详解
 
@@ -56,7 +61,7 @@ Import-Module scripts/lib/powershell/LibConfig.psm1
 $config = Get-IniConfig -FilePath "build_config.ini"
 $buildType = $config["cmake"]["build_type"]
 Write-LogInfo "Build type: $buildType"
-```
+```yaml
 
 ---
 
@@ -77,7 +82,7 @@ $generator = Get-IniValue -FilePath "config.ini" -Section "cmake" -Key "generato
 if (-not [string]::IsNullOrEmpty($generator)) {
     Write-LogInfo "Generator: $generator"
 }
-```
+```yaml
 
 ---
 
@@ -99,7 +104,7 @@ if (Test-IniValue -FilePath "config.ini" -Section "cmake" -Key "generator") {
 } else {
     Write-LogWarning "Generator is not defined"
 }
-```
+```bash
 
 ---
 
@@ -130,7 +135,7 @@ $configFile = Get-DefaultConfigFile -Mode "deploy"
 
 # CI 模式配置，指定脚本目录
 $configFile = Get-DefaultConfigFile -Mode "ci" -ScriptDir "C:\Scripts"
-```
+```yaml
 
 ---
 
@@ -157,4 +162,4 @@ $installDir = Get-IniValue -FilePath $configFile -Section "paths" -Key "install_
 if (Test-IniValue -FilePath $configFile -Section "cmake" -Key "generator") {
     Write-LogSuccess "CMake generator is configured"
 }
-```
+```text

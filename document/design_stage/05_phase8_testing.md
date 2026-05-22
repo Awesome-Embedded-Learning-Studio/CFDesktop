@@ -1,3 +1,8 @@
+---
+title: "Phase 8: 测试体系详细设计文档"
+description: "Phase 8: 测试体系详细设计文档 的详细文档"
+---
+
 # Phase 8: 测试体系详细设计文档
 
 ## 文档信息
@@ -30,7 +35,7 @@
 
 ### 2.1 测试金字塔
 
-```
+```text
                     /\
                    /  \
                   / E2E \
@@ -51,11 +56,11 @@
    /        20% 集成                 \
   /         10% UI                    \
  /____________________________________\
-```
+```text
 
 ### 2.2 测试目录结构
 
-```
+```text
 tests/
 ├── unit/                           # 单元测试
 │   ├── base/
@@ -110,7 +115,7 @@ tests/
 │   └── test_theme.h
 │
 └── CMakeLists.txt
-```
+```yaml
 
 ---
 
@@ -132,7 +137,7 @@ add_subdirectory(unit)
 add_subdirectory(integration)
 add_subdirectory(ui)
 add_subdirectory(performance)
-```
+```text
 
 ### 3.2 基础测试模板
 
@@ -191,7 +196,7 @@ void TestHardwareProbe::testDetectCPU_IMX6ULL() {
 
 QTEST_MAIN(TestHardwareProbe)
 #include "test_hardware_probe.moc"
-```
+```text
 
 ### 3.3 Mock 系统设计
 
@@ -232,7 +237,7 @@ public:
 };
 
 } // namespace CFDesktop::Testing
-```
+```bash
 
 ### 3.4 关键单元测试用例清单
 
@@ -325,7 +330,7 @@ void TestBaseIntegration::testFullBaseStack() {
     // 完整的 Base 库集成测试
     // 模拟真实启动流程
 }
-```
+```text
 
 ### 4.2 测试应用框架
 
@@ -371,7 +376,7 @@ private:
 };
 
 } // namespace CFDesktop::Testing
-```
+```yaml
 
 ---
 
@@ -431,7 +436,7 @@ void TestLauncherUI::testSwipeGesture() {
     QTest::qWait(500);
     QCOMPARE(m_launcher->currentPage(), 1);
 }
-```
+```text
 
 ### 5.2 可访问性测试
 
@@ -456,7 +461,7 @@ void TestAccessibility::testScreenReader() {
     QCOMPARE(iface->role(), QAccessible::Role::PushButton);
     QVERIFY(!iface->text(QAccessible::Name).isEmpty());
 }
-```
+```yaml
 
 ---
 
@@ -520,7 +525,7 @@ void BenchmarkThemeLoad::testVariableLookupPerformance() {
 
     qDebug() << "Average variable lookup time:" << avgTime * 1000 << "μs";
 }
-```
+```text
 
 ### 6.2 内存使用测试
 
@@ -569,7 +574,7 @@ qint64 TestMemoryUsage::getCurrentMemoryUsage() {
     }
     return -1;
 }
-```
+```bash
 
 ### 6.3 性能基准
 
@@ -697,7 +702,7 @@ jobs:
         with:
           name: performance-results
           path: build/testing/performance/
-```
+```bash
 
 ### 7.2 代码覆盖率要求
 
@@ -720,7 +725,7 @@ jobs:
 
 **文件**: `tests/mock/proc/cpuinfo_imx6ull`
 
-```
+```text
 processor       : 0
 model name      : Freescale i.MX6 UltraLite 528 MHz
 BogoMIPS        : 264.00
@@ -734,11 +739,11 @@ CPU revision    : 5
 Hardware        : Freescale i.MX6 UltraLite 528 MHz
 Revision        : 0000
 Serial          : 0000000000000000
-```
+```text
 
 **文件**: `tests/mock/proc/meminfo_512mb`
 
-```
+```text
 MemTotal:         524288 kB
 MemFree:          262144 kB
 MemAvailable:     393216 kB
@@ -749,7 +754,7 @@ Active:           131072 kB
 Inactive:         104857 kB
 SwapTotal:             0 kB
 SwapFree:              0 kB
-```
+```text
 
 ### 8.2 测试夹具
 
@@ -790,7 +795,7 @@ inline Theme createDefaultTestTheme() {
 }
 
 } // namespace CFDesktop::Testing
-```
+```bash
 
 ---
 
@@ -884,7 +889,7 @@ void TestExample::cleanup() {
     // 每个测试用例后：清理资源
     delete m_testObject;
 }
-```
+```bash
 
 ---
 

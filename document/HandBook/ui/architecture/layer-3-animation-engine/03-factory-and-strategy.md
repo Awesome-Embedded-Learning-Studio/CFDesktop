@@ -1,3 +1,8 @@
+---
+title: 工厂与策略——动画创建的灵活组合模式
+description: 在前面的文章里，我们讲了动画的抽象基类和两种具体实现。但控件怎么获取这些动画？直接  一个吗？
+---
+
 # 工厂与策略——动画创建的灵活组合模式
 
 在前面的文章里，我们讲了动画的抽象基类和两种具体实现。但控件怎么获取这些动画？直接 `new` 一个吗？
@@ -32,7 +37,7 @@ private:
     bool globalEnabled_ = true;
     std::unordered_map<std::string, std::unique_ptr<ICFAbstractAnimation>> animations_;
 };
-```
+```bash
 
 ## Token 到 AnimationDescriptor 的映射
 
@@ -57,7 +62,7 @@ struct AnimationDescriptor {
     float fromValue;
     float toValue;
 };
-```
+```text
 
 ## getAnimation() 的完整流程
 
@@ -104,7 +109,7 @@ cf::WeakPtr<ICFAbstractAnimation> CFMaterialAnimationFactory::getAnimation(const
     // 7. 返回 WeakPtr
     return animations_[token]->GetWeakPtr();
 }
-```
+```text
 
 ## 动画实例的创建
 
@@ -130,7 +135,7 @@ std::unique_ptr<ICFAbstractAnimation> CFMaterialAnimationFactory::createSlideAni
 std::unique_ptr<ICFAbstractAnimation> CFMaterialAnimationFactory::createScaleAnimation(...) {
     // 创建 CFMaterialScaleAnimation
 }
-```
+```text
 
 ## AnimationStrategy 策略模式
 
@@ -152,7 +157,7 @@ public:
         return true;  // 默认启用动画
     }
 };
-```
+```text
 
 控件类型可以实现自己的策略：
 
@@ -177,7 +182,7 @@ public:
         return adjusted;
     }
 };
-```
+```text
 
 使用策略：
 
@@ -188,7 +193,7 @@ auto factory = std::make_unique<CFMaterialAnimationFactory>(theme, std::move(but
 
 // 控件获取动画时会自动应用策略
 auto anim = factory->getAnimation("md.animation.fadeIn");
-```
+```text
 
 ## 策略的应用时机
 
@@ -202,7 +207,7 @@ auto anim = factory->getAnimation("md.animation.fadeIn");
 
 ```cpp
 factory->setEnabledAll(false);  // 禁用所有动画
-```
+```text
 
 禁用时，`getAnimation()` 会返回无效的 WeakPtr。已有的正在运行的动画不受影响，会自然完成。
 
@@ -219,7 +224,7 @@ factory->setEnabledAll(false);  // 禁用所有动画
 
 ```cpp
 factory->setTargetEnabled("md.animation.fadeIn", false);
-```
+```yaml
 
 这样只有特定的动画被禁用，其他动画正常运行。
 

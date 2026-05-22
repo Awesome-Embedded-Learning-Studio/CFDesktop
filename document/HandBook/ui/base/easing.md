@@ -1,3 +1,8 @@
+---
+title: "easing - 缓动曲线"
+description: 提供了 Material Design 规范的预设缓动曲线和弹簧物理参数。缓动曲线决定了动画的速度变
+---
+
 # easing - 缓动曲线
 
 `easing` 提供了 Material Design 规范的预设缓动曲线和弹簧物理参数。缓动曲线决定了动画的速度变化——是匀速、先慢后快、还是先快后慢——直接影响动画的"质感"。Material Design 对这个有详细规范，我们直接实现了它的标准曲线。
@@ -18,7 +23,7 @@ QEasingCurve curve = fromEasingType(Type::Standard);
 QPropertyAnimation* anim = new QPropertyAnimation(this, "geometry");
 anim->setEasingCurve(fromEasingType(Type::Emphasized));
 anim->setDuration(300);
-```
+```text
 
 各种类型的区别：
 - `Linear`：匀速，没有加速感
@@ -42,7 +47,7 @@ QEasingCurve overshoot = custom(0.34f, 1.56f, 0.64f, 1.0f);
 
 // 弹性效果
 QEasingCurve bounce = custom(0.68f, -0.6f, 0.32f, 1.6f);
-```
+```text
 
 控制点参数的含义：
 - `x1, y1` 是第一个控制点的坐标
@@ -72,7 +77,7 @@ SpringPreset stiff = springStiff();
 // 配合 math_helper 的 springStep() 使用
 auto [pos, vel] = math::springStep(currentPos, velocity, targetPos,
                                    bouncy.stiffness, bouncy.damping, dt);
-```
+```text
 
 弹簧的调优确实有点玄学——stiffness 太小会拖沓，太大容易震荡；damping 太小会一直抖，太大又没有弹性。我们提供的预设是在实际项目中调出来的经验值，基本够用了。
 
@@ -95,7 +100,7 @@ anim->setEasingCurve(fromEasingType(Type::Linear));
 // 按钮点击反馈：用弹簧，增加触感
 SpringPreset preset = springBouncy();
 // 在 update 循环中调用 springStep()
-```
+```text
 
 总的原则：**用户主动触发的操作用强缓动/弹簧，系统自动的状态变化用弱缓动**。这样既能传达操作的"手感"，又不会让界面显得太花哨。
 

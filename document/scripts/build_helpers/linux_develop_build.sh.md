@@ -1,3 +1,8 @@
+---
+title: linuxdevelopbuild.sh
+description: "文档编写日期: 2026-03-20，是完整的开发构建脚本，执行清理 + 配置 + 构建 + 测试的"
+---
+
 # linux_develop_build.sh
 
 > 文档编写日期: 2026-03-20
@@ -8,7 +13,7 @@
 
 ```bash
 ./scripts/build_helpers/linux_develop_build.sh [develop|deploy|ci] [-c|--config <config_file>]
-```
+```bash
 
 ### 参数说明
 
@@ -37,7 +42,7 @@
 
 ```bash
 Step 1: Cleaning build directory
-```
+```text
 
 使用 `lib_build.sh` 中的 `clean_build_dir` 函数清理构建目录。这确保每次都是干净的构建。
 
@@ -45,7 +50,7 @@ Step 1: Cleaning build directory
 
 ```bash
 Step 2: Calling fast build script
-```
+```text
 
 调用 `linux_fast_develop_build.sh` 执行实际的配置和构建。
 
@@ -53,7 +58,7 @@ Step 2: Calling fast build script
 
 ```bash
 Step 3: Running tests
-```
+```text
 
 调用 `linux_run_tests.sh` 运行所有测试。测试失败不会导致脚本退出（仅警告）。
 
@@ -71,11 +76,11 @@ Step 3: Running tests
 
 # 使用自定义配置文件
 ./scripts/build_helpers/linux_develop_build.sh develop -c my_config.ini
-```
+```text
 
 ### 输出示例
 
-```
+```text
 ========================================
 Starting Linux Build Process (Full Clean + Build)
 ========================================
@@ -105,7 +110,7 @@ Executing: linux_run_tests.sh develop
 ========================================
 All tests passed successfully!
 ========================================
-```
+```bash
 
 ### 与快速构建的对比
 

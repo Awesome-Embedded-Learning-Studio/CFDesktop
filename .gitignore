@@ -1,6 +1,8 @@
 # ignores
 .cache
 .claude
+CLAUDE.md
+MEMORY.md
 
 # aqtinstall log
 aqtinstall.log
@@ -12,7 +14,6 @@ out/
 
 # Documents summons
 xml/
-site/
 document/api/
 
 # .vscode
@@ -29,3 +30,9 @@ __pycache__/
 
 # Docker build logs
 scripts/docker/logger/
+
+# Node/VitePress
+node_modules/
+site/.vitepress/cache/
+site/.vitepress/dist/
+site/.vitepress/.temp

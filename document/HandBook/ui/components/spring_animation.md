@@ -1,3 +1,8 @@
+---
+title: "ICFSpringAnimation - 弹簧动画"
+description: 是基于物理弹簧模型的动画基类，用真实的弹簧动力学来驱动动画。与时间动画不同，弹簧动画没有固定的持续时
+---
+
 # ICFSpringAnimation - 弹簧动画
 
 `ICFSpringAnimation` 是基于物理弹簧模型的动画基类，用真实的弹簧动力学来驱动动画。与时间动画不同，弹簧动画没有固定的持续时间——它从当前值向目标值"弹"过去，根据刚度和阻尼参数决定运动轨迹。这种方式能产生更自然、更有"重量感"的交互反馈。
@@ -6,11 +11,11 @@
 
 弹簧动画模拟了一个连接在目标值上的物理弹簧：
 
-```
+```text
 加速度 = (目标值 - 当前值) * 刚度 - 速度 * 阻尼
 速度 += 加速度 * dt
 位置 += 速度 * dt
-```
+```text
 
 系统会一直迭代，直到位置足够接近目标值且速度足够小。这意味着动画的实际时长取决于初始距离和物理参数，而不是预先设定的时间。
 
@@ -29,7 +34,7 @@ auto* anim = new CFSpringAnimation(gentle, this);
 // 或者用高弹性预设
 auto bouncy = cf::ui::base::Easing::springBouncy();
 auto* anim2 = new CFSpringAnimation(bouncy, this);
-```
+```text
 
 框架提供了三种预设：
 - `springGentle()`：柔和的弹簧，回弹较少，适合常规过渡
@@ -46,7 +51,7 @@ anim->setTarget(1.0f);
 
 // 运行过程中改变目标，弹簧会立即转向
 anim->setTarget(0.5f);  // 会立即向新目标加速
-```
+```text
 
 这种"追逐"特性使得弹簧动画非常适合交互式场景——比如拖拽释放后，元素会"弹"回原位，或者在拖拽过程中跟随手指。
 
@@ -61,7 +66,7 @@ anim->setInitialVelocity(100.0f);
 // 配合负目标值，可以做出"甩出去"的效果
 anim->setTarget(-1.0f);
 anim->setInitialVelocity(500.0f);
-```
+```text
 
 如果没有设置初始速度，默认从静止开始。
 
@@ -71,7 +76,7 @@ anim->setInitialVelocity(500.0f);
 
 ```cpp
 float position = anim->currentValue();
-```
+```text
 
 这个值会随着弹簧振荡而变化，直到收敛到目标值。
 
@@ -96,7 +101,7 @@ tick(int dt) {
     position += velocity * dt;
     return !isSettled();  // 是否已稳定
 }
-```
+```text
 
 如果你在做一个按钮的点击反馈：
 - 时间动画：按下时缩小，松开时放大，像在"播放一段视频"
@@ -126,7 +131,7 @@ bool isSettled() {
     return abs(position - target) < epsilon
         && abs(velocity) < epsilon;
 }
-```
+```text
 
 ⚠️ 这意味着弹簧可能在理论上"永远"不结束（阻尼过低时会无限振荡）。实际使用中，框架会在若干帧后强制结束，避免空耗 CPU。
 

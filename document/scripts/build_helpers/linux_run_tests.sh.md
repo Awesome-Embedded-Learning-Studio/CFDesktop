@@ -1,3 +1,8 @@
+---
+title: linuxruntests.sh
+description: "文档编写日期: 2026-03-20，是测试运行脚本，使用CTest执行CMake测试套件。"
+---
+
 # linux_run_tests.sh
 
 > 文档编写日期: 2026-03-20
@@ -8,7 +13,7 @@
 
 ```bash
 ./scripts/build_helpers/linux_run_tests.sh [develop|deploy|ci] [-c|--config <config_file>]
-```
+```bash
 
 ### 参数说明
 
@@ -43,9 +48,9 @@
 
 脚本会在配置的构建目录下的 `test` 子目录中查找测试：
 
-```
+```text
 <build_dir>/test/
-```
+```text
 
 例如，如果 `build_dir = build_develop`，则测试目录为 `build_develop/test/`。
 
@@ -63,13 +68,13 @@
 
 # 使用自定义配置文件
 ./scripts/build_helpers/linux_run_tests.sh develop -c my_config.ini
-```
+```text
 
 ### 输出示例
 
 #### 测试成功
 
-```
+```text
 ========================================
 Running Tests (Config: develop)
 ========================================
@@ -94,11 +99,11 @@ Total Test time (real) =   0.25 sec
 ========================================
 All tests passed successfully!
 ========================================
-```
+```text
 
 #### 测试失败
 
-```
+```text
 ========================================
 Running Tests (Config: develop)
 ========================================
@@ -109,7 +114,7 @@ Running Tests (Config: develop)
 ========================================
 Some tests failed with exit code: 8
 ========================================
-```
+```bash
 
 ### 错误处理
 
@@ -161,4 +166,4 @@ Some tests failed with exit code: 8
 
 # 或仅运行测试（假设已构建）
 ./scripts/build_helpers/linux_run_tests.sh ci
-```
+```text
