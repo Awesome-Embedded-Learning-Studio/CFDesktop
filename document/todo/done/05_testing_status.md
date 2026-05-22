@@ -1,3 +1,8 @@
+---
+title: "Phase 5: 测试系统 - 状态文档"
+description: "模块ID: Phase 5，状态: 🚧 基础框架完成，UI控件测试缺失"
+---
+
 # Phase 5: 测试系统 - 状态文档
 
 > **模块ID**: Phase 5
@@ -55,7 +60,7 @@
 
 ### 3.2 测试目录结构
 
-```
+```text
 test/
 ├── CMakeLists.txt                    # 测试构建配置
 ├── base/                             # 基础工具库测试
@@ -92,7 +97,7 @@ test/
     ├── boot_test_gui.cpp             # GUI 启动测试
     ├── CMakeLists.txt
     └── README.md                     # 启动测试文档
-```
+```bash
 
 ---
 
@@ -223,7 +228,7 @@ test/
 
 ## 五、测试金字塔
 
-```
+```text
                     /\
                    /  \
                   / E2E\         (端到端测试 - 少量)
@@ -234,7 +239,7 @@ test/
              /------------\
             /   单元测试    \    (单元测试 - 大量，已完成 ~60%)
            /________________\
-```
+```yaml
 
 ---
 
@@ -246,13 +251,13 @@ test/
 # 从项目根目录
 cmake -B out/build_test -DBUILD_TESTING=ON
 cmake --build out/build_test
-```
+```text
 
 ### 运行所有测试
 
 ```bash
 ./out/build_test/bin/cf_desktop_tests
-```
+```text
 
 ### 运行特定测试
 
@@ -262,19 +267,19 @@ cmake --build out/build_test
 
 # 运行特定测试用例
 ./out/build_test/bin/cf_desktop_tests --gtest_filter=MathHelperTest.Lerp*
-```
+```text
 
 ### 使用脚本运行
 
 **Windows**:
 ```powershell
 .\scripts\run_all_tests.ps1
-```
+```text
 
 **Linux/macOS**:
 ```bash
 ./scripts/run_all_tests.sh
-```
+```yaml
 
 ---
 

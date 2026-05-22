@@ -1,3 +1,8 @@
+---
+title: "适配器模式——Material 控件的\"薄包装\"设计"
+description: 在前面的文章里，我们聊完了基础数学工具、主题引擎、动画系统、行为组件。现在所有的基础设施都就绪了，可
+---
+
 # 适配器模式——Material 控件的"薄包装"设计
 
 在前面的文章里，我们聊完了基础数学工具、主题引擎、动画系统、行为组件。现在所有的基础设施都就绪了，可以开始构建具体的控件了。
@@ -40,7 +45,7 @@ void Button::mousePressEvent(QMouseEvent* event) {
     m_stateMachine->onPress(event->pos());
     m_ripple->onPress(event->pos(), rect());
 }
-```
+```text
 
 第一步调用父类方法是必须的，原因如下：
 
@@ -75,7 +80,7 @@ Button::Button(ButtonVariant variant, QWidget* parent)
     connect(&ThemeManager::instance(), &ThemeManager::themeChanged,
             this, [this](const ICFTheme&) { update(); });
 }
-```
+```text
 
 注意所有行为组件的 parent 都是 `this`，这意味着它们会随控件一起销毁，无需手动管理生命周期。
 
@@ -94,7 +99,7 @@ QColor Button::containerColor() const {
         // ...
     }
 }
-```
+```text
 
 这里使用 `currentTheme()` 获取当前活动的主题。如果主题切换，`themeChanged` 信号会触发 `update()`，控件会重新读取主题数据并重绘。
 
@@ -117,7 +122,7 @@ QColor Button::containerColor() const {
 // 错误！不要这样做
 auto& theme = ThemeManager::instance().currentTheme();
 theme.color_scheme().setColor("md.primary", QColor("#FF0000"));
-```
+```bash
 
 修改主题应该通过 ThemeManager 的 `setThemeTo()` 方法，或者在主题创建时指定颜色。这保证了主题的全局一致性。
 

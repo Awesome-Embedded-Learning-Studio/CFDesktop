@@ -1,3 +1,8 @@
+---
+title: 配置选项
+description: 本文档详细介绍 CFLogger 的所有配置选项。
+---
+
 # 配置选项
 
 本文档详细介绍 CFLogger 的所有配置选项。
@@ -14,7 +19,7 @@ enum class level {
     WARNING, // 警告信息
     ERROR    // 错误信息
 };
-```
+```text
 
 ### 设置最低级别
 
@@ -24,13 +29,13 @@ set_level(level::INFO);
 
 // 高级 API
 Logger::instance().setMininumLevel(level::INFO);
-```
+```text
 
 ### 级别关系
 
-```
+```text
 TRACE (0) < DEBUG (1) < INFO (2) < WARNING (3) < ERROR (4)
-```
+```bash
 
 设置某级别后，只有该级别及以上的日志会被记录：
 
@@ -61,7 +66,7 @@ void setup_logging_by_env() {
 
     Logger::instance().setMininumLevel(lvl);
 }
-```
+```text
 
 ## FormatterFlag 配置
 
@@ -78,7 +83,7 @@ enum FormatterFlag : uint32_t {
     MESSAGE = 1 << 5,         // 消息内容
     COLOR = 1 << 6,           // ANSI 颜色
 };
-```
+```text
 
 ### 预设组合
 
@@ -86,7 +91,7 @@ enum FormatterFlag : uint32_t {
 MINIMAL = LEVEL | MESSAGE;
 DEFAULT = TIMESTAMP | LEVEL | TAG | SOURCE_LOCATION | MESSAGE;
 VERBOSE = TIMESTAMP | LEVEL | TAG | THREAD_ID | SOURCE_LOCATION | MESSAGE;
-```
+```bash
 
 ### 输出组件示例
 
@@ -118,7 +123,7 @@ if (config->is_enabled(FormatterFlag::COLOR)) {
 config->set_flags(FormatterFlag::MINIMAL);
 
 formatter->set_config(config);
-```
+```text
 
 ### 位运算组合
 
@@ -131,7 +136,7 @@ auto flags = FormatterFlag::DEFAULT & ~FormatterFlag::SOURCE_LOCATION;
 
 // 添加某个标志
 auto flags = FormatterFlag::MINIMAL | FormatterFlag::TIMESTAMP;
-```
+```text
 
 ## 时间戳格式配置
 
@@ -140,7 +145,7 @@ auto flags = FormatterFlag::MINIMAL | FormatterFlag::TIMESTAMP;
 ```cpp
 auto config = std::make_shared<FormatterConfig>();
 config->set_timestamp_format("%Y-%m-%d %H:%M:%S");
-```
+```bash
 
 ### 常用格式
 
@@ -195,7 +200,7 @@ formatter->set_config(config);
 
 // 方法3：使用 FileFormatter（自动忽略颜色）
 auto formatter = std::make_shared<FileFormatter>();
-```
+```text
 
 ## 队列配置
 
@@ -204,7 +209,7 @@ auto formatter = std::make_shared<FileFormatter>();
 ```cpp
 // AsyncPostQueue 中的常量
 static constexpr size_t kMaxNormalQueueSize = 65536;  // 2^16
-```
+```bash
 
 这是编译时常量，运行时不可修改。
 
@@ -233,7 +238,7 @@ void monitor_queue() {
         last_count = current_count;
     }
 }
-```
+```text
 
 ## 文件 Sink 配置
 
@@ -244,7 +249,7 @@ enum class OpenMode {
     Append,   // 追加到文件末尾
     Truncate  // 覆盖现有文件
 };
-```
+```text
 
 ### 使用示例
 
@@ -254,7 +259,7 @@ auto sink = std::make_shared<FileSink>("app.log");
 
 // 覆盖模式（测试环境）
 auto sink = std::make_shared<FileSink>("app.log", OpenMode::Truncate);
-```
+```text
 
 ## 多环境配置
 
@@ -283,7 +288,7 @@ void setup_dev_environment() {
     Logger::instance().add_sink(console);
     Logger::instance().setMininumLevel(level::TRACE);
 }
-```
+```text
 
 ### 测试环境
 
@@ -305,7 +310,7 @@ void setup_test_environment() {
     Logger::instance().add_sink(console);
     Logger::instance().setMininumLevel(level::DEBUG);
 }
-```
+```text
 
 ### 生产环境
 
@@ -344,7 +349,7 @@ void setup_production_environment() {
     Logger::instance().add_sink(error_log);
     Logger::instance().setMininumLevel(level::INFO);
 }
-```
+```text
 
 ## 配置文件示例
 
@@ -377,7 +382,7 @@ void setup_production_environment() {
         ]
     }
 }
-```
+```text
 
 ### 命令行参数
 
@@ -426,7 +431,7 @@ void parse_command_line_args(int argc, char** argv) {
         Logger::instance().add_sink(file_sink);
     }
 }
-```
+```text
 
 ## 配置最佳实践
 

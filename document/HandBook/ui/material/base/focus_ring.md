@@ -1,3 +1,8 @@
+---
+title: "MdFocusIndicator - Material 焦点环"
+description: 是 Material Design 3 键盘焦点可视化的核心组件。它负责在控件获得键盘焦点时绘制聚焦
+---
+
 # MdFocusIndicator - Material 焦点环
 
 `MdFocusIndicator` 是 Material Design 3 键盘焦点可视化的核心组件。它负责在控件获得键盘焦点时绘制聚焦环，并提供流畅的进出动画。我们单独实现这个组件，是因为 Qt 自带的焦点样式（`QWidget::setFocusPolicy` 配合样式表）无法实现 Material 规范的动画效果和精确尺寸控制。
@@ -41,7 +46,7 @@ public:
 private:
     base::MdFocusIndicator* m_focusIndicator;
 };
-```
+```text
 
 ## 事件处理
 
@@ -59,7 +64,7 @@ void MyWidget::focusOutEvent(QFocusEvent* event) {
     m_focusIndicator->onFocusOut();
     update();
 }
-```
+```text
 
 ⚠️ 记得在事件处理函数中先调用父类实现，否则 Qt 的焦点系统可能无法正常工作。
 
@@ -82,7 +87,7 @@ void MyWidget::paintEvent(QPaintEvent* event) {
         m_focusIndicator->paint(&p, shape(), indicatorColor);
     }
 }
-```
+```text
 
 聚焦环的颜色通常使用 `onSurface` 角色获取，这样可以与控件内容保持一致的对比度。
 
@@ -104,7 +109,7 @@ m_focusIndicator->paint(&p, shape, indicatorColor);
 // 自定义形状
 QPainterPath shape = customShape();
 m_focusIndicator->paint(&p, shape, indicatorColor);
-```
+```text
 
 环会自动沿着形状的边界向内偏移绘制，不需要手动计算偏移量。
 
@@ -118,7 +123,7 @@ auto factory = Application::animationFactory();
 if (factory) {
     factory->setEnabledAll(false);
 }
-```
+```text
 
 这对于低端设备或性能敏感的场景很有用。
 
@@ -131,7 +136,7 @@ MyWidget::MyWidget(QWidget* parent) : QWidget(parent) {
     setFocusPolicy(Qt::StrongFocus);
     // ...
 }
-```
+```text
 
 对于纯装饰性的控件，使用 `Qt::NoFocus` 避免干扰键盘导航流。
 

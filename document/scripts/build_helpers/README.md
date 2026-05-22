@@ -1,3 +1,8 @@
+---
+title: 构建辅助脚本 (Build Helpers)
+description: "文档编写日期: 2026-03-20，本目录包含CFDesktop项目的构建辅助脚本。"
+---
+
 # 构建辅助脚本 (Build Helpers)
 
 > 文档编写日期: 2026-03-20
@@ -46,7 +51,7 @@
 
 # 快速开发构建（增量编译）
 ./scripts/build_helpers/linux_fast_develop_build.sh
-```
+```text
 
 ### 部署构建
 
@@ -56,19 +61,19 @@
 
 # 快速部署构建（增量编译）
 ./scripts/build_helpers/linux_fast_deploy_build.sh
-```
+```text
 
 ### 仅配置
 
 ```bash
 ./scripts/build_helpers/linux_configure.sh [develop|deploy|ci]
-```
+```text
 
 ### 运行测试
 
 ```bash
 ./scripts/build_helpers/linux_run_tests.sh [develop|deploy|ci]
-```
+```text
 
 ### Docker构建
 
@@ -87,7 +92,7 @@
 
 # 运行测试
 ./scripts/build_helpers/docker_start.sh --run-project-test
-```
+```bash
 
 ## 架构支持
 

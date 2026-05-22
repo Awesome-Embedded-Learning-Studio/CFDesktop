@@ -1,3 +1,8 @@
+---
+title: "MaterialRadiusScale - Material 圆角系统"
+description: 实现 Material Design 3 的圆角规范。Material 用 7 个标准圆角值覆盖几乎
+---
+
 # MaterialRadiusScale - Material 圆角系统
 
 `MaterialRadiusScale` 实现 Material Design 3 的圆角规范。Material 用 7 个标准圆角值覆盖几乎所有 UI 场景，从完全方形到超大圆角都有定义。我们把它们存在嵌入式 Token 注册表中，每个圆角规格实例独立管理。
@@ -32,7 +37,7 @@ auto radiusScale = cf::ui::core::material::defaultRadiusScale();
 float smallRadius = radiusScale.queryRadiusScale("md.shape.cornerSmall");   // 8.0f
 float mediumRadius = radiusScale.queryRadiusScale("md.shape.cornerMedium"); // 12.0f
 float largeRadius = radiusScale.queryRadiusScale("md.shape.cornerLarge");   // 16.0f
-```
+```text
 
 圆角名称采用 `md.shape.` 前缀，后跟 Material 官方定义的规格名称。
 
@@ -62,7 +67,7 @@ void MyCard::paintEvent(QPaintEvent*) {
     QRectF rect = this->rect().adjusted(1, 1, -1, -1);
     painter.drawRoundedRect(rect, m_borderRadius, m_borderRadius);
 }
-```
+```text
 
 ## 组件对应关系
 
@@ -83,7 +88,7 @@ float fabRadius = radiusScale.queryRadiusScale("md.shape.cornerExtraLarge"); // 
 
 // 侧边栏用超大超大圆角
 float drawerRadius = radiusScale.queryRadiusScale("md.shape.cornerExtraExtraLarge"); // 32dp
-```
+```text
 
 ## 自定义圆角
 
@@ -97,7 +102,7 @@ radiusScale.registry().set("md.shape.cornerCustom", 20.0f);
 
 // 覆盖现有圆角
 radiusScale.registry().set("md.shape.cornerMedium", 16.0f); // 改成和 Large 一样
-```
+```text
 
 这个设计让系统既支持标准 Material 规范，也允许根据品牌需求调整。
 
@@ -111,7 +116,7 @@ float r1 = radiusScale.queryRadiusScale("md.shape.cornerLarge");
 
 // 后续查询从缓存返回
 float r2 = radiusScale.queryRadiusScale("md.shape.cornerLarge");
-```
+```text
 
 缓存在 `MaterialRadiusScale` 对象生命周期内有效。
 
@@ -126,7 +131,7 @@ float radiusDp = radiusScale.queryRadiusScale("md.shape.cornerMedium");
 // 转换为物理像素
 qreal scaleFactor = devicePixelRatioF();
 float radiusPx = radiusDp * scaleFactor;
-```
+```text
 
 大多数情况下直接用 dp 值传入 Qt 函数就可以，Qt 会自动处理 DPI 缩放。
 
@@ -141,7 +146,7 @@ painter.setRenderHint(QPainter::Antialiasing);
 
 // 使用 float 精度的绘制函数
 painter.drawRoundedRect(rect, radius, radius);
-```
+```text
 
 小圆角值（如 4dp 的 ExtraSmall）在高 DPI 下可能会被平滑成几乎直线，这是正常行为。
 

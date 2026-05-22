@@ -1,3 +1,8 @@
+---
+title: "Phase 8: P1 控件补全 TODO"
+description: "完成日期: 2026-03-18，详细完成状态: done/13widgetappsstatus.m"
+---
+
 # Phase 8: P1 控件补全 TODO
 
 > **状态**: ✅ 已完成

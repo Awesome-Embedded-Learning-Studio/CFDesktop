@@ -1,3 +1,8 @@
+---
+title: ConfigStore 常见问题与故障排查
+description: 本文档列出了 ConfigStore 使用中的常见问题、故障排查方法和调试技巧。
+---
+
 # ConfigStore 常见问题与故障排查
 
 本文档列出了 ConfigStore 使用中的常见问题、故障排查方法和调试技巧。
@@ -30,7 +35,7 @@ ConfigStore::instance().sync(SyncMethod::Sync);  // 同步写入
 
 // 或使用异步同步（推荐）
 ConfigStore::instance().sync(SyncMethod::Async);  // 不阻塞调用方
-```
+```text
 
 #### 可能原因 2：层级优先级问题
 
@@ -55,7 +60,7 @@ auto system_theme = ConfigStore::instance().query<std::string>(
     Layer::System,
     ""
 );
-```
+```text
 
 #### 可能原因 3：KeyView 转换失败
 
@@ -69,7 +74,7 @@ ConfigStore::instance().set(invalid_kv, "value");  // 返回 false
 // 解决方案：使用合法字符
 KeyView valid_kv{.group = "app_theme", .key = "name"};  // 仅字母、数字、下划线
 ConfigStore::instance().set(valid_kv, "value");  // 成功
-```
+```yaml
 
 ---
 
@@ -99,7 +104,7 @@ ConfigStore::instance().set(
     "https://custom.api.com",
     Layer::User
 );
-```
+```text
 
 #### 方法 2：自定义路径提供者
 
@@ -140,7 +145,7 @@ public:
 
 // 初始化时使用
 ConfigStore::instance().initialize(std::make_shared<EnvironmentPathProvider>());
-```
+```text
 
 #### 方法 3：使用环境变量
 
@@ -186,7 +191,7 @@ public:
 ConfigStore::instance().initialize(
     std::make_shared<DynamicPathProvider>(QString::fromStdString(config_dir))
 );
-```
+```yaml
 
 ---
 
@@ -210,7 +215,7 @@ ConfigStore::instance().set(KeyView{.group = "app", .key = "theme"}, "dark");
 // 解决方案：手动触发通知
 ConfigStore::instance().set(KeyView{.group = "app", .key = "theme"}, "dark", Layer::App, NotifyPolicy::Manual);
 ConfigStore::instance().notify();  // 触发所有 Manual Watcher
-```
+```text
 
 #### 原因 2：键模式不匹配
 
@@ -234,7 +239,7 @@ ConfigStore::instance().watch(
     "app.*",  // 匹配 app 下的所有键
     callback
 );
-```
+```text
 
 #### 原因 3：Watcher 被提前取消
 
@@ -263,7 +268,7 @@ public:
         ConfigStore::instance().unwatch(theme_watcher_);
     }
 };
-```
+```yaml
 
 ---
 
@@ -278,7 +283,7 @@ ConfigStore::instance().set(KeyView{.group = "test", .key = "value"}, std::strin
 // 尝试读取为 int，但字符串无法直接转换
 auto result = ConfigStore::instance().query<int>(KeyView{.group = "test", .key = "value"}, 0);
 // 可能返回默认值 0
-```
+```text
 
 #### 解决方案 1：先读取字符串再转换
 
@@ -295,7 +300,7 @@ if (!str_value.empty()) {
         // 处理转换错误
     }
 }
-```
+```text
 
 #### 解决方案 2：使用 QVariant 兼容的类型
 
@@ -307,7 +312,7 @@ ConfigStore::instance().set(KeyView{.group = "test", .key = "value"}, 123);  // 
 int value = ConfigStore::instance().query<int>(
     KeyView{.group = "test", .key = "value"}, 0
 );  // 正确返回 123
-```
+```text
 
 #### 解决方案 3：使用 std::any 处理多种类型
 
@@ -320,7 +325,7 @@ if (value.type() == typeid(int)) {
     std::string str_value = std::any_cast<std::string>(value);
     // 手动转换...
 }
-```
+```yaml
 
 ---
 
@@ -337,7 +342,7 @@ copy C:\OldPath\config.ini %APPDATA%\MyApp\user.ini
 
 # macOS
 cp /old/path/config.plist ~/Library/Preferences/com.myapp.plist
-```
+```text
 
 #### 方法 2：使用 ConfigStore API 迁移
 
@@ -378,7 +383,7 @@ void migrate_old_config(const std::string& old_file_path) {
     // 同步到磁盘
     ConfigStore::instance().sync(SyncMethod::Sync);
 }
-```
+```text
 
 #### 方法 3：映射旧键名到新键名
 
@@ -424,7 +429,7 @@ void migrate_with_mapping(const std::string& old_file) {
 
     ConfigStore::instance().sync(SyncMethod::Sync);
 }
-```
+```yaml
 
 ---
 
@@ -445,7 +450,7 @@ ConfigStore::instance().reload();  // Temp 层被清空
 // 3. 调用 clear_layer(Layer::Temp)
 ConfigStore::instance().clear_layer(Layer::Temp);
 // Temp 层数据被清空
-```
+```text
 
 #### 保留场景
 
@@ -461,7 +466,7 @@ auto value = ConfigStore::instance().query<std::string>(
 // sync() 不会清空 Temp 层
 ConfigStore::instance().sync(SyncMethod::Sync);
 // Temp 层数据仍然存在
-```
+```text
 
 #### 最佳实践
 
@@ -496,7 +501,7 @@ ConfigStore::instance().set(
     "dark",
     Layer::User  // 使用 User 或 App 层
 );
-```
+```yaml
 
 ---
 
@@ -532,7 +537,7 @@ ConfigStore::instance().set(
 
 // 批量修改完成后，一次性触发
 ConfigStore::instance().notify();  // 所有 Watcher 被触发一次
-```
+```text
 
 #### 方法 2：使用事务模式
 
@@ -565,7 +570,7 @@ public:
 
     // 事务结束，自动触发通知
 }
-```
+```text
 
 #### 方法 3：先取消 Watcher，批量修改后再添加
 
@@ -585,7 +590,7 @@ ConfigStore::instance().set(KeyView{.group = "batch", .key = "c"}, 3);
 
 // 重新添加 Watcher
 watcher_handle = ConfigStore::instance().watch("batch.*", callback);
-```
+```bash
 
 ---
 
@@ -668,7 +673,7 @@ void check_config_files() {
         }
     }
 }
-```
+```yaml
 
 ---
 
@@ -676,7 +681,7 @@ void check_config_files() {
 
 ### 问题诊断流程
 
-```
+```bash
                     配置读取异常
                          |
          +---------------+---------------+
@@ -705,7 +710,7 @@ void check_config_files() {
     +-----------+-------+
                 |
             解决问题
-```
+```text
 
 ### 详细诊断步骤
 
@@ -749,7 +754,7 @@ void diagnose_key(const KeyView& kv) {
 
 // 使用
 diagnose_key(KeyView{.group = "app.theme", .key = "name"});
-```
+```text
 
 #### 步骤 2：检查配置文件
 
@@ -804,7 +809,7 @@ void diagnose_config_files() {
         std::cout << "  修改时间: " << file.lastModified().toString().toStdString() << std::endl;
     }
 }
-```
+```text
 
 #### 步骤 3：检查 Watcher 状态
 
@@ -847,7 +852,7 @@ void diagnose_watchers() {
     ConfigStore::instance().unwatch(handle);
     ConfigStore::instance().clear_layer(Layer::Temp);
 }
-```
+```text
 
 ### 日志输出分析方法
 
@@ -887,7 +892,7 @@ auto theme = LoggingConfigStore::query<std::string>(
     "default",
     Layer::User
 );
-```
+```text
 
 #### 检查 pending_changes
 
@@ -908,7 +913,7 @@ void monitor_pending_changes() {
     size_t after_notify = ConfigStore::instance().pending_changes();
     std::cout << "notify 后待写入变更数: " << after_notify << std::endl;
 }
-```
+```text
 
 ### 调试技巧
 
@@ -973,7 +978,7 @@ void dump_group(QSettings& settings, const QString& group, int indent) {
         settings.endGroup();
     }
 }
-```
+```text
 
 #### 技巧 2：验证类型转换
 
@@ -992,7 +997,7 @@ void test_type_conversion(const KeyView& kv) {
     std::cout << "  as double: " << as_double << std::endl;
     std::cout << "  as bool: " << (as_bool ? "true" : "false") << std::endl;
 }
-```
+```text
 
 #### 技巧 3：Watcher 性能分析
 
@@ -1054,7 +1059,7 @@ auto handle = watcher->install();
 // ... 运行一段时间 ...
 
 watcher->print_stats();
-```
+```yaml
 
 ---
 
@@ -1078,7 +1083,7 @@ ConfigStore::instance().set(
     KeyView{.group = "app_short", .key = "long_group_key"},
     "value"
 );
-```
+```text
 
 #### 问题 2：注册表权限
 
@@ -1114,7 +1119,7 @@ bool check_registry_access() {
 
     return false;
 }
-```
+```text
 
 #### 问题 3：INI 格式与注册表格式差异
 
@@ -1159,7 +1164,7 @@ public:
 // QSettings 会根据路径扩展名自动选择格式
 // .ini -> INI 格式
 // 无扩展名 -> 注册表（Windows）
-```
+```text
 
 ### Linux
 
@@ -1189,7 +1194,7 @@ void ensure_config_directory(const std::string& path) {
 
 // 使用
 ensure_config_directory("~/.config/cfdesktop/user.ini");
-```
+```text
 
 #### 问题 2：System 层路径需要 root 权限
 
@@ -1198,7 +1203,7 @@ ensure_config_directory("~/.config/cfdesktop/user.ini");
 sudo touch /etc/cfdesktop/system.ini
 sudo chown $USER:$USER /etc/cfdesktop/system.ini
 # 或者将应用配置放在用户目录
-```
+```text
 
 #### 问题 3：INI 文件编码
 
@@ -1213,7 +1218,7 @@ ConfigStore::instance().set(
     u8"应用程序标题",  // UTF-8 字符串字面量
     Layer::User
 );
-```
+```text
 
 ### macOS
 
@@ -1244,7 +1249,7 @@ void import_from_plist(const std::string& plist_path) {
         ConfigStore::instance().set(kv, value.toString().toStdString(), Layer::User);
     }
 }
-```
+```text
 
 #### 问题 2：macOS 特殊目录
 
@@ -1282,7 +1287,7 @@ public:
         return true;
     }
 };
-```
+```yaml
 
 ---
 
@@ -1324,7 +1329,7 @@ void monitor_memory_usage() {
 
 // 方案 3：限制缓存大小（需要修改 ConfigStore 实现）
 // 在 ConfigStoreImpl 中添加 LRU 缓存
-```
+```text
 
 ### 读写缓慢
 
@@ -1372,7 +1377,7 @@ void benchmark_config_operations() {
     // 清理
     ConfigStore::instance().clear_layer(Layer::Temp);
 }
-```
+```text
 
 #### 优化建议
 
@@ -1390,7 +1395,7 @@ for (int i = 0; i < 1000; ++i) {
 }
 ConfigStore::instance().notify();
 ConfigStore::instance().sync(SyncMethod::Async);  // 异步同步
-```
+```text
 
 2. **使用 Temp 层存储频繁变化的配置**
 ```cpp
@@ -1410,7 +1415,7 @@ ConfigStore::instance().set(
     Layer::App
 );
 ConfigStore::instance().sync(SyncMethod::Sync);
-```
+```text
 
 ### Watcher 性能问题
 
@@ -1426,7 +1431,7 @@ ConfigStore::instance().watch(
         // 这会阻塞所有后续的配置操作
     }
 );
-```
+```text
 
 #### 解决方案
 
@@ -1512,7 +1517,7 @@ private:
 // 使用
 auto debounced_watcher = std::make_unique<DebouncedWatcher>("app.*", std::chrono::milliseconds(100));
 debounced_watcher->install();
-```
+```yaml
 
 ---
 

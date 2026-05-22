@@ -1,3 +1,8 @@
+---
+title: "PolicyChain - 策略链"
+description: 是责任链模式（Chain of Responsibility）的一种实现，按优先级顺序执行一系列策略
+---
+
 # PolicyChain - 策略链
 
 `cf::PolicyChain` 是责任链模式（Chain of Responsibility）的一种实现，按优先级顺序执行一系列策略函数。如果某个策略返回了有效值（非 `std::nullopt`），链就停止；如果返回 `std::nullopt`，则尝试下一个策略。这种模式特别适合"多种可能的解决方案，优先使用第一个有效的"场景。
@@ -19,7 +24,7 @@ std::optional<Font> get_font(const std::string& name) {
     if (auto f = try_builtin(name))     return f;
     return std::nullopt;
 }
-```
+```text
 
 这看起来还好，但当策略数量增加、策略需要动态注册时，硬编码的 if-else 就不够灵活了。PolicyChain 把这些策略变成可组合、可动态管理的链。
 
@@ -47,7 +52,7 @@ auto result = chain.execute("42");
 if (result) {
     std::cout << "Result: " << *result << std::endl;  // Result: 42
 }
-```
+```text
 
 ### 使用工厂函数
 
@@ -68,7 +73,7 @@ auto chain = cf::make_policy_chain<int, const std::string&>(
 auto r1 = chain.execute("hello");  // 返回 std::optional(5) — stoi 失败但 length 可用
 auto r2 = chain.execute("123");    // 返回 std::optional(123) — stoi 成功
 auto r3 = chain.execute("");       // 返回 std::optional(0) — 兜底策略
-```
+```text
 
 `make_policy_chain` 按参数顺序添加策略，第一个参数优先级最高。
 
@@ -92,7 +97,7 @@ auto chain = cf::policy_chain_builder<int, int>()
 auto r1 = chain.execute(5);   // 10 — 第一个策略处理
 auto r2 = chain.execute(-3);  // 3  — 第二个策略处理
 auto r3 = chain.execute(0);   // 0  — 兜底策略
-```
+```text
 
 Builder 的 `then` 按调用顺序添加策略，先添加的优先级高。
 
@@ -119,7 +124,7 @@ template <typename Ret, typename... Args> class PolicyChain {
     [[nodiscard]] bool empty() const;
     [[nodiscard]] SizeType size() const;
 };
-```
+```text
 
 ### 工厂函数和 Builder
 
@@ -131,7 +136,7 @@ auto make_policy_chain(Policies&&... policies);
 // Builder 创建器
 template <typename T, typename... Args>
 auto policy_chain_builder();
-```
+```text
 
 ## 执行语义
 
@@ -148,7 +153,7 @@ if (result) {
 } else {
     // 所有策略都未能处理
 }
-```
+```text
 
 ## 典型使用场景
 
@@ -170,7 +175,7 @@ auto renderer_chain = cf::make_policy_chain<std::string>(
 );
 
 auto renderer = renderer_chain.execute();
-```
+```text
 
 ### 配置值解析
 
@@ -186,7 +191,7 @@ auto config_chain = cf::policy_chain_builder<std::string, const std::string&>()
         return get_default(key);        // 最后默认值
     })
     .build();
-```
+```text
 
 ### 资源加载
 
@@ -202,7 +207,7 @@ auto loader_chain = cf::make_policy_chain<QImage, const QString&>(
         return try_load_from_network(path);
     }
 );
-```
+```text
 
 ## 线程安全
 

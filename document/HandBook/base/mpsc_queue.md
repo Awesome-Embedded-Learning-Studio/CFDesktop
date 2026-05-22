@@ -1,3 +1,8 @@
+---
+title: "MpscQueue - 无锁多生产者单消费者队列"
+description: 是一个固定容量的环形缓冲区无锁队列，专为多生产者单消费者（MPSC）场景设计。它的典型应用场景是高性
+---
+
 # MpscQueue - 无锁多生产者单消费者队列
 
 `cf::lockfree::MpscQueue` 是一个固定容量的环形缓冲区无锁队列，专为多生产者单消费者（MPSC）场景设计。它的典型应用场景是高性能日志系统、事件分发和任务队列。
@@ -26,7 +31,7 @@ int value;
 if (queue.tryPop(value)) {
     std::cout << "Got: " << value << std::endl;  // Got: 42
 }
-```
+```text
 
 ### 批量操作
 
@@ -44,7 +49,7 @@ size_t popped = queue.tryPopBatch(buffer, 32);
 for (size_t i = 0; i < popped; ++i) {
     process(buffer[i]);
 }
-```
+```text
 
 ### 容量查询
 
@@ -57,7 +62,7 @@ size_t approx_size = queue.size();
 
 // 是否为空（近似值）
 bool empty = queue.empty();
-```
+```text
 
 ## 容量要求
 
@@ -67,7 +72,7 @@ bool empty = queue.empty();
 cf::lockfree::MpscQueue<int, 1024> q1;   // OK: 1024 = 2^10
 cf::lockfree::MpscQueue<int, 2048> q2;   // OK: 2048 = 2^11
 cf::lockfree::MpscQueue<int, 1000> q3;   // 编译错误：static_assert 失败
-```
+```text
 
 选择容量时应该考虑最坏情况下的生产速率和消费速率之差。如果生产者短暂 burst 产生了很多数据，队列需要有足够的缓冲空间。
 
@@ -113,7 +118,7 @@ while (seq != pos) {
 #endif
     seq = cell->sequence.load(std::memory_order_acquire);
 }
-```
+```text
 
 这意味着如果消费者跟不上，生产者线程会被阻塞在自旋中。如果你的场景可能出现持续的生产过剩，需要在上层做背压控制。
 
@@ -124,7 +129,7 @@ struct Cell {
     std::atomic<size_type> sequence;              // 序列号
     alignas(alignof(T)) unsigned char storage[sizeof(T)];  // 原始存储
 };
-```
+```text
 
 每个槽位的存储是 `alignas(T)` 的原始字节数组，通过 placement new 构造对象。这样避免了不必要的默认构造，也支持没有默认构造函数的类型。
 
@@ -132,7 +137,7 @@ struct Cell {
 
 ```cpp
 char padding_[64 - sizeof(readPos_) - sizeof(writePos_) - sizeof(buffer_) % 64];
-```
+```bash
 
 ## 线程安全
 

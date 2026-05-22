@@ -1,3 +1,8 @@
+---
+title: 故障排除
+description: 本文档列出 CFLogger 使用中的常见问题和解决方案。
+---
+
 # 故障排除
 
 本文档列出 CFLogger 使用中的常见问题和解决方案。
@@ -23,7 +28,7 @@ int main() {
     flush();  // 或 Logger::instance().flush_sync()
     return 0;
 }
-```
+```text
 
 **原因 2：日志级别设置过高**
 
@@ -35,7 +40,7 @@ info("这条不会显示");  // INFO < WARNING
 // ✅ 调整级别
 set_level(level::INFO);
 info("这条会显示");
-```
+```text
 
 **原因 3：没有添加 Sink**
 
@@ -47,7 +52,7 @@ Logger::instance().log(level::INFO, "Hello", "Tag", {});
 auto sink = std::make_shared<ConsoleSink>();
 Logger::instance().add_sink(sink);
 Logger::instance().log(level::INFO, "Hello", "Tag", {});
-```
+```text
 
 ### Q2: 程序崩溃后日志丢失
 
@@ -72,7 +77,7 @@ int main() {
     Logger::instance().flush_sync();  // 确保所有日志写入
     return 0;
 }
-```
+```text
 
 ### Q3: 队列溢出导致日志丢失
 
@@ -83,7 +88,7 @@ size_t overflow = Logger::instance().get_normal_queue_overflow();
 if (overflow > 0) {
     warning("队列溢出，丢失 " + std::to_string(overflow) + " 条日志");
 }
-```
+```text
 
 #### 解决方法
 
@@ -95,7 +100,7 @@ Logger::instance().setMininumLevel(level::WARNING);
 
 // 减少详细日志
 // trace() → debug() → info()
-```
+```text
 
 **方法 2：批量日志**
 
@@ -111,7 +116,7 @@ for (int i = 0; i < 10000; ++i) {
     // 处理...
 }
 trace("完成处理 10000 个项目");
-```
+```text
 
 **方法 3：异步处理加速**
 
@@ -120,7 +125,7 @@ trace("完成处理 10000 个项目");
 ```cpp
 // 使用更快的 Sink
 // 考虑使用内存缓冲 + 批量写入
-```
+```text
 
 ### Q4: 颜色显示异常
 
@@ -128,9 +133,9 @@ trace("完成处理 10000 个项目");
 
 在文件中看到 ANSI 转义码：
 
-```
+```text
 [14:23:45] [INFO] [CFLog] ^[[92m消息^[[0m
-```
+```text
 
 #### 原因
 
@@ -153,15 +158,15 @@ auto file_formatter = std::make_shared<FileFormatter>(
 auto config = std::make_shared<FormatterConfig>(FormatterFlag::DEFAULT);
 config->disable(FormatterFlag::COLOR);
 formatter->set_config(config);
-```
+```text
 
 ### Q5: 编译错误
 
 #### 问题：找不到头文件
 
-```
+```text
 fatal error: cflog/cflog.h: No such file or directory
-```
+```text
 
 #### 解决方法
 
@@ -176,13 +181,13 @@ target_link_libraries(my_app PRIVATE CFDesktop::logger)
 target_include_directories(my_app PRIVATE
     ${CMAKE_SOURCE_DIR}/desktop/base/logger/include
 )
-```
+```text
 
 #### 问题：链接错误
 
-```
+```text
 undefined reference to `cf::log::info(std::string_view, ...)`
-```
+```text
 
 #### 解决方法
 
@@ -192,7 +197,7 @@ target_link_libraries(my_app PRIVATE CFDesktop::logger)
 
 # 检查 logger 库是否被构建
 # 确保 CMake 选项 CFDESKTOP_BUILD_LOGGER 为 ON
-```
+```text
 
 ### Q6: 多线程日志混乱
 
@@ -219,7 +224,7 @@ public:
 private:
     std::mutex mutex_;
 };
-```
+```text
 
 ### Q7: 性能问题
 
@@ -250,7 +255,7 @@ public:
 private:
     std::chrono::steady_clock::time_point start_;
 };
-```
+```text
 
 #### 解决方法
 
@@ -277,7 +282,7 @@ size_t overflow = Logger::instance().get_normal_queue_overflow();
 if (overflow > 0) {
     // 日志产生速度 > 消费速度
 }
-```
+```text
 
 **原因 2：自定义 Sink 泄漏**
 
@@ -293,7 +298,7 @@ public:
 private:
     std::vector<std::string> messages_;  // 从不清理
 };
-```
+```text
 
 **解决方法**
 
@@ -315,7 +320,7 @@ private:
     size_t max_size_ = 1000;
     std::mutex mutex_;
 };
-```
+```text
 
 ### Q9: 文件打开失败
 
@@ -347,7 +352,7 @@ void ensure_log_directory(const std::string& log_path) {
 // 使用
 ensure_log_directory("/var/log/myapp/app.log");
 auto sink = std::make_shared<FileSink>("/var/log/myapp/app.log");
-```
+```text
 
 ### Q10: 时间戳不正确
 
@@ -366,7 +371,7 @@ auto sink = std::make_shared<FileSink>("/var/log/myapp/app.log");
 auto config = std::make_shared<FormatterConfig>();
 config->set_timestamp_format("%Y-%m-%d %H:%M:%S %z");  // 添加时区
 formatter->set_config(config);
-```
+```text
 
 ## 调试技巧
 
@@ -380,7 +385,7 @@ Logger::instance().setMininumLevel(level::TRACE);
 auto formatter = std::make_shared<AsciiColorFormatter>(
     FormatterFlag::VERBOSE | FormatterFlag::COLOR
 );
-```
+```text
 
 ### 监控队列状态
 
@@ -414,7 +419,7 @@ private:
     std::thread thread_;
     size_t last_overflow_ = 0;
 };
-```
+```text
 
 ### 捕获异常
 
@@ -433,7 +438,7 @@ public:
         }
     }
 };
-```
+```text
 
 ## 获取帮助
 
@@ -463,7 +468,7 @@ grep "\[Network\]" app.log
 
 # 实时过滤
 tail -f app.log | grep ERROR
-```
+```text
 
 ## 下一步
 

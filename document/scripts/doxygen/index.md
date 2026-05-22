@@ -1,10 +1,11 @@
-# doxygen
+---
+title: Doxygen 脚本
+description: 本目录包含基于 Doxygen 的文档生成脚本与注释风格检查工具，自动从源码中提取 API 文档并验
+---
 
-> Welcome to the doxygen section.
+# Doxygen 脚本
 
-## Overview
-
-Documentation and resources for doxygen.
+本目录包含基于 Doxygen 的文档生成脚本与注释风格检查工具，自动从源码中提取 API 文档并验证注释是否符合项目 Doxygen 规范（`DOXYGEN_REQUEST.md`），确保文档与代码保持同步。
 
 ---
 

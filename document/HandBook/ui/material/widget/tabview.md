@@ -1,3 +1,8 @@
+---
+title: "TabView - Material 标签页"
+description: 是 Material Design 3 标签页控件的完整实现，支持标签文本、带滑动动画的选中指示器和
+---
+
 # TabView - Material 标签页
 
 `TabView` 是 Material Design 3 标签页控件的完整实现，支持标签文本、带滑动动画的选中指示器和标签滚动。包含状态层、焦点指示器和 Material Design 3 样式。
@@ -13,7 +18,7 @@ class TabView : public QTabWidget {
     Q_PROPERTY(int tabMinWidth READ tabMinWidth WRITE setTabMinWidth)
     Q_PROPERTY(bool showIndicator READ showIndicator WRITE setShowIndicator)
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/tabview/tabview.h`
 
@@ -37,7 +42,7 @@ tabs->setTabHeight(48);
 
 // 连接信号
 connect(tabs, &QTabWidget::currentChanged, this, &MyClass::onTabChanged);
-```
+```text
 
 ## 标签高度和宽度
 
@@ -47,7 +52,7 @@ tabs->setTabHeight(48);
 
 // 设置标签最小宽度（默认遵循 Material Design 3 规范）
 tabs->setTabMinWidth(90);
-```
+```text
 
 ## 选中指示器
 
@@ -57,7 +62,7 @@ tabs->setShowIndicator(true);
 
 // 选中指示器是一个滑动条，在标签之间平滑过渡
 // 使用 Primary 颜色绘制
-```
+```text
 
 指示器在标签切换时通过滑动动画移动到新的选中标签位置。
 
@@ -70,7 +75,7 @@ tabs->setTabCloseable(1, true);  // 第二个标签可关闭
 
 // 连接关闭信号
 connect(tabs, &TabView::tabCloseRequested, this, &MyClass::onTabClose);
-```
+```text
 
 可关闭的标签会显示关闭按钮。
 
@@ -81,7 +86,7 @@ TabView 使用内部 `MaterialTabBar` 实现标签栏：
 ```cpp
 // MaterialTabBar 是内部实现，不暴露给外部
 // 负责标签的绘制、选中指示器动画和滚动
-```
+```bash
 
 ## 绘制流程
 

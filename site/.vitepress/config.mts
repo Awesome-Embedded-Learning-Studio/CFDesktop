@@ -45,7 +45,6 @@ function shouldSkip(name: string): boolean {
   return (
     name.startsWith(".") ||
     name === "api" ||
-    name === "stylesheets" ||
     name === "Awesome-Embedded.png" ||
     name === "Awesome-Embedded.ico"
   );

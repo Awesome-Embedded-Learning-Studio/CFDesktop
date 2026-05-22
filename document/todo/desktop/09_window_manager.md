@@ -1,3 +1,8 @@
+---
+title: "Phase 9: 窗口管理器 TODO"
+description: "状态: 🚧 部分完成，依赖阶段: Phase 6, Phase 7"
+---
+
 # Phase 9: 窗口管理器 TODO
 
 > **状态**: 🚧 部分完成

@@ -1,3 +1,8 @@
+---
+title: AI 辅助开发指南
+description: 本页是通用 AI 协作入口，适用于 Claude Code、Codex 或其他代码助手。私人配置文件
+---
+
 # AI 辅助开发指南
 
 本页是通用 AI 协作入口，适用于 Claude Code、Codex 或其他代码助手。私人配置文件如 `CLAUDE.md`、`MEMORY.md`、`.claude/`、`.codex/` 不属于仓库公共基建。

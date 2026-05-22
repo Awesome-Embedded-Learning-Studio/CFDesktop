@@ -1,3 +1,8 @@
+---
+title: "TableView - Material 表格视图"
+description: 是 Material Design 3 表格视图控件的完整实现，用于二维数据展示。具有自定义表头渲染
+---
+
 # TableView - Material 表格视图
 
 `TableView` 是 Material Design 3 表格视图控件的完整实现，用于二维数据展示。具有自定义表头渲染、网格线、带水波纹的行选择、排序指示器、列调整大小反馈和交替行颜色。
@@ -15,7 +20,7 @@ class TableView : public QTableView {
     Q_PROPERTY(bool alternatingRowColors READ alternatingRowColors WRITE setAlternatingRowColors)
     Q_PROPERTY(bool rippleEnabled READ rippleEnabled WRITE setRippleEnabled)
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/tableview/tableview.h`
 
@@ -26,7 +31,7 @@ enum class TableRowHeight {
     Compact,  // 48dp - 紧凑模式，适合密集数据
     Standard  // 56dp - 标准模式（默认）
 };
-```
+```text
 
 ## 网格线样式
 
@@ -37,7 +42,7 @@ enum class TableGridStyle {
     Vertical,   // 仅垂直线
     Both        // 水平和垂直线（默认）
 };
-```
+```text
 
 ## 基本用法
 
@@ -72,7 +77,7 @@ table->setModel(model);
 
 // 连接信号
 connect(table, &QTableView::clicked, this, &MyClass::onCellClicked);
-```
+```text
 
 ## 交替行颜色
 
@@ -82,7 +87,7 @@ table->setAlternatingRowColors(true);
 
 // 禁用交替行颜色
 table->setAlternatingRowColors(false);
-```
+```text
 
 交替行颜色使用 `SurfaceVariant` 的 5% 透明度，提供轻微的视觉区分而不影响阅读。
 
@@ -94,7 +99,7 @@ table->setAlternatingRowColors(false);
 // 选中行有 PrimaryContainer 叠加层
 // 水波纹效果从点击位置扩散
 // 通过 m_hoveredRow 和 m_pressedRow 追踪状态
-```
+```text
 
 ## 表头
 
@@ -103,7 +108,7 @@ table->setAlternatingRowColors(false);
 ```cpp
 // 显示/隐藏表头
 table->setShowHeader(true);
-```
+```bash
 
 表头支持排序指示器和列调整大小的视觉反馈。
 

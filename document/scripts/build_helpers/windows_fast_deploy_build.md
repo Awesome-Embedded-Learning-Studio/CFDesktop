@@ -1,3 +1,8 @@
+---
+title: windowsfastdeploybuild.ps1
+description: "文档编写日期: 2026-03-20，本脚本执行快速部署构建，包含："
+---
+
 # windows_fast_deploy_build.ps1
 
 > 文档编写日期: 2026-03-20
@@ -7,13 +12,13 @@
 ### 基本语法
 ```powershell
 .\scripts\build_helpers\windows_fast_deploy_build.ps1
-```
+```text
 
 ### 使用示例
 ```powershell
 # 执行快速部署构建 (配置 + 编译)
 .\scripts\build_helpers\windows_fast_deploy_build.ps1
-```
+```text
 
 ## Scripts详解
 
@@ -45,7 +50,7 @@
 从配置文件读取构建目录和并行任务数，然后执行编译：
 ```bash
 cmake --build <build_dir> [--parallel <jobs>]
-```
+```bash
 
 ### 构建计时
 脚本使用`Start-BuildTimer`和`Stop-BuildTimer`记录编译耗时。
@@ -78,7 +83,7 @@ cmake --build <build_dir> [--parallel <jobs>]
 ```ini
 [options]
 jobs = 8  # 并行编译任务数，留空则使用CMake默认值
-```
+```text
 
 ### 注意事项
 - 本脚本不运行测试，如需测试请使用 `windows_run_tests.ps1 -Config deploy`

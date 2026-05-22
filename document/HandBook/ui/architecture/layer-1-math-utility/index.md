@@ -1,10 +1,11 @@
-# layer-1-math-utility
+---
+title: "Layer 1: 数学与工具层"
+description: 本章节介绍 UI 渲染管线的第一层——数学与工具层，涵盖  颜色空间转换、 几何计算、 缓动函数以及
+---
 
-> Welcome to the layer-1-math-utility section.
+# Layer 1: 数学与工具层
 
-## Overview
-
-Documentation and resources for layer-1-math-utility.
+本章节介绍 UI 渲染管线的第一层——数学与工具层，涵盖 `CFColor` 颜色空间转换、`GeometryHelper` 几何计算、`Easing` 缓动函数以及 `DevicePixel` 设备像素适配等基础工具。该层为上层所有模块提供零依赖的纯计算支持。
 
 ---
 

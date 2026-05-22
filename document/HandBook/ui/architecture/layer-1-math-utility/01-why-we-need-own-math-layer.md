@@ -1,3 +1,8 @@
+---
+title: 从零开始——为什么我们决定自己造轮子
+description: 说实话，当我说我们要自己写一套数学工具库的时候，队友的表情就像看到我决定徒手写 JSON 解析器一样
+---
+
 # 从零开始——为什么我们决定自己造轮子
 
 说实话，当我说我们要自己写一套数学工具库的时候，队友的表情就像看到我决定徒手写 JSON 解析器一样——你说你有什么毛病？Qt 不是已经给你配好了 QColor、QEasingCurve，甚至还有 QPropertyAnimation，你这不是吃饱了撑的吗？
@@ -71,7 +76,7 @@ QList<CFColor> palette = tonalPalette(brandColor);
 
 // palette[0] 是最接近品牌色的 tone 值
 // palette[1] 到 palette[13] 是从 Tone 0 到 Tone 100 的 13 个等级
-```
+```yaml
 
 如果你打印出这些颜色的 RGB 值，你会发现它们的色相和色度基本保持一致，只有亮度在变化——这正是 HCT 空间的优势。
 

@@ -1,3 +1,8 @@
+---
+title: libpaths.sh
+description: "文档编写日期: 2026-03-20，加载后可使用以下环境变量或调用对应的 getter 函数："
+---
+
 # lib_paths.sh
 
 > 文档编写日期: 2026-03-20
@@ -9,7 +14,7 @@
 # 推荐方式：在脚本中先设置 SCRIPT_DIR，然后加载
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/bash/lib_paths.sh"
-```
+```bash
 
 加载后可使用以下环境变量或调用对应的 getter 函数：
 - `$PROJECT_ROOT` 或 `get_project_root()` - 项目根目录
@@ -46,7 +51,7 @@ source "$SCRIPT_DIR/../lib/bash/lib_paths.sh"
 
 ### 目录结构假设
 
-```
+```text
 PROJECT_ROOT/
   ├── scripts/
   │   ├── lib/
@@ -55,7 +60,7 @@ PROJECT_ROOT/
   │   └── build_helpers/
   │       └── your_script.sh
   └── ...
-```
+```text
 
 ### 核心函数详解
 
@@ -65,13 +70,13 @@ PROJECT_ROOT/
 if path_exists "/some/path"; then
     echo "路径存在"
 fi
-```
+```text
 
 #### ensure_dir
 确保目录存在，如果不存在则创建（包括父目录）。
 ```bash
 ensure_dir "$PROJECT_ROOT/build/output"
-```
+```text
 
 ### 依赖关系
 - Bash 内置命令

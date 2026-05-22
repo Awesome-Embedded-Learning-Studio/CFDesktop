@@ -1,3 +1,8 @@
+---
+title: "procparser - Linux 文件解析工具"
+description: Linux 下的硬件信息大多藏在  和  伪文件系统里。这些文件格式固定但处理起来很繁琐，而且容易出
+---
+
 # proc_parser - Linux 文件解析工具
 
 Linux 下的硬件信息大多藏在 `/proc` 和 `/sys` 伪文件系统里。这些文件格式固定但处理起来很繁琐，而且容易出错——比如字段分隔符可能是冒号加空格，也可能是制表符。`proc_parser` 提供了一套专门处理这些格式的工具，用 `string_view` 避免拷贝，而且不抛异常。
@@ -16,7 +21,7 @@ auto model = cf::parse_cpuinfo_field(line, "model name");
 // 字段不存在时返回空视图
 auto missing = cf::parse_cpuinfo_field(line, "vendor_id");
 // missing.data() == nullptr
-```
+```text
 
 实际使用时通常是逐行读取：
 
@@ -36,7 +41,7 @@ while (std::getline(cpuinfo, line)) {
         std::cout << "厂商: " << vendor << std::endl;
     }
 }
-```
+```text
 
 ## 字符串去空格
 
@@ -47,7 +52,7 @@ std::string_view sv = "  hello world  ";
 auto trimmed = cf::trim_whitespace(sv);      // "hello world"
 auto left_trimmed = cf::ltrim_whitespace(sv); // "hello world  "
 auto right_trimmed = cf::rtrim_whitespace(sv);// "  hello world"
-```
+```text
 
 ## 解析缓存大小
 
@@ -58,7 +63,7 @@ auto size1 = cf::parse_cache_size("32K");   // 32
 auto size2 = cf::parse_cache_size("1M");    // 1024
 auto size3 = cf::parse_cache_size("2G");    // 2097152
 auto invalid = cf::parse_cache_size("xyz"); // std::nullopt
-```
+```text
 
 这在读取 `/sys/devices/system/cpu/cpu0/cache/index*/size` 时特别有用：
 
@@ -68,7 +73,7 @@ auto size_kb = cf::parse_cache_size(l1_size);
 if (size_kb) {
     std::cout << "L1 缓存: " << *size_kb << " KB" << std::endl;
 }
-```
+```text
 
 ## 解析数字
 
@@ -79,7 +84,7 @@ auto value = cf::parse_uint32("4096");      // 4096
 auto hex1 = cf::parse_hex_uint32("0x41");   // 65
 auto hex2 = cf::parse_hex_uint32("FF");     // 255
 auto invalid = cf::parse_uint32("abc");     // std::nullopt
-```
+```text
 
 十六进制解析在处理 ARM 的 `CPU implementer` 字段时很常见：
 
@@ -89,7 +94,7 @@ if (auto impl_val = cf::parse_hex_uint32(impl)) {
     auto vendor = cf::arm_implementer_to_vendor(*impl_val);
     // impl_val = 0x41 -> vendor = "ARM"
 }
-```
+```text
 
 ## 读取文件
 
@@ -102,7 +107,7 @@ auto max_freq = cf::read_uint32_file(
 if (max_freq.has_value()) {
     std::cout << "最大频率: " << *max_freq << " kHz" << std::endl;
 }
-```
+```text
 
 ⚠️ 这个函数会执行文件 I/O，可能因为权限或文件不存在而失败。返回 `std::nullopt` 时可以判断是文件问题还是解析失败。
 
@@ -115,7 +120,7 @@ auto vendor = cf::arm_implementer_to_vendor(0x41);  // "ARM"
 auto vendor2 = cf::arm_implementer_to_vendor(0x51); // "Qualcomm"
 auto vendor3 = cf::arm_implementer_to_vendor(0x69); // "Intel"
 auto unknown = cf::arm_implementer_to_vendor(0xFF); // "Unknown"
-```
+```text
 
 支持的厂商 ID 包括 ARM (0x41)、Broadcom (0x42)、Qualcomm (0x51)、NVIDIA (0x4E) 等。
 
@@ -132,7 +137,7 @@ std::string_view bad() {
 std::string_view good(const std::string& line) {
     return cf::parse_cpuinfo_field(line, "model name");  // OK，调用方保证 line 有效
 }
-```
+```text
 
 ## 相关文档
 

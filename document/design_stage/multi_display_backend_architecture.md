@@ -1,3 +1,8 @@
+---
+title: CFDesktop 多显示后端架构设计
+description: "最后更新: 2026-03-29，在  中增加:"
+---
+
 # CFDesktop 多显示后端架构设计
 
 > **状态**: 设计中
@@ -24,7 +29,7 @@ CFDesktop 需要在以下场景中运行：
 
 ## 二、系统角色模型
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │                    CFDesktop Shell                    │
 │  (ShellLayer, PanelManager, WindowManager, IWindow)   │
@@ -45,7 +50,7 @@ CFDesktop 需要在以下场景中运行：
 ├───────────────────────────────────────────────────────┤
 │              硬件层 (GPU / DRM / FB / Win32)            │
 └───────────────────────────────────────────────────────┘
-```
+```bash
 
 ### DisplayServerRole 枚举
 
@@ -80,7 +85,7 @@ signals:
     void externalWindowAppeared(WeakPtr<IWindow> window);
     void externalWindowDisappeared(WeakPtr<IWindow> window);
 };
-```
+```text
 
 **职责**:
 - 决定 CFDesktop 的运行角色（客户端 / 合成器 / 直接渲染）
@@ -101,7 +106,7 @@ public:
     virtual QSize screenSize() const = 0;
     virtual void* nativeHandle() const = 0;  // EGLDisplay, HWND 等
 };
-```
+```text
 
 **职责**:
 - 抽象底层渲染硬件初始化
@@ -121,7 +126,7 @@ struct BackendCapabilities {
     bool supportsScreenshot = true;
     int maxTextureSize = 4096;
 };
-```
+```yaml
 
 ---
 
@@ -132,7 +137,7 @@ struct BackendCapabilities {
 在 `IWindowBackend` 中增加:
 ```cpp
 virtual BackendCapabilities capabilities() const = 0;
-```
+```text
 
 允许 WindowManager 和 Shell 在运行时查询后端能力，做出适配决策。
 
@@ -154,7 +159,7 @@ enum class DisplayServerMode {
 };
 
 DisplayServerMode DetectDisplayServerMode();
-```
+```text
 
 `DetectDisplayServerMode()` 检测逻辑:
 1. 检查环境变量 `CFDESKTOP_DISPLAY_SERVER` (强制覆盖)
@@ -173,7 +178,7 @@ public:
     virtual void setStrategy(std::unique_ptr<IShellLayerStrategy> strategy) = 0;
     virtual QRect geometry() const = 0;
 };
-```
+```text
 
 `ShellLayer` 同时继承 `IShellLayer` 和 `QWidget`:
 ```cpp
@@ -182,7 +187,7 @@ class ShellLayer : public QWidget, public IShellLayer {
 };
 
 // Wayland 合成器可以实现 IShellLayer 而不继承 QWidget
-```
+```bash
 
 ---
 
@@ -261,13 +266,13 @@ if(CFDESKTOP_ENABLE_X11_WM)
     find_package(PkgConfig)
     pkg_check_modules(XCB OPTIONAL xcb xcb-composite xcb-ewmh)
 endif()
-```
+```yaml
 
 ---
 
 ## 八、运行时后端选择流程
 
-```
+```text
 CFDesktop 启动
     │
     ▼
@@ -292,4 +297,4 @@ DetectDisplayServerMode()
     │   └── DirectRender 模式 (linuxfb)
     │
     └── 默认: Client 模式
-```
+```text

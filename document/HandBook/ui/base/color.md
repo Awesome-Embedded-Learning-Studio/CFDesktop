@@ -1,3 +1,8 @@
+---
+title: "color - HCT 色彩空间"
+description: "是对  的扩展，增加了 HCT（Hue-Chroma-Tone）色彩空间支持。HCT 是 Mater"
+---
+
 # color - HCT 色彩空间
 
 `CFColor` 是对 `QColor` 的扩展，增加了 HCT（Hue-Chroma-Tone）色彩空间支持。HCT 是 Material Design 3 采用的色彩空间，比 RGB 或 HSL 更符合人类对颜色的直觉感知——色相、鲜艳度、明度三个维度正交，调整其中一个不会影响其他两个。这在做动态主题系统时特别重要。
@@ -19,7 +24,7 @@ QColor brighterBlue = rgbBlue.lighter(120);  // 结果可能偏紫了
 CFColor hctBlue(240.0f, 80.0f, 50.0f);  // 蓝色，中高饱和度，中等亮度
 CFColor brighterHCT = CFColor(hctBlue.hue(), hctBlue.chroma(), 70.0f);
 // 色相 240° 不变，鲜艳度不变，只是更亮了
-```
+```text
 
 这就是 Material Design 3 能从单个"种子颜色"生成整套主题的原因——在 HCT 空间里，你可以独立控制颜色的各个维度。
 
@@ -41,7 +46,7 @@ CFColor fromHexWithAlpha("#80FF0000");  // 50% 透明的红色
 
 // 从 HCT 值
 CFColor fromHCT(240.0f, 80.0f, 50.0f);  // 蓝色，饱和度 80，明度 50
-```
+```text
 
 HCT 值的范围：
 - `hue`：0° 到 360°，绕色相环一圈
@@ -64,7 +69,7 @@ float t = color.tone();    // 约 42（中等偏暗）
 // 基于这些值生成变体
 CFColor lighterVariant(color.hue(), color.chroma() * 0.8f, color.tone() + 20);
 CFColor darkerVariant(color.hue(), color.chroma() * 1.2f, color.tone() - 20);
-```
+```text
 
 HCT 值在构造时计算并缓存，所以访问是 O(1) 的。别担心性能问题。
 
@@ -82,7 +87,7 @@ float lumBg = bg.relativeLuminance();      // ~1.0（白色）
 // 对比度 = (Lmax + 0.05) / (Lmin + 0.05)
 float ratio = (std::max(lumText, lumBg) + 0.05) /
               (std::min(lumText, lumBg) + 0.05);
-```
+```text
 
 这个函数在 `color_helper.h` 的 `contrastRatio()` 里被使用，一般不需要直接调用。但如果你想自己实现一些可访问性相关的逻辑，可以用它。
 
@@ -100,7 +105,7 @@ QColor qColor = myColor.native_color();
 QPainter painter(this);
 painter.setBrush(myColor.native_color());
 painter.drawEllipse(center, 50, 50);
-```
+```text
 
 `CFColor` 不是 `QColor` 的子类，而是组合关系。这样设计是为了避免 `QColor` 的隐式转换带来的意外——`QColor(const char*)` 会把字符串当成颜色名，而我们希望 hex 字符串有明确的解析行为。
 
@@ -124,7 +129,7 @@ QList<CFColor> palette = tonalPalette(seed);
 CFColor primary = palette[6];      // 主要色
 CFColor onPrimary = palette[10];   // 主要色上的文字
 CFColor surface = palette[4];      // 表面色
-```
+```text
 
 这样生成的主题保证色彩和谐，避免了手工调整 RGB 时容易出现的"脏色"问题。
 

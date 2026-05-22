@@ -1,3 +1,8 @@
+---
+title: "Phase 11: 通知与控制中心 TODO"
+description: "预计周期: 2~3 周，依赖阶段: Phase 6, Phase 10"
+---
+
 # Phase 11: 通知与控制中心 TODO
 
 > **状态**: ⬜ 待开始

@@ -1,3 +1,8 @@
+---
+title: CFDesktop 开发环境文档
+description: 欢迎使用 CFDesktop 开发环境设置指南。本文档系列将帮助您搭建完整的开发环境，从基础工具安装
+---
+
 # CFDesktop 开发环境文档
 
 欢迎使用 CFDesktop 开发环境设置指南。本文档系列将帮助您搭建完整的开发环境，从基础工具安装到高级配置，逐步引导您成为 CFDesktop 开发者。
@@ -87,7 +92,7 @@ graph LR
     style D fill:#FF9800
     style E fill:#FF5722
     style F fill:#9E9E9E
-```
+```text
 
 ### 快速开始
 
@@ -101,7 +106,7 @@ cd CFDesktop
 
 # 3. Linux 快速构建
 ./scripts/build_helpers/linux_fast_develop_build.sh
-```
+```yaml
 
 ---
 

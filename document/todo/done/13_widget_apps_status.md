@@ -1,3 +1,8 @@
+---
+title: "Phase G: Widget 应用与示例程序状态"
+description: "完成日期: 2026-03-21，总体进度: 100%"
+---
+
 # Phase G: Widget 应用与示例程序状态
 
 > **状态**: ✅ 已完成

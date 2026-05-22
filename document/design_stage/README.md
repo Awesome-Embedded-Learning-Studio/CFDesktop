@@ -1,3 +1,8 @@
+---
+title: CFDesktop 前期阶段设计文档总览
+description: 本目录包含 CFDesktop 项目前期阶段的详细设计文档。
+---
+
 # CFDesktop 前期阶段设计文档总览
 
 ## 文档目录

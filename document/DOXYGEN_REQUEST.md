@@ -1,3 +1,8 @@
+---
+title: "prompt.md — Doxygen comment generation specification (English)"
+description: "Doxygen 注释生成规范，定义 AI 生成 C++ 代码文档的格式和风格要求"
+---
+
 # prompt.md — Doxygen comment generation specification (English)
 
 > Purpose: a strict, machine-readable yet human-friendly prompt that instructs an AI to generate idiomatic, high-quality Doxygen comments for modern C++ code (C, C++20/23, templates, concepts, macros, embedded/OS code). Use this file as the contract that the generator must follow.
@@ -52,7 +57,7 @@ Every file must start with a file-level block like:
  * @since   <project version or "N/A">
  * @ingroup <module or "none">
  */
-```
+```yaml
 
 * Fill `@author`, `@date`, `@version` from git metadata if available; otherwise set to `"N/A"`.
 * Keep the file-level description concise (≤ 2–3 short sentences).
@@ -82,7 +87,7 @@ Block style example:
  * @since              Version or "N/A".
  * @ingroup            Module name or "none".
  */
-```
+```text
 
 Line-style equivalent:
 
@@ -91,7 +96,7 @@ Line-style equivalent:
 /// @details Optional extended description in third-person present tense.
 /// @param[in] name Description...
 /// @return Description...
-```
+```yaml
 
 * **MUST** include `@tparam` for templates.
 * **MUST** include `@throws` (or `@throws None`).
@@ -173,7 +178,7 @@ Class example:
  * @endcode
  */
 class RingBuffer { ... };
-```
+```yaml
 
 ---
 
@@ -197,7 +202,7 @@ enum class PowerState {
     Sleep,  ///< Low-power sleep mode.
     On      ///< Fully powered.
 };
-```
+```yaml
 
 ---
 
@@ -212,7 +217,7 @@ Example:
 ```cpp
 /// @brief Pointer to underlying device context. Ownership: observer; may be nullptr.
 DeviceContext* ctx_;
-```
+```yaml
 
 ---
 
@@ -297,14 +302,14 @@ Provide exact failure messages for each check so the generator can iterate.
  * @ingroup         util
  */
 uint64_t parse_le_uint(const uint8_t* buf, size_t len);
-```
+```text
 
 ### Bad (function)
 
 ```cpp
 /** Parses bytes into a number. This function will parse and return value. */
 uint64_t parse_le_uint(const uint8_t* buf, size_t len);
-```
+```yaml
 
 * Issues: first-person / future tense; no tags; no units; no param directions; too short; possibly misleading.
 
@@ -373,7 +378,7 @@ Return an object with fields:
   ],
   "fixme_count": M
 }
-```
+```yaml
 
 ---
 

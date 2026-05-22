@@ -1,3 +1,8 @@
+---
+title: 常见问题排查
+description: 本文档提供 CFDesktop 项目开发和构建过程中常见问题的解决方案。
+---
+
 # 常见问题排查
 
 本文档提供 CFDesktop 项目开发和构建过程中常见问题的解决方案。
@@ -16,9 +21,9 @@
 
 **症状**:
 
-```
+```text
 error: Docker daemon is not running!
-```
+```text
 
 **解决方案**:
 
@@ -29,14 +34,14 @@ sudo systemctl status docker
 
 # macOS/Windows
 # 启动 Docker Desktop 应用程序
-```
+```text
 
 **验证 Docker 运行状态**:
 
 ```bash
 docker info
 docker run --rm hello-world
-```
+```yaml
 
 ---
 
@@ -60,7 +65,7 @@ docker run --rm hello-world
 
 # 重启 Docker
 sudo systemctl restart docker
-```
+```text
 
 #### 2. 基础镜像拉取失败
 
@@ -70,7 +75,7 @@ docker pull ubuntu:24.04
 
 # 或使用镜像加速
 docker pull registry.cn-hangzhou.aliyuncs.com/library/ubuntu:24.04
-```
+```text
 
 #### 3. 磁盘空间不足
 
@@ -80,14 +85,14 @@ docker system prune -a
 
 # 查看 Docker 占用空间
 docker system df
-```
+```text
 
 #### 4. 构建缓存问题
 
 ```bash
 # 使用 --no-cache 重新构建
 docker build --no-cache -f scripts/docker/Dockerfile.build -t cfdesktop-build .
-```
+```yaml
 
 ---
 
@@ -107,7 +112,7 @@ sudo systemctl restart docker
 
 # 使用 host 网络模式（Linux）
 docker run --rm --network host -v $(pwd):/project cfdesktop-build
-```
+```yaml
 
 ---
 
@@ -124,14 +129,14 @@ docker run --rm --network host -v $(pwd):/project cfdesktop-build
 ```bash
 # 缓存镜像，避免重复构建
 bash scripts/build_helpers/docker_start.sh --fast-build --verify
-```
+```text
 
 2. **跳过 ARM64 验证**（如果不是必需）:
 
 ```bash
 # 修改 pre-push hook 或使用 --no-verify
 git push --no-verify
-```
+```yaml
 
 3. **在原生 ARM64 环境构建**:
 
@@ -156,7 +161,7 @@ bash scripts/build_helpers/docker_start.sh
 # PowerShell 需要手动转换
 $env:MSYS_NO_PATHCONV=1
 docker run --rm -v "D:/ProjectHome/CFDesktop:/project" cfdesktop-build
-```
+```yaml
 
 ---
 
@@ -172,7 +177,7 @@ docker run --rm -u $(id -u):$(id -g) -v $(pwd):/project cfdesktop-build
 
 # 或修改文件权限
 sudo chown -R $USER:$USER out/
-```
+```text
 
 ## 构建问题
 
@@ -184,9 +189,9 @@ sudo chown -R $USER:$USER out/
 
 #### 1. 头文件未找到
 
-```
+```text
 fatal error: some_header.h: No such file or directory
-```
+```text
 
 **解决方案**:
 
@@ -199,13 +204,13 @@ docker run --rm -v $(pwd):/project cfdesktop-build bash -c "
   apt-get update && \
   bash /project/scripts/dependency/install_build_dependencies.sh
 "
-```
+```text
 
 #### 2. Qt 版本不匹配
 
-```
+```text
 error: 'Qt6::xxx' not found
-```
+```text
 
 **解决方案**:
 
@@ -216,13 +221,13 @@ qmlplugindump --version
 
 # CMakeLists.txt 中指定正确版本
 find_package(Qt6 6.8.1 REQUIRED COMPONENTS Core Gui Widgets)
-```
+```text
 
 #### 3. C++ 标准问题
 
-```
+```text
 error: 'xxx' is not a member of 'std'
-```
+```text
 
 **解决方案**:
 
@@ -230,7 +235,7 @@ error: 'xxx' is not a member of 'std'
 # CMakeLists.txt
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-```
+```yaml
 
 ---
 
@@ -242,9 +247,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #### 1. 未定义引用
 
-```
+```text
 undefined reference to 'xxx'
-```
+```text
 
 **解决方案**:
 
@@ -256,13 +261,13 @@ target_link_libraries(your_target
         Qt6::Widgets
         # 添加缺失的库
 )
-```
+```text
 
 #### 2. 库文件未找到
 
-```
+```bash
 cannot find -lxxx
-```
+```text
 
 **解决方案**:
 
@@ -272,7 +277,7 @@ ldconfig -p | grep xxx
 
 # 添加库路径
 link_directories(/path/to/lib)
-```
+```yaml
 
 ---
 
@@ -284,22 +289,22 @@ link_directories(/path/to/lib)
 
 #### 1. 构建类型未指定
 
-```
+```text
 CMAKE_BUILD_TYPE is not set
-```
+```text
 
 **解决方案**:
 
 ```bash
 # 使用正确的配置脚本
 bash scripts/build_helpers/linux_develop_build.sh -c build_develop_config.ini
-```
+```text
 
 #### 2. 工具链问题
 
-```
+```text
 CMAKE_CXX_COMPILER not set
-```
+```text
 
 **解决方案**:
 
@@ -309,7 +314,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake -S . -B out/build
 
 # 或使用预设工具链
 cmake -DUSE_TOOLCHAIN=linux/llvm -S . -B out/build
-```
+```yaml
 
 ---
 
@@ -317,9 +322,9 @@ cmake -DUSE_TOOLCHAIN=linux/llvm -S . -B out/build
 
 #### Qt 未找到
 
-```
+```bash
 Could not find Qt6
-```
+```text
 
 **解决方案**:
 
@@ -327,13 +332,13 @@ Could not find Qt6
 # 设置 Qt 路径
 export Qt6_DIR=/path/to/Qt/6.8.1/gcc_64/lib/cmake/Qt6
 cmake -DQt6_DIR=/path/to/Qt/6.8.1/gcc_64/lib/cmake/Qt6 -S . -B out/build
-```
+```text
 
 #### Qt 模块缺失
 
-```
+```text
 Qt6 component 'Widgets' not found
-```
+```text
 
 **解决方案**:
 
@@ -342,7 +347,7 @@ Qt6 component 'Widgets' not found
 docker run --rm -v $(pwd):/project cfdesktop-build bash -c "
   python3 -m aqt install-qt --outputdir /opt linux desktop 6.8.1 gcc_64 -m qtbase qttools
 "
-```
+```yaml
 
 ---
 
@@ -361,7 +366,7 @@ ctest -R test_name --verbose
 
 # 输出到文件
 ctest --output-on-failure > test_results.txt
-```
+```text
 
 ## Git Hooks 问题
 
@@ -371,9 +376,9 @@ ctest --output-on-failure > test_results.txt
 
 #### 1. 空白字符检查失败
 
-```
+```text
 error: 空白字符检查失败
-```
+```text
 
 **解决方案**:
 
@@ -383,13 +388,13 @@ bash scripts/develop/remove_trailing_space.sh --staged
 
 # 或强制提交（不推荐）
 git commit --no-verify -m "message"
-```
+```text
 
 #### 2. clang-format 失败
 
-```
+```text
 error: clang-format failed
-```
+```text
 
 **解决方案**:
 
@@ -398,7 +403,7 @@ error: clang-format failed
 sudo apt install clang-format
 
 # 或跳过格式化（删除 Hook 中的格式化部分）
-```
+```yaml
 
 ---
 
@@ -408,9 +413,9 @@ sudo apt install clang-format
 
 #### 1. 版本号检查失败
 
-```
+```text
 error: 版本号未变更，推送被阻止
-```
+```text
 
 **解决方案**:
 
@@ -424,13 +429,13 @@ git commit -m "chore: bump version to x.y.z"
 
 # 重新推送
 git push
-```
+```text
 
 #### 2. Docker 构建失败
 
-```
+```text
 error: Docker 构建验证失败
-```
+```text
 
 **解决方案**:
 
@@ -443,7 +448,7 @@ bash scripts/build_helpers/docker_start.sh --verify
 
 # 或强制推送（不推荐）
 git push --no-verify
-```
+```yaml
 
 ---
 
@@ -462,7 +467,7 @@ bash scripts/release/hooks/install_hooks.sh
 
 # 检查执行权限
 chmod +x .git/hooks/pre-commit .git/hooks/pre-push
-```
+```yaml
 
 ---
 
@@ -477,7 +482,7 @@ chmod +x .git/hooks/pre-commit .git/hooks/pre-push
 export MSYS_NO_PATHCONV=1
 
 # 或修改 Hook 脚本，使用项目根目录的绝对路径
-```
+```text
 
 ## 性能优化
 
@@ -489,7 +494,7 @@ bash scripts/build_helpers/docker_start.sh --fast-build
 
 # 结合验证使用
 bash scripts/build_helpers/docker_start.sh --fast-build --verify
-```
+```yaml
 
 ---
 
@@ -502,7 +507,7 @@ docker run --rm -v $(pwd):/project -v ~/.ccache:/root/.ccache cfdesktop-build
 # 或使用环境变量
 export CCACHE_DIR=~/.ccache
 export CCACHE_MAXSIZE=10G
-```
+```yaml
 
 ---
 
@@ -514,7 +519,7 @@ cmake -S . -B out/build -DCMAKE_BUILD_PARALLEL_LEVEL=4
 
 # 或使用 make
 make -j4
-```
+```yaml
 
 ---
 
@@ -529,7 +534,7 @@ export Qt6_DIR=/path/to/Qt/6.8.1/gcc_64/lib/cmake/Qt6
 # 配置和构建
 cmake -S . -B out/build -DCMAKE_BUILD_TYPE=Debug
 cmake --build out/build --parallel
-```
+```yaml
 
 ---
 
@@ -541,7 +546,7 @@ bash scripts/build_helpers/linux_fast_develop_build.sh -c build_develop_config.i
 
 # 只构建变更的目标
 cmake --build out/build --target <specific_target>
-```
+```text
 
 ## 获取更多帮助
 
@@ -554,7 +559,7 @@ ls scripts/docker/logger/ci_build_*.log
 # CMake 配置日志
 cat out/build/CMakeFiles/CMakeOutput.log
 cat out/build/CMakeFiles/CMakeError.log
-```
+```yaml
 
 ---
 
@@ -570,7 +575,7 @@ cmake -S . -B out/build --trace-expand
 
 # Make 详细输出
 make VERBOSE=1
-```
+```yaml
 
 ---
 
@@ -609,10 +614,10 @@ make VERBOSE=1
 2. [步骤 2]
 
 ## 错误信息
-```
+```text
 [粘贴错误输出]
-```
+```text
 
 ## 已尝试的解决方案
 [列出已尝试的方法]
-```
+```text

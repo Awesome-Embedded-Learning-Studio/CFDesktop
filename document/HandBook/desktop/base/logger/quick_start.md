@@ -1,3 +1,8 @@
+---
+title: 快速入门
+description: 欢迎使用 CFLogger！本指南将帮助你在 5 分钟内上手使用 CFLogger。
+---
+
 # 快速入门
 
 欢迎使用 CFLogger！本指南将帮助你在 5 分钟内上手使用 CFLogger。
@@ -10,13 +15,13 @@ CFLogger 提供两套 API：简单 API 和高级 API。
 
 ```cpp
 #include "cflog/cflog.h"
-```
+```text
 
 ### 高级 API（需要更多控制）
 
 ```cpp
 #include "cflog/cflog.hpp"
-```
+```text
 
 ## 第二步：Hello World
 
@@ -36,13 +41,13 @@ int main() {
 
     return 0;
 }
-```
+```text
 
 编译运行后，你将看到：
 
-```
+```text
 [INFO] Hello, CFLogger!
-```
+```text
 
 ## 第三步：使用不同日志级别
 
@@ -63,7 +68,7 @@ int main() {
     flush();
     return 0;
 }
-```
+```bash
 
 ### 日志级别对照表
 
@@ -97,17 +102,17 @@ int main() {
     flush();
     return 0;
 }
-```
+```text
 
 ### 级别过滤规则
 
-```
+```text
 设置为 TRACE：显示所有日志
 设置为 DEBUG：显示 DEBUG, INFO, WARNING, ERROR
 设置为 INFO：  显示 INFO, WARNING, ERROR
 设置为 WARNING：显示 WARNING, ERROR
 设置为 ERROR：只显示 ERROR
-```
+```text
 
 ## 第五步：使用标签组织日志
 
@@ -128,7 +133,7 @@ int main() {
     flush();
     return 0;
 }
-```
+```bash
 
 ### 常用标签建议
 
@@ -191,7 +196,7 @@ int main() {
     Logger::instance().flush_sync();  // 等待写入完成
     return 0;
 }
-```
+```text
 
 ## 完整示例
 
@@ -234,7 +239,7 @@ int main() {
 
     return 0;
 }
-```
+```text
 
 ## CMake 配置
 
@@ -249,7 +254,7 @@ add_executable(my_app main.cpp)
 
 # 链接 CFLogger
 target_link_libraries(my_app PRIVATE CFDesktop::logger)
-```
+```text
 
 ## 编译运行
 
@@ -262,7 +267,7 @@ cmake --build build
 
 # 运行
 ./build/my_app
-```
+```yaml
 
 ## 常见问题
 

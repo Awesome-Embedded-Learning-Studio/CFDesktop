@@ -1,3 +1,8 @@
+---
+title: LibPaths.psm1
+description: "文档编写日期: 2026-03-20，LibPaths.psm1 提供路径解析和目录管理功能。该模块"
+---
+
 # LibPaths.psm1
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 加载方式
 ```powershell
 Import-Module scripts/lib/powershell/LibPaths.psm1
-```
+```bash
 
 ## Scripts详解
 
@@ -31,7 +36,7 @@ LibPaths.psm1 提供路径解析和目录管理功能。该模块专门设计用
 #### Get-ScriptDir
 ```powershell
 Get-ScriptDir
-```
+```text
 获取调用此模块的脚本所在目录的绝对路径。这是模块的核心函数，使用多种回退机制确保在各种执行场景下都能正确获取路径：
 
 **检测机制（按优先级）：**
@@ -51,22 +56,22 @@ Get-ScriptDir
 #### Get-ProjectRoot
 ```powershell
 Get-ProjectRoot
-```
+```text
 获取项目根目录。假设脚本位于 `scripts/` 的子目录中，函数会向上追溯两级目录。
 
 **目录结构假设：**
-```
+```text
 ProjectRoot/
   scripts/
     lib/
       LibPaths.psm1
     some-script.ps1  <-- 从这里调用
-```
+```text
 
 #### ConvertTo-AbsolutePath
 ```powershell
 ConvertTo-AbsolutePath [-Path] <string> [[-BasePath] <string>]
-```
+```text
 将相对路径转换为绝对路径。
 
 **参数：**
@@ -81,7 +86,7 @@ ConvertTo-AbsolutePath [-Path] <string> [[-BasePath] <string>]
 #### New-Directory
 ```powershell
 New-Directory [-Path] <string>
-```
+```text
 确保指定目录存在。如果目录不存在则创建，已存在则不做任何操作。
 
 ### 导出的变量

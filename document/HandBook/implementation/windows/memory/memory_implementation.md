@@ -1,3 +1,8 @@
+---
+title: Windows 平台内存模块实现
+description: Windows 下的内存信息获取相对直接——大部分数据可以从单个 API 调用拿到。我们用  获取物
+---
+
 # Windows 平台内存模块实现
 
 Windows 下的内存信息获取相对直接——大部分数据可以从单个 API 调用拿到。我们用 `GlobalMemoryStatusEx` 获取物理内存和交换空间，用 `GetProcessMemoryInfo` 获取进程内存，DIMM 信息则需要解析 SMBIOS 表。整体来说比 Linux 少踩坑，但也有一些平台特定的细节需要注意。
@@ -18,7 +23,7 @@ void queryPhysicalMemory(PhysicalMemory& physical) {
     physical.available_bytes = status.ullAvailPhys;
     physical.free_bytes = status.ullAvailPhys;  // Windows: AvailPhys ~= Free
 }
-```
+```text
 
 交换空间的获取方式类似：
 
@@ -31,7 +36,7 @@ void querySwapMemory(SwapMemory& swap) {
     swap.total_bytes = status.ullTotalPageFile;
     swap.free_bytes = status.ullAvailPageFile;
 }
-```
+```text
 
 ⚠️ `dwLength` 字段必须设置为 `sizeof(MEMORYSTATUSEX)`，否则 `GlobalMemoryStatusEx` 会返回失败。这个设计很古老，但一直保留到现在。
 
@@ -64,7 +69,7 @@ void queryProcessMemory(ProcessMemory& process) {
         process.vm_peak_bytes = 0;
     }
 }
-```
+```bash
 
 字段映射关系：
 | Windows 字段 | 我们的字段 | 含义 |
@@ -101,7 +106,7 @@ if (result != bufferSize) {
 
 const RawSMBIOSData* smbios = reinterpret_cast<const RawSMBIOSData*>(buffer.data());
 parseSmbiosMemoryDevices(smbios->SMBIOSTableData, smbios->Length, dimms);
-```
+```text
 
 ### SMBIOS 结构解析
 
@@ -138,7 +143,7 @@ struct MemoryDevice {
 };
 
 #pragma pack(pop)
-```
+```text
 
 SMBIOS 结构后面跟着一个字符串表，字符串索引从 1 开始。0 表示没有字符串。我们需要跳过格式化段（`Length` 字节），然后读取字符串直到双 null 字节：
 
@@ -165,7 +170,7 @@ const char* getSmbiosString(const uint8_t* structStart, uint8_t stringIndex,
 
     return reinterpret_cast<const char*>(strStart);
 }
-```
+```text
 
 ⚠️ SMBIOS 字符串索引是 1-based 的，这一点很容易忘。索引 0 表示没有字符串，不是第一个字符串。
 
@@ -203,7 +208,7 @@ MemoryType smbiosToMemoryType(uint8_t smbType) {
         default: return MemoryType::UNKNOWN;
     }
 }
-```
+```text
 
 ### 容量解析
 
@@ -224,7 +229,7 @@ if (sizeValue == 0 || (sizeValue & 0x8000) != 0) {
     // 正常大小，单位是 MB
     dimm.capacity_bytes = static_cast<uint64_t>(sizeValue) * 1024 * 1024;
 }
-```
+```text
 
 ⚠️ 32GB 以上的内存条必须用扩展大小字段，因为 16 位的 `Size` 字段只能表示到 32767 MB（约 32GB）。
 
@@ -268,7 +273,7 @@ void parseSmbiosMemoryDevices(const uint8_t* data, uint32_t length,
         p = next;
     }
 }
-```
+```text
 
 ## 平台限制
 

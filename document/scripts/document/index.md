@@ -1,3 +1,8 @@
+---
+title: 文档脚本
+description: CFDesktop 文档系统已从 MkDocs 迁移到 VitePress。
+---
+
 # 文档脚本
 
 CFDesktop 文档系统已从 MkDocs 迁移到 VitePress。
@@ -9,7 +14,7 @@ pnpm install
 pnpm dev
 pnpm build
 pnpm preview
-```
+```bash
 
 ## 配置文件
 

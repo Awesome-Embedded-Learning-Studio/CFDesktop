@@ -1,3 +1,8 @@
+---
+title: "ICFTimingAnimation - 时间动画"
+description: 是基于时间的动画基类，使用固定的持续时间和缓动曲线来完成插值。这是最常见、最直观的动画方式——我们指
+---
+
 # ICFTimingAnimation - 时间动画
 
 `ICFTimingAnimation` 是基于时间的动画基类，使用固定的持续时间和缓动曲线来完成插值。这是最常见、最直观的动画方式——我们指定一个起点、一个终点、一段时长，动画就按照缓动曲线从起点走到终点。相比弹簧动画，时间动画的行为更可预测，适合大多数 UI 过渡场景。
@@ -6,10 +11,10 @@
 
 时间动画的核心是"时间驱动"——内部维护一个已逝时间计数器，每帧累加 `dt`，当累计时间超过设定的持续时间时，动画结束。插值过程使用缓动函数将时间进度映射到值进度：
 
-```
+```text
 progress = easing(elapsed / duration)
 value = from + progress * (to - from)
-```
+```text
 
 ## 创建动画
 
@@ -22,7 +27,7 @@ value = from + progress * (to - from)
 // 假设 theme->motionSpec() 返回有效的 IMotionSpec
 auto* motionSpec = theme->motionSpec();
 auto* anim = new CFTimingAnimation(motionSpec, this);
-```
+```text
 
 ⚠️ `IMotionSpec` 指针必须在动画的生命周期内保持有效。这个设计是经过权衡的——动画工厂创建动画时持有对主题的引用，而主题拥有 motion spec，所以生命周期是绑定的，不需要额外拷贝。
 
@@ -39,7 +44,7 @@ anim->setRange(0.0f, 255.0f);
 
 // 从位置 A 到位置 B
 anim->setRange(startX, endX);
-```
+```text
 
 `setRange()` 可以在动画运行时调用，会即时改变当前帧的计算基准，但通常建议在 `start()` 前设置好。
 
@@ -49,7 +54,7 @@ anim->setRange(startX, endX);
 
 ```cpp
 float current = anim->currentValue();
-```
+```bash
 
 ## 时间动画 vs 弹簧动画
 
@@ -84,7 +89,7 @@ connect(fadeIn, &ICFAbstractAnimation::finished, []() {
 
 // 启动
 fadeIn->start();
-```
+```text
 
 ## 线程安全
 

@@ -1,3 +1,8 @@
+---
+title: formatcpp.sh
+description: "文档编写日期: 2026-03-20，使用  自动格式化项目中的 C++ 源代码文件，确保代码风格一"
+---
+
 # format_cpp.sh
 
 > 文档编写日期: 2026-03-20
@@ -8,7 +13,7 @@
 
 ```bash
 ./scripts/develop/format_cpp.sh [OPTIONS]
-```
+```bash
 
 ### 参数说明
 
@@ -29,7 +34,7 @@
 
 # 预览格式化效果
 ./scripts/develop/format_cpp.sh --dry-run
-```
+```bash
 
 ## Scripts详解 (Detailed Explanation)
 
@@ -72,7 +77,7 @@ sudo pacman -S clang
 
 # macOS
 brew install clang-format
-```
+```bash
 
 ### 工作模式
 

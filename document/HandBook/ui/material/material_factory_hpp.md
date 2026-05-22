@@ -1,3 +1,8 @@
+---
+title: "materialfactory.hpp - Material 工厂函数"
+description: 提供了一套自由函数风格的工厂 API，用于创建 Material Design 3 的各个组件。相比
+---
+
 # material_factory.hpp - Material 工厂函数
 
 `material_factory.hpp` 提供了一套自由函数风格的工厂 API，用于创建 Material Design 3 的各个组件。相比 `MaterialFactory` 类，这套 API 更轻量，不需要实例化工厂对象——直接调用函数就行。
@@ -14,7 +19,7 @@ auto light = cf::ui::core::material::light();
 
 // 默认深色方案
 auto dark = cf::ui::core::material::dark();
-```
+```text
 
 这两个函数返回 `MaterialColorScheme` 对象（不是指针），可以直接使用或移动。
 
@@ -31,7 +36,7 @@ auto scheme = cf::ui::core::material::fromKeyColor(seed);
 
 // 生成深色版本
 auto darkScheme = cf::ui::core::material::fromKeyColor(seed, true);
-```
+```text
 
 种子颜色可以是用户选择的品牌色、墙纸的主色等等。生成的配色会自动计算 26 个颜色角色的值，确保视觉协调。
 
@@ -63,7 +68,7 @@ if (result) {
             break;
     }
 }
-```
+```text
 
 这个错误处理比 `MaterialFactory::fromJson` 的空指针友好得多。
 
@@ -79,7 +84,7 @@ QByteArray json = material::toJson(scheme);
 QFile file("theme.json");
 file.open(QIODevice::WriteOnly);
 file.write(json);
-```
+```text
 
 导出的格式兼容 Material Theme Builder。
 
@@ -92,7 +97,7 @@ auto typography = cf::ui::core::material::defaultTypography();
 
 QFont titleFont = typography.queryTargetFont("md.typography.titleLarge");
 QFont bodyFont = typography.queryTargetFont("md.typography.bodyMedium");
-```
+```text
 
 默认字体会根据平台自动选择——Windows 用 Segoe UI，macOS 用 .SF NS Text，Linux 用 Ubuntu。
 
@@ -106,7 +111,7 @@ auto radius = cf::ui::core::material::defaultRadiusScale();
 float small = radius.queryRadiusScale("md.shape.cornerSmall");   // 8.0f
 float medium = radius.queryRadiusScale("md.shape.cornerMedium"); // 12.0f
 float large = radius.queryRadiusScale("md.shape.cornerLarge");   // 16.0f
-```
+```text
 
 ## 动画工厂
 
@@ -117,7 +122,7 @@ auto motion = cf::ui::core::material::motion();
 
 int duration = motion.queryDuration("shortEnter");  // 200
 auto spec = motion.getMotionSpec("mediumExit");
-```
+```text
 
 ## 完整工作流
 
@@ -137,7 +142,7 @@ QColor primary = colors.queryExpectedColor("md.primary");
 QFont titleFont = typography.queryTargetFont("md.typography.titleLarge");
 float cardRadius = radius.queryRadiusScale("md.shape.cornerMedium");
 auto enterSpec = motion.getMotionSpec("mediumEnter");
-```
+```text
 
 如果需要完整的 `MaterialTheme` 对象，还是得用 `MaterialFactory` 类。
 
@@ -163,7 +168,7 @@ void applyCustomTheme(const QColor& brandColor) {
     updateTypography(&typography);
     // ...
 }
-```
+```bash
 
 这种方式让应用可以轻松实现"品牌色换肤"功能。
 

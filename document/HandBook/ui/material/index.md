@@ -1,3 +1,8 @@
+---
+title: Material Design
+description: CFDesktop 对 Material Design 3 规范的完整实现，包括动画系统、基础行为层
+---
+
 # Material Design
 
 CFDesktop 对 Material Design 3 规范的完整实现，包括动画系统、基础行为层和 20+ Widget 控件。

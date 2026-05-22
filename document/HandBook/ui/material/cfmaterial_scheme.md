@@ -1,3 +1,8 @@
+---
+title: "MaterialColorScheme - Material Design 3 颜色方案"
+description: 是我们对 Material Design 3 颜色系统的完整实现。Material You 的核心就
+---
+
 # MaterialColorScheme - Material Design 3 颜色方案
 
 `MaterialColorScheme` 是我们对 Material Design 3 颜色系统的完整实现。Material You 的核心就是动态颜色系统——从一个种子颜色自动生成 26 个语义化颜色，确保整个 UI 在视觉上协调一致。我们把这个系统做成了嵌入式 Token 注册表的形式，每个颜色方案实例都独立管理自己的颜色值。
@@ -30,7 +35,7 @@ auto darkScheme = cf::ui::core::material::dark();
 QColor primary = lightScheme.queryExpectedColor("md.primary");
 QColor onPrimary = lightScheme.queryExpectedColor("md.onPrimary");
 QColor surface = lightScheme.queryExpectedColor("md.surface");
-```
+```text
 
 颜色名称采用 `md.` 前缀，后跟 Material 官方定义的 token 名称。这样设计是为了和其他主题系统（比如我们未来可能实现的 Fluent）做区分。
 
@@ -50,7 +55,7 @@ PrimaryColors primary = scheme.primary();
 // 需要实际颜色值时还是通过查询
 QColor primaryColor = scheme.queryExpectedColor("md.primary");
 QColor containerColor = scheme.queryExpectedColor("md.primaryContainer");
-```
+```text
 
 颜色组结构体（`PrimaryColors`、`SecondaryColors` 等）主要是为了类型安全和文档目的，实际颜色值还是从 registry 中查询。
 
@@ -67,7 +72,7 @@ auto scheme = cf::ui::core::material::fromKeyColor(seedColor);
 
 // 生成深色版本
 auto darkScheme = cf::ui::core::material::fromKeyColor(seedColor, true);
-```
+```text
 
 这个功能内部使用 HCT 色彩空间和 Material 的色调调色板算法。HCT（Hue-Chroma-Tone）是 Material 团队专门开发的色彩空间，比 HSL 更符合人眼对颜色的感知——这也是为什么 Material 的配色看起来特别和谐的原因。
 
@@ -100,7 +105,7 @@ if (result) {
         qDebug() << "JSON 解析失败:" << err.message.c_str();
     }
 }
-```
+```text
 
 也支持直接传入颜色对象的方式（没有 `schemes` 包装的扁平结构）。
 
@@ -116,7 +121,7 @@ QByteArray json = material::toJson(scheme);
 QFile file("my_theme.json");
 file.open(QIODevice::WriteOnly);
 file.write(json);
-```
+```text
 
 ## Token 注册表
 
@@ -130,7 +135,7 @@ auto& registry = scheme.registry();
 
 // 可以手动修改或添加 Token
 registry.set("md.customColor", QColor("#FF5722"));
-```
+```text
 
 这个设计让系统既支持预定义的 Material 颜色，也允许扩展自定义颜色。
 
@@ -144,7 +149,7 @@ QColor color1 = scheme.queryColor("md.primary");
 
 // 后续查询从缓存返回
 QColor color2 = scheme.queryColor("md.primary");
-```
+```text
 
 缓存在 `MaterialColorScheme` 对象生命周期内有效。如果需要修改某个颜色后立即生效，直接修改 registry 即可——查询接口每次都会从 registry 读取最新值。
 
@@ -152,7 +157,7 @@ QColor color2 = scheme.queryColor("md.primary");
 
 Material Design 3 定义了 26 个颜色角色，对应的查询名称如下：
 
-```
+```text
 主色组：
   md.primary, md.onPrimary, md.primaryContainer, md.onPrimaryContainer
 
@@ -171,7 +176,7 @@ Material Design 3 定义了 26 个颜色角色，对应的查询名称如下：
 
 工具色组：
   md.shadow, md.scrim, md.inverseSurface, md.inverseOnSurface, md.inversePrimary
-```
+```text
 
 ## 相关文档
 

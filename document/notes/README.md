@@ -1,3 +1,8 @@
+---
+title: CFDesktop 桌面行为系统设计文档
+description: 一套完整的跨平台桌面应用窗口行为管理架构设计方案
+---
+
 # CFDesktop 桌面行为系统设计文档
 
 > 一套完整的跨平台桌面应用窗口行为管理架构设计方案
@@ -31,17 +36,17 @@
 
 ```bash
 cd /home/charliechen/CFDesktop/document/notes
-```
+```text
 
 ### 阅读顺序
 
-```
+```text
 新手开发者：
     01 → 02 → 03 → 04
 
 有经验开发者：
     直接阅读 04，需要时查阅其他文档
-```
+```text
 
 ### 代码示例
 
@@ -65,11 +70,11 @@ DesktopBehaviors behaviors = DesktopBehaviorFlag::Fullscreen
 if (behaviors.testFlag(DesktopBehaviorFlag::Fullscreen)) {
     // 处理全屏逻辑
 }
-```
+```text
 
 ## 架构概览
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Application Layer                        │
 │                    (用户代码 / 业务逻辑)                     │
@@ -94,7 +99,7 @@ if (behaviors.testFlag(DesktopBehaviorFlag::Fullscreen)) {
 │                Platform Abstraction Layer                  │
 │          (Windows / macOS / X11 / Wayland / Embedded)      │
 └─────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## 核心概念
 
@@ -135,7 +140,7 @@ if (behaviors.testFlag(DesktopBehaviorFlag::Fullscreen)) {
 
 ## 项目结构
 
-```
+```text
 desktop/
 ├── ui/
 │   ├── CFDesktop.cpp           # 主窗口实现
@@ -155,7 +160,7 @@ document/notes/                 # 本文档目录
 ├── 02-Qt-Window-Behavior-Analysis.md
 ├── 03-Desktop-Strategy-Pattern-Design.md
 └── 04-Desktop-Behavior-System-Architecture.md
-```
+```yaml
 
 ## 贡献指南
 

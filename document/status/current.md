@@ -1,3 +1,8 @@
+---
+title: CFDesktop 当前状态
+description: "最后更新: 2026-05-22，- 本地  可发现 47 个 CTest 测试。"
+---
+
 # CFDesktop 当前状态
 
 > 最后更新: 2026-05-22

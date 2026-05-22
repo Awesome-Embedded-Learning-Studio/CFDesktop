@@ -1,3 +1,8 @@
+---
+title: "Milestone 6: 小组件 + 控制中心"
+description: "预计周期: 7-10 天，前置依赖: Milestone 2: 状态栏 (下拉触发点)"
+---
+
 # Milestone 6: 小组件 + 控制中心
 
 > **状态**: ⬜ 待开始

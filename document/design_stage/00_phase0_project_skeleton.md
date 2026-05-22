@@ -1,3 +1,8 @@
+---
+title: "Phase 0: 工程骨架搭建详细设计文档"
+description: "- \"xaver.clang-tidy\""
+---
+
 # Phase 0: 工程骨架搭建详细设计文档
 
 ## 文档信息
@@ -63,7 +68,7 @@ add_subdirectory(tests)
 
 # ==================== 打包配置 ====================
 include(CPack)
-```
+```text
 
 ### 3.2 Base 库 CMakeLists.txt
 
@@ -122,7 +127,7 @@ install(TARGETS CFFesktopBase
 install(FILES ${BASE_PUBLIC_HEADERS}
     DESTINATION include/CFDesktop/Base
 )
-```
+```text
 
 ### 3.3 SDK 库 CMakeLists.txt
 
@@ -145,7 +150,7 @@ install(FILES
     cmake/CFDesktopSDKConfigVersion.cmake
     DESTINATION lib/cmake/CFDesktopSDK
 )
-```
+```text
 
 ### 3.4 Shell 主程序 CMakeLists.txt
 
@@ -166,7 +171,7 @@ target_link_libraries(cfdesktop-shell PRIVATE
 install(TARGETS cfdesktop-shell
     RUNTIME DESTINATION bin
 )
-```
+```text
 
 ### 3.5 交叉编译工具链配置
 
@@ -187,7 +192,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 set(Qt6_DIR /opt/qt6-arm/lib/cmake/Qt6)
-```
+```text
 
 #### 3.5.2 ARM64 (RK3568/RK3588) 工具链
 
@@ -206,7 +211,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 set(Qt6_DIR /opt/qt6-arm64/lib/cmake/Qt6)
-```
+```text
 
 ### 3.6 CMakePresets.json
 
@@ -260,7 +265,7 @@ set(Qt6_DIR /opt/qt6-arm64/lib/cmake/Qt6)
         }
     ]
 }
-```
+```yaml
 
 ---
 
@@ -341,7 +346,7 @@ jobs:
       - name: Format Check
         run: |
           ./tools/format.sh --check
-```
+```text
 
 ### 4.2 部署流程 (.github/workflows/deploy.yml)
 
@@ -377,7 +382,7 @@ jobs:
             systemctl stop cfdesktop
             tar -xzf cfdesktop.tar.gz -C /opt/
             systemctl start cfdesktop
-```
+```yaml
 
 ---
 
@@ -400,7 +405,7 @@ jobs:
     "C_Cpp.clang_format_style": "file",
     "clang-format.style.location": ".clang-format"
 }
-```
+```text
 
 ### 5.2 推荐扩展
 
@@ -437,7 +442,7 @@ IncludeCategories:
     Priority:        3
   - Regex:           '^".*"'
     Priority:        4
-```
+```bash
 
 ---
 

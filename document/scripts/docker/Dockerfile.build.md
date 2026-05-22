@@ -1,3 +1,8 @@
+---
+title: Dockerfile.build
+description: "文档编写日期: 2026-03-20，-  - 避免交互式提示"
+---
+
 # Dockerfile.build
 
 > 文档编写日期: 2026-03-20
@@ -16,7 +21,7 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 # ARM64构建
 docker build --build-arg QT_ARCH=linux_gcc_arm64 --platform linux/arm64 \
   -f scripts/docker/Dockerfile.build -t cfdesktop-build:arm64 .
-```
+```text
 
 ### 运行容器
 ```bash
@@ -25,7 +30,7 @@ docker run --rm --platform linux/amd64 -v $(pwd):/project cfdesktop-build
 
 # ARM64平台
 docker run --rm --platform linux/arm64 -v $(pwd):/project cfdesktop-build
-```
+```bash
 
 ## Scripts详解
 

@@ -1,3 +1,8 @@
+---
+title: "pre-push.sample"
+description: "文档编写日期: 2026-03-20，在推送前验证Docker构建，仅对main和release分支"
+---
+
 # pre-push.sample
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 绕过方法
 ```bash
 git push --no-verify
-```
+```bash
 
 ## Scripts详解
 

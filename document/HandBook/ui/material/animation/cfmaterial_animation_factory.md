@@ -1,3 +1,8 @@
+---
+title: "CFMaterialAnimationFactory - Material 动画工厂"
+description: 是 Material Design 3 动画系统的核心入口，负责创建和管理符合 Material 规
+---
+
 # CFMaterialAnimationFactory - Material 动画工厂
 
 `CFMaterialAnimationFactory` 是 Material Design 3 动画系统的核心入口，负责创建和管理符合 Material 规范的动画实例。我们设计这个工厂的初衷是让使用者不需要直接面对复杂的动画参数配置，而是通过一个语义化的 token（如 `"md.animation.fadeIn"`）就能获取到完整配置好的动画。
@@ -39,7 +44,7 @@ if (fadeIn) {
     fadeIn->setTargetWidget(myWidget);
     fadeIn->start();
 }
-```
+```text
 
 工厂拥有创建的动画实例，返回的是 `WeakPtr`。这个设计是为了避免悬空指针——如果工厂被销毁，所有返回的 WeakPtr 都会自动失效。
 
@@ -67,7 +72,7 @@ factory->getAnimation(ANIMATION_SCALE_DOWN); // md.animation.scaleDown
 // 旋转
 factory->getAnimation(ANIMATION_ROTATE_IN);  // md.animation.rotateIn
 factory->getAnimation(ANIMATION_ROTATE_OUT); // md.animation.rotateOut
-```
+```text
 
 ## 动画策略模式
 
@@ -93,7 +98,7 @@ public:
 
 // 设置策略
 factory->setStrategy(std::make_unique<ButtonAnimationStrategy>());
-```
+```text
 
 策略在动画创建之前被调用，所以你可以基于 widget 的状态、尺寸或者任何你关心的条件来调整动画参数。
 
@@ -116,7 +121,7 @@ auto customFade = factory->createAnimation(desc, myWidget);
 if (customFade) {
     customFade->start();
 }
-```
+```text
 
 ⚠️ 注意：`createAnimation()` 总是创建新的动画实例，而 `getAnimation()` 会复用已存在的实例。如果你需要多个独立的动画实例（比如同时控制多个 widget），应该用 `createAnimation()`。
 
@@ -134,7 +139,7 @@ factory->setEnabledAll(true);
 if (QGuiApplication::styleHints()->showIsFullScreen() == false) {
     factory->setEnabledAll(false);
 }
-```
+```text
 
 `setEnabledAll()` 只影响新创建的动画，已经运行的动画不会被中断。
 
@@ -148,7 +153,7 @@ auto anim = factory->getAnimation("md.animation.fadeIn");
 if (anim) {  // 这里会失败，WeakPtr 已经失效
     anim->start();
 }
-```
+```text
 
 ⚠️ 这个坑在异步代码里尤其容易出现——如果你把 WeakPtr 存起来延迟使用，一定要检查有效性。
 

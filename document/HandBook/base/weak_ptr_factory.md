@@ -1,3 +1,8 @@
+---
+title: "weakptrfactory - 弱引用工厂"
+description: 是弱引用机制的核心工厂类，负责创建和管理某个对象的弱引用。每个需要对外提供弱引用的对象都应该持有一个
+---
+
 # weak_ptr_factory - 弱引用工厂
 
 `WeakPtrFactory<T>` 是弱引用机制的核心工厂类，负责创建和管理某个对象的弱引用。每个需要对外提供弱引用的对象都应该持有一个 `WeakPtrFactory` 成员，把它作为接口的守门员。
@@ -24,7 +29,7 @@ private:
     // 必须是最后一个成员变量
     cf::WeakPtrFactory<NetworkManager> weak_factory_{this};
 };
-```
+```text
 
 构造时传入 `this` 指针，工厂会记住对象的位置。每次调用 `GetWeakPtr()` 就会创建一个新的弱引用，指向同一个对象。
 
@@ -44,7 +49,7 @@ private:
     // 工厂最后销毁
     cf::WeakPtrFactory<MyClass> weak_factory_{this};
 };
-```
+```text
 
 如果把工厂放在中间，某些成员析构时可能仍然检测到弱引用"有效"，然后尝试访问已经被析构的部分对象，后果是未定义行为。
 
@@ -63,7 +68,7 @@ auto weak3 = obj.GetWeakPtr();
 // 所有弱引用都指向同一个对象
 assert(weak1.Get() == weak2.Get());
 assert(weak2.Get() == weak3.Get());
-```
+```text
 
 每次调用都创建一个新的 `WeakPtr` 对象，但它们共享同一个内部的"存活标志"。对象销毁或调用 `InvalidateWeakPtrs()` 后，所有弱引用同时失效。
 
@@ -88,7 +93,7 @@ public:
 private:
     cf::WeakPtrFactory<ConfigManager> weak_factory_{this};
 };
-```
+```text
 
 `InvalidateWeakPtrs()` 会把当前的存活标志设为失效，然后分配一个新的。失效前创建的所有弱引用都会变成无效，失效后调用 `GetWeakPtr()` 得到的新弱引用使用新的标志，所以是有效的。
 
@@ -112,7 +117,7 @@ public:
 private:
     cf::WeakPtrFactory<Service> weak_factory_{this};
 };
-```
+```text
 
 这个接口通过内部的 `shared_ptr` 引用计数实现，所以是 O(1) 的。如果 `use_count() > 1`，说明有外部弱引用存在。注意这个检查不是实时的——调用完 `HasWeakPtrs()` 后，其他线程可能立即创建或销毁弱引用。
 
@@ -129,7 +134,7 @@ private:
 MyClass a;
 MyClass b = a;  // 编译错误：WeakPtrFactory 不可复制
 MyClass c = std::move(a);  // 编译错误：WeakPtrFactory 不可移动
-```
+```text
 
 这个设计是有意为之的。工厂和对象的生命周期绑定在一起，复制或移动会破坏这个关系。如果你确实需要移动对象，得先清理所有弱引用，但这个场景在我们的使用中极少出现，干脆直接禁了。
 
@@ -157,7 +162,7 @@ private:
     std::vector<Callback> callbacks_;
     cf::WeakPtrFactory<AsyncWorker> weak_factory_{this};
 };
-```
+```text
 
 ### 观察者模式
 
@@ -186,7 +191,7 @@ private:
     std::vector<cf::WeakPtr<Observer>> observers_;
     cf::WeakPtrFactory<Subject> weak_factory_{this};
 };
-```
+```text
 
 ### 延迟销毁检查
 
@@ -210,7 +215,7 @@ public:
 private:
     cf::WeakPtrFactory<ResourceManager> weak_factory_{this};
 };
-```
+```text
 
 ## 注意事项
 

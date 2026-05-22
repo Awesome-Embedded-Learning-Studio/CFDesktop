@@ -1,3 +1,8 @@
+---
+title: linuxfastdeploybuild.sh
+description: "文档编写日期: 2026-03-20，是快速部署构建脚本，执行配置 + 构建流程，不清理构建目录，支"
+---
+
 # linux_fast_deploy_build.sh
 
 > 文档编写日期: 2026-03-20
@@ -8,7 +13,7 @@
 
 ```bash
 ./scripts/build_helpers/linux_fast_deploy_build.sh [develop|deploy|ci] [-c|--config <config_file>]
-```
+```bash
 
 ### 参数说明
 
@@ -47,7 +52,7 @@
 
 ```bash
 Step 1: Configuring with CMake
-```
+```text
 
 调用 `linux_configure.sh` 执行CMake配置。
 
@@ -55,7 +60,7 @@ Step 1: Configuring with CMake
 
 ```bash
 Step 2: Building project
-```
+```text
 
 使用CMake构建项目。如果配置了并行任务数，会使用 `--parallel` 参数加速编译。
 
@@ -73,11 +78,11 @@ Step 2: Building project
 
 # 使用自定义配置文件
 ./scripts/build_helpers/linux_fast_deploy_build.sh deploy -c my_config.ini
-```
+```text
 
 ### 输出示例
 
-```
+```bash
 ========================================
 Starting Linux FAST Build Process (Deploy)
 ========================================
@@ -93,7 +98,7 @@ Step 2: Building project
 ========================================
 Command: cmake --build build_deploy --parallel 4
 ...
-```
+```text
 
 ### 配置参数
 
@@ -102,7 +107,7 @@ Command: cmake --build build_deploy --parallel 4
 ```ini
 [options]
 jobs=4
-```
+```text
 
 如果未设置，则不使用并行参数。
 
@@ -140,4 +145,4 @@ jobs=4
 
 # 需要测试时
 ./scripts/build_helpers/linux_run_tests.sh deploy
-```
+```text

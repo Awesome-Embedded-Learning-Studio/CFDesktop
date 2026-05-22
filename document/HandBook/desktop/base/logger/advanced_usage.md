@@ -1,3 +1,8 @@
+---
+title: 高级用法
+description: 本文档介绍 CFLogger 的高级功能，包括自定义 Sink、Formatter 以及运行时配置。
+---
+
 # 高级用法
 
 本文档介绍 CFLogger 的高级功能，包括自定义 Sink、Formatter 以及运行时配置。
@@ -23,7 +28,7 @@
 #include "cflog/cflog_format_factory.h"
 #include "cflog/formatter/console_formatter.h"
 #include "cflog/sinks/console_sink.h"
-```
+```text
 
 ### 获取 Logger 实例
 
@@ -31,7 +36,7 @@
 using namespace cf::log;
 
 auto& logger = Logger::instance();
-```
+```text
 
 ### 基本用法
 
@@ -45,7 +50,7 @@ logger.setMininumLevel(level::INFO);
 // 刷新
 logger.flush();       // 异步
 logger.flush_sync();  // 同步
-```
+```text
 
 ## 自定义 Sink
 
@@ -84,7 +89,7 @@ private:
     std::string prefix_;
     std::ostream& output_stream_ = std::cout;
 };
-```
+```text
 
 ### 使用自定义 Sink
 
@@ -97,7 +102,7 @@ my_sink->setFormat(std::make_shared<AsciiColorFormatter>());
 
 // 添加到 Logger
 Logger::instance().add_sink(my_sink);
-```
+```text
 
 ### 网络 Sink 示例
 
@@ -137,7 +142,7 @@ private:
     asio::ip::tcp::socket socket_;
     std::vector<std::string> messages_;
 };
-```
+```text
 
 ## 自定义 Formatter
 
@@ -166,7 +171,7 @@ public:
 
     bool configurable() const override { return false; }
 };
-```
+```text
 
 ### 可配置的 Formatter
 
@@ -214,7 +219,7 @@ public:
 private:
     std::shared_ptr<FormatterConfig> config_;
 };
-```
+```text
 
 ## FormatterFactory 使用
 
@@ -242,7 +247,7 @@ auto cached = factory.get_or_create("console");
 
 // 清除缓存
 factory.clear_cache();
-```
+```text
 
 ### 运行时切换格式
 
@@ -262,7 +267,7 @@ sink->setFormat(factory.create("simple"));
 
 // 运行时切换到详细格式
 sink->setFormat(factory.create("verbose"));
-```
+```text
 
 ## 动态 Sink 管理
 
@@ -274,7 +279,7 @@ void enable_file_logging(const std::string& path) {
     file_sink->setFormat(std::make_shared<FileFormatter>());
     Logger::instance().add_sink(file_sink);
 }
-```
+```text
 
 ### 运行时移除 Sink
 
@@ -282,13 +287,13 @@ void enable_file_logging(const std::string& path) {
 void disable_file_logging(FileSink* sink) {
     Logger::instance().remove_sink(sink);
 }
-```
+```text
 
 ### 清除所有 Sink
 
 ```cpp
 Logger::instance().clear_sinks();
-```
+```text
 
 ## 运行时配置修改
 
@@ -300,7 +305,7 @@ Logger::instance().setMininumLevel(level::INFO);
 
 // 晚上调试时使用 DEBUG 级别
 Logger::instance().setMininumLevel(level::DEBUG);
-```
+```text
 
 ### 动态修改 Formatter 配置
 
@@ -315,7 +320,7 @@ config->disable(FormatterFlag::COLOR);
 config->set_timestamp_format("%Y-%m-%d %H:%M:%S");
 
 formatter->set_config(config);
-```
+```text
 
 ## 多环境配置
 
@@ -340,7 +345,7 @@ void setup_dev_logging() {
     Logger::instance().add_sink(console);
     Logger::instance().setMininumLevel(level::TRACE);
 }
-```
+```text
 
 ### 生产环境配置
 
@@ -375,7 +380,7 @@ void setup_prod_logging() {
     Logger::instance().add_sink(error_file);
     Logger::instance().setMininumLevel(level::INFO);
 }
-```
+```text
 
 ## 完整示例
 
@@ -445,7 +450,7 @@ int main(int argc, char** argv) {
     Logger::instance().flush_sync();
     return 0;
 }
-```
+```text
 
 ## 下一步
 

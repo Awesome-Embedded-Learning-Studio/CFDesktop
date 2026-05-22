@@ -1,3 +1,8 @@
+---
+title: 开发指南
+description: 本节面向重新启动开发时的日常入口。，1. 当前项目状态
+---
+
 # 开发指南
 
 本节面向重新启动开发时的日常入口。
@@ -28,4 +33,4 @@ QT_QPA_PLATFORM=offscreen ctest --test-dir out/build_develop/test --output-on-fa
 pnpm install
 pnpm dev
 pnpm build
-```
+```text

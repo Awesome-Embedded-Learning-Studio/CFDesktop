@@ -1,3 +1,8 @@
+---
+title: "PainterLayer - 绘图层管理器"
+description: 是 Material 分层绘制的基础组件。它的职责很简单：持有一个颜色和透明度值，在绘制时将两者叠加
+---
+
 # PainterLayer - 绘图层管理器
 
 `PainterLayer` 是 Material 分层绘制的基础组件。它的职责很简单：持有一个颜色和透明度值，在绘制时将两者叠加后填充到指定路径中。虽然看起来只是个颜色存储器，但单独抽出来的意义在于为状态层、遮罩层等提供统一接口，避免在每个控件里重复实现"带透明度的颜色填充"这个操作。
@@ -25,7 +30,7 @@ public:
 private:
     base::PainterLayer* m_stateLayer;
 };
-```
+```text
 
 ## 绘制调用
 
@@ -44,7 +49,7 @@ void MyWidget::paintEvent(QPaintEvent* event) {
 
     // 再绘制其他内容...
 }
-```
+```text
 
 `paint()` 方法内部会处理透明度小于等于零的情况直接返回，所以不需要在外层判断。
 
@@ -62,7 +67,7 @@ void PainterLayer::paint(QPainter* painter, const QPainterPath& clipPath) {
 
     painter->fillPath(clipPath, color);
 }
-```
+```text
 
 这意味着如果颜色本身是半透明的（比如 alpha = 0.5），再设置 opacity = 0.5，最终 alpha 会是 0.25。这个设计允许你用一个基础颜色控制整体色调，用 opacity 控制当前状态下的强度。
 
@@ -97,7 +102,7 @@ class MyWidget : public QWidget {
         update();
     }
 };
-```
+```text
 
 实际项目中我们通常配合 `StateMachine` 来管理这些状态变化，而不是在每个事件里手动设置。
 
@@ -115,7 +120,7 @@ void MyWidget::updateStateLayerColor() {
 
     m_stateLayer->setColor(cf::ui::base::CFColor(onSurface));
 }
-```
+```text
 
 ⚠️ 不要用背景色做状态层颜色，那会改变控件的"色调"而不是"深浅"。Material 的状态层是通过叠加一层半透明的文本颜色来模拟"变深"或"变亮"的视觉效果。
 
@@ -127,7 +132,7 @@ void MyWidget::updateStateLayerColor() {
 // 手动触发重绘
 m_stateLayer->setOpacity(newOpacity);
 update();  // 别忘了这个
-```
+```text
 
 这和 `RippleHelper` 的设计不同——后者内部管理动画并主动发出 `repaintNeeded()` 信号，因为涟漪是"主动"的视觉效果，而状态层是"被动"的。
 
@@ -173,7 +178,7 @@ private:
     base::PainterLayer* m_stateLayer;
     base::PainterLayer* m_maskLayer;
 };
-```
+```text
 
 绘制顺序很重要：背景 → 状态层 → 遮罩层 → 内容。改变顺序会破坏视觉层次。
 
@@ -189,7 +194,7 @@ m_layer = new base::PainterLayer(this);
 m_layer = new base::PainterLayer(nullptr);
 // ... 使用完毕后
 delete m_layer;
-```
+```text
 
 ## 为什么不直接用 QColor
 
@@ -199,7 +204,7 @@ delete m_layer;
 // 看起来更简单的方式
 QColor m_stateColor;
 float m_stateOpacity = 0.0f;
-```
+```text
 
 问题在于一致性——当有多个控件需要状态层、多个层需要管理时，每个控件都要自己实现"填充带透明度的颜色到路径"的逻辑，容易出错。抽出 `PainterLayer` 后：
 

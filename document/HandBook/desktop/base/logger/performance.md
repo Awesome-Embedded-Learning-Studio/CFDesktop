@@ -1,3 +1,8 @@
+---
+title: 性能优化
+description: 本文档介绍 CFLogger 的性能特性和优化建议。
+---
+
 # 性能优化
 
 本文档介绍 CFLogger 的性能特性和优化建议。
@@ -28,13 +33,13 @@
 - 线程数: 16
 - 每线程日志数: 10000
 - 队列洪泛数: 70000
-```
+```text
 
 ## 架构性能优势
 
 ### 异步处理
 
-```
+```text
 同步日志 (阻塞):
 [调用线程] → [格式化] → [写入磁盘] → [返回]
               ↑_________阻塞________^
@@ -43,7 +48,7 @@
 [调用线程] → [入队] → [立即返回]
                 ↓
             [工作线程] → [格式化] → [写入磁盘]
-```
+```text
 
 **优势**：
 - 调用线程不会被 I/O 阻塞
@@ -56,7 +61,7 @@ CFLogger 使用无锁 MPSC（多生产者单消费者）队列：
 
 ```cpp
 cf::lockfree::MpscQueue<LogRecord, 65536> normalQueue_;
-```
+```text
 
 **优势**：
 - 多线程写入无需互斥锁
@@ -67,7 +72,7 @@ cf::lockfree::MpscQueue<LogRecord, 65536> normalQueue_;
 
 ```cpp
 void submit(LogRecord record);  // 按值传递
-```
+```text
 
 LogRecord 使用移动语义，避免字符串拷贝：
 
@@ -75,7 +80,7 @@ LogRecord 使用移动语义，避免字符串拷贝：
 LogRecord record;
 record.msg = "很长的日志消息...";
 async_queue_.submit(std::move(record));  // 移动，不拷贝
-```
+```text
 
 ## 性能影响因素
 
@@ -91,7 +96,7 @@ trace("这条消息不会被记录");  // 只做一次原子比较
 // ❌ 高开销
 set_level(level::TRACE);
 trace("这条消息会被记录");  // 入队、格式化、写入
-```
+```bash
 
 ### 消息大小
 
@@ -111,7 +116,7 @@ trace("完整响应: " + huge_json_response);
 // ✅ 好
 trace("响应大小: " + std::to_string(response.size()) + " bytes");
 debug("响应内容: " + response.substr(0, 100) + "...");
-```
+```text
 
 ### 格式化器复杂度
 
@@ -128,7 +133,7 @@ auto formatter = std::make_shared<AsciiColorFormatter>(
 auto formatter = std::make_shared<AsciiColorFormatter>(
     FormatterFlag::VERBOSE
 );
-```
+```bash
 
 ### Sink 类型
 
@@ -149,7 +154,7 @@ auto formatter = std::make_shared<AsciiColorFormatter>(
 #else
     Logger::instance().setMininumLevel(level::INFO);
 #endif
-```
+```text
 
 ### 2. 避免热路径过度日志
 
@@ -165,7 +170,7 @@ for (int i = 0; i < 1000000; ++i) {
     // 处理...
 }
 debug("完成处理 1000000 个项目");
-```
+```text
 
 ### 3. 延迟计算
 
@@ -177,7 +182,7 @@ trace("详细信息: " + expensive_function());
 if (Logger::instance().getMininumLevel() <= level::TRACE) {
     trace("详细信息: " + expensive_function());
 }
-```
+```text
 
 ### 4. 简化格式
 
@@ -192,7 +197,7 @@ if (Logger::instance().getMininumLevel() <= level::TRACE) {
         FormatterFlag::VERBOSE | FormatterFlag::COLOR
     );
 #endif
-```
+```text
 
 ### 5. 批量刷新
 
@@ -208,7 +213,7 @@ for (int i = 0; i < 1000; ++i) {
     info("项目 " + std::to_string(i));
 }
 Logger::instance().flush();  // 最后统一刷新
-```
+```text
 
 ### 6. 监控队列溢出
 
@@ -226,13 +231,13 @@ void monitor_queue_overflow() {
         last_check = now;
     }
 }
-```
+```text
 
 ## 内存使用
 
 ### 内存估算
 
-```
+```text
 每个 LogRecord 大小：
 - level: 4 字节
 - tag: 约 32 字节
@@ -244,7 +249,7 @@ void monitor_queue_overflow() {
 
 队列容量：65,536 条
 队列内存：约 14 MB
-```
+```text
 
 ### 内存优化
 
@@ -256,7 +261,7 @@ void log_message(std::string_view msg) {
 
 // ✅ 避免大量临时对象
 info("数据: " + data.to_string());  // data.to_string() 返回临时字符串
-```
+```text
 
 ## 线程扩展性
 
@@ -264,13 +269,13 @@ info("数据: " + data.to_string());  // data.to_string() 返回临时字符串
 
 CFLogger 在多线程环境下表现良好：
 
-```
+```text
 单线程：    10,000 条/秒
 2 线程：    20,000 条/秒
 4 线程：    40,000 条/秒
 8 线程：    80,000 条/秒
 16 线程：   120,000 条/秒 (开始饱和)
-```
+```text
 
 ### 瓶颈分析
 
@@ -312,7 +317,7 @@ private:
     std::chrono::steady_clock::time_point start_time_;
     size_t log_count_ = 0;
 };
-```
+```text
 
 ### 使用示例
 
@@ -327,7 +332,7 @@ for (int i = 0; i < 10000; ++i) {
 
 Logger::instance().flush_sync();
 monitor.report();
-```
+```text
 
 ## 性能检查清单
 
@@ -366,7 +371,7 @@ void setup_high_performance_logging() {
     // 较高的日志级别
     Logger::instance().setMininumLevel(level::WARNING);
 }
-```
+```text
 
 ### 调试配置
 
@@ -390,7 +395,7 @@ void setup_verbose_logging() {
     // 最低级别
     Logger::instance().setMininumLevel(level::TRACE);
 }
-```
+```text
 
 ## 下一步
 

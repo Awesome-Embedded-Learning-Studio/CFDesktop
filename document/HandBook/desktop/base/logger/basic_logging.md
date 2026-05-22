@@ -1,3 +1,8 @@
+---
+title: 基础日志详解
+description: 本文档详细介绍 CFLogger 的简单 API 使用方法。
+---
+
 # 基础日志详解
 
 本文档详细介绍 CFLogger 的简单 API 使用方法。
@@ -8,7 +13,7 @@
 
 ```cpp
 #include "cflog/cflog.h"
-```
+```text
 
 ## 日志函数详解
 
@@ -18,7 +23,7 @@
 void trace(std::string_view msg,
            std::string_view tag = "CFLog",
            std::source_location loc = std::source_location::current());
-```
+```text
 
 **用途**：记录最详细的输出信息，通常用于追踪函数调用流程。
 
@@ -30,7 +35,7 @@ void process_request(const std::string& request) {
     // 处理请求...
     trace("请求处理完成", "HTTP");
 }
-```
+```text
 
 **建议**：
 - 生产环境通常设置为禁用
@@ -43,7 +48,7 @@ void process_request(const std::string& request) {
 void debug(std::string_view msg,
            std::string_view tag = "CFLog",
            std::source_location loc = std::source_location::current());
-```
+```text
 
 **用途**：记录调试信息，帮助开发者理解程序运行状态。
 
@@ -55,7 +60,7 @@ void connect_database(const std::string& url) {
     // 连接逻辑...
     debug("数据库连接成功", "Database");
 }
-```
+```text
 
 **建议**：
 - 开发环境默认级别
@@ -68,7 +73,7 @@ void connect_database(const std::string& url) {
 void info(std::string_view msg,
           std::string_view tag = "CFLog",
           std::source_location loc = std::source_location::current());
-```
+```text
 
 **用途**：记录程序正常运行的重要信息。
 
@@ -78,7 +83,7 @@ void info(std::string_view msg,
 info("应用程序启动", "App");
 info("配置文件加载完成", "Config");
 info("服务器启动，监听端口 8080", "Server");
-```
+```text
 
 **建议**：
 - 生产环境推荐的最低级别
@@ -91,7 +96,7 @@ info("服务器启动，监听端口 8080", "Server");
 void warning(std::string_view msg,
              std::string_view tag = "CFLog",
              std::source_location loc = std::source_location::current());
-```
+```text
 
 **用途**：记录潜在的问题，不会影响程序继续运行。
 
@@ -104,7 +109,7 @@ void load_config(const std::string& path) {
         // 使用默认配置...
     }
 }
-```
+```text
 
 **建议**：
 - 记录可恢复的异常情况
@@ -116,7 +121,7 @@ void load_config(const std::string& path) {
 ```cpp
 void error(std::string_view msg,
            std::source_location loc = std::source_location::current());
-```
+```text
 
 **用途**：记录错误和异常情况。
 
@@ -128,7 +133,7 @@ void save_file(const std::string& path) {
         error("文件保存失败: " + path, "FileIO");
     }
 }
-```
+```text
 
 **重要特性**：
 - **ERROR 日志永不丢失**：即使队列满，ERROR 日志也会被保留
@@ -141,7 +146,7 @@ void save_file(const std::string& path) {
 
 ```cpp
 void set_level(level lvl);
-```
+```text
 
 设置全局最低日志级别，低于此级别的日志将被过滤。
 
@@ -165,7 +170,7 @@ int main() {
     flush();
     return 0;
 }
-```
+```bash
 
 ### 不同环境的推荐级别
 
@@ -187,7 +192,7 @@ info("用户登录成功", "Auth");
 info("查询数据库", "Database");
 warning("缓存未命中", "Cache");
 error("连接超时", "Network");
-```
+```bash
 
 ### 推荐的标签命名
 
@@ -214,7 +219,7 @@ error("连接超时", "Network");
 
 ```cpp
 void flush();
-```
+```text
 
 异步刷新，请求工作线程处理队列，立即返回。
 
@@ -222,7 +227,7 @@ void flush();
 info("重要操作开始");
 do_something();
 flush();  // 确保日志写入
-```
+```text
 
 **适用场景**：
 - 需要确保日志及时写入
@@ -232,7 +237,7 @@ flush();  // 确保日志写入
 
 ```cpp
 void flush_sync();  // 高级 API
-```
+```text
 
 同步刷新，等待所有日志写入完成。
 
@@ -240,7 +245,7 @@ void flush_sync();  // 高级 API
 #include "cflog/cflog.hpp"
 
 Logger::instance().flush_sync();
-```
+```text
 
 **适用场景**：
 - 程序退出前
@@ -292,7 +297,7 @@ int main() {
 
     return 0;
 }
-```
+```bash
 
 ## 与高级 API 的对比
 

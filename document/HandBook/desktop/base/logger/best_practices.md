@@ -1,3 +1,8 @@
+---
+title: 最佳实践
+description: 本文档总结了使用 CFLogger 的推荐做法和常见模式。
+---
+
 # 最佳实践
 
 本文档总结了使用 CFLogger 的推荐做法和常见模式。
@@ -34,7 +39,7 @@ void process_user_login(const std::string& username) {
     trace("参数 username = " + username, "Auth");
     // ... 过度日志
 }
-```
+```text
 
 ## 标签使用
 
@@ -50,7 +55,7 @@ info("缓存更新", "cache");        // 小写也可以，保持一致
 info("连接成功", "db");           // 过于简短
 info("请求处理", "HttpRequestHandler");  // 过于详细
 info("缓存更新", "c");            // 意义不明
-```
+```text
 
 ### 按模块划分标签
 
@@ -75,7 +80,7 @@ public:
         debug("发送数据: " + data, "Network");
     }
 };
-```
+```bash
 
 ### 常用标签建议
 
@@ -104,7 +109,7 @@ warning("查询耗时 " + std::to_string(duration_ms) + "ms 超过阈值", "Data
 error("文件打开失败", "FileIO");
 info("用户登录", "Auth");
 warning("查询慢", "Database");
-```
+```text
 
 ### 结构化消息
 
@@ -115,7 +120,7 @@ info("请求处理 | method=POST | path=/api/users | duration=50ms | status=200"
 // ✅ 使用键值对
 error("数据库错误 | code=" + std::to_string(err.code) +
       " | msg=" + err.message + " | query=" + query, "Database");
-```
+```text
 
 ### 避免敏感信息
 
@@ -126,7 +131,7 @@ info("用户登录: user=admin&password=123456", "Auth");
 // ✅ 脱敏处理
 info("用户登录: user=admin&password=****", "Auth");
 info("信用卡支付: ****-****-****-" + last4, "Payment");
-```
+```text
 
 ## 性能考虑
 
@@ -148,7 +153,7 @@ void process_data(const std::vector<Data>& items) {
     }
     info("完成处理 " + std::to_string(items.size()) + " 个项目");
 }
-```
+```text
 
 ### 延迟计算
 
@@ -160,7 +165,7 @@ trace("调试信息: " + expensive_computation());  // 即使 TRACE 被过滤也
 if (should_log(level::TRACE)) {
     trace("调试信息: " + expensive_computation());
 }
-```
+```text
 
 ### 字符串拼接
 
@@ -174,7 +179,7 @@ info(msg);
 
 // ✅ 单次拼接
 info("用户: " + username + ", 操作: " + action);
-```
+```text
 
 ## 线程安全
 
@@ -197,7 +202,7 @@ int main() {
         t.join();
     }
 }
-```
+```text
 
 ### 共享资源的日志
 
@@ -215,7 +220,7 @@ private:
     std::mutex mutex_;
     int counter_ = 0;
 };
-```
+```text
 
 ## 错误处理
 
@@ -237,7 +242,7 @@ try {
     error("数据库连接失败 | url=" + url +
           " | error=" + std::string(e.what()), "Database");
 }
-```
+```text
 
 ### 关键操作前后
 
@@ -254,7 +259,7 @@ void save_to_file(const std::string& path, const Data& data) {
         throw;
     }
 }
-```
+```text
 
 ## 启动和关闭
 
@@ -275,7 +280,7 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-```
+```text
 
 ### 应用关闭
 
@@ -291,7 +296,7 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-```
+```text
 
 ## 配置管理
 
@@ -319,7 +324,7 @@ void setup_logging(Environment env) {
             break;
     }
 }
-```
+```text
 
 ### 动态调整
 
@@ -339,7 +344,7 @@ public:
         Logger::instance().setMininumLevel(static_cast<level>(new_level));
     }
 };
-```
+```text
 
 ## 日志轮转
 
@@ -356,7 +361,7 @@ class DailyFileSink : public ISink {
     // 每天创建新文件
     // app_20260316.log, app_20260317.log, ...
 };
-```
+```text
 
 ## 单元测试
 
@@ -373,7 +378,7 @@ TEST(MyTest, TestSomething) {
     // 测试结束恢复
     Logger::instance().setMininumLevel(level::WARNING);
 }
-```
+```text
 
 ### Mock Sink
 
@@ -404,7 +409,7 @@ TEST(LoggingTest, ErrorLogged) {
     ASSERT_FALSE(mock->messages.empty());
     ASSERT_TRUE(mock->messages[0].find("Test error") != std::string::npos);
 }
-```
+```text
 
 ## 检查清单
 

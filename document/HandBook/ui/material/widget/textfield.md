@@ -1,3 +1,8 @@
+---
+title: "TextField - Material 文本输入框"
+description: 是 Material Design 3 文本输入框控件的完整实现，支持填充（Filled）和描边（O
+---
+
 # TextField - Material 文本输入框
 
 `TextField` 是 Material Design 3 文本输入框控件的完整实现，支持填充（Filled）和描边（Outlined）两种视觉变体。包含浮动标签、前缀/后缀图标、字符计数器、帮助/错误文本和密码模式。
@@ -19,7 +24,7 @@ class TextField : public QLineEdit {
     Q_PROPERTY(QIcon prefixIcon READ prefixIcon WRITE setPrefixIcon)
     Q_PROPERTY(QIcon suffixIcon READ suffixIcon WRITE setSuffixIcon)
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/textfield/textfield.h`
 
@@ -32,7 +37,7 @@ enum class TextFieldVariant {
     Filled,    // 填充变体 - 背景填充色，底部指示线
     Outlined,  // 描边变体 - 圆角边框，无背景填充
 };
-```
+```text
 
 选择哪种变体取决于整体设计风格。Filled 变体适合密集表单，Outlined 变体适合突出显示的场景。
 
@@ -58,7 +63,7 @@ search->setLabel("Search");
 
 // 连接信号
 connect(field1, &QLineEdit::textChanged, this, &MyClass::onTextChanged);
-```
+```text
 
 ## 浮动标签
 
@@ -70,7 +75,7 @@ field->setLabel("Password");
 // 标签行为：
 // - 空内容 + 无焦点：标签在输入区域内（占位符位置）
 // - 有内容或有焦点：标签浮动到输入框上方（小字体）
-```
+```text
 
 浮动动画通过 `m_floatingProgress`（0.0 到 1.0）控制，由 `CFMaterialAnimationFactory` 驱动平滑过渡。
 
@@ -85,7 +90,7 @@ field->setErrorText("Password is too short");
 
 // 清除错误
 field->setErrorText("");  // 恢复显示帮助文本
-```
+```text
 
 错误状态下，输入框边框/指示线使用 error 颜色。
 
@@ -100,7 +105,7 @@ field->setSuffixIcon(QIcon::fromTheme("visibility_off"));
 
 // 密码模式（使用 QLineEdit 的内置功能）
 field->setEchoMode(QLineEdit::Password);
-```
+```text
 
 ## 字符计数器
 
@@ -111,7 +116,7 @@ field->setShowCharacterCounter(true);
 
 // 显示格式：当前字符数 / 最大长度
 // 例如："42 / 100"
-```
+```bash
 
 字符计数器显示在帮助文本区域的右侧。
 

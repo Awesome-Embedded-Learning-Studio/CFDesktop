@@ -1,3 +1,8 @@
+---
+title: CFDesktop 项目状态报告
+description: "报告日期: 2026-03-30，报告版本: v4.0"
+---
+
 # CFDesktop 项目状态报告
 
 > **报告日期**: 2026-03-30
@@ -459,7 +464,7 @@ CFDesktop 是一个基于 Qt6 的嵌入式桌面框架项目，采用 Material D
 
 ## 四、关键文件路径
 
-```
+```text
 CFDesktop/
 ├── CMakeLists.txt                  # 主构建配置 (v0.13.1, C++23)
 ├── base/                           # 基础库模块
@@ -490,7 +495,7 @@ CFDesktop/
 ├── test/                           # 测试代码 (55%覆盖率, 24个测试)
 ├── example/                        # 示例程序 (70%覆盖, 80个示例)
 └── document/                       # 文档 (80%覆盖, 271篇)
-```
+```yaml
 
 ---
 

@@ -1,3 +1,8 @@
+---
+title: "CFMaterialSlideAnimation - Material 滑动动画"
+description: 实现了 Material Design 3 规范中的位移动画，控制 widget 在屏幕空间中的位置
+---
+
 # CFMaterialSlideAnimation - Material 滑动动画
 
 `CFMaterialSlideAnimation` 实现了 Material Design 3 规范中的位移动画，控制 widget 在屏幕空间中的位置变化。滑动动画是 Material Design 中最重要的过渡方式之一——它利用空间位置的变化来建立元素之间的视觉关联，让用户理解"这个东西从哪里来、到哪里去"。
@@ -37,7 +42,7 @@ slideAnim->setDistance(100.0f);
 // 设置目标并启动
 slideAnim->setTargetWidget(myCard);
 slideAnim->start(Direction::Forward);
-```
+```text
 
 方向枚举的命名可能会让你困惑——`SlideDirection::Up` 表示 widget 向上移动，视觉上是"从下方滑入"。反过来想：枚举值描述的是 widget 移动的轨迹方向，而不是来源方向。
 
@@ -55,7 +60,7 @@ slideAnim->setDistance(parentWidget->height());
 
 // Snackbar 从底部轻微上浮
 slideAnim->setDistance(50.0f);
-```
+```text
 
 ⚠️ 距离值应该是正数。方向由 `SlideDirection` 控制，不需要用负距离来表示反向移动。
 
@@ -69,7 +74,7 @@ slideAnim->setTargetWidget(widget);
 slideAnim->start(Direction::Forward);
 // ... 动画运行中，widget 位置被修改 ...
 slideAnim->stop();  // widget 回到 (100, 100)
-```
+```text
 
 但如果你在动画过程中手动移动了 widget，动画停止时恢复的位置仍然是启动时的原始位置，这可能导致视觉跳跃。如果需要在动画结束后将 widget 定位到新位置，应该在 `finished` 信号中处理：
 
@@ -78,7 +83,7 @@ connect(slideAnim.get(), &ICFAbstractAnimation::finished, this, [widget]() {
     // 动画结束后，手动设置到目标位置
     widget->move(200, 100);
 });
-```
+```text
 
 ## 方向详解
 
@@ -100,7 +105,7 @@ offset = QPoint(-distance, 0)
 // SlideDirection::Right: widget 向右移动（从左侧进入）
 // 位移应用到 x 轴，offset 为正值
 offset = QPoint(distance, 0)
-```
+```bash
 
 理解这个逻辑有助于你在调试时判断问题方向——如果动画朝反方向移动，大概率是方向枚举选错了。
 
@@ -135,7 +140,7 @@ void showBottomSheet(QWidget* sheet, QWidget* parent) {
     slideAnim->setTargetWidget(sheet);
     slideAnim->start();
 }
-```
+```text
 
 ### 侧边菜单滑入
 
@@ -152,7 +157,7 @@ void showSideMenu(QWidget* menu, QWidget* parent) {
     slideAnim->setTargetWidget(menu);
     slideAnim->start();
 }
-```
+```text
 
 ### 列表项交错动画
 
@@ -169,7 +174,7 @@ void showListItems(const QList<QWidget*>& items) {
         slideAnim->start();
     }
 }
-```
+```text
 
 ### 下拉刷新
 
@@ -183,7 +188,7 @@ void onPullDown(float offset) {
     // 反向播放：回到原位
     slideAnim->start(Direction::Backward);
 }
-```
+```text
 
 ## 性能优化建议
 
@@ -207,7 +212,7 @@ fadeAnim->setTargetWidget(widget);
 
 slideAnim->start();
 fadeAnim->start();
-```
+```yaml
 
 这种组合在卡片、对话框等"重要元素"出现时特别有效。
 

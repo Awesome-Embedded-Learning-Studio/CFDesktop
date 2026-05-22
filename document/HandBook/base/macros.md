@@ -1,3 +1,8 @@
+---
+title: "macros - 宏定义系统"
+description: 是 CFDesktop 项目的宏定义入口文件，本身不直接定义宏，而是引入  来完成平台检测。这个设计
+---
+
 # macros - 宏定义系统
 
 `macros.h` 是 CFDesktop 项目的宏定义入口文件，本身不直接定义宏，而是引入 `system_judge.h` 来完成平台检测。这个设计把平台相关的宏定义集中管理，避免在代码里到处散落 `#ifdef` 检查。
@@ -15,7 +20,7 @@
 #elif defined(CFDESKTOP_OS_LINUX)
     // Linux 特定代码
 #endif
-```
+```text
 
 检测逻辑基于编译器预定义宏。Windows 平台检查 `_WIN32` 或 `_WIN64`，Linux 平台检查 `__linux__`。这些是主流编译器（MSVC、GCC、Clang）都遵守的约定。
 
@@ -31,7 +36,7 @@
 #elif defined(CFDESKTOP_ARCH_ARM32)
     // ARM32 特定代码
 #endif
-```
+```text
 
 x86-64 检查 `__x86_64__`、`_M_X64` 或 `__amd64__`，ARM64 检查 `__aarch64__` 或 `_M_ARM64`，ARM32 检查 `__arm__` 或 `_M_ARM`。这覆盖了我们项目目标平台的所有主流架构。
 
@@ -66,7 +71,7 @@ void set_thread_priority(int priority) {
     // Linux 实现省略...
 #endif
 }
-```
+```text
 
 ## 命名约定
 
@@ -89,7 +94,7 @@ void set_thread_priority(int priority) {
 #if defined(__NEW_OS__)
 #    define CFDESKTOP_OS_NEW_OS
 #endif
-```
+```text
 
 然后记得在对应的地方添加平台特定实现，并写测试确保在新平台上能正确编译和运行。
 

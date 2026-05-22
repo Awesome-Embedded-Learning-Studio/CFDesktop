@@ -1,3 +1,8 @@
+---
+title: "Button - Material 按钮"
+description: 是 Material Design 3 按钮控件的完整实现，支持五种视觉变体、水波纹效果、状态层动画
+---
+
 # Button - Material 按钮
 
 `Button` 是 Material Design 3 按钮控件的完整实现，支持五种视觉变体、水波纹效果、状态层动画、阴影和焦点指示器。我们选择自己实现而不是继承 QPushButton 的样式，是因为 Material 的交互规范（特别是状态层动画和水波纹）无法通过 Qt 样式表很好地表达。
@@ -14,7 +19,7 @@ enum class ButtonVariant {
     Text,      // 文本按钮 - 最低强调
     Elevated,  // 浮起按钮 - 带阴影
 };
-```
+```text
 
 选择哪种变体取决于按钮在界面中的层级关系。主操作用 Filled，次要操作用 Tonal 或 Outlined，低优先级操作用 Text 或 Elevated。
 
@@ -36,7 +41,7 @@ auto* button3 = new Button("Low priority", ButtonVariant::Text, this);
 
 // 连接信号（与 QPushButton 兼容）
 connect(button1, &Button::clicked, this, &MyClass::onButtonClick);
-```
+```text
 
 ## 图标按钮
 
@@ -49,7 +54,7 @@ button->setLeadingIcon(icon);
 
 // 或者使用 setIcon（别名）
 button->setIcon(icon);
-```
+```bash
 
 图标尺寸固定为 18dp，与文本间距 8dp，这是 Material 规范要求的。
 
@@ -78,7 +83,7 @@ float contentHeight = helper.dpToPx(40.0f);  // 固定高度
 float hPadding = helper.dpToPx(24.0f);       // 水平内边距
 float iconWidth = helper.dpToPx(18.0f);      // 图标宽度
 float iconGap = helper.dpToPx(8.0f);         // 图标与文本间距
-```
+```text
 
 ⚠️ 按钮的最小宽度不是固定的，而是由内容决定的。如果需要确保触摸目标大小（至少 48x48dp），需要在布局时留出足够的间距。
 
@@ -112,7 +117,7 @@ void Button::paintEvent(QPaintEvent* event) {
     // Step 7: 绘制焦点指示器
     drawFocusIndicator(p, shape);
 }
-```
+```text
 
 这个顺序很重要——状态层在背景之上、内容之下，水波纹在状态层之上，焦点环在最外层。改变顺序会导致视觉效果不符合 Material 规范。
 
@@ -126,7 +131,7 @@ button->setElevation(2);
 
 // 设置光源角度（默认 15 度，来自左上方）
 button->setLightSourceAngle(15.0f);
-```
+```text
 
 海拔级别影响阴影的模糊半径和偏移量。按钮默认使用 level 2，按压时会临时增加，产生"下沉"的视觉效果。
 
@@ -137,7 +142,7 @@ button->setLightSourceAngle(15.0f);
 ```cpp
 // 禁用按压效果（仅状态层动画保留）
 button->setPressEffectEnabled(false);
-```
+```text
 
 禁用后，按钮的视觉反馈会减弱，但仍然有水波纹和状态层。这在某些自定义场景下有用。
 
@@ -149,7 +154,7 @@ button->setPressEffectEnabled(false);
 // Filled: container = PRIMARY, label = ON_PRIMARY
 // Tonal: container = SECONDARY_CONTAINER, label = ON_SECONDARY_CONTAINER
 // Outlined/Text/Elevated: container = SURFACE, label = PRIMARY
-```
+```text
 
 如果主题不可用，会使用硬编码的 fallback 颜色。这在开发阶段很有用，但生产环境应该总是配置正确的主题。
 
@@ -159,7 +164,7 @@ button->setPressEffectEnabled(false);
 
 ```cpp
 float cornerRadius = height() / 2.0f;
-```
+```text
 
 这在视觉上形成了胶囊形状，是 Material 3 的默认样式。如果需要方角按钮，需要子类化并重写 `cornerRadius()` 方法。
 
@@ -171,7 +176,7 @@ float cornerRadius = height() / 2.0f;
 if (!isEnabled()) {
     color.setAlphaF(0.38f);
 }
-```
+```text
 
 禁用时状态层不显示，交互事件也不会触发状态变化。
 
@@ -190,7 +195,7 @@ layout->addWidget(new Button("OK", ButtonVariant::Filled, dialog));
 auto* cardLayout = new QHBoxLayout(card);
 cardLayout->addWidget(new Button("Action", ButtonVariant::Outlined, card));
 cardLayout->addStretch();
-```
+```text
 
 ## 相关文档
 

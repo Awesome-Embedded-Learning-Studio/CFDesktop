@@ -1,3 +1,8 @@
+---
+title: Scripts文档
+description: "文档编写日期: 2026-03-20，本目录包含CFDesktop项目所有脚本的完整文档。"
+---
+
 # Scripts文档
 
 > 文档编写日期: 2026-03-20
@@ -6,7 +11,7 @@
 
 ## 目录结构
 
-```
+```text
 scripts/
 ├── build_helpers/    # 构建辅助脚本 (Linux/Windows)
 ├── dependency/       # 依赖安装
@@ -19,7 +24,7 @@ scripts/
 ├── release/          # 发布相关
 │   └── hooks/       # Git钩子
 └── run_helpers/      # 运行辅助
-```
+```bash
 
 ## 快速导航
 

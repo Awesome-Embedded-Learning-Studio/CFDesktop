@@ -1,10 +1,11 @@
-# lib
+---
+title: 脚本库
+description: 本目录包含构建与发布脚本共用的工具函数库，按语言分为 Bash 和 PowerShell 两个子目录
+---
 
-> Welcome to the lib section.
+# 脚本库
 
-## Overview
-
-Documentation and resources for lib.
+本目录包含构建与发布脚本共用的工具函数库，按语言分为 Bash 和 PowerShell 两个子目录。这些共享函数涵盖路径处理、日志输出、环境检测等通用逻辑，避免各脚本间的代码重复。
 
 ---
 

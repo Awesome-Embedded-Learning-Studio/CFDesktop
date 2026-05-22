@@ -1,3 +1,8 @@
+---
+title: Motion Token 字面量
+description: 定义了 Material Design 3 动效系统的全部 Token 字面量。Material 的
+---
+
 # Motion Token 字面量
 
 `cfmaterial_motion_token_literals.h` 定义了 Material Design 3 动效系统的全部 Token 字面量。Material 的动效不仅仅是"让东西动起来"，而是一套精心设计的时间（Duration）和缓动（Easing）体系，用来传达 UI 的层级关系和交互反馈。
@@ -41,7 +46,7 @@ const char* rippleExpandDuration = MOTION_RIPPLE_EXPAND_DURATION;
 
 // 涟漪消散 - 150ms
 const char* rippleFadeDuration = MOTION_RIPPLE_FADE_DURATION;
-```
+```text
 
 注意退出时长通常比进入时长短，这是个刻意的设计——用户等待东西出现比等待东西消失更不耐烦。
 
@@ -75,7 +80,7 @@ const char* rippleExpandEasing = MOTION_RIPPLE_EXPAND_EASING;
 
 // 涟漪消散缓动 - Linear
 const char* rippleFadeEasing = MOTION_RIPPLE_FADE_EASING;
-```
+```bash
 
 ## 缓动函数说明
 
@@ -128,7 +133,7 @@ auto dialogEnter = theme.resolveMotion(
     MOTION_LONG_ENTER_EASING
 );
 dialog.animate(dialogEnter);
-```
+```text
 
 ## 场景选择指南
 
@@ -173,7 +178,7 @@ auto rippleExpand = resolveMotion(
     MOTION_RIPPLE_EXPAND_DURATION,
     MOTION_RIPPLE_EXPAND_EASING
 );
-```
+```text
 
 ⚠️ 一个常见的错误是用错缓动方向。进入动画应该用 Decelerate（减速），这样元素到达终点时会柔和地停下来；退出动画应该用 Accelerate（加速），元素快速离开不留痕迹。用反了会感觉很怪——进入时"哐"一下撞上终点，退出时拖泥带水。
 
@@ -186,7 +191,7 @@ auto rippleExpand = resolveMotion(
 for (size_t i = 0; i < MOTION_TOKEN_COUNT; ++i) {
     printf("Motion Token %zu: %s\n", i, ALL_MOTION_TOKENS[i]);
 }
-```
+```text
 
 ## 自定义动效参数
 
@@ -200,7 +205,7 @@ for (size_t i = 0; i < MOTION_TOKEN_COUNT; ++i) {
 // 对于特殊场景，直接传值更实际
 MotionSpec custom = {500, CustomEasing};
 element.animate(custom);
-```
+```text
 
 建议把常用的自定义动效也纳入 Token 管理，保持代码的一致性。
 
@@ -215,7 +220,7 @@ element.animate(spec);
 
 // 大量元素同时动画时，考虑简化动效
 // 比如用短时长代替长时长，或者取消缓动
-```
+```text
 
 Material 的动效时长（最大 450ms）是经过平衡的——既足够传达视觉反馈，又不会让用户等太久。如果你的动效感觉"拖"，可能不是时长问题，而是缓动曲线选择不当。
 
@@ -232,7 +237,7 @@ if (userPrefersReducedMotion()) {
     // 正常动画
     element.animate(spec);
 }
-```
+```text
 
 Material 的动效设计已经考虑了可访问性，但提供降级选项仍然是好实践。
 

@@ -1,3 +1,8 @@
+---
+title: "Phase 6: 多平台模拟器 TODO"
+description: "预计周期: 2~3 周，依赖阶段: Phase 0, Phase 2, Phase 3"
+---
+
 # Phase 6: 多平台模拟器 TODO
 
 > **状态**: ⬜ 待开始

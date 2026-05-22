@@ -1,3 +1,8 @@
+---
+title: "MaterialFactory - Material 主题工厂"
+description: 是创建 Material Design 3 主题的入口。它实现了  接口，提供了按名称创建、从 JS
+---
+
 # MaterialFactory - Material 主题工厂
 
 `MaterialFactory` 是创建 Material Design 3 主题的入口。它实现了 `ThemeFactory` 接口，提供了按名称创建、从 JSON 创建和导出 JSON 的能力。这个类存在的意义是统一管理主题的创建方式，让调用方不需要知道 `MaterialTheme` 的构造细节。
@@ -21,7 +26,7 @@ auto darkTheme = factory.fromName("theme.material.dark");
 if (!lightTheme) {
     qDebug() << "主题创建失败，可能是名称错误";
 }
-```
+```text
 
 如果传入无法识别的名称，`fromName` 会返回 `nullptr`。支持的名称列表：
 - `theme.material.light`：Material 默认浅色主题
@@ -52,7 +57,7 @@ auto theme = factory.fromJson(json);
 if (!theme) {
     qDebug() << "JSON 解析失败";
 }
-```
+```text
 
 JSON 格式可以只包含颜色，也可以包含完整的主题配置。如果某个部分缺失，工厂会使用默认值填充。
 
@@ -70,7 +75,7 @@ QByteArray json = factory.toJson(theme.get());
 QFile file("my_theme.json");
 file.open(QIODevice::WriteOnly);
 file.write(json);
-```
+```text
 
 导出的 JSON 兼容 Material Theme Builder 的导入格式，可以在在线工具中编辑后再导回。
 
@@ -84,7 +89,7 @@ setThemeFactory(std::move(factory));
 
 // 后续可以通过通用接口创建主题
 auto theme = themeFactory()->fromName("theme.material.light");
-```
+```text
 
 这样设计的好处是可以在运行时切换不同的主题系统（比如未来添加 Fluent Design 支持），而不需要修改业务代码。
 
@@ -105,7 +110,7 @@ if (!result) {
     const auto& err = result.error();
     // 可以根据 err.kind 判断具体错误类型
 }
-```
+```text
 
 这是我们在后续版本中计划改进的地方。
 
@@ -122,7 +127,7 @@ auto t1 = factory.fromName("theme.material.light");
 
 // 线程 2
 auto t2 = factory.fromName("theme.material.dark");
-```
+```text
 
 创建出来的 `MaterialTheme` 对象也是独立不共享的，可以在线程间传递。
 

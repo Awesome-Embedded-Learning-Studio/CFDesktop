@@ -1,3 +1,8 @@
+---
+title: "Milestone 3: 任务栏/导航栏"
+description: "预计周期: 5-7 天，前置依赖: Milestone 2: 状态栏"
+---
+
 # Milestone 3: 任务栏/导航栏
 
 > **状态**: ⬜ 待开始

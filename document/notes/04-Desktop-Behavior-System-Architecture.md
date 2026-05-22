@@ -1,3 +1,8 @@
+---
+title: 桌面行为系统设计：从策略到Window Manager抽象
+description: 桌面行为系统设计：从策略到Window Manager抽象 的详细文档
+---
+
 # 桌面行为系统设计：从策略到Window Manager抽象
 
 ## 目录
@@ -35,7 +40,7 @@ namespace desktop::architecture {
 // 4. 接口隔离：客户端不应该依赖它不需要的接口
 
 } // namespace desktop::architecture
-```
+```yaml
 
 ---
 
@@ -43,7 +48,7 @@ namespace desktop::architecture {
 
 ### 整体分层视图
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Application Layer                        │
 │                   (用户代码 / 业务逻辑层)                          │
@@ -95,7 +100,7 @@ namespace desktop::architecture {
 │                      Window Manager / OS                         │
 │                   (窗口管理器 / 操作系统层)                       │
 └─────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### 各层职责详解
 
@@ -122,7 +127,7 @@ private:
 };
 
 } // namespace desktop::app
-```
+```text
 
 **特点**：
 - 完全不依赖 Qt 具体类
@@ -181,7 +186,7 @@ public:
 };
 
 } // namespace desktop::abstraction
-```
+```text
 
 #### 3. Strategy Layer（策略层）
 
@@ -234,7 +239,7 @@ private:
 };
 
 } // namespace desktop::strategy
-```
+```text
 
 #### 4. Qt Integration Layer（Qt 集成层）
 
@@ -379,7 +384,7 @@ private:
 };
 
 } // namespace desktop::qtintegration
-```
+```text
 
 #### 5. Platform Abstraction Layer（平台抽象层）
 
@@ -482,7 +487,7 @@ public:
 };
 
 } // namespace desktop::platform
-```
+```text
 
 ### 层间通信协议
 
@@ -542,7 +547,7 @@ private:
 };
 
 } // namespace desktop::communication
-```
+```yaml
 
 ---
 
@@ -550,7 +555,7 @@ private:
 
 ### 完整流程图
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                        行为变更请求                              │
 │                    (User / Plugin / System)                     │
@@ -611,7 +616,7 @@ private:
 │                        行为变更完成                              │
 │                    (通知观察者 / 触发事件)                       │
 └─────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### 流程代码实现
 
@@ -750,7 +755,7 @@ private:
 };
 
 } // namespace desktop::flow
-```
+```text
 
 ### 流程监控与调试
 
@@ -817,7 +822,7 @@ private:
 };
 
 } // namespace desktop::flow
-```
+```yaml
 
 ---
 
@@ -1044,7 +1049,7 @@ struct ResolutionResult {
 };
 
 } // namespace desktop::conflict
-```
+```text
 
 ### 优先级系统
 
@@ -1099,7 +1104,7 @@ public:
 };
 
 } // namespace desktop::priority
-```
+```yaml
 
 ---
 
@@ -1148,7 +1153,7 @@ public:
 
 Q_DECLARE_INTERFACE(desktop::plugin::IDesktopBehaviorPlugin,
                     desktop::plugin::DesktopBehaviorPlugin_iid)
-```
+```text
 
 ### 插件管理器
 
@@ -1216,7 +1221,7 @@ PluginManager& PluginManager::instance() {
 }
 
 } // namespace desktop::plugin
-```
+```text
 
 ### 插件实现示例
 
@@ -1298,7 +1303,7 @@ public:
 };
 
 } // namespace desktop::plugin::example
-```
+```text
 
 ### 插件元数据文件
 
@@ -1317,7 +1322,7 @@ public:
         "RequiredFeatures": []
     }
 }
-```
+```text
 
 ### 动态加载策略
 
@@ -1365,7 +1370,7 @@ public:
 };
 
 } // namespace desktop::plugin
-```
+```yaml
 
 ---
 
@@ -1452,7 +1457,7 @@ enum class WindowLevel {
 };
 
 } // namespace desktop::future
-```
+```text
 
 ### 平台特定扩展
 
@@ -1510,7 +1515,7 @@ struct WaylandSpecificBehaviors {
 #endif
 
 } // namespace desktop::platform
-```
+```yaml
 
 ---
 
@@ -1613,7 +1618,7 @@ private:
 };
 
 } // namespace desktop::performance
-```
+```text
 
 ### 测试策略
 
@@ -1688,7 +1693,7 @@ private:
 };
 
 } // namespace desktop::testing
-```
+```yaml
 
 ---
 

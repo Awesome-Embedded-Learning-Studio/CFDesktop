@@ -1,3 +1,8 @@
+---
+title: windowsconfigure.ps1
+description: "文档编写日期: 2026-03-20，本脚本仅用于配置项目，使用CMake生成构建系统文件，不执行编"
+---
+
 # windows_configure.ps1
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 基本语法
 ```powershell
 .\scripts\build_helpers\windows_configure.ps1 [-Config <develop|deploy>]
-```
+```bash
 
 ### 参数说明
 | 参数 | 类型 | 默认值 | 说明 |
@@ -21,7 +26,7 @@
 
 # 使用部署配置
 .\scripts\build_helpers\windows_configure.ps1 -Config deploy
-```
+```text
 
 ## Scripts详解
 
@@ -53,7 +58,7 @@ build_type   = 构建类型 (Debug/Release/RelWithDebInfo)
 [paths]
 source       = 源代码目录 (相对于项目根目录)
 build_dir    = 构建输出目录 (相对于项目根目录)
-```
+```yaml
 
 ### 执行流程
 1. 加载配置文件
@@ -81,8 +86,8 @@ build_dir    = 构建输出目录 (相对于项目根目录)
 配置成功后，可使用以下命令进行编译:
 ```powershell
 cmake --build <build_dir>
-```
+```yaml
 或使用快速构建脚本:
 ```powershell
 .\scripts\build_helpers\windows_fast_develop_build.ps1
-```
+```text

@@ -1,3 +1,8 @@
+---
+title: "ICFAnimationManagerFactory - 动画工厂管理器"
+description: 是动画的集中创建和管理接口，负责从字符串 token 生成动画实例并管理它们的生命周期。这个设计把动
+---
+
 # ICFAnimationManagerFactory - 动画工厂管理器
 
 `ICFAnimationManagerFactory` 是动画的集中创建和管理接口，负责从字符串 token 生成动画实例并管理它们的生命周期。这个设计把动画的创建逻辑从业务代码里抽离出来，通过 token 来间接引用动画——这样可以在不修改调用代码的情况下，统一调整动画参数或者全局关闭动画。
@@ -19,7 +24,7 @@ auto anim = factory->getAnimation("md.animation.fadeIn");
 if (anim) {
     anim->start();
 }
-```
+```text
 
 ## 动画注册
 
@@ -36,7 +41,7 @@ if (result == ICFAnimationManagerFactory::RegisteredResult::OK) {
 } else if (result == ICFAnimationManagerFactory::RegisteredResult::DUP_NAME) {
     // 名称重复
 }
-```
+```text
 
 如果需要更精细的控制，可以用 `registerAnimationCreator` 传入一个 lambda：
 
@@ -46,7 +51,7 @@ factory->registerAnimationCreator("customFade", [](QObject* parent) {
     anim->setDuration(500);  // 自定义时长
     return anim;
 });
-```
+```text
 
 ⚠️ 传入的 lambda 会在每次 `getAnimation()` 被调用时执行，所以不要在这里捕获可能会失效的局部变量。
 
@@ -60,7 +65,7 @@ if (anim) {
     // 动画存在且可用
     anim->start();
 }
-```
+```text
 
 返回 `WeakPtr` 而不是原始指针，是因为工厂拥有动画的所有权。如果工厂被销毁，所有返回的 `WeakPtr` 会自动失效，不会变成悬空指针：
 
@@ -74,7 +79,7 @@ if (anim) {
 if (anim) {
     // 这里不会执行，因为 anim 已经失效
 }
-```
+```text
 
 ## 全局开关
 
@@ -94,7 +99,7 @@ factory->setTargetEnabled("md.animation.fadeIn", false);
 if (!factory->targetEnabled("md.animation.fadeIn")) {
     // 这个动画被禁用
 }
-```
+```text
 
 ⚠️ `setEnabledAll(false)` 只影响**新创建**的动画，已经正在运行的动画会继续直到完成。如果需要立即停止所有动画，需要自己维护一个引用列表并逐个调用 `stop()`。
 
@@ -105,7 +110,7 @@ if (!factory->targetEnabled("md.animation.fadeIn")) {
 ```cpp
 factory->setTargetFps(60.0f);  // 60 FPS
 factory->setTargetFps(30.0f);  // 30 FPS（省电）
-```
+```text
 
 这个值会影响动画 tick 之间的时间间隔，但不会改变动画的总时长——时长是通过 `MotionSpec` 控制的。
 
@@ -119,7 +124,7 @@ enum class RegisteredResult {
     DUP_NAME,      // 名称已存在
     UNSUPPORT_TYPE // 不支持的类型
 };
-```
+```text
 
 遇到 `DUP_NAME` 时，如果要替换已存在的动画，需要先移除再重新注册。目前接口没有直接提供移除方法，这是设计上的取舍——我们假设动画注册是在初始化阶段一次性完成的。
 

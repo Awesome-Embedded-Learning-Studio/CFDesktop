@@ -1,3 +1,8 @@
+---
+title: PowerShell库文档
+description: "文档编写日期: 2026-03-20，本目录包含 CFDesktop 构建系统使用的 PowerSh"
+---
+
 # PowerShell库文档
 
 > 文档编写日期: 2026-03-20
@@ -22,7 +27,7 @@
 ```powershell
 Import-Module scripts/lib/powershell/LibCommon.psm1
 Import-Module scripts/lib/powershell/LibConfig.psm1
-```
+```text
 
 ### 脚本内加载（点号加载）
 
@@ -30,18 +35,18 @@ Import-Module scripts/lib/powershell/LibConfig.psm1
 . "$PSScriptRoot\LibCommon.psm1"
 . "$PSScriptRoot\LibConfig.psm1"
 . "$PSScriptRoot\LibBuild.psm1"
-```
+```text
 
 ## 依赖关系
 
-```
+```text
 LibCommon.psm1 (基础模块，无依赖)
     ├── LibBuild.psm1 (依赖 LibCommon)
     ├── LibConfig.psm1 (无依赖)
     ├── LibPaths.psm1 (无依赖)
     ├── LibArgs.psm1 (无依赖)
     └── LibGit.psm1 (无依赖)
-```
+```text
 
 **注意**: LibBuild.psm1 依赖 LibCommon.psm1，使用前必须先加载 LibCommon.psm1。
 
@@ -62,7 +67,7 @@ Write-LogWarning "Warning message"
 Write-LogError "Error message"
 Write-LogSeparator
 Write-LogProgress -Current 5 -Total 10 -Message "Processing"
-```
+```text
 
 ### 构建操作 (LibBuild)
 
@@ -78,7 +83,7 @@ Invoke-CMakeConfigure -Generator "Ninja" -BuildType "Release" -SourceDir "." -Bu
 
 # CMake 构建
 Invoke-CMakeBuild -BuildDir "build" -Parallel (Get-ParallelJobCount)
-```
+```text
 
 ### 配置读取 (LibConfig)
 
@@ -94,4 +99,4 @@ $value = Get-IniValue -FilePath "config.ini" -Section "section" -Key "key"
 if (Test-IniValue -FilePath "config.ini" -Section "section" -Key "key") {
     # 配置存在
 }
-```
+```text

@@ -1,3 +1,8 @@
+---
+title: libgit.sh
+description: "文档编写日期: 2026-03-20，提供 Git 相关的辅助函数，主要包括："
+---
+
 # lib_git.sh
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 加载方式
 ```bash
 source scripts/lib/bash/lib_git.sh
-```
+```bash
 
 ## Scripts详解
 
@@ -53,7 +58,7 @@ echo $?  # 输出: 1 (第一个版本大于第二个版本)
 
 compare_versions "1.0.0" "1.0.0"
 echo $?  # 输出: 0 (版本相等)
-```
+```text
 
 #### determine_verify_level
 根据本地版本和远程版本的差异，确定需要进行的验证级别。
@@ -61,7 +66,7 @@ echo $?  # 输出: 0 (版本相等)
 determine_verify_level "1.2.3" "1.3.0"  # 输出: minor
 determine_verify_level "1.2.3" "2.0.0"  # 输出: major
 determine_verify_level "1.2.3" "1.2.4"  # 输出: patch
-```
+```text
 
 验证级别含义：
 - **major**: X64 + ARM64 完整构建 + 测试
@@ -72,7 +77,7 @@ determine_verify_level "1.2.3" "1.2.4"  # 输出: patch
 从项目根目录的 CMakeLists.txt 中提取版本号。
 ```bash
 get_cmake_version "/path/to/project"  # 输出: 1.2.3
-```
+```text
 
 ### 依赖关系
 - Git 命令行工具（git）

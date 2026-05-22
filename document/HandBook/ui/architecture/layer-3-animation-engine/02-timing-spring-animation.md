@@ -1,3 +1,8 @@
+---
+title: 时间与弹簧——两种动画范式的完整实现
+description: 在上一篇文章里，我们讲了动画引擎的抽象架构。这篇文章聊聊两种具体的动画实现：基于时间的动画和基于弹簧
+---
+
 # 时间与弹簧——两种动画范式的完整实现
 
 在上一篇文章里，我们讲了动画引擎的抽象架构。这篇文章聊聊两种具体的动画实现：基于时间的动画和基于弹簧的动画。
@@ -24,7 +29,7 @@ protected:
     float m_to = 1.0f;
     int m_elapsed = 0;  // 已过时间（毫秒）
 };
-```
+```text
 
 注意 `motion_spec_` 是一个原始指针。这是一个设计决策：IMotionSpec 的生命周期必须比动画长。在 CFMaterialAnimationFactory 中，这个条件是满足的，因为工厂持有对主题的引用，而主题拥有 MotionSpec。
 
@@ -56,7 +61,7 @@ bool ICFTimingAnimation::tick(int dt) {
 
     return m_elapsed < duration;  // 返回 false 表示动画结束
 }
-```
+```text
 
 这里的关键是 `valueForProgress()`，它根据缓动曲线将 [0, 1] 的线性进度映射到非线性进度。
 
@@ -92,7 +97,7 @@ protected:
     float m_velocity = 0.0f;
     float m_target = 1.0f;
 };
-```
+```text
 
 ## springStep 物理模拟
 
@@ -118,7 +123,7 @@ std::pair<float, float> springStep(float position, float velocity, float target,
 
     return {newPosition, newVelocity};
 }
-```
+```text
 
 这个算法在 Layer 1 讲过，关键点是：
 
@@ -158,7 +163,7 @@ bool ICFSpringAnimation::tick(int dt) {
 
     return !isConverged;
 }
-```
+```text
 
 收敛的条件是速度足够小且距离目标足够近。阈值 0.01 是经验值，可以根据需要调整。
 
@@ -177,7 +182,7 @@ namespace Easing {
     SpringPreset springBouncy();   // 明显的弹性
     SpringPreset springStiff();     // 僵硬的弹性
 }
-```
+```text
 
 不同的预设适用于不同的场景：按钮点击用 gentle，对话框进入用 bouncy，列表滚动用 stiff。
 
@@ -211,7 +216,7 @@ if (fadeAnim) {
 // SpringAnimation：弹性缩放
 // 需要先注册自定义弹簧动画
 // 或者使用预设的弹簧动画 token
-```
+```yaml
 
 ## 总结
 

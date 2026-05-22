@@ -1,3 +1,8 @@
+---
+title: "Phase 2: Base 库核心详细设计文档"
+description: "Phase 2: Base 库核心详细设计文档 的详细文档"
+---
+
 # Phase 2: Base 库核心详细设计文档
 
 ## 文档信息
@@ -30,7 +35,7 @@
 
 ### 2.1 整体依赖关系
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │                   Application Layer                       │
 │                  (Shell / Third-party Apps)               │
@@ -48,11 +53,11 @@
 │                      Qt6 Framework                        │
 │  Core / Gui / Widgets / Multimedia / Network             │
 └──────────────────────────────────────────────────────────┘
-```
+```text
 
 ### 2.2 Base 库目录结构
 
-```
+```text
 src/base/
 ├── include/CFDesktop/Base/
 │   ├── ThemeEngine/
@@ -111,7 +116,7 @@ src/base/
         ├── FileSink.cpp
         ├── ConsoleSink.cpp
         └── NetworkSink.cpp
-```
+```yaml
 
 ---
 
@@ -119,7 +124,7 @@ src/base/
 
 ### 3.1 主题包结构
 
-```
+```text
 assets/themes/
 └── default/
     ├── theme.json                 # 主题元数据
@@ -135,7 +140,7 @@ assets/themes/
         ├── actions/               # 动作图标
         ├── status/                # 状态图标
         └── devices/               # 设备图标
-```
+```text
 
 ### 3.2 主题元数据格式
 
@@ -158,7 +163,7 @@ assets/themes/
         "animationPolicy": "full"
     }
 }
-```
+```text
 
 ### 3.3 颜色变量定义
 
@@ -186,7 +191,7 @@ assets/themes/
     "divider": "#E0E0E0",
     "shadow": "rgba(0, 0, 0, 0.12)"
 }
-```
+```text
 
 ### 3.4 QSS 模板语法
 
@@ -218,7 +223,7 @@ QPushButton:disabled {
     background-color: @divider;
     color: @text.disabled;
 }
-```
+```text
 
 ### 3.5 ThemeEngine 类接口
 
@@ -342,7 +347,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```bash
 
 ### 3.6 主题降级策略
 
@@ -513,7 +518,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 4.2 预定义动画类型
 
@@ -553,7 +558,7 @@ enum class EasingType {
 QEasingCurve easingCurve(EasingType type);
 
 } // namespace CFDesktop::Base
-```
+```yaml
 
 ---
 
@@ -679,7 +684,7 @@ inline int dp(int value) { return DPIManager::instance()->dp(value); }
 inline int sp(int value) { return DPIManager::instance()->sp(value); }
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 5.2 DPI 计算公式
 
@@ -696,7 +701,7 @@ int DPIManager::sp(int value) const {
     qreal fontScale = QApplication::font().pointSizeF() / 10.0;
     return qRound(value * m_dpi / BASE_DPI * m_devicePixelRatio * fontScale);
 }
-```
+```text
 
 ### 5.3 常用尺寸定义
 
@@ -724,7 +729,7 @@ namespace CFDesktop::Base::Sizes {
     inline int iconSizeMedium() { return dp(24); }
     inline int iconSizeLarge() { return dp(48); }
 }
-```
+```yaml
 
 ---
 
@@ -860,7 +865,7 @@ void setConfig(const QString& key, const T& value) {
 }
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 6.2 配置文件格式
 
@@ -887,7 +892,7 @@ UpdateCheck=true
 Level=Info
 MaxFileSizeMB=10
 MaxFiles=5
-```
+```text
 
 **用户配置**: `~/.config/CFDesktop/config.conf`
 
@@ -903,7 +908,7 @@ StatusBarPosition=top
 [User]
 Name=User
 AutoLogin=false
-```
+```yaml
 
 ---
 
@@ -1030,7 +1035,7 @@ private:
 #define LOG_FATAL(tag, msg) Logger::instance()->fatal(tag, msg)
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 7.2 LogMessage 结构
 
@@ -1054,7 +1059,7 @@ struct LogMessage {
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 7.3 LogSink 实现
 
@@ -1090,7 +1095,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 #### ConsoleSink
 
@@ -1118,7 +1123,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 #### NetworkSink
 
@@ -1145,7 +1150,7 @@ private:
 };
 
 } // namespace CFDesktop::Base
-```
+```text
 
 ### 7.4 日志配置
 
@@ -1171,7 +1176,7 @@ MaxFiles=5
 Enabled=false
 Host=192.168.1.100
 Port=514
-```
+```yaml
 
 ---
 

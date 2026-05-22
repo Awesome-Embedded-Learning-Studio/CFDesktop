@@ -1,3 +1,8 @@
+---
+title: 格式化器 (Formatter) 详解
+description: Formatter 负责将 LogRecord 转换为可读的文本格式。
+---
+
 # 格式化器 (Formatter) 详解
 
 Formatter 负责将 LogRecord 转换为可读的文本格式。
@@ -6,13 +11,13 @@ Formatter 负责将 LogRecord 转换为可读的文本格式。
 
 ### 什么是 Formatter？
 
-```
+```text
 LogRecord (结构化数据)
          ↓
     Formatter (格式化器)
          ↓
    std::string (可读文本)
-```
+```bash
 
 ### 内置 Formatter
 
@@ -38,7 +43,7 @@ enum FormatterFlag : uint32_t {
     MESSAGE = 1 << 5,         // 消息内容
     COLOR = 1 << 6,           // ANSI 颜色
 };
-```
+```text
 
 ### 预设组合
 
@@ -51,7 +56,7 @@ DEFAULT = TIMESTAMP | LEVEL | TAG | SOURCE_LOCATION | MESSAGE
 
 // 详细：包含所有组件
 VERBOSE = TIMESTAMP | LEVEL | TAG | THREAD_ID | SOURCE_LOCATION | MESSAGE
-```
+```bash
 
 ### 输出示例
 
@@ -72,7 +77,7 @@ using namespace cf::log;
 
 // 使用默认配置
 auto formatter = std::make_shared<AsciiColorFormatter>();
-```
+```text
 
 ### 自定义配置
 
@@ -86,7 +91,7 @@ auto minimal = std::make_shared<AsciiColorFormatter>(
 auto verbose = std::make_shared<AsciiColorFormatter>(
     FormatterFlag::VERBOSE | FormatterFlag::COLOR
 );
-```
+```text
 
 ### 运行时修改配置
 
@@ -104,7 +109,7 @@ config->enable(FormatterFlag::THREAD_ID);
 config->set_timestamp_format("%Y-%m-%d %H:%M:%S");
 
 formatter->set_config(config);
-```
+```bash
 
 ### ANSI 颜色映射
 
@@ -118,7 +123,7 @@ formatter->set_config(config);
 
 ### 输出示例
 
-```
+```text
 [14:23:45] [INFO] [CFLog] 应用启动
          ^^^^^^ 绿色
 
@@ -127,7 +132,7 @@ formatter->set_config(config);
 
 [14:23:47] [ERROR] [Network] 连接失败
          ^^^^^ 红色
-```
+```text
 
 ## FileFormatter
 
@@ -139,7 +144,7 @@ formatter->set_config(config);
 using namespace cf::log;
 
 auto formatter = std::make_shared<FileFormatter>();
-```
+```text
 
 ### 特点
 
@@ -153,7 +158,7 @@ FileFormatter 与 AsciiColorFormatter 基本相同，但：
 auto formatter = std::make_shared<FileFormatter>(
     FormatterFlag::DEFAULT | FormatterFlag::COLOR  // COLOR 被忽略
 );
-```
+```text
 
 ## DefaultFormatter
 
@@ -165,7 +170,7 @@ auto formatter = std::make_shared<FileFormatter>(
 #include "cflog/formatter/default_formatter.h"
 
 auto formatter = std::make_shared<DefaultFormatter>();
-```
+```text
 
 **输出**：只包含 `LogRecord.msg`
 
@@ -186,7 +191,7 @@ auto config = std::make_shared<FormatterConfig>(
     FormatterFlag::MINIMAL,
     "%H:%M:%S"  // 时间格式
 );
-```
+```text
 
 ### 线程安全操作
 
@@ -204,7 +209,7 @@ if (config->is_enabled(FormatterFlag::COLOR)) {
 
 // 设置所有标志
 config->set_flags(FormatterFlag::VERBOSE);
-```
+```bash
 
 ### 时间戳格式
 
@@ -233,7 +238,7 @@ public:
         return false;  // 不支持配置
     }
 };
-```
+```text
 
 ### 可配置自定义
 
@@ -283,7 +288,7 @@ private:
         return "";
     }
 };
-```
+```text
 
 ## 常见格式示例
 
@@ -311,7 +316,7 @@ private:
         return "";
     }
 };
-```
+```text
 
 ### Syslog 格式
 
@@ -342,7 +347,7 @@ private:
         return "";
     }
 };
-```
+```text
 
 ## 使用 FormatterFactory
 
@@ -361,7 +366,7 @@ auto formatter = factory.create("custom");
 
 // 获取或创建（带缓存）
 auto cached = factory.get_or_create("custom");
-```
+```bash
 
 ## 选择建议
 

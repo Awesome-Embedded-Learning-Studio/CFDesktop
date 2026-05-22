@@ -1,3 +1,8 @@
+---
+title: dockerstart.ps1
+description: "文档编写日期: 2026-03-20，本脚本用于在Docker容器中构建CFDesktop项目，提供"
+---
+
 # docker_start.ps1
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 基本语法
 ```powershell
 .\scripts\build_helpers\docker_start.ps1 [OPTIONS]
-```
+```bash
 
 ### 参数说明
 | 参数 | 类型 | 默认值 | 说明 |
@@ -51,7 +56,7 @@
 
 # 禁用日志记录
 .\scripts\build_helpers\docker_start.ps1 -NoLog
-```
+```text
 
 ## Scripts详解
 
@@ -76,14 +81,14 @@
 启动容器并进入交互式bash shell：
 ```powershell
 .\docker_start.ps1
-```
+```text
 项目根目录挂载到容器内的 `/project`。
 
 #### 2. CI验证模式
 运行完整的CI构建：
 ```powershell
 .\docker_start.ps1 -Verify
-```
+```text
 执行 `scripts/build_helpers/ci_build_entry.sh ci`
 
 #### 3. 构建项目模式
@@ -100,7 +105,7 @@
 运行项目测试：
 ```powershell
 .\docker_start.ps1 -RunProjectTest
-```
+```bash
 
 ### 架构支持
 
@@ -146,7 +151,7 @@
 使用 `-StayOnError` 参数，CI构建失败时容器不会退出，可进入交互模式调试：
 ```powershell
 .\docker_start.ps1 -Verify -StayOnError
-```
+```text
 
 ### 快速构建模式
 使用 `-FastBuild` 参数复用已有镜像：

@@ -1,3 +1,8 @@
+---
+title: CI/CD
+description: CFDesktop 当前使用 GitHub Actions 分层验证。
+---
+
 # CI/CD
 
 CFDesktop 当前使用 GitHub Actions 分层验证。

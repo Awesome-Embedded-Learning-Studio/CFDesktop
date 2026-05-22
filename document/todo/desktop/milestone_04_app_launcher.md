@@ -1,3 +1,8 @@
+---
+title: "Milestone 4: 应用启动器"
+description: "预计周期: 5-7 天，前置依赖: Milestone 3: 任务栏"
+---
+
 # Milestone 4: 应用启动器
 
 > **状态**: ⬜ 待开始

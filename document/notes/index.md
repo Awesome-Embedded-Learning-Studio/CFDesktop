@@ -1,3 +1,8 @@
+---
+title: 桌面行为系统设计文档
+description: 本文档系列详细介绍了桌面应用程序中窗口行为建模、Qt 集成、策略模式应用和系统架构设计的完整方案。
+---
+
 # 桌面行为系统设计文档
 
 本文档系列详细介绍了桌面应用程序中窗口行为建模、Qt 集成、策略模式应用和系统架构设计的完整方案。
@@ -84,11 +89,11 @@ enum class DesktopBehaviorFlag {
 };
 
 Q_DECLARE_FLAGS(DesktopBehaviors, DesktopBehaviorFlag)
-```
+```text
 
 ### 架构分层
 
-```
+```text
 Application Layer (用户代码)
          ↓
 Behavior Abstraction (DesktopBehaviors)
@@ -98,7 +103,7 @@ Strategy Layer (IDesktopBehaviorStrategy)
 Qt Integration (WindowFlags)
          ↓
 Platform Abstraction (Windows/X11/Wayland)
-```
+```bash
 
 ---
 

@@ -1,3 +1,8 @@
+---
+title: CI 构建入口设置指南
+description: "状态: ✅ 已完成，完成日期: 2026-03-07"
+---
+
 # CI 构建入口设置指南
 
 **状态**: ✅ 已完成
@@ -16,13 +21,13 @@
 
 ## 文件结构
 
-```
+```text
 scripts/build_helpers/
 ├── ci_build_entry.sh              # CI 构建入口脚本
 ├── build_ci_config.ini            # AMD64 CI 配置
 ├── build_ci_aarch64_config.ini    # ARM64 CI 配置
 └── build_ci_armhf_config.ini      # ARM32 CI 配置
-```
+```text
 
 ## CI 构建配置
 
@@ -44,7 +49,7 @@ build_dir=out/build_ci             # CI 专用构建目录
 
 [options]
 jobs=16                            # 并行编译任务数
-```
+```text
 
 ### build_ci_aarch64_config.ini (ARM64)
 
@@ -64,7 +69,7 @@ build_dir=out/build_ci_aarch64     # ARM64 专用构建目录
 
 [options]
 jobs=16
-```
+```text
 
 ### build_ci_armhf_config.ini (ARM32)
 
@@ -84,7 +89,7 @@ build_dir=out/build_ci_armhf      # ARM32 专用构建目录
 
 [options]
 jobs=8
-```
+```text
 
 ## CI 构建入口脚本
 
@@ -106,11 +111,11 @@ bash scripts/build_helpers/ci_build_entry.sh ci
 
 # 仅运行测试
 bash scripts/build_helpers/ci_build_entry.sh test
-```
+```text
 
 ### 架构检测流程
 
-```
+```text
 ci_build_entry.sh
     │
     ├── 检测架构 (uname -m)
@@ -126,7 +131,7 @@ ci_build_entry.sh
     │
     └── 执行构建
           └──> linux_develop_build.sh ci -c <config>
-```
+```bash
 
 ## 日志系统
 
@@ -141,7 +146,7 @@ ci_build_entry.sh
 
 **示例输出**:
 
-```
+```text
 [2026-03-07 10:30:00] [INFO] ========================================
 [2026-03-07 10:30:00] [INFO] CI Build Entry Point
 [2026-03-07 10:30:00] [INFO] Mode: ci
@@ -152,7 +157,7 @@ ci_build_entry.sh
 ...
 [2026-03-07 10:35:00] [SUCCESS] CI build completed successfully!
 [2026-03-07 10:35:00] [INFO] ========================================
-```
+```text
 
 ## 集成方式
 
@@ -172,14 +177,14 @@ docker run --rm --platform linux/arm64 \
     -v $(pwd):/project \
     cfdesktop-build:arm64 \
     bash scripts/build_helpers/ci_build_entry.sh ci
-```
+```text
 
 ### 直接运行
 
 ```bash
 # 在 Linux 环境中直接运行
 bash scripts/build_helpers/ci_build_entry.sh ci
-```
+```text
 
 ## 错误处理
 
@@ -194,7 +199,7 @@ else
     log "CI build failed with exit code: $exit_code" "ERROR"
     exit $exit_code
 fi
-```
+```text
 
 ## 验证方法
 
@@ -206,7 +211,7 @@ bash scripts/build_helpers/docker_start.sh --verify
 
 # ARM64
 bash scripts/build_helpers/docker_start.sh --arch arm64 --verify
-```
+```text
 
 ### 2. 验证配置
 
@@ -219,7 +224,7 @@ cat scripts/build_helpers/build_ci_config.ini
 # generator=Unix Makefiles
 # toolchain=linux/ci-x86_64
 # build_type=Release
-```
+```text
 
 ### 3. 验证构建目录
 
@@ -229,7 +234,7 @@ ls -la out/build_ci/
 
 # 与开发构建分离
 ls -la out/build_develop/
-```
+```text
 
 ## 技术细节
 
@@ -252,14 +257,14 @@ case "$ARCH" in
         exit 1
         ;;
 esac
-```
+```text
 
 ### 脚本位置计算
 
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-```
+```bash
 
 这确保脚本可以从任何位置正确调用，并找到相关文件。
 
@@ -292,7 +297,7 @@ docker run --rm --platform linux/amd64 ...
 
 # ARM64
 docker run --rm --platform linux/arm64 ...
-```
+```bash
 
 ### Q: 构建产物在哪里？
 

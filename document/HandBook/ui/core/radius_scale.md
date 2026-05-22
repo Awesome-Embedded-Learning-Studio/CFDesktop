@@ -1,3 +1,8 @@
+---
+title: "IRadiusScale - 圆角规范接口"
+description: 定义了按名称查询圆角值的抽象接口，是 Material Design 3 形状系统的 C++ 映射层
+---
+
 # IRadiusScale - 圆角规范接口
 
 `IRadiusScale` 定义了按名称查询圆角值的抽象接口，是 Material Design 3 形状系统的 C++ 映射层。选择用字符串键值而不是枚举来访问圆角，是为了支持动态形状配置和运行时扩展——我们可以在不重新编译的情况下调整圆角方案。
@@ -16,7 +21,7 @@ float small = radius.queryRadiusScale("cornerSmall");
 float medium = radius.queryRadiusScale("cornerMedium");
 float large = radius.queryRadiusScale("cornerLarge");
 float extraLarge = radius.queryRadiusScale("cornerExtraLarge");
-```
+```text
 
 `queryRadiusScale()` 返回的是浮点数值，单位是密度无关像素（dp）。返回值可以直接用于 Qt 组件的圆角设置：
 
@@ -25,7 +30,7 @@ float extraLarge = radius.queryRadiusScale("cornerExtraLarge");
 QPushButton* button = new QPushButton("Click Me");
 float cornerRadius = radius.queryRadiusScale("cornerMedium");
 button->setStyleSheet(QString("border-radius: %1px;").arg(cornerRadius));
-```
+```text
 
 ## Token 命名约定
 
@@ -40,7 +45,7 @@ button->setStyleSheet(QString("border-radius: %1px;").arg(cornerRadius));
 "cornerLarge"        // 大圆角（16dp）
 "cornerExtraLarge"   // 极大圆角（28dp）
 "cornerFull"         // 完全圆角（形状变成胶囊或圆形）
-```
+```text
 
 具体的 token 列表由实现类决定，可以在运行时动态扩展。如果查询不存在的 token，接口规定返回 0——这是一个便于判断的 fallback 值，但可能隐藏配置错误。
 
@@ -73,7 +78,7 @@ protected:
         painter.fillPath(path, palette().button());
     }
 };
-```
+```text
 
 使用时：
 
@@ -83,7 +88,7 @@ auto* smallBtn = new RoundedButton("cornerSmall");     // 轻微圆角
 auto* mediumBtn = new RoundedButton("cornerMedium");   // 标准圆角
 auto* largeBtn = new RoundedButton("cornerLarge");     // 大圆角
 auto* pillBtn = new RoundedButton("cornerFull");       // 胶囊形状
-```
+```text
 
 ## 与样式表集成
 
@@ -97,7 +102,7 @@ void applyCornerRadius(QWidget* widget, const char* cornerToken) {
         "QWidget { border-radius: %1px; }"
     ).arg(r));
 }
-```
+```text
 
 ⚠️ 样式表中的圆角是按像素计算的，而 `queryRadiusScale()` 返回的是 dp 值。在高 DPI 屏幕上，需要手动乘以设备像素比率：
 
@@ -108,7 +113,7 @@ float dpToPx(float dp) {
 
 // 正确的高 DPI 处理
 float r = dpToPx(radius.queryRadiusScale("cornerMedium"));
-```
+```text
 
 ## 实现要点
 

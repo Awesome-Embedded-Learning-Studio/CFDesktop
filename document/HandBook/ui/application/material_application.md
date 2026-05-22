@@ -1,3 +1,8 @@
+---
+title: "MaterialApplication - Material 应用"
+description: 是  的 Material Design 3 专用派生类，自动注册亮色和暗色主题，并把 Materi
+---
+
 # MaterialApplication - Material 应用
 
 `MaterialApplication` 是 `Application` 的 Material Design 3 专用派生类，自动注册亮色和暗色主题，并把 Material 动画工厂绑定上去。如果你的应用用 Material Design 3，直接用它就行，不需要手动注册主题。
@@ -20,7 +25,7 @@ int main(int argc, char* argv[]) {
 
     return app.exec();
 }
-```
+```text
 
 构造函数里会自动调用 `init()`，`init()` 按下面的顺序执行：
 
@@ -40,7 +45,7 @@ app.setTheme("theme.material.dark");
 // 或者用 token 字面量（推荐）
 using namespace cf::ui::core::token::literals;
 app.setTheme(MATERIAL_THEME_DARK);
-```
+```text
 
 主题切换会触发 `themeChanged` 信号，动画工厂会同步重建。
 
@@ -54,7 +59,7 @@ Application::registerAnimationFactoryType("theme.material",
     [](const core::ICFTheme& theme, QObject* parent) {
         return std::make_unique<CFMaterialAnimationFactory>(theme, nullptr, parent);
     });
-```
+```text
 
 所以你不需要自己管工厂创建，只要确保主题 token 以 `theme.material.` 开头就行。
 
@@ -67,7 +72,7 @@ MaterialApplication app(argc, argv);
 
 // 如果想要暗色主题作为默认
 app.setTheme(MATERIAL_THEME_DARK);
-```
+```text
 
 或者自己派生一个类，在 `init()` 里改默认主题：
 
@@ -79,7 +84,7 @@ protected:
         setTheme(MATERIAL_THEME_DARK);  // 然后改默认
     }
 };
-```
+```text
 
 ⚠️ 不要在 `MaterialApplication::init()` 里改默认主题再调用基类 `init()`——因为基类的 `init()` 会创建动画工厂，此时默认主题还是亮色的。要么在构造后改，要么在派生类的 `init()` 里先调基类 `init()` 再改。
 
@@ -96,7 +101,7 @@ themeManager()->insert_one("theme.material.light", ...);
 themeManager()->setThemeTo("theme.material.light", false);
 
 app.init();  // 别忘了手动调用 init()
-```
+```text
 
 而 `MaterialApplication` 把这些都包圆了，构造完就能用。如果你用 Material Design 3，没理由不用它。
 

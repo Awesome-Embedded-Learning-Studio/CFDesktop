@@ -1,3 +1,8 @@
+---
+title: "ListView - Material 列表视图"
+description: 是 Material Design 3 列表视图控件的完整实现，支持单行、双行和三行列表项。包含水波
+---
+
 # ListView - Material 列表视图
 
 `ListView` 是 Material Design 3 列表视图控件的完整实现，支持单行、双行和三行列表项。包含水波纹效果、状态层、分隔线和焦点指示器。
@@ -13,7 +18,7 @@ class ListView : public QListView {
     Q_PROPERTY(bool showSeparator READ showSeparator WRITE setShowSeparator)
     Q_PROPERTY(bool rippleEnabled READ rippleEnabled WRITE setRippleEnabled)
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/listview/listview.h`
 
@@ -27,7 +32,7 @@ enum class ItemHeight {
     TwoLine = 72,     // 72dp - 双行项目
     ThreeLine = 88    // 88dp - 三行项目
 };
-```
+```text
 
 ## 基本用法
 
@@ -54,7 +59,7 @@ list->setModel(model);
 
 // 连接信号
 connect(list, &QListView::clicked, this, &MyClass::onItemClicked);
-```
+```text
 
 ## 分隔线
 
@@ -64,7 +69,7 @@ list->setShowSeparator(true);
 
 // 禁用分隔线
 list->setShowSeparator(false);
-```
+```text
 
 分隔线使用 `OutlineVariant` 颜色绘制，遵循 Material Design 的视觉规范。
 
@@ -73,7 +78,7 @@ list->setShowSeparator(false);
 ```cpp
 // 启用/禁用水波纹效果（默认启用）
 list->setRippleEnabled(true);
-```
+```bash
 
 水波纹在列表项被点击时从点击位置向外扩散，使用 `RippleHelper` 实现。
 
@@ -98,7 +103,7 @@ ListView 使用内部委托（`ListViewDelegate`）控制列表项的大小：
 ```cpp
 // 委托在 .cpp 中定义，自动设置 uniformItemSizes
 // 根据 ItemHeight 设置每项的高度
-```
+```bash
 
 ## 绘制流程
 

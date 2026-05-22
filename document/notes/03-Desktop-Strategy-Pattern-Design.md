@@ -1,3 +1,8 @@
+---
+title: 桌面策略系统设计（Strategy Pattern 实战）
+description: 1. 为什么使用 Strategy 模式
+---
+
 # 桌面策略系统设计（Strategy Pattern 实战）
 
 ## 目录
@@ -76,7 +81,7 @@ void applyWindowFlags(QWidget* widget) {
 void applyWindowFlags(QWidget* widget, IDesktopDisplaySizeStrategy* strategy) {
     strategy->action(widget);  // 平台特定实现被封装
 }
-```
+```text
 
 ### 1.2 行为解耦与单一职责
 
@@ -99,7 +104,7 @@ class CFDesktop : public QWidget {
 // 1. 实现特定平台的窗口行为
 // 2. 提供行为查询接口
 // 3. 管理平台相关的状态
-```
+```text
 
 这种分离带来的好处：
 
@@ -131,7 +136,7 @@ PlatformFactoryAPI native() noexcept;
 // PlatformFactoryAPI* remote() noexcept;
 
 } // namespace
-```
+```text
 
 这支持以下场景：
 
@@ -178,7 +183,7 @@ TEST(DesktopTest, ApplyStrategy) {
     EXPECT_TRUE(mock_strategy.action_called);
     EXPECT_EQ(mock_strategy.last_widget, &desktop);
 }
-```
+```yaml
 
 参考资料：
 - [Strategy in C++ / Design Patterns - Refactoring.Guru](https://refactoring.guru/design-patterns/strategy/cpp/example)
@@ -203,7 +208,7 @@ TEST(DesktopTest, ApplyStrategy) {
 
 ### 2.2 UML 结构图
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        Context (CFDesktop)                          │
 │                                                                     │
@@ -231,7 +236,7 @@ TEST(DesktopTest, ApplyStrategy) {
 │+ action()       │ │+ action()       │ │+ action()        │
 │+ query()        │ │+ query()        │ │+ query()         │
 └─────────────────┘ └─────────────────┘ └─────────────────┘
-```
+```text
 
 ### 2.3 C++ 实现要点
 
@@ -245,7 +250,7 @@ public:
     virtual ~IDesktopDisplaySizeStrategy() = default;
     // ...
 };
-```
+```text
 
 #### 智能指针支持
 
@@ -264,7 +269,7 @@ public:
     std::shared_ptr<IDesktopPropertyStrategy>
     factorize_shared(const IDesktopPropertyStrategy::StrategyType t);
 };
-```
+```text
 
 #### WeakPtr 集成
 
@@ -280,7 +285,7 @@ public:
 private:
     WeakPtrFactory<IDesktopDisplaySizeStrategy> weak_factory_ptr_;
 };
-```
+```yaml
 
 参考资料：
 - [Strategy Design Pattern - GeeksforGeeks](https://www.geeksforgeeks.org/system-design/strategy-pattern-set-1/)
@@ -348,7 +353,7 @@ protected:
 };
 
 } // namespace cf::desktop::platform_strategy
-```
+```text
 
 ### 3.2 策略类型枚举
 
@@ -370,7 +375,7 @@ inline const char* strategyTypeToString(IDesktopPropertyStrategy::StrategyType t
             return "Unknown";
     }
 }
-```
+```text
 
 ### 3.3 ABI 友好设计
 
@@ -392,7 +397,7 @@ public:
     virtual const char* name() const noexcept = 0;
     virtual StrategyType type() const noexcept { return type_; }
 };
-```
+```text
 
 #### 2. 使用 Pimpl 模式隐藏实现
 
@@ -410,7 +415,7 @@ private:
 class IDesktopPropertyStrategy::Impl {
     // 实现细节可以随意修改而不影响 ABI
 };
-```
+```text
 
 #### 3. 自定义删除器
 
@@ -428,7 +433,7 @@ public:
         }};
     }
 };
-```
+```text
 
 ### 3.4 显示策略接口
 
@@ -509,7 +514,7 @@ private:
 };
 
 } // namespace cf::desktop::platform_strategy
-```
+```bash
 
 参考资料：
 - [Qt 6.10.2 QFlags 官方文档](https://doc.qt.io/qt-6/qflags.html)
@@ -555,7 +560,7 @@ Action 方法遵循以下设计原则：
  * @warning 不应在持有锁的状态下调用此方法（可能触发 Qt 事件）
  */
 virtual bool action(QWidget* widget_data);
-```
+```text
 
 #### 2. 返回值表示操作结果
 
@@ -573,7 +578,7 @@ virtual bool action(QWidget* widget_data) {
         throw std::invalid_argument("widget is null");  // 不推荐
     }
 }
-```
+```text
 
 #### 3. 幂等性
 
@@ -594,7 +599,7 @@ public:
         return true;
     }
 };
-```
+```text
 
 ### 4.3 Query 方法设计
 
@@ -617,7 +622,7 @@ Query 方法遵循以下设计原则：
  * @note 可以多次调用而不影响系统状态
  */
 virtual DesktopBehaviors query() const;
-```
+```text
 
 #### 2. 返回完整信息
 
@@ -631,7 +636,7 @@ if (behaviors.testFlag(DesktopBehaviorFlag::Fullscreen)) {
 // ❌ 错误：提供多个查询方法
 bool isFullscreen() const;  // 应该使用 query().testFlag()
 bool isFrameless() const;   // 应该使用 query().testFlag()
-```
+```text
 
 #### 3. const 正确性
 
@@ -643,7 +648,7 @@ virtual DesktopBehaviors query() const;
 void monitorDesktop(const IDesktopDisplaySizeStrategy& strategy) {
     DesktopBehaviors current = strategy.query();  // OK
 }
-```
+```text
 
 ### 4.4 分离的好处
 
@@ -674,7 +679,7 @@ private:
     mutable DesktopBehaviors cached_behaviors_;
     mutable bool cache_valid_ = false;
 };
-```
+```text
 
 #### 2. 并发访问
 
@@ -690,7 +695,7 @@ DesktopBehaviors state2 = strategy.query();
 // 线程 3：修改状态（需要同步）
 std::lock_guard<std::mutex> lock(mtx);
 strategy.action(widget);
-```
+```text
 
 #### 3. 前置条件检查
 
@@ -703,7 +708,7 @@ if (!current.testFlag(DesktopBehaviorFlag::Fullscreen)) {
     // 只有在非全屏状态下才执行全屏操作
     strategy.action(widget);
 }
-```
+```yaml
 
 参考资料：
 - [CQRS - Martin Fowler](https://martinfowler.com/bliki/CQRS.html)
@@ -778,7 +783,7 @@ public:
 };
 
 } // namespace
-```
+```text
 
 ### 5.2 FramelessStrategy
 
@@ -840,7 +845,7 @@ public:
 };
 
 } // namespace
-```
+```text
 
 ### 5.3 WSL 平台策略
 
@@ -941,7 +946,7 @@ private:
 };
 
 } // namespace cf::desktop::platform_strategy::wsl
-```
+```text
 
 ### 5.4 组合行为策略
 
@@ -990,7 +995,7 @@ public:
                DesktopBehaviorFlag::AvoidSystemUI;
     }
 };
-```
+```yaml
 
 参考资料：
 - [QWidget::setWindowFlags - Qt Documentation](https://doc.qt.io/qt-6/qwidget.html#windowFlags-prop)
@@ -1039,7 +1044,7 @@ public:
      */
     virtual void clearStrategies() = 0;
 };
-```
+```text
 
 ### 6.2 CompositeStrategy
 
@@ -1140,7 +1145,7 @@ private:
 };
 
 } // namespace
-```
+```text
 
 ### 6.3 策略链模式
 
@@ -1229,7 +1234,7 @@ public:
 private:
     std::vector<std::shared_ptr<IChainStrategy>> chain_;
 };
-```
+```text
 
 ### 6.4 条件策略
 
@@ -1290,7 +1295,7 @@ auto createConditionalStrategy() {
         std::make_shared<X11Strategy>()           // false 分支
     );
 }
-```
+```yaml
 
 参考资料：
 - [Composite Pattern - Refactoring.Guru](https://refactoring.guru/design-patterns/composite)
@@ -1346,7 +1351,7 @@ inline const std::vector<ConflictRule> kConflictRules = {
 };
 
 } // namespace BehaviorConflictRules
-```
+```text
 
 ### 7.2 冲突检测接口
 
@@ -1428,7 +1433,7 @@ public:
         return detect(combined);
     }
 };
-```
+```text
 
 ### 7.3 冲突解决策略
 
@@ -1546,7 +1551,7 @@ private:
         return behaviors;
     }
 };
-```
+```text
 
 ### 7.4 集成到策略应用
 
@@ -1596,7 +1601,7 @@ public:
         return strategy->action(widget);
     }
 };
-```
+```yaml
 
 参考资料：
 - [Conflict-Free Replicated Data Types (CRDTs) - Wikipedia](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type)
@@ -1673,7 +1678,7 @@ private:
 };
 
 } // namespace
-```
+```text
 
 ### 8.2 平台特定工厂
 
@@ -1722,7 +1727,7 @@ private:
 };
 
 } // namespace
-```
+```text
 
 ### 8.3 插件化工厂
 
@@ -1811,7 +1816,7 @@ public:
      */
     virtual QStringList supportedStrategies() const = 0;
 };
-```
+```yaml
 
 参考资料：
 - [How to Create Qt Plugins - Qt Documentation](https://doc.qt.io/qt-6/plugins-howto.html)
@@ -1843,7 +1848,7 @@ class WindowStrategy : public IDesktopDisplaySizeStrategy {
         // ... 更多行为
     }
 };
-```
+```text
 
 #### 2. 开闭原则
 
@@ -1863,7 +1868,7 @@ class FullscreenStrategy : public IDesktopDisplaySizeStrategy {
         addNewFeature(widget);  // 违反开闭原则
     }
 };
-```
+```text
 
 #### 3. 依赖倒置
 
@@ -1881,7 +1886,7 @@ class CFDesktop {
 private:
     FullscreenStrategy* display_strategy_;  // 具体实现
 };
-```
+```text
 
 ### 9.2 命名约定
 
@@ -1904,7 +1909,7 @@ class StrategyFactory;
 // 组合策略：Composite + 功能
 class CompositeStrategy;
 class StrategyChain;
-```
+```text
 
 ### 9.3 错误处理
 
@@ -1962,7 +1967,7 @@ public:
 private:
     StrategyResult last_result_;
 };
-```
+```text
 
 ### 9.4 性能考虑
 
@@ -2000,7 +2005,7 @@ private:
     mutable DesktopBehaviors cached_behaviors_;
     mutable bool cache_valid_;
 };
-```
+```text
 
 ### 9.5 线程安全
 
@@ -2027,7 +2032,7 @@ private:
     std::shared_ptr<IDesktopDisplaySizeStrategy> impl_;
     mutable std::mutex mutex_;
 };
-```
+```text
 
 ### 9.6 测试策略
 
@@ -2071,7 +2076,7 @@ TEST(FullscreenStrategyTest, ApplyFullscreen) {
         DesktopBehaviorFlag::Fullscreen | DesktopBehaviorFlag::Frameless
     ));
 }
-```
+```yaml
 
 ---
 

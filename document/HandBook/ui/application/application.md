@@ -1,3 +1,8 @@
+---
+title: "Application - 应用基础类"
+description: 是 Qt 的  替代品，在标准应用框架之上集成了主题管理和动画工厂。我们用它替换掉裸的 ，这样在任何
+---
+
 # Application - 应用基础类
 
 `Application` 是 Qt 的 `QApplication` 替代品，在标准应用框架之上集成了主题管理和动画工厂。我们用它替换掉裸的 `QApplication`，这样在任何地方都能通过静态方法访问当前主题和动画资源，不需要到处传递单例指针。
@@ -22,7 +27,7 @@ int main(int argc, char* argv[]) {
 
     return app.exec();
 }
-```
+```text
 
 注意：如果你直接用 `Application` 而不是它的派生类，需要手动注册主题并调用 `init()`，否则 `currentTheme()` 会抛异常。实际上更推荐用 `MaterialApplication`，下面会说。
 
@@ -38,7 +43,7 @@ app.setTheme("theme.material.dark");
 connect(&app, &Application::themeChanged, [](const core::ICFTheme& newTheme) {
     // 响应主题切换，更新 UI
 });
-```
+```text
 
 这里有个细节：动画工厂的重建会保留之前的启用状态。比如你禁用了动画，切换主题后动画仍然是禁用状态，不会突然恢复。
 
@@ -56,7 +61,7 @@ if (fadeIn) {
 
 // 全局禁用动画（比如在批量操作时）
 Application::setAnimationsEnabled(false);
-```
+```text
 
 返回的是 `WeakPtr`，因为动画工厂归 `Application` 所有，外部只持有弱引用。如果 `Application` 被销毁或者主题切换导致工厂重建，原来的 `WeakPtr` 就会失效——所以拿到指针后要尽快用，不要长期持有。
 
@@ -75,7 +80,7 @@ Application::registerAnimationFactoryType("theme.fluent",
 
 // 现在切换到 "theme.fluent.*" 主题时会用你的工厂
 app.setTheme("theme.fluent.dark");
-```
+```text
 
 匹配逻辑是按前缀最长匹配：`theme.fluent.dark` 会匹配 `theme.fluent`，而不是 `theme`。这样你可以同时注册多个工厂，每个负责一个主题家族。
 
@@ -98,7 +103,7 @@ protected:
         Application::init();
     }
 };
-```
+```text
 
 如果顺序搞反了，基类的 `init()` 会尝试创建动画工厂，但此时主题还没注册，工厂创建会失败。
 

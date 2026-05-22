@@ -1,3 +1,8 @@
+---
+title: "GroupBox - Material 分组框"
+description: 是 Material Design 3 分组框控件的完整实现，具有圆角、可选的海拔阴影和主题感知颜色
+---
+
 # GroupBox - Material 分组框
 
 `GroupBox` 是 Material Design 3 分组框控件的完整实现，具有圆角、可选的海拔阴影和主题感知颜色。提供带有标题的容器，用于将相关控件分组显示。
@@ -13,7 +18,7 @@ class GroupBox : public QGroupBox {
     Q_PROPERTY(float cornerRadius READ cornerRadius WRITE setCornerRadius)
     Q_PROPERTY(bool hasBorder READ hasBorder WRITE setHasBorder)
 };
-```
+```text
 
 头文件：`ui/widget/material/widget/groupbox/groupbox.h`
 
@@ -34,7 +39,7 @@ layout->addWidget(new TextField(TextFieldVariant::Outlined, group));
 
 // 创建不带标题的分组框
 auto* group2 = new GroupBox(this);
-```
+```text
 
 ## 海拔与阴影
 
@@ -46,7 +51,7 @@ group->setElevation(2);
 
 // 海拔级别越高，阴影越明显
 group->setElevation(4);
-```
+```text
 
 海拔级别影响阴影的模糊半径和偏移量，遵循 Material Design 的标准级别定义。
 
@@ -61,7 +66,7 @@ group->setCornerRadius(12.0f);
 
 // 重置为默认值
 group->setCornerRadius(0);
-```
+```text
 
 ## 边框控制
 
@@ -69,7 +74,7 @@ group->setCornerRadius(0);
 // 启用/禁用边框（默认启用）
 group->setHasBorder(true);   // 显示边框
 group->setHasBorder(false);  // 仅显示阴影（如果 elevation > 0）
-```
+```bash
 
 禁用边框时，分组框仅依靠阴影来区分层级，适合卡片式布局。
 
@@ -117,7 +122,7 @@ addressLayout->addWidget(new TextField("Street", TextFieldVariant::Outlined));
 addressLayout->addWidget(new TextField("City", TextFieldVariant::Outlined));
 
 mainLayout->addWidget(addressGroup);
-```
+```text
 
 ## 相关文档
 

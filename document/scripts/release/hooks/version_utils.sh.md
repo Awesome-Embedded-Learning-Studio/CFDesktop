@@ -1,3 +1,8 @@
+---
+title: versionutils.sh
+description: "文档编写日期: 2026-03-20，为Git钩子提供版本号解析、验证级别检测和Git版本信息获取功"
+---
+
 # version_utils.sh
 
 > 文档编写日期: 2026-03-20
@@ -7,7 +12,7 @@
 ### 加载方式
 ```bash
 source scripts/release/hooks/version_utils.sh
-```
+```cpp
 
 ## Scripts详解
 
@@ -57,7 +62,7 @@ source scripts/release/hooks/version_utils.sh
 #### determine_verify_level
 ```bash
 determine_verify_level <local_version> <remote_version>
-```
+```text
 - **参数1**: 本地版本号（如 `1.2.3`）
 - **参数2**: 远程版本号（如 `1.1.0`）
 - **返回**: `major`, `minor`, 或 `patch`
@@ -66,7 +71,7 @@ determine_verify_level <local_version> <remote_version>
 #### get_cmake_version
 ```bash
 get_cmake_version <project_root>
-```
+```text
 - **参数1**: 项目根目录路径
 - **返回**: CMakeLists.txt中的版本号（提取 `VERSION x.y.z` 格式）
 - **失败**: 返回空字符串
@@ -74,7 +79,7 @@ get_cmake_version <project_root>
 #### get_remote_cmake_version
 ```bash
 get_remote_cmake_version [remote_branch]
-```
+```text
 - **参数1**: 远程分支名（默认: `origin/main`）
 - **返回**: 远程CMakeLists.txt中的版本号
 - **失败**: 返回空字符串
@@ -108,7 +113,7 @@ echo "$(get_verify_level_description "$LEVEL")"
 # 获取CMake版本
 CMAKE_VER=$(get_cmake_version "/path/to/project")
 echo "$CMAKE_VER"  # 输出: x.y.z
-```
+```text
 
 ### 相关文件
 - `/home/charliechen/CFDesktop/scripts/release/hooks/version_utils.sh`

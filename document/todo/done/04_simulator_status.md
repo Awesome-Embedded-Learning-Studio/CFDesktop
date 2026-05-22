@@ -1,3 +1,8 @@
+---
+title: "Phase 4: 多平台模拟器 - 状态文档"
+description: "模块ID: Phase 4，状态: <img src=\"x-data:image/svg+xml,%"
+---
+
 # Phase 4: 多平台模拟器 - 状态文档
 
 > **模块ID**: Phase 4

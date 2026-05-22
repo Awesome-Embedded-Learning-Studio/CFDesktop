@@ -1,3 +1,8 @@
+---
+title: done
+description: 已完成模块的状态文档索引，本目录记录 CFDesktop 各模块的完成状态和实现细节。
+---
+
 # done
 
 > 已完成模块的状态文档索引

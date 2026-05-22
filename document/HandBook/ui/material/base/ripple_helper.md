@@ -1,3 +1,8 @@
+---
+title: "RippleHelper - Material 涟漪效果助手"
+description: 是 Material Design 水波纹效果的完整实现。当用户点击 Material 控件时，从点
+---
+
 # RippleHelper - Material 涟漪效果助手
 
 `RippleHelper` 是 Material Design 水波纹效果的完整实现。当用户点击 Material 控件时，从点击位置扩散出的圆形涟漪能提供即时的触觉反馈。我们选择单独实现这个组件，是因为 Qt 的默认效果反馈太"僵硬"，而 Material 的涟漪需要精确的扩散半径计算和淡入淡出时序控制。
@@ -17,7 +22,7 @@ float maxRadius(const QRectF& rect, const QPointF& center) {
     float d4 = std::hypot(center.x() - rect.bottomRight().x(), center.y() - rect.bottomRight().y());
     return std::max({d1, d2, d3, d4});
 }
-```
+```text
 
 ## 基本用法
 
@@ -50,7 +55,7 @@ public:
 private:
     base::RippleHelper* m_rippleHelper;
 };
-```
+```text
 
 ## 事件处理
 
@@ -68,7 +73,7 @@ void MyWidget::mouseReleaseEvent(QMouseEvent* event) {
     m_rippleHelper->onRelease();
     update();
 }
-```
+```text
 
 `onCancel()` 用于取消未释放的涟漪，比如鼠标拖出控件范围时：
 
@@ -78,7 +83,7 @@ void MyWidget::leaveEvent(QEvent* event) {
     m_rippleHelper->onCancel();  // 清除所有涟漪
     update();
 }
-```
+```text
 
 ⚠️ `onCancel()` 会立即清除所有涟漪，不做淡出动画。这是有意为之的设计——当用户明确"取消"交互时，不需要延迟反馈。
 
@@ -94,7 +99,7 @@ enum class Mode {
 
 // 设置模式
 m_rippleHelper->setMode(base::RippleHelper::Mode::Bounded);
-```
+```text
 
 大多数控件应该使用 `Bounded` 模式，让涟漪限制在圆角矩形内。`Unbounded` 模式适用于特殊场景，比如浮动操作按钮（FAB）的涟漪可以扩散到圆形边界外。
 
@@ -121,7 +126,7 @@ void MyWidget::paintEvent(QPaintEvent* event) {
     // 绘制内容
     // drawContent(p);
 }
-```
+```text
 
 ## 颜色设置
 
@@ -135,7 +140,7 @@ QColor labelColor = colors->queryExpectedColor("md.onSurface");
 
 // 设置涟漪颜色
 m_rippleHelper->setColor(cf::ui::base::CFColor(labelColor));
-```
+```text
 
 在浅色主题上使用深色涟漪，深色主题上使用浅色涟漪，这是确保对比度的基本要求。
 
@@ -149,7 +154,7 @@ QRadialGradient gradient(ripple.center, ripple.radius);
 gradient.setColorAt(0.0f, color);      // 中心完全实色
 gradient.setColorAt(0.7f, color);      // 70% 半径处仍是实色
 gradient.setColorAt(1.0f, transparent); // 边缘渐变到透明
-```
+```text
 
 这种处理避免了锯齿边缘，使涟漪看起来更自然。
 
@@ -163,7 +168,7 @@ auto factory = Application::animationFactory();
 if (factory) {
     factory->setEnabledAll(false);
 }
-```
+```bash
 
 这对于低端设备或性能敏感的场景很有用。另外，`hasActiveRipple()` 可以用来判断是否需要重绘，避免无效的 `paintEvent` 调用。
 

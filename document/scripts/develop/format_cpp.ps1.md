@@ -1,3 +1,8 @@
+---
+title: formatcpp.ps1
+description: "文档编写日期: 2026-03-20，使用  自动格式化项目中的 C++ 源代码文件，确保代码风格一"
+---
+
 # format_cpp.ps1
 
 > 文档编写日期: 2026-03-20
@@ -8,7 +13,7 @@
 
 ```powershell
 .\scripts\develop\format_cpp.ps1 [OPTIONS]
-```
+```bash
 
 ### 参数说明
 
@@ -28,7 +33,7 @@
 
 # 预览格式化效果
 .\scripts\develop\format_cpp.ps1 -DryRun
-```
+```bash
 
 ## Scripts详解 (Detailed Explanation)
 
@@ -69,7 +74,7 @@
 
 # 或使用 WSL/Linux 子系统
 sudo apt install clang-format
-```
+```bash
 
 ### 工作模式
 
@@ -86,7 +91,7 @@ sudo apt install clang-format
 ```powershell
 Import-Module LibCommon.psm1  # 提供日志函数 (Write-LogInfo, Write-LogSuccess 等)
 Import-Module LibPaths.psm1   # 提供路径函数 (Get-ProjectRoot)
-```
+```bash
 
 ### 输出日志
 

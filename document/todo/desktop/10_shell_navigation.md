@@ -1,3 +1,8 @@
+---
+title: "Phase 10: Shell 导航系统 TODO"
+description: "依赖阶段: Phase 6, Phase 9"
+---
+
 # Phase 10: Shell 导航系统 TODO
 
 > **状态**: ⬜ 待开始

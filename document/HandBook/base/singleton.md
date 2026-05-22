@@ -1,3 +1,8 @@
+---
+title: "Singleton - 单例模式"
+description: 命名空间提供了两种单例实现： 和 。两者的区别在于初始化方式—— 需要显式调用  并支持参数化构造，
+---
+
 # Singleton - 单例模式
 
 `cf` 命名空间提供了两种单例实现：`Singleton` 和 `SimpleSingleton`。两者的区别在于初始化方式——`Singleton` 需要显式调用 `init()` 并支持参数化构造，而 `SimpleSingleton` 利用 Meyer's Singleton 模式自动初始化，要求目标类有默认构造函数。
@@ -30,7 +35,7 @@ using LoggerSingleton = cf::SimpleSingleton<Logger>;
 
 // 在任何地方
 LoggerSingleton::instance().log("Hello");
-```
+```text
 
 不需要手动初始化，第一次调用 `instance()` 时自动构造。后续调用返回同一个实例。
 
@@ -50,7 +55,7 @@ private:
 // 使用
 auto& mgr = WindowManager::instance();
 mgr.create_window("Main");
-```
+```text
 
 注意把构造函数设为 `private` 或 `protected`，并声明 `SimpleSingleton` 为友元。
 
@@ -88,7 +93,7 @@ DBSingleton::init("host=localhost port=5432", 10);
 
 // 使用
 DBSingleton::instance().query("SELECT * FROM users");
-```
+```text
 
 ### 初始化时机控制
 
@@ -110,7 +115,7 @@ int main() {
     // 阶段 3：运行
     run_app();
 }
-```
+```text
 
 如果调用 `instance()` 之前没有调用 `init()`，会抛出 `std::logic_error`：
 
@@ -121,7 +126,7 @@ try {
 } catch (const std::logic_error& e) {
     // "Singleton not initialized. Call init() first."
 }
-```
+```text
 
 ### 重置单例
 
@@ -137,7 +142,7 @@ void test_something() {
     // 下次使用前需要重新 init
     cf::Singleton<Config>::init("production_config.json");
 }
-```
+```text
 
 `reset()` 之后必须重新调用 `init()` 才能使用 `instance()`。
 
@@ -148,7 +153,7 @@ void test_something() {
 ```cpp
 cf::Singleton<Config>::init("config1.json");  // 生效
 cf::Singleton<Config>::init("config2.json");  // 被忽略，仍使用 config1
-```
+```bash
 
 ## 两种单例对比
 
