@@ -71,8 +71,21 @@ jobs:
       - name: Normalize Docker image name
         run: echo "GHCR_IMAGE=$(echo '${{ env.GHCR_IMAGE }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
 
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Pull pre-built Docker image
-        run: docker pull ${{ env.GHCR_IMAGE }}:latest 2>/dev/null || echo "GHCR_PULL_FAILED=true" >> "$GITHUB_ENV"
+        run: |
+          if docker pull ${{ env.GHCR_IMAGE }}:latest; then
+            echo "GHCR_PULL_FAILED=false" >> "$GITHUB_ENV"
+          else
+            echo "::warning::GHCR image pull failed, falling back to local Docker build."
+            echo "GHCR_PULL_FAILED=true" >> "$GITHUB_ENV"
+          fi
 
       - name: Build Docker image (fallback)
         if: env.GHCR_PULL_FAILED == 'true'
@@ -143,8 +156,21 @@ jobs:
       - name: Normalize Docker image name
         run: echo "GHCR_IMAGE=$(echo '${{ env.GHCR_IMAGE }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
 
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Pull pre-built Docker image
-        run: docker pull ${{ env.GHCR_IMAGE }}:latest 2>/dev/null || echo "GHCR_PULL_FAILED=true" >> "$GITHUB_ENV"
+        run: |
+          if docker pull ${{ env.GHCR_IMAGE }}:latest; then
+            echo "GHCR_PULL_FAILED=false" >> "$GITHUB_ENV"
+          else
+            echo "::warning::GHCR image pull failed, falling back to local Docker build."
+            echo "GHCR_PULL_FAILED=true" >> "$GITHUB_ENV"
+          fi
 
       - name: Build Docker image (fallback)
         if: env.GHCR_PULL_FAILED == 'true'

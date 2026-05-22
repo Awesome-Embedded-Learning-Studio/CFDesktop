@@ -80,8 +80,9 @@ template <typename Ret, typename... Args> class PolicyChain {
      */
     [[nodiscard]] std::optional<Ret> execute(Args... args) const {
         for (const auto& policy : policies_) {
-            if (auto result = policy(args...); result.has_value()) {
-                return result;
+            auto result = std::invoke(policy, args...);
+            if (result.has_value()) {
+                return std::move(result);
             }
         }
         return std::nullopt;

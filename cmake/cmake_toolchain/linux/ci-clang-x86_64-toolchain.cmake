@@ -15,8 +15,15 @@ set(CMAKE_SYSTEM_NAME Linux)
 # Compiler configuration
 # Ubuntu 24.04 ships Clang 18 with full C++23 support
 # -----------------------------------------------------------------------------
-set(CMAKE_C_COMPILER "clang" CACHE FILEPATH "C compiler")
-set(CMAKE_CXX_COMPILER "clang++" CACHE FILEPATH "C++ compiler")
+find_program(CF_CLANG_C_COMPILER NAMES clang)
+find_program(CF_CLANG_CXX_COMPILER NAMES clang++)
+
+if(NOT CF_CLANG_C_COMPILER OR NOT CF_CLANG_CXX_COMPILER)
+    message(FATAL_ERROR "Clang CI toolchain requires clang and clang++ in PATH")
+endif()
+
+set(CMAKE_C_COMPILER "${CF_CLANG_C_COMPILER}" CACHE FILEPATH "C compiler")
+set(CMAKE_CXX_COMPILER "${CF_CLANG_CXX_COMPILER}" CACHE FILEPATH "C++ compiler")
 
 # -----------------------------------------------------------------------------
 # Qt6 search path (same as GCC CI toolchain)
