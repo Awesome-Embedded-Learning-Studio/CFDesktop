@@ -3,10 +3,11 @@
   "version": "0.18.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.33.3",
   "scripts": {
-    "docs:dev": "vitepress dev document",
-    "docs:build": "vitepress build document",
-    "docs:preview": "vitepress preview document"
+    "dev": "vitepress dev site",
+    "build": "vitepress build site",
+    "preview": "vitepress preview site"
   },
   "devDependencies": {
     "vitepress": "1.6.4"

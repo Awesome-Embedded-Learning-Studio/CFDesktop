@@ -1,6 +1,0 @@
-pyproject.toml
-cfdesktop_docs.egg-info/PKG-INFO
-cfdesktop_docs.egg-info/SOURCES.txt
-cfdesktop_docs.egg-info/dependency_links.txt
-cfdesktop_docs.egg-info/requires.txt
-cfdesktop_docs.egg-info/top_level.txt

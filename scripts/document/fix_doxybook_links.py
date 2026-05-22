@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Fix doxybook-generated API doc links for MkDocs.
+Fix doxybook-generated API doc links for Markdown documentation sites.
 
 Doxybook generates links like `Classes/xxx.md` assuming they're relative to
-the api/ root, but MkDocs resolves them relative to the file's actual location.
-This script adds the correct `../` prefixes.
+the api/ root, but Markdown site generators resolve them relative to the
+file's actual location. This script adds the correct `../` prefixes.
 
 Usage:
     python scripts/document/fix_doxybook_links.py
 
-Run this AFTER doxybook generates the docs, BEFORE mkdocs build/serve.
+Run this after doxybook generates the docs and before publishing API pages.
 """
 import os
 import re

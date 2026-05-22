@@ -14,7 +14,6 @@ out/
 
 # Documents summons
 xml/
-site/
 document/api/
 
 # .vscode
@@ -34,6 +33,6 @@ scripts/docker/logger/
 
 # Node/VitePress
 node_modules/
-document/.vitepress/cache/
-document/.vitepress/dist/
-document/.vitepress/.temp
+site/.vitepress/cache/
+site/.vitepress/dist/
+site/.vitepress/.temp
