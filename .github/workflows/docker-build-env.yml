@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
+      - develop
     paths:
+      - .github/workflows/docker-build-env.yml
       - scripts/docker/Dockerfile.build
       - scripts/dependency/install_build_dependencies.sh
   workflow_dispatch:
@@ -38,11 +40,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Normalize image name
+        id: image
+        run: |
+          IMAGE="${REGISTRY}/${IMAGE_NAME}"
+          echo "image=${IMAGE,,}" >> "$GITHUB_OUTPUT"
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ steps.image.outputs.image }}
           tags: |
             type=raw,value=latest
             type=sha,prefix=
@@ -59,4 +67,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
+            QT_ARCH=linux_gcc_64
             CI=true

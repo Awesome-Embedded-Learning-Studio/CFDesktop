@@ -19,10 +19,40 @@
 #include <atomic>
 #include <cstddef>
 
+#if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
+#    include <intrin.h>
+#endif
+
 #include "base/span/span.h"
 
 namespace cf {
 namespace lockfree {
+
+namespace detail {
+
+/**
+ * @brief  Issues a short processor-friendly spin-wait hint.
+ *
+ * Uses the platform pause intrinsic on x86 targets and falls back to a compiler
+ * signal fence on other architectures.
+ *
+ * @throws None.
+ * @note   Intended for tight lock-free retry loops.
+ * @warning Does not yield the current thread or provide scheduling fairness.
+ * @since  0.1
+ * @ingroup base_lockfree
+ */
+inline void cpu_relax() noexcept {
+#if defined(_MSC_VER) && (defined(_M_X64) || defined(_M_IX86))
+    _mm_pause();
+#elif (defined(__x86_64__) || defined(__i386__)) && (defined(__GNUC__) || defined(__clang__))
+    __builtin_ia32_pause();
+#else
+    std::atomic_signal_fence(std::memory_order_seq_cst);
+#endif
+}
+
+} // namespace detail
 
 /**
  * @brief Multi-Producer Single-Consumer lock-free queue.
@@ -124,13 +154,7 @@ template <typename T, size_t Capacity> class MpscQueue {
         // If seq > pos, it means consumer hasn't caught up (queue full)
         // Uses a simple approach: just wait without timeout for MPSC
         while (seq != pos) {
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-            __builtin_ia32_pause(); // x86 pause instruction
-#else
-            // Generic fallback
-            volatile int dummy = 0;
-            (void)dummy;
-#endif
+            detail::cpu_relax();
             seq = cell->sequence.load(std::memory_order_acquire);
         }
 
@@ -207,13 +231,7 @@ template <typename T, size_t Capacity> class MpscQueue {
             size_type seq = cell->sequence.load(std::memory_order_acquire);
             // Wait for this slot to become available (like tryPush)
             while (seq != pos) {
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-                __builtin_ia32_pause(); // x86 pause instruction
-#else
-                // Generic fallback
-                volatile int dummy = 0;
-                (void)dummy;
-#endif
+                detail::cpu_relax();
                 seq = cell->sequence.load(std::memory_order_acquire);
             }
 
