@@ -1,5 +1,10 @@
 # This script cleans the build directory then calls the fast version to build
 
+param(
+    [Parameter(Mandatory = $false)]
+    [string]$Config = "develop"
+)
+
 # 导入库模块
 $LibDir = Join-Path (Split-Path -Parent $PSScriptRoot) "lib\powershell"
 Import-Module (Join-Path $LibDir "LibCommon.psm1") -Force
@@ -28,7 +33,16 @@ Write-LogInfo "Project root: $ProjectRoot"
 Set-Location $ProjectRoot
 
 # Load configuration from INI file
-$ConfigFile = Join-Path $ScriptDir "build_develop_config.ini"
+$ConfigFileName = switch ($Config) {
+    "develop" { "build_develop_config.ini" }
+    "deploy" { "build_deploy_config.ini" }
+    "ci" { "build_ci_windows_config.ini" }
+    default {
+        # Treat as direct filename for custom configs
+        if ($Config -like "*.ini") { $Config } else { "$Config.ini" }
+    }
+}
+$ConfigFile = Join-Path $ScriptDir $ConfigFileName
 Write-LogInfo "Loading configuration from: $ConfigFile"
 
 # Safety check: config file must exist
@@ -43,7 +57,7 @@ if (!(Test-Path $ConfigFile)) {
 }
 
 try {
-    $Config = Get-IniConfig -FilePath $ConfigFile
+    $ConfigData = Get-IniConfig -FilePath $ConfigFile
     Write-LogSuccess "Configuration loaded successfully!"
 }
 catch {
@@ -52,7 +66,7 @@ catch {
 }
 
 # Extract configuration values
-$BuildDir = $Config["paths"]["build_dir"]
+$BuildDir = $ConfigData["paths"]["build_dir"]
 
 # Safety check: BUILD_DIR must not be empty
 if ([string]::IsNullOrWhiteSpace($BuildDir)) {
@@ -91,10 +105,10 @@ Write-LogInfo "Step 2: Calling fast build script"
 Write-LogSeparator
 
 $FastBuildScript = Join-Path $ScriptDir "windows_fast_develop_build.ps1"
-Write-LogInfo "Executing: $FastBuildScript"
+Write-LogInfo "Executing: $FastBuildScript -Config $Config"
 
 try {
-    & $FastBuildScript
+    & $FastBuildScript -Config $Config
     if ($LASTEXITCODE -eq 0) {
         Write-LogSeparator
         Write-LogSuccess "Build process completed successfully!"
@@ -116,10 +130,10 @@ Write-LogInfo "Step 3: Running tests"
 Write-LogSeparator
 
 $TestScript = Join-Path $ScriptDir "windows_run_tests.ps1"
-Write-LogInfo "Executing: $TestScript -Config develop"
+Write-LogInfo "Executing: $TestScript -Config $Config"
 
 try {
-    & $TestScript -Config "develop"
+    & $TestScript -Config $Config
     if ($LASTEXITCODE -eq 0) {
         Write-LogSeparator
         Write-LogSuccess "All tests passed successfully!"

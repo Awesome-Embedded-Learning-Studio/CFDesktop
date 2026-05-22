@@ -3,7 +3,6 @@
 # Usage: .\windows_configure.ps1 [-Config <develop|deploy>]
 param(
     [Parameter(Position=0)]
-    [ValidateSet("develop", "deploy")]
     [string]$Config = "develop"
 )
 
@@ -34,12 +33,15 @@ Write-LogInfo "Changing to project directory"
 Set-Location $ProjectRoot
 
 # Determine which config file to use
-if ($Config -eq "deploy") {
-    $ConfigFile = Join-Path $ScriptDir "build_deploy_config.ini"
+$ConfigFileName = switch ($Config) {
+    "develop" { "build_develop_config.ini" }
+    "deploy" { "build_deploy_config.ini" }
+    "ci" { "build_ci_windows_config.ini" }
+    default {
+        if ($Config -like "*.ini") { $Config } else { "$Config.ini" }
+    }
 }
-else {
-    $ConfigFile = Join-Path $ScriptDir "build_develop_config.ini"
-}
+$ConfigFile = Join-Path $ScriptDir $ConfigFileName
 
 Write-LogInfo "Loading configuration from: $ConfigFile"
 

@@ -33,9 +33,12 @@ Set-Location $ProjectRoot
 $ConfigFile = switch ($Config) {
     "develop" { "build_develop_config.ini" }
     "deploy" { "build_deploy_config.ini" }
+    "ci" { "build_ci_windows_config.ini" }
     default {
-        Write-LogError "Unknown config: $Config. Valid options are: develop, deploy"
-        exit 1
+        if ($Config -like "*.ini") { $Config } else {
+            Write-LogError "Unknown config: $Config. Valid options are: develop, deploy, ci"
+            exit 1
+        }
     }
 }
 

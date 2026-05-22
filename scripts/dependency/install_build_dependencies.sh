@@ -187,7 +187,7 @@ main() {
     # 注意：ca-certificates 包含在此列表，用于 HTTP bootstrap 后的补装
     apt install -y --no-install-recommends \
         `# === 编译工具链 ===` \
-        build-essential cmake ninja-build ccache git wget curl \
+        build-essential clang cmake ninja-build ccache git wget curl \
         `# === Python ===` \
         python3 python3-pip \
         `# === 证书（Bootstrap 时可能未安装）===` \
