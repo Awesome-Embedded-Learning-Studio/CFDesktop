@@ -16,7 +16,7 @@ namespace cf::config {
  * @brief Abstract interface for providing config store file paths.
  *
  * This interface allows different projects to provide their own path logic:
- * - Desktop project: uses standard paths like /etc/cfdesktop, ~/.config/cfdesktop
+ * - Desktop project: uses paths under the application-managed directory
  * - Other projects: can use custom paths
  * - Tests: can use mock/temporary paths
  *
@@ -29,7 +29,7 @@ class IConfigStorePathProvider {
     /**
      * @brief Get the system-level config file path.
      *
-     * @return Full path to system config (e.g., "/etc/cfdesktop/system.ini")
+     * @return Full path to system config (e.g., "{app_dir}/system.ini")
      * @return Empty QString if system layer should be disabled
      * @throws None
      * @note None
@@ -133,9 +133,9 @@ class IConfigStorePathProvider {
  * @brief Default path provider for CFDesktop project.
  *
  * Provides standard paths:
- * - System: /etc/cfdesktop/system.ini
+ * - System: {app_dir}/system.ini (managed within CFDesktop's own directory)
  * - User: ~/.config/cfdesktop/user.ini
- * - App: config/app.ini (relative to working directory)
+ * - App: {app_dir}/app.ini
  */
 class DesktopConfigStorePathProvider : public IConfigStorePathProvider {
   public:
@@ -143,7 +143,7 @@ class DesktopConfigStorePathProvider : public IConfigStorePathProvider {
      * @brief Construct with default paths.
      *
      * Uses:
-     * - system_path: "/etc/cfdesktop/system.ini"
+     * - system_path: disabled (empty) by default
      * - user_dir: "~/.config/cfdesktop"
      * - app_dir: "config"
      * @throws None

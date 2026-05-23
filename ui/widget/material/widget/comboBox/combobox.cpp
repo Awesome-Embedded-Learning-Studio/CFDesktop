@@ -17,12 +17,10 @@
 #include "base/device_pixel.h"
 #include "base/easing.h"
 #include "base/geometry_helper.h"
+#include "base/include/base/weak_ptr/weak_ptr.h"
 #include "components/material/cfmaterial_animation_factory.h"
 #include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/ripple_helper.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QEvent>
@@ -68,30 +66,18 @@ constexpr float DEFAULT_WIDTH_DP = 200.0f;
 // Constructor / Destructor
 // ============================================================================
 
-ComboBox::ComboBox(QWidget* parent) : QComboBox(parent), variant_(ComboBoxVariant::Filled) {
+ComboBox::ComboBox(QWidget* parent)
+    : QComboBox(parent), variant_(ComboBoxVariant::Filled),
+      m_material(this, base::MaterialWidgetBase::Config{
+                           .useRipple = true,
+                           .useElevation = false,
+                           .useFocusIndicator = true,
+                       }) {
     // Set size policy
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 
     // Set minimum contents length for proper sizing
     setMinimumContentsLength(1);
-
-    // Get animation factory from Application
-    m_animationFactory = cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(
-        application_support::Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_ripple = new RippleHelper(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    // Set ripple mode to bounded
-    m_ripple->setMode(RippleHelper::Mode::Bounded);
-
-    // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Initialize popup animation
     m_popupAnimation = new QPropertyAnimation(this);
@@ -123,75 +109,50 @@ void ComboBox::setVariant(ComboBoxVariant variant) {
 
 void ComboBox::enterEvent(QEnterEvent* event) {
     QComboBox::enterEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverEnter();
-    update();
+    m_material.onEnterEvent();
 }
 
 void ComboBox::leaveEvent(QEvent* event) {
     QComboBox::leaveEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverLeave();
-    if (m_ripple)
-        m_ripple->onCancel();
-    update();
+    m_material.onLeaveEvent();
 }
 
 void ComboBox::mousePressEvent(QMouseEvent* event) {
     QComboBox::mousePressEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onPress(event->pos());
-    if (m_ripple)
-        m_ripple->onPress(event->pos(), fieldRect());
-    update();
+    m_material.onMousePress(event->pos(), fieldRect());
 }
 
 void ComboBox::mouseReleaseEvent(QMouseEvent* event) {
     QComboBox::mouseReleaseEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onRelease();
-    if (m_ripple)
-        m_ripple->onRelease();
-    update();
+    m_material.onMouseRelease();
 }
 
 void ComboBox::focusInEvent(QFocusEvent* event) {
     QComboBox::focusInEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusIn();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusIn();
-    update();
+    m_material.onFocusIn();
 }
 
 void ComboBox::focusOutEvent(QFocusEvent* event) {
     QComboBox::focusOutEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusOut();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusOut();
-    update();
+    m_material.onFocusOut();
 }
 
 void ComboBox::changeEvent(QEvent* event) {
     QComboBox::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
-        update();
+        m_material.onEnabledChange(isEnabled());
     }
 }
 
 void ComboBox::showPopup() {
+    // Get animation factory locally for custom arrow animation
+    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+        application_support::Application::animationFactory());
+
     // Start arrow rotation animation
-    if (m_animationFactory) {
-        auto anim = m_animationFactory->createPropertyAnimation(
-            &m_arrowRotation, 0.0f, 180.0f, 200, cf::ui::base::Easing::Type::Standard, this);
+    if (factory) {
+        auto anim = factory->createPropertyAnimation(&m_arrowRotation, 0.0f, 180.0f, 200,
+                                                     cf::ui::base::Easing::Type::Standard, this);
         if (anim) {
             // IMPORTANT: Update range to fix cached animation's stale from/to values
             if (auto* propAnim =
@@ -266,11 +227,14 @@ void ComboBox::hidePopup() {
         m_popupAnimation->stop();
     }
 
+    // Get animation factory locally for custom arrow animation
+    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+        application_support::Application::animationFactory());
+
     // Reset arrow rotation animation
-    if (m_animationFactory) {
-        auto anim = m_animationFactory->createPropertyAnimation(
-            &m_arrowRotation, m_arrowRotation, 0.0f, 150, cf::ui::base::Easing::Type::Standard,
-            this);
+    if (factory) {
+        auto anim = factory->createPropertyAnimation(&m_arrowRotation, m_arrowRotation, 0.0f, 150,
+                                                     cf::ui::base::Easing::Type::Standard, this);
         if (anim) {
             // IMPORTANT: Update range to fix cached animation's stale from/to values
             if (auto* propAnim =
@@ -524,8 +488,8 @@ void ComboBox::drawOutline(QPainter& p, const QPainterPath& shape) {
 
     // For filled variant, outline is only visible when hovered/focused
     if (variant_ == ComboBoxVariant::Filled) {
-        if (m_stateMachine && isEnabled()) {
-            float opacity = m_stateMachine->stateLayerOpacity();
+        if (m_material.stateMachine() && isEnabled()) {
+            float opacity = m_material.stateMachine()->stateLayerOpacity();
             if (opacity > 0.0f) {
                 color.setAlphaF(opacity);
             } else {
@@ -549,11 +513,11 @@ void ComboBox::drawOutline(QPainter& p, const QPainterPath& shape) {
 }
 
 void ComboBox::drawStateLayer(QPainter& p, const QPainterPath& shape) {
-    if (!m_stateMachine || !isEnabled()) {
+    if (!m_material.stateMachine() || !isEnabled()) {
         return;
     }
 
-    float opacity = m_stateMachine->stateLayerOpacity();
+    float opacity = m_material.stateMachine()->stateLayerOpacity();
     if (opacity <= 0.0f) {
         return;
     }
@@ -566,11 +530,11 @@ void ComboBox::drawStateLayer(QPainter& p, const QPainterPath& shape) {
 }
 
 void ComboBox::drawRipple(QPainter& p, const QPainterPath& shape) {
-    if (m_ripple) {
+    if (m_material.ripple()) {
         // Update ripple color based on current state
-        m_ripple->setColor(stateLayerColor());
+        m_material.ripple()->setColor(stateLayerColor());
 
-        m_ripple->paint(&p, shape);
+        m_material.ripple()->paint(&p, shape);
     }
 }
 
@@ -624,7 +588,7 @@ void ComboBox::drawArrow(QPainter& p, const QRectF& rect) {
 }
 
 void ComboBox::drawFocusIndicator(QPainter& p, const QPainterPath& shape) {
-    if (m_focusIndicator) {
+    if (m_material.focusIndicator()) {
         // Expand rect slightly for focus ring
         CanvasUnitHelper helper(qApp->devicePixelRatio());
         float margin = helper.dpToPx(FOCUS_RING_MARGIN_DP);
@@ -632,7 +596,7 @@ void ComboBox::drawFocusIndicator(QPainter& p, const QPainterPath& shape) {
         QRectF focusRect = field.adjusted(-margin, -margin, margin, margin);
 
         QPainterPath focusShape = roundedRect(focusRect, cornerRadius() + margin);
-        m_focusIndicator->paint(&p, focusShape, containerColor());
+        m_material.focusIndicator()->paint(&p, focusShape, containerColor());
     }
 }
 

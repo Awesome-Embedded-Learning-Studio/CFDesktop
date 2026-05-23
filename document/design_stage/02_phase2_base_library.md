@@ -753,7 +753,7 @@ namespace CFDesktop::Base {
  * @brief 配置类型
  */
 enum class ConfigType {
-    System,     // 系统配置 (/etc/CFDesktop/config.conf)
+    System,     // ⚠️ 过时：实际使用 CFDesktop 自管理目录，非 /etc/
     User,       // 用户配置 (~/.config/CFDesktop/config.conf)
     App,        // 应用配置
     Temp        // 临时配置 (内存)
@@ -869,7 +869,7 @@ void setConfig(const QString& key, const T& value) {
 
 ### 6.2 配置文件格式
 
-**系统配置**: `/etc/CFDesktop/config.conf`
+**系统配置**: ~~`/etc/CFDesktop/config.conf`~~ ⚠️ 过时：实际使用 CFDesktop 自管理目录
 
 ```ini
 [General]

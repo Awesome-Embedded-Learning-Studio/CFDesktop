@@ -96,7 +96,7 @@ description: "状态: ✅ 部分完成，总体进度: ~50%"
 
 #### 配置文件路径
 
-- System: `/etc/cfdesktop/system.ini`
+- System: `{app_dir}/system.ini`（CFDesktop 自管理目录内）
 - User: `~/.config/cfdesktop/user.ini`
 - App: `config/app.ini`
 

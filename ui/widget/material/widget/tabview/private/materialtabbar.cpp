@@ -14,8 +14,6 @@
 #include "application_support/application.h"
 #include "base/device_pixel.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QFontMetrics>
@@ -27,7 +25,6 @@ namespace cf::ui::widget::material {
 
 using namespace cf::ui::base;
 using namespace cf::ui::base::device;
-using namespace cf::ui::components;
 using namespace cf::ui::components::material;
 using namespace cf::ui::core;
 using namespace cf::ui::core::token::literals;
@@ -58,7 +55,11 @@ MaterialTabBar::MaterialTabBar(TabView* parent)
     : QTabBar(parent), m_tabView(parent), m_tabHeightDp(DEFAULT_TAB_HEIGHT_DP),
       m_tabMinWidthDp(DEFAULT_TAB_MIN_WIDTH_DP), m_showIndicator(true), m_indicatorPosition(0.0f),
       m_indicatorTargetPosition(0.0f), m_lastIndex(-1), m_hoveredIndex(-1), m_pressedIndex(-1),
-      m_closeButtonHoveredIndex(-1), m_stateMachine(nullptr), m_focusIndicator(nullptr) {
+      m_closeButtonHoveredIndex(-1), m_material(this, base::MaterialWidgetBase::Config{
+                                                          .useRipple = true,
+                                                          .useElevation = false,
+                                                          .useFocusIndicator = true,
+                                                      }) {
 
     setDrawBase(false);
     setDocumentMode(true);
@@ -67,14 +68,6 @@ MaterialTabBar::MaterialTabBar(TabView* parent)
     setElideMode(Qt::ElideRight);
     setMouseTracking(true);
 
-    m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
-
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(this, &QTabBar::currentChanged, this, &MaterialTabBar::animateIndicatorTo);
 }
 
@@ -153,15 +146,15 @@ void MaterialTabBar::drawTab(QPainter& p, int index) {
     drawTabStateLayer(p, tabRect, index);
     drawTabContent(p, tabRect, index);
 
-    if (index == currentIndex() && hasFocus() && m_focusIndicator) {
+    if (index == currentIndex() && hasFocus() && m_material.focusIndicator()) {
         QPainterPath shape;
         shape.addRoundedRect(tabRect.adjusted(2, 2, -2, -2), 4, 4);
-        m_focusIndicator->paint(&p, shape, focusIndicatorColor());
+        m_material.focusIndicator()->paint(&p, shape, focusIndicatorColor());
     }
 }
 
 void MaterialTabBar::drawTabStateLayer(QPainter& p, const QRect& tabRect, int index) {
-    if (!isEnabled() || !m_stateMachine) {
+    if (!isEnabled() || !m_material.stateMachine()) {
         return;
     }
 
@@ -263,7 +256,9 @@ void MaterialTabBar::animateIndicatorTo(int index) {
     int oldIndex = m_lastIndex;
     m_lastIndex = index;
 
-    if (!m_animationFactory || !m_animationFactory->isAllEnabled()) {
+    auto factory =
+        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
+    if (!factory || !factory->isAllEnabled()) {
         m_indicatorPosition = static_cast<float>(tabRect(index).left());
         update();
         return;
@@ -355,17 +350,13 @@ void MaterialTabBar::drawCloseIcon(QPainter& p, const QRect& closeRect, int inde
 
 void MaterialTabBar::enterEvent(QEnterEvent* event) {
     QTabBar::enterEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onHoverEnter();
-    }
+    m_material.onEnterEvent();
     update();
 }
 
 void MaterialTabBar::leaveEvent(QEvent* event) {
     QTabBar::leaveEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onHoverLeave();
-    }
+    m_material.onLeaveEvent();
     m_hoveredIndex = -1;
     m_closeButtonHoveredIndex = -1;
     update();
@@ -388,9 +379,7 @@ void MaterialTabBar::mousePressEvent(QMouseEvent* event) {
     int index = tabAt(event->pos());
     if (index >= 0) {
         m_pressedIndex = index;
-        if (m_stateMachine) {
-            m_stateMachine->onPress(event->pos());
-        }
+        m_material.onMousePress(event->pos(), QRectF(tabRect(index)));
     }
     QTabBar::mousePressEvent(event);
     update();
@@ -398,9 +387,7 @@ void MaterialTabBar::mousePressEvent(QMouseEvent* event) {
 
 void MaterialTabBar::mouseReleaseEvent(QMouseEvent* event) {
     m_pressedIndex = -1;
-    if (m_stateMachine) {
-        m_stateMachine->onRelease();
-    }
+    m_material.onMouseRelease();
 
     // Check if close button was clicked
     int index = tabAt(event->pos());
@@ -416,32 +403,20 @@ void MaterialTabBar::mouseReleaseEvent(QMouseEvent* event) {
 
 void MaterialTabBar::focusInEvent(QFocusEvent* event) {
     QTabBar::focusInEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onFocusIn();
-    }
-    if (m_focusIndicator) {
-        m_focusIndicator->onFocusIn();
-    }
+    m_material.onFocusIn();
     update();
 }
 
 void MaterialTabBar::focusOutEvent(QFocusEvent* event) {
     QTabBar::focusOutEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onFocusOut();
-    }
-    if (m_focusIndicator) {
-        m_focusIndicator->onFocusOut();
-    }
+    m_material.onFocusOut();
     update();
 }
 
 void MaterialTabBar::changeEvent(QEvent* event) {
     QTabBar::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            isEnabled() ? m_stateMachine->onEnable() : m_stateMachine->onDisable();
-        }
+        m_material.onEnabledChange(isEnabled());
         update();
     }
 }

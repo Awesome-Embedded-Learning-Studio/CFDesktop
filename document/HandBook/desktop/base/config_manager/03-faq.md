@@ -108,6 +108,8 @@ ConfigStore::instance().set(
 
 #### 方法 2：自定义路径提供者
 
+> **注**: 以下示例展示如何为自定义应用实现路径提供者。CFDesktop 默认实现使用应用自管理目录，不读取 `/etc/` 系统路径。
+
 ```cpp
 #include <QCoreApplication>
 #include <cstdlib>
@@ -148,6 +150,8 @@ ConfigStore::instance().initialize(std::make_shared<EnvironmentPathProvider>());
 ```text
 
 #### 方法 3：使用环境变量
+
+> **注**: 以下为自定义应用的示例。CFDesktop 默认实现使用应用自管理目录。
 
 ```cpp
 #include <QCoreApplication>
@@ -600,7 +604,7 @@ watcher_handle = ConfigStore::instance().watch("batch.*", callback);
 
 | 平台 | 层级 | 路径 |
 |------|------|------|
-| **Linux** | System | `/etc/cfdesktop/system.ini` |
+| **Linux** | System | `<应用目录>/config/system.ini` |
 | | User | `~/.config/cfdesktop/user.ini` |
 | | App | `<应用目录>/config/app.ini` |
 | **Windows** | System | `HKEY_LOCAL_MACHINE\Software\CFDesktop` |
@@ -621,7 +625,7 @@ watcher_handle = ConfigStore::instance().watch("batch.*", callback);
 class DebugPathProvider : public IConfigStorePathProvider {
 public:
     QString system_path() const override {
-        QString path = "/etc/cfdesktop/system.ini";
+        QString path = QCoreApplication::applicationDirPath() + "/config/system.ini";
         std::cout << "System path: " << path.toStdString() << std::endl;
         return path;
     }
@@ -657,7 +661,7 @@ ConfigStore::instance().initialize(std::make_shared<DebugPathProvider>());
 // 方法 2：直接检查文件是否存在
 void check_config_files() {
     std::array<std::string, 3> paths = {
-        "/etc/cfdesktop/system.ini",
+        QCoreApplication::applicationDirPath().toStdString() + "/config/system.ini",
         std::getenv("HOME") + "/.config/cfdesktop/user.ini"s,
         QCoreApplication::applicationDirPath().toStdString() + "/config/app.ini"
     };
@@ -763,7 +767,7 @@ void diagnose_config_files() {
     std::cout << "\n=== 配置文件诊断 ===" << std::endl;
 
     std::array<std::pair<Layer, std::string>, 3> files = {
-        {Layer::System, "/etc/cfdesktop/system.ini"},
+        {Layer::System, QCoreApplication::applicationDirPath().toStdString() + "/config/system.ini"},
         {Layer::User, std::getenv("HOME") + "/.config/cfdesktop/user.ini"s},
         {Layer::App, QCoreApplication::applicationDirPath().toStdString() + "/config/app.ini"}
     };
@@ -1196,13 +1200,15 @@ void ensure_config_directory(const std::string& path) {
 ensure_config_directory("~/.config/cfdesktop/user.ini");
 ```text
 
-#### 问题 2：System 层路径需要 root 权限
+#### 问题 2：System 层路径不可写
+
+CFDesktop 使用应用自管理目录，System 层配置位于应用目录下（如 `{app_dir}/system.ini`），无需 root 权限。
 
 ```bash
-# System 层配置通常位于 /etc，需要 root 权限写入
-sudo touch /etc/cfdesktop/system.ini
-sudo chown $USER:$USER /etc/cfdesktop/system.ini
-# 或者将应用配置放在用户目录
+# 配置文件位于应用目录下，应用启动时自动创建
+# 例如: <应用目录>/config/system.ini
+# 如果目录不存在，手动创建：
+mkdir -p <应用目录>/config
 ```text
 
 #### 问题 3：INI 文件编码

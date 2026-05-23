@@ -21,7 +21,7 @@ CFDesktop 是一个基于 Qt6 的嵌入式桌面框架项目，采用 Material D
 | 模块 | 完成度 | 状态 | 优先级 |
 |------|--------|------|--------|
 | Phase 0: 工程骨架 | 100% | ✅ 已完成并归档 | P0 |
-| Phase 1: 硬件探针 | 90% | 🚧 进行中 | P0 |
+| Phase 1: 硬件探针 | 100% | ✅ 完成 | P0 |
 | Phase 2: Base库核心 | 85% | 🚧 进行中 | P0 |
 | Phase 3: 输入抽象层 | 0% | ⬜ 待开始 | P1 |
 | Phase 4: 多平台模拟器 | 0% | ⬜ 待开始 | P1 |
@@ -59,7 +59,7 @@ CFDesktop 是一个基于 Qt6 的嵌入式桌面框架项目，采用 Material D
 
 ---
 
-### 1.1 硬件探针 (Phase 1) - 90% 🚧 进行中
+### 1.1 硬件探针 (Phase 1) - 100% ✅ 完成
 
 #### ✅ 已完成
 - **CPU 检测器** (100%) - `base/system/cpu/` 模块
@@ -99,11 +99,19 @@ CFDesktop 是一个基于 Qt6 的嵌入式桌面框架项目，采用 Material D
 - **网络检测器** (85%) - `base/system/network/` 模块
   - 网卡枚举、IP地址、可达性检测
 
+#### ✅ 已完成 (HWTier 系统)
+- **HWTier 系统** (100%) - `base/system/hardware_tier/` 模块
+  - `HardwareTierLevel` 枚举 (Unknown/Low/Mid/High)
+  - 可插拔四阶段管线 (Collect→Score→Assess→Policy)
+  - 默认收集器、四维度评分器 (CPU/GPU/Memory/Display 各 0-100)
+  - 默认评估器和策略引擎
+  - DeviceConfig 覆盖支持 (`setDeviceConfigOverride()`)
+  - `HardwareTierCapabilities` 能力标志 (OpenGL/软件渲染/动画/硬件解码/EGLFS/LinuxFB)
+  - 完整管线注册 API (`registerCollector/Scorer/Assessor/Policy`)
+  - 示例程序 `example/base/system/example_hardware_tier.cpp`
+
 #### ❌ 待完成
-- HWTier 枚举定义 (Low/Mid/High 三档)
-- HardwareProbe 主类整合
-- CapabilityPolicy 策略引擎
-- DeviceConfig 配置文件系统
+- 自定义检测脚本执行支持
 
 ---
 
@@ -472,6 +480,7 @@ CFDesktop/
 │   ├── system/memory/              # ✅ 内存检测 (95%)
 │   ├── system/gpu/                 # ✅ GPU检测 (90%)
 │   ├── system/network/             # ✅ 网络检测 (85%)
+│   ├── system/hardware_tier/       # ✅ HWTier 硬件分级 (100%)
 │   ├── device/console/             # ✅ 控制台设备 (85%)
 │   └── include/base/policy_chain/  # ✅ 策略链 (80%)
 ├── ui/                             # UI框架 (95%)

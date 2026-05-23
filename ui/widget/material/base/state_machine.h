@@ -273,6 +273,23 @@ class CF_UI_EXPORT StateMachine : public QObject {
     void cancelCurrentAnimation();
 
     /**
+     * @brief  Transitions to a new state if different from current.
+     *
+     * @details Compares new state with current state. If different,
+     *          updates the state, emits stateChanged, and animates
+     *          opacity to the target value for the new state.
+     *
+     * @param[in]     newState The target state to transition to.
+     *
+     * @throws        None
+     * @note          No-op if newState equals current state.
+     * @warning       None
+     * @since         N/A
+     * @ingroup       ui_widget_material_base
+     */
+    void transitionTo(States newState);
+
+    /**
      * @brief  Slot called when the current animation finishes.
      *
      * @details Clears the animation reference to allow new animations.

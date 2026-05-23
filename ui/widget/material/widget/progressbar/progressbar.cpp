@@ -18,11 +18,10 @@
 #include "base/device_pixel.h"
 #include "base/easing.h"
 #include "base/geometry_helper.h"
+#include "base/include/base/weak_ptr/weak_ptr.h"
 #include "components/material/cfmaterial_animation_factory.h"
 #include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QFocusEvent>
@@ -56,21 +55,14 @@ constexpr float FOCUS_RING_MARGIN_DP = 4.0f;
 // Constructor / Destructor
 // ============================================================================
 
-ProgressBar::ProgressBar(QWidget* parent) : QProgressBar(parent) {
+ProgressBar::ProgressBar(QWidget* parent)
+    : QProgressBar(parent), m_material(this, base::MaterialWidgetBase::Config{
+                                                 .useRipple = false,
+                                                 .useElevation = false,
+                                                 .useFocusIndicator = true,
+                                             }) {
     // Set size policy
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-
-    // Get animation factory from Application
-    m_animationFactory = cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(
-        application_support::Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    // Connect repaint signals
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Start indeterminate animation if in indeterminate mode
     if (minimum() == 0 && maximum() == 0) {
@@ -89,47 +81,28 @@ ProgressBar::~ProgressBar() {
 
 void ProgressBar::enterEvent(QEnterEvent* event) {
     QProgressBar::enterEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverEnter();
-    update();
+    m_material.onEnterEvent();
 }
 
 void ProgressBar::leaveEvent(QEvent* event) {
     QProgressBar::leaveEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverLeave();
-    update();
+    m_material.onLeaveEvent();
 }
 
 void ProgressBar::focusInEvent(QFocusEvent* event) {
     QProgressBar::focusInEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusIn();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusIn();
-    update();
+    m_material.onFocusIn();
 }
 
 void ProgressBar::focusOutEvent(QFocusEvent* event) {
     QProgressBar::focusOutEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusOut();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusOut();
-    update();
+    m_material.onFocusOut();
 }
 
 void ProgressBar::changeEvent(QEvent* event) {
     QProgressBar::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
-        update();
+        m_material.onEnabledChange(isEnabled());
     }
 }
 
@@ -253,7 +226,11 @@ QRectF ProgressBar::trackRect() const {
 // ============================================================================
 
 void ProgressBar::startIndeterminateAnimation() {
-    if (!m_animationFactory || m_indeterminateAnimating) {
+    // Get animation factory locally for custom indeterminate animation
+    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+        application_support::Application::animationFactory());
+
+    if (!factory || m_indeterminateAnimating) {
         return;
     }
 
@@ -261,8 +238,8 @@ void ProgressBar::startIndeterminateAnimation() {
 
     // Create a looping animation for indeterminate mode
     // Using a property animation on m_indeterminatePosition
-    auto anim = m_animationFactory->createPropertyAnimation(
-        &m_indeterminatePosition, 0.0f, 1.0f, 1500, cf::ui::base::Easing::Type::Linear, this);
+    auto anim = factory->createPropertyAnimation(&m_indeterminatePosition, 0.0f, 1.0f, 1500,
+                                                 cf::ui::base::Easing::Type::Linear, this);
 
     if (anim) {
         // IMPORTANT: Update range to fix cached animation's stale from/to values
@@ -348,8 +325,8 @@ void ProgressBar::drawFill(QPainter& p, const QRectF& trackRect) {
     }
 
     // Handle state layer overlay
-    if (m_stateMachine && isEnabled()) {
-        float opacity = m_stateMachine->stateLayerOpacity();
+    if (m_material.stateMachine() && isEnabled()) {
+        float opacity = m_material.stateMachine()->stateLayerOpacity();
         if (opacity > 0.0f) {
             CFColor stateColor = stateLayerColor();
             QColor stateQColor = stateColor.native_color();
@@ -442,13 +419,13 @@ void ProgressBar::drawText(QPainter& p, const QRectF& rect) {
 }
 
 void ProgressBar::drawFocusIndicator(QPainter& p, const QRectF& rect) {
-    if (m_focusIndicator) {
+    if (m_material.focusIndicator()) {
         CanvasUnitHelper helper(qApp->devicePixelRatio());
         float margin = helper.dpToPx(FOCUS_RING_MARGIN_DP);
         QRectF focusRect = rect.adjusted(-margin, -margin, margin, margin);
 
         QPainterPath shape = roundedRect(focusRect, cornerRadius() + margin);
-        m_focusIndicator->paint(&p, shape, fillColor());
+        m_material.focusIndicator()->paint(&p, shape, fillColor());
     }
 }
 

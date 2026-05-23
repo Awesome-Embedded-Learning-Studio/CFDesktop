@@ -15,19 +15,12 @@
 #pragma once
 
 #include "base/color.h"
-#include "base/include/base/weak_ptr/weak_ptr.h"
-#include "cfmaterial_animation_factory.h"
 #include "export.h"
+#include "widget/material/base/material_widget_base.h"
 #include <QProgressBar>
 #include <QWidget>
 
 namespace cf::ui::widget::material {
-
-// Forward declarations
-namespace base {
-class StateMachine;
-class MdFocusIndicator;
-} // namespace base
 
 using CFColor = cf::ui::base::CFColor;
 
@@ -197,9 +190,7 @@ class CF_UI_EXPORT ProgressBar : public QProgressBar {
     void updateIndeterminatePosition();
 
     // Behavior components
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animationFactory;
-    base::StateMachine* m_stateMachine;
-    base::MdFocusIndicator* m_focusIndicator;
+    base::MaterialWidgetBase m_material;
 
     // Indeterminate animation state (0.0 to 1.0)
     float m_indeterminatePosition = 0.0f;

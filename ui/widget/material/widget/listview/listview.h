@@ -19,18 +19,10 @@
 #include <QWidget>
 
 #include "base/color.h"
-#include "base/include/base/weak_ptr/weak_ptr.h"
-#include "cfmaterial_animation_factory.h"
 #include "export.h"
+#include "widget/material/base/material_widget_base.h"
 
 namespace cf::ui::widget::material {
-
-// Forward declarations
-namespace base {
-class StateMachine;
-class RippleHelper;
-class MdFocusIndicator;
-} // namespace base
 
 class ListViewDelegate;
 
@@ -341,10 +333,7 @@ class CF_UI_EXPORT ListView : public QListView {
     QFont secondaryFont() const;
 
     // Behavior components
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animationFactory;
-    base::StateMachine* m_stateMachine;
-    base::RippleHelper* m_ripple;
-    base::MdFocusIndicator* m_focusIndicator;
+    base::MaterialWidgetBase m_material;
 
     // Item properties
     ItemHeight m_itemHeight;

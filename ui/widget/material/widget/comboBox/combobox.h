@@ -14,21 +14,13 @@
 #pragma once
 
 #include "base/color.h"
-#include "base/include/base/weak_ptr/weak_ptr.h"
-#include "cfmaterial_animation_factory.h"
 #include "export.h"
+#include "widget/material/base/material_widget_base.h"
 #include <QComboBox>
 #include <QPropertyAnimation>
 #include <QWidget>
 
 namespace cf::ui::widget::material {
-
-// Forward declarations
-namespace base {
-class StateMachine;
-class RippleHelper;
-class MdFocusIndicator;
-} // namespace base
 
 using CFColor = cf::ui::base::CFColor;
 
@@ -285,10 +277,7 @@ class CF_UI_EXPORT ComboBox : public QComboBox {
     float arrowRotation() const;
 
     // Behavior components
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animationFactory;
-    base::StateMachine* m_stateMachine;
-    base::RippleHelper* m_ripple;
-    base::MdFocusIndicator* m_focusIndicator;
+    base::MaterialWidgetBase m_material;
 
     // Variant
     ComboBoxVariant variant_;

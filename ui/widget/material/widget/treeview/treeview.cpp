@@ -20,12 +20,8 @@
 #include "treeview.h"
 #include "application_support/application.h"
 #include "base/device_pixel.h"
-#include "cfmaterial_animation_factory.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 #include "private/treeviewdelegate.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/ripple_helper.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QMouseEvent>
@@ -36,8 +32,6 @@ namespace cf::ui::widget::material {
 
 using namespace cf::ui::base;
 using namespace cf::ui::base::device;
-using namespace cf::ui::components;
-using namespace cf::ui::components::material;
 using namespace cf::ui::core;
 using namespace cf::ui::core::token::literals;
 using namespace cf::ui::widget::material::base;
@@ -61,30 +55,17 @@ inline CFColor fallbackOnSurface() {
 // ============================================================================
 
 TreeView::TreeView(QWidget* parent)
-    : QTreeView(parent), m_itemHeight(TreeItemHeight::Standard),
-      m_indentStyle(TreeIndentStyle::Material), m_showTreeLines(true), m_rootIsDecorated(true) {
-    // Get animation factory from Application
-    m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_ripple = new RippleHelper(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
+    : QTreeView(parent), m_material(this,
+                                    MaterialWidgetBase::Config{
+                                        .useRipple = true,
+                                        .useElevation = false,
+                                        .useFocusIndicator = true,
+                                    }),
+      m_itemHeight(TreeItemHeight::Standard), m_indentStyle(TreeIndentStyle::Material),
+      m_showTreeLines(true), m_rootIsDecorated(true) {
     // Initialize and set the delegate for item rendering
     m_delegate = new TreeViewItemDelegate(this);
     setItemDelegate(m_delegate);
-
-    // Set ripple mode to bounded (clipped to item bounds)
-    m_ripple->setMode(RippleHelper::Mode::Bounded);
-
-    // Connect repaint signals
-    // QTreeView paints on viewport, so connect to viewport() for ripple updates
-    connect(m_ripple, &RippleHelper::repaintNeeded, viewport(),
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Configure tree view for Material appearance
     setHeaderHidden(true);
@@ -256,9 +237,7 @@ CFColor TreeView::onSurfaceColor() const {
 
 void TreeView::enterEvent(QEnterEvent* event) {
     QTreeView::enterEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onHoverEnter();
-    }
+    m_material.onEnterEvent();
     // Initialize hovered index on enter
     QPoint localPos = viewport()->mapFromGlobal(QCursor::pos());
     m_hoveredIndex = indexAt(localPos);
@@ -268,12 +247,7 @@ void TreeView::enterEvent(QEnterEvent* event) {
 
 void TreeView::leaveEvent(QEvent* event) {
     QTreeView::leaveEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onHoverLeave();
-    }
-    if (m_ripple) {
-        m_ripple->onCancel();
-    }
+    m_material.onLeaveEvent();
     // Clear hovered index
     if (m_hoveredIndex.isValid()) {
         QPersistentModelIndex oldIndex = m_hoveredIndex;
@@ -343,12 +317,12 @@ void TreeView::mousePressEvent(QMouseEvent* event) {
             }
 
             // Still handle ripple/state effects
-            if (m_stateMachine) {
-                m_stateMachine->onPress(event->pos());
+            if (m_material.stateMachine()) {
+                m_material.stateMachine()->onPress(event->pos());
             }
-            if (m_ripple) {
+            if (m_material.ripple()) {
                 // Use viewport coordinates for ripple (painter draws on viewport)
-                m_ripple->onPress(viewportPos, QRectF(itemRect));
+                m_material.ripple()->onPress(viewportPos, QRectF(itemRect));
                 // Store clip rect for ripple animation
                 m_rippleClipRect = QRectF(itemRect);
             }
@@ -361,8 +335,8 @@ void TreeView::mousePressEvent(QMouseEvent* event) {
     // Non-icon area: use normal flow (selection, ripple, etc.)
     QTreeView::mousePressEvent(event);
 
-    if (m_stateMachine) {
-        m_stateMachine->onPress(event->pos());
+    if (m_material.stateMachine()) {
+        m_material.stateMachine()->onPress(event->pos());
     }
 
     // Track pressed index for ripple
@@ -371,10 +345,10 @@ void TreeView::mousePressEvent(QMouseEvent* event) {
         m_pressedIndex = pressedIndex;
         m_pressPosition = event->pos();
 
-        if (m_ripple) {
+        if (m_material.ripple()) {
             QRect itemRect = visualRect(pressedIndex);
             // Use viewport coordinates for ripple (painter draws on viewport)
-            m_ripple->onPress(viewportPos, QRectF(itemRect));
+            m_material.ripple()->onPress(viewportPos, QRectF(itemRect));
             // Store clip rect for ripple animation (so it continues after release)
             m_rippleClipRect = QRectF(itemRect);
         }
@@ -385,11 +359,11 @@ void TreeView::mousePressEvent(QMouseEvent* event) {
 void TreeView::mouseReleaseEvent(QMouseEvent* event) {
     QTreeView::mouseReleaseEvent(event);
 
-    if (m_stateMachine) {
-        m_stateMachine->onRelease();
+    if (m_material.stateMachine()) {
+        m_material.stateMachine()->onRelease();
     }
-    if (m_ripple) {
-        m_ripple->onRelease();
+    if (m_material.ripple()) {
+        m_material.ripple()->onRelease();
     }
     m_pressedIndex = QPersistentModelIndex();
     update();
@@ -397,37 +371,18 @@ void TreeView::mouseReleaseEvent(QMouseEvent* event) {
 
 void TreeView::focusInEvent(QFocusEvent* event) {
     QTreeView::focusInEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onFocusIn();
-    }
-    if (m_focusIndicator) {
-        m_focusIndicator->onFocusIn();
-    }
-    update();
+    m_material.onFocusIn();
 }
 
 void TreeView::focusOutEvent(QFocusEvent* event) {
     QTreeView::focusOutEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onFocusOut();
-    }
-    if (m_focusIndicator) {
-        m_focusIndicator->onFocusOut();
-    }
-    update();
+    m_material.onFocusOut();
 }
 
 void TreeView::changeEvent(QEvent* event) {
     QTreeView::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
-        update();
+        m_material.onEnabledChange(isEnabled());
     }
 }
 
@@ -465,30 +420,30 @@ void TreeView::paintEvent(QPaintEvent* event) {
 
     // Draw ripple if active (overlay on top of items)
     // RippleHelper manages its own state - always try to paint
-    if (m_ripple && !m_rippleClipRect.isEmpty()) {
-        m_ripple->setColor(onSurfaceColor());
+    if (m_material.ripple() && !m_rippleClipRect.isEmpty()) {
+        m_material.ripple()->setColor(onSurfaceColor());
         QPainterPath clipPath;
         clipPath.addRect(m_rippleClipRect);
         p.save();
         p.setClipPath(clipPath);
-        m_ripple->paint(&p, clipPath);
+        m_material.ripple()->paint(&p, clipPath);
         p.restore();
 
         // Clear clip rect when ripple is no longer active
-        if (!m_ripple->hasActiveRipple()) {
+        if (!m_material.ripple()->hasActiveRipple()) {
             m_rippleClipRect = QRectF();
         }
     }
 
     // Draw focus indicator on current index if focused
-    if (m_focusIndicator && hasFocus()) {
+    if (m_material.focusIndicator() && hasFocus()) {
         QModelIndex current = currentIndex();
         if (current.isValid()) {
             QRect itemRect = visualRect(current);
             if (itemRect.intersects(viewport()->rect())) {
                 QPainterPath shape;
                 shape.addRect(itemRect);
-                m_focusIndicator->paint(&p, shape, onSurfaceColor());
+                m_material.focusIndicator()->paint(&p, shape, onSurfaceColor());
             }
         }
     }

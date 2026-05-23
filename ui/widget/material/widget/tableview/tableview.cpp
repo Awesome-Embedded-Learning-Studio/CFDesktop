@@ -15,11 +15,7 @@
 #include "tableview.h"
 #include "application_support/application.h"
 #include "base/device_pixel.h"
-#include "cfmaterial_animation_factory.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/ripple_helper.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QFontMetrics>
@@ -32,8 +28,6 @@ namespace cf::ui::widget::material {
 
 using namespace cf::ui::base;
 using namespace cf::ui::base::device;
-using namespace cf::ui::components;
-using namespace cf::ui::components::material;
 using namespace cf::ui::core;
 using namespace cf::ui::core::token::literals;
 using namespace cf::ui::widget::material::base;
@@ -67,27 +61,15 @@ inline CFColor fallbackPrimaryContainer() {
 // ============================================================================
 
 TableView::TableView(QWidget* parent)
-    : QTableView(parent), rowHeight_(TableRowHeight::Standard),
-      gridStyle_(TableGridStyle::Horizontal), showHeader_(true), alternatingRowColors_(false),
-      rippleEnabled_(true), m_hasValidPressPos(false), m_hoveredRow(-1), m_pressedRow(-1) {
-    // Get animation factory from Application
-    m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_ripple = new RippleHelper(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    // Set ripple mode to bounded for table cells
-    m_ripple->setMode(RippleHelper::Mode::Bounded);
-
-    // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-
+    : QTableView(parent), m_material(this,
+                                     MaterialWidgetBase::Config{
+                                         .useRipple = true,
+                                         .useElevation = false,
+                                         .useFocusIndicator = true,
+                                     }),
+      rowHeight_(TableRowHeight::Standard), gridStyle_(TableGridStyle::Horizontal),
+      showHeader_(true), alternatingRowColors_(false), rippleEnabled_(true),
+      m_hasValidPressPos(false), m_hoveredRow(-1), m_pressedRow(-1) {
     // Configure default QTableView properties for Material rendering
     setAttribute(Qt::WA_Hover, true);
     setMouseTracking(true);
@@ -186,8 +168,8 @@ bool TableView::rippleEnabled() const {
 void TableView::setRippleEnabled(bool enabled) {
     if (rippleEnabled_ != enabled) {
         rippleEnabled_ = enabled;
-        if (!enabled && m_ripple) {
-            m_ripple->onCancel();
+        if (!enabled && m_material.ripple()) {
+            m_material.ripple()->onCancel();
         }
     }
 }
@@ -269,7 +251,7 @@ void TableView::paintEvent(QPaintEvent* event) {
     }
 
     // Draw ripple effects
-    if (rippleEnabled_ && m_ripple && (m_pressedRow >= 0 || m_hoveredRow >= 0)) {
+    if (rippleEnabled_ && m_material.ripple() && (m_pressedRow >= 0 || m_hoveredRow >= 0)) {
         int row = (m_pressedRow >= 0) ? m_pressedRow : m_hoveredRow;
         if (row >= 0) {
             QRect rowRect = visualRect(model()->index(row, 0));
@@ -277,8 +259,8 @@ void TableView::paintEvent(QPaintEvent* event) {
             rowRect.setWidth(viewportRect.width());
             QPainterPath clipPath;
             clipPath.addRect(rowRect);
-            m_ripple->setColor(onSurfaceColor());
-            m_ripple->paint(&p, clipPath);
+            m_material.ripple()->setColor(onSurfaceColor());
+            m_material.ripple()->paint(&p, clipPath);
         }
     }
 
@@ -288,7 +270,7 @@ void TableView::paintEvent(QPaintEvent* event) {
     }
 
     // Draw focus indicator around the actual content area
-    if (hasFocus() && m_focusIndicator && model()) {
+    if (hasFocus() && m_material.focusIndicator() && model()) {
         // Calculate actual content bounds
         QRectF contentRect = viewportRect;
 
@@ -326,15 +308,15 @@ void TableView::mousePressEvent(QMouseEvent* event) {
         int row = index.row();
         if (row >= 0) {
             m_pressedRow = row;
-            if (m_stateMachine) {
-                m_stateMachine->onPress(event->pos());
+            if (m_material.stateMachine()) {
+                m_material.stateMachine()->onPress(event->pos());
             }
-            if (m_ripple && rippleEnabled_) {
+            if (m_material.ripple() && rippleEnabled_) {
                 QRect rowRect = visualRect(model()->index(row, 0));
                 rowRect.setLeft(0);
                 rowRect.setWidth(viewport()->width());
                 // Ripple expects viewport coordinates since rowRect is in viewport coords
-                m_ripple->onPress(viewportPos, rowRect);
+                m_material.ripple()->onPress(viewportPos, rowRect);
             }
             update();
         }
@@ -345,11 +327,11 @@ void TableView::mouseReleaseEvent(QMouseEvent* event) {
     QTableView::mouseReleaseEvent(event);
 
     if (m_pressedRow >= 0) {
-        if (m_stateMachine) {
-            m_stateMachine->onRelease();
+        if (m_material.stateMachine()) {
+            m_material.stateMachine()->onRelease();
         }
-        if (m_ripple && rippleEnabled_) {
-            m_ripple->onRelease();
+        if (m_material.ripple() && rippleEnabled_) {
+            m_material.ripple()->onRelease();
         }
         m_pressedRow = -1;
         m_hasValidPressPos = false;
@@ -368,8 +350,8 @@ void TableView::mouseMoveEvent(QMouseEvent* event) {
 
     if (m_hoveredRow != row) {
         m_hoveredRow = row;
-        if (row >= 0 && m_stateMachine) {
-            m_stateMachine->onHoverEnter();
+        if (row >= 0 && m_material.stateMachine()) {
+            m_material.stateMachine()->onHoverEnter();
         }
         update();
     }
@@ -377,20 +359,12 @@ void TableView::mouseMoveEvent(QMouseEvent* event) {
 
 void TableView::enterEvent(QEnterEvent* event) {
     QTableView::enterEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onHoverEnter();
-    }
-    update();
+    m_material.onEnterEvent();
 }
 
 void TableView::leaveEvent(QEvent* event) {
     QTableView::leaveEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onHoverLeave();
-    }
-    if (m_ripple) {
-        m_ripple->onCancel();
-    }
+    m_material.onLeaveEvent();
     m_hoveredRow = -1;
     m_pressedRow = -1;
     update();
@@ -398,37 +372,18 @@ void TableView::leaveEvent(QEvent* event) {
 
 void TableView::focusInEvent(QFocusEvent* event) {
     QTableView::focusInEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onFocusIn();
-    }
-    if (m_focusIndicator) {
-        m_focusIndicator->onFocusIn();
-    }
-    update();
+    m_material.onFocusIn();
 }
 
 void TableView::focusOutEvent(QFocusEvent* event) {
     QTableView::focusOutEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onFocusOut();
-    }
-    if (m_focusIndicator) {
-        m_focusIndicator->onFocusOut();
-    }
-    update();
+    m_material.onFocusOut();
 }
 
 void TableView::changeEvent(QEvent* event) {
     QTableView::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
-        update();
+        m_material.onEnabledChange(isEnabled());
     }
 }
 
@@ -487,7 +442,7 @@ void TableView::drawGridLines(QPainter& p, const QRectF& viewportRect) {
 }
 
 void TableView::drawFocusIndicator(QPainter& p, const QRectF& rect) {
-    if (m_focusIndicator) {
+    if (m_material.focusIndicator()) {
         // Create focus indicator path (inset to account for both ring width and spacing)
         // Ring width: 3dp, Additional inset: 3dp = Total 6dp
         QPainterPath path;
@@ -496,7 +451,7 @@ void TableView::drawFocusIndicator(QPainter& p, const QRectF& rect) {
         QRectF focusRect = rect.adjusted(-inset, -inset, inset, inset);
         path.addRoundedRect(focusRect, 4, 4);
 
-        m_focusIndicator->paint(&p, path, primaryContainerColor());
+        m_material.focusIndicator()->paint(&p, path, primaryContainerColor());
     }
 }
 

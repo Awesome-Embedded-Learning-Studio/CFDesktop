@@ -16,17 +16,17 @@ namespace cf::config {
 // ============================================================================
 
 DesktopConfigStorePathProvider::DesktopConfigStorePathProvider()
-    : system_path_("/etc/cfdesktop/system.ini"), user_dir_(QDir::homePath() + "/.config/cfdesktop"),
+    : system_path_(QString()), user_dir_(QDir::homePath() + "/.config/cfdesktop"),
       app_dir_("config") {}
 
 DesktopConfigStorePathProvider::DesktopConfigStorePathProvider(const QString& app_base)
-    : system_path_("/etc/cfdesktop/system.ini"), user_dir_(QDir::homePath() + "/.config/cfdesktop"),
+    : system_path_(app_base + "/system.ini"), user_dir_(QDir::homePath() + "/.config/cfdesktop"),
       app_dir_(app_base) {}
 
 DesktopConfigStorePathProvider::DesktopConfigStorePathProvider(const QString& organization,
                                                                const QString& application)
-    : system_path_("/etc/" + organization + "/system.ini"),
-      user_dir_(QDir::homePath() + "/.config/" + organization), app_dir_("config") {
+    : system_path_(QString()), user_dir_(QDir::homePath() + "/.config/" + organization),
+      app_dir_("config") {
     user_filename_ = application + ".ini";
     app_filename_ = application + ".ini";
 }

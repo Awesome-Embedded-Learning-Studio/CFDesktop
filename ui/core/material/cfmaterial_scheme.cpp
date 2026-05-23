@@ -14,38 +14,32 @@
 namespace cf::ui::core {
 
 MaterialColorScheme::MaterialColorScheme() {
-    color_cache_.reserve(32);
+    colors_.reserve(32);
 }
 
 QColor& MaterialColorScheme::queryExpectedColor(const char* name) {
-    auto it = color_cache_.find(name);
-    if (it != color_cache_.end()) {
+    auto it = colors_.find(name);
+    if (it != colors_.end()) {
         return it->second;
     }
-
-    auto result = registry_.get_dynamic<CFColor>(name);
-    if (result && *result) {
-        auto [iter, inserted] = color_cache_.emplace(name, (*result)->native_color());
-        return iter->second;
-    }
-
-    // Fallback color
     static QColor fallback(Qt::black);
     return fallback;
 }
 
 QColor MaterialColorScheme::queryColor(const char* name) const {
-    auto it = color_cache_.find(name);
-    if (it != color_cache_.end()) {
+    auto it = colors_.find(name);
+    if (it != colors_.end()) {
         return it->second;
     }
-
-    auto result = registry_.get_dynamic_const<CFColor>(name);
-    if (result && *result) {
-        return (*result)->native_color();
-    }
-
     return QColor(Qt::black);
+}
+
+void MaterialColorScheme::setColor(const std::string& name, const QColor& color) {
+    colors_[name] = color;
+}
+
+bool MaterialColorScheme::hasColor(const std::string& name) const {
+    return colors_.find(name) != colors_.end();
 }
 
 } // namespace cf::ui::core

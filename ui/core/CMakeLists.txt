@@ -10,7 +10,7 @@ add_subdirectory(material)
 # ============================================================
 
 # STATIC library for linking into cfui.dll
-# Note: token.hpp and color_scheme.h are header-only files
+# Note: color_scheme.h is a header-only interface file
 add_library(cf_ui_core STATIC
     theme_manager.cpp
 )

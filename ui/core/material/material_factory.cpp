@@ -20,11 +20,6 @@
 #include "cfmaterial_fonttype.h"
 #include "cfmaterial_motion.h"
 #include "cfmaterial_radius_scale.h"
-#include "token/material_scheme/cfmaterial_token_literals.h"
-
-// Type aliases to avoid namespace lookup issues
-using CFColor = ::cf::ui::base::CFColor;
-
 namespace cf::ui::core::material {
 
 namespace detail {
@@ -123,55 +118,46 @@ struct DarkColors {
 // =============================================================================
 
 template <typename ColorDefs> inline void registerAllColors(MaterialColorScheme& scheme) {
-    auto& r = scheme.registry();
-    namespace literals = ::cf::ui::core::token::literals;
-    using CFColor = ::cf::ui::base::CFColor;
-
     // Primary colors
-    r.register_dynamic<CFColor>(literals::PRIMARY, CFColor(ColorDefs::primary));
-    r.register_dynamic<CFColor>(literals::ON_PRIMARY, CFColor(ColorDefs::onPrimary));
-    r.register_dynamic<CFColor>(literals::PRIMARY_CONTAINER, CFColor(ColorDefs::primaryContainer));
-    r.register_dynamic<CFColor>(literals::ON_PRIMARY_CONTAINER,
-                                CFColor(ColorDefs::onPrimaryContainer));
+    scheme.setColor("md.primary", QColor(ColorDefs::primary));
+    scheme.setColor("md.onPrimary", QColor(ColorDefs::onPrimary));
+    scheme.setColor("md.primaryContainer", QColor(ColorDefs::primaryContainer));
+    scheme.setColor("md.onPrimaryContainer", QColor(ColorDefs::onPrimaryContainer));
 
     // Secondary colors
-    r.register_dynamic<CFColor>(literals::SECONDARY, CFColor(ColorDefs::secondary));
-    r.register_dynamic<CFColor>(literals::ON_SECONDARY, CFColor(ColorDefs::onSecondary));
-    r.register_dynamic<CFColor>(literals::SECONDARY_CONTAINER,
-                                CFColor(ColorDefs::secondaryContainer));
-    r.register_dynamic<CFColor>(literals::ON_SECONDARY_CONTAINER,
-                                CFColor(ColorDefs::onSecondaryContainer));
+    scheme.setColor("md.secondary", QColor(ColorDefs::secondary));
+    scheme.setColor("md.onSecondary", QColor(ColorDefs::onSecondary));
+    scheme.setColor("md.secondaryContainer", QColor(ColorDefs::secondaryContainer));
+    scheme.setColor("md.onSecondaryContainer", QColor(ColorDefs::onSecondaryContainer));
 
     // Tertiary colors
-    r.register_dynamic<CFColor>(literals::TERTIARY, CFColor(ColorDefs::tertiary));
-    r.register_dynamic<CFColor>(literals::ON_TERTIARY, CFColor(ColorDefs::onTertiary));
-    r.register_dynamic<CFColor>(literals::TERTIARY_CONTAINER,
-                                CFColor(ColorDefs::tertiaryContainer));
-    r.register_dynamic<CFColor>(literals::ON_TERTIARY_CONTAINER,
-                                CFColor(ColorDefs::onTertiaryContainer));
+    scheme.setColor("md.tertiary", QColor(ColorDefs::tertiary));
+    scheme.setColor("md.onTertiary", QColor(ColorDefs::onTertiary));
+    scheme.setColor("md.tertiaryContainer", QColor(ColorDefs::tertiaryContainer));
+    scheme.setColor("md.onTertiaryContainer", QColor(ColorDefs::onTertiaryContainer));
 
     // Error colors
-    r.register_dynamic<CFColor>(literals::ERROR, CFColor(ColorDefs::error));
-    r.register_dynamic<CFColor>(literals::ON_ERROR, CFColor(ColorDefs::onError));
-    r.register_dynamic<CFColor>(literals::ERROR_CONTAINER, CFColor(ColorDefs::errorContainer));
-    r.register_dynamic<CFColor>(literals::ON_ERROR_CONTAINER, CFColor(ColorDefs::onErrorContainer));
+    scheme.setColor("md.error", QColor(ColorDefs::error));
+    scheme.setColor("md.onError", QColor(ColorDefs::onError));
+    scheme.setColor("md.errorContainer", QColor(ColorDefs::errorContainer));
+    scheme.setColor("md.onErrorContainer", QColor(ColorDefs::onErrorContainer));
 
     // Surface colors
-    r.register_dynamic<CFColor>(literals::BACKGROUND, CFColor(ColorDefs::background));
-    r.register_dynamic<CFColor>(literals::ON_BACKGROUND, CFColor(ColorDefs::onBackground));
-    r.register_dynamic<CFColor>(literals::SURFACE, CFColor(ColorDefs::surface));
-    r.register_dynamic<CFColor>(literals::ON_SURFACE, CFColor(ColorDefs::onSurface));
-    r.register_dynamic<CFColor>(literals::SURFACE_VARIANT, CFColor(ColorDefs::surfaceVariant));
-    r.register_dynamic<CFColor>(literals::ON_SURFACE_VARIANT, CFColor(ColorDefs::onSurfaceVariant));
-    r.register_dynamic<CFColor>(literals::OUTLINE, CFColor(ColorDefs::outline));
-    r.register_dynamic<CFColor>(literals::OUTLINE_VARIANT, CFColor(ColorDefs::outlineVariant));
+    scheme.setColor("md.background", QColor(ColorDefs::background));
+    scheme.setColor("md.onBackground", QColor(ColorDefs::onBackground));
+    scheme.setColor("md.surface", QColor(ColorDefs::surface));
+    scheme.setColor("md.onSurface", QColor(ColorDefs::onSurface));
+    scheme.setColor("md.surfaceVariant", QColor(ColorDefs::surfaceVariant));
+    scheme.setColor("md.onSurfaceVariant", QColor(ColorDefs::onSurfaceVariant));
+    scheme.setColor("md.outline", QColor(ColorDefs::outline));
+    scheme.setColor("md.outlineVariant", QColor(ColorDefs::outlineVariant));
 
     // Utility colors
-    r.register_dynamic<CFColor>(literals::SHADOW, CFColor(ColorDefs::shadow));
-    r.register_dynamic<CFColor>(literals::SCRIM, CFColor(ColorDefs::scrim));
-    r.register_dynamic<CFColor>(literals::INVERSE_SURFACE, CFColor(ColorDefs::inverseSurface));
-    r.register_dynamic<CFColor>(literals::INVERSE_ON_SURFACE, CFColor(ColorDefs::inverseOnSurface));
-    r.register_dynamic<CFColor>(literals::INVERSE_PRIMARY, CFColor(ColorDefs::inversePrimary));
+    scheme.setColor("md.shadow", QColor(ColorDefs::shadow));
+    scheme.setColor("md.scrim", QColor(ColorDefs::scrim));
+    scheme.setColor("md.inverseSurface", QColor(ColorDefs::inverseSurface));
+    scheme.setColor("md.inverseOnSurface", QColor(ColorDefs::inverseOnSurface));
+    scheme.setColor("md.inversePrimary", QColor(ColorDefs::inversePrimary));
 }
 
 } // namespace detail
@@ -220,7 +206,6 @@ Result fromJson(const QByteArray& json, bool isDark) {
     }
 
     MaterialColorScheme scheme;
-    auto& r = scheme.registry();
 
     // Map of MD3 color names to registry keys
     const std::unordered_map<std::string, std::string> colorMapping = {
@@ -264,144 +249,135 @@ Result fromJson(const QByteArray& json, bool isDark) {
                     MaterialSchemeError::Kind::InvalidColorFormat,
                     "Invalid color format for " + key + ": " + colorStr.toStdString()});
             }
-            r.register_dynamic<CFColor>(registryKey, CFColor(colorStr));
+            scheme.setColor(registryKey, QColor(colorStr));
         }
     }
 
     return scheme;
 }
 
-MaterialColorScheme fromKeyColor(CFColor keyColor, bool isDark) {
+MaterialColorScheme fromKeyColor(cf::ui::base::CFColor keyColor, bool isDark) {
     using ::cf::ui::base::tonalPalette;
 
     MaterialColorScheme scheme;
-    auto& r = scheme.registry();
 
     // Generate tonal palette from key color
-    QList<CFColor> tonal = tonalPalette(keyColor);
+    QList<cf::ui::base::CFColor> tonal = tonalPalette(keyColor);
 
     // Helper to get color from tonal palette by index
-    auto getTone = [&tonal](int index) -> CFColor {
-        // tonalPalette returns 13 colors: 0, 10, 20, ..., 90, 95, 99, 100
-        // Map index 0-12 to these tones
+    auto getTone = [&tonal](int index) -> cf::ui::base::CFColor {
         if (index >= 0 && index < tonal.size()) {
             return tonal[index];
         }
-        return CFColor("#808080"); // Fallback gray
+        return cf::ui::base::CFColor("#808080"); // Fallback gray
     };
 
     if (!isDark) {
         // Light scheme generation
-        r.register_dynamic<CFColor>("md.primary", getTone(4)); // Tone 40
-        r.register_dynamic<CFColor>("md.onPrimary", CFColor("#FFFFFF"));
-        r.register_dynamic<CFColor>("md.primaryContainer", getTone(9));   // Tone 90
-        r.register_dynamic<CFColor>("md.onPrimaryContainer", getTone(0)); // Tone 0
+        scheme.setColor("md.primary", getTone(4).native_color());
+        scheme.setColor("md.onPrimary", QColor("#FFFFFF"));
+        scheme.setColor("md.primaryContainer", getTone(9).native_color());
+        scheme.setColor("md.onPrimaryContainer", getTone(0).native_color());
 
         // Secondary: Use complementary hue
-        CFColor secondaryKey(std::fmod(keyColor.hue() + 60.0f, 360.0f), keyColor.chroma() * 0.8f,
-                             keyColor.tone());
-        QList<CFColor> secondaryPalette = tonalPalette(secondaryKey);
-        r.register_dynamic<CFColor>("md.secondary", secondaryPalette[5]);
-        r.register_dynamic<CFColor>("md.onSecondary", CFColor("#FFFFFF"));
-        r.register_dynamic<CFColor>("md.secondaryContainer", secondaryPalette[9]);
-        r.register_dynamic<CFColor>("md.onSecondaryContainer", secondaryPalette[0]);
+        cf::ui::base::CFColor secondaryKey(std::fmod(keyColor.hue() + 60.0f, 360.0f),
+                                           keyColor.chroma() * 0.8f, keyColor.tone());
+        QList<cf::ui::base::CFColor> secondaryPalette = tonalPalette(secondaryKey);
+        scheme.setColor("md.secondary", secondaryPalette[5].native_color());
+        scheme.setColor("md.onSecondary", QColor("#FFFFFF"));
+        scheme.setColor("md.secondaryContainer", secondaryPalette[9].native_color());
+        scheme.setColor("md.onSecondaryContainer", secondaryPalette[0].native_color());
 
         // Tertiary: Use complementary hue
-        CFColor tertiaryKey(std::fmod(keyColor.hue() + 120.0f, 360.0f), keyColor.chroma() * 0.6f,
-                            keyColor.tone());
-        QList<CFColor> tertiaryPalette = tonalPalette(tertiaryKey);
-        r.register_dynamic<CFColor>("md.tertiary", tertiaryPalette[5]);
-        r.register_dynamic<CFColor>("md.onTertiary", CFColor("#FFFFFF"));
-        r.register_dynamic<CFColor>("md.tertiaryContainer", tertiaryPalette[9]);
-        r.register_dynamic<CFColor>("md.onTertiaryContainer", tertiaryPalette[0]);
+        cf::ui::base::CFColor tertiaryKey(std::fmod(keyColor.hue() + 120.0f, 360.0f),
+                                          keyColor.chroma() * 0.6f, keyColor.tone());
+        QList<cf::ui::base::CFColor> tertiaryPalette = tonalPalette(tertiaryKey);
+        scheme.setColor("md.tertiary", tertiaryPalette[5].native_color());
+        scheme.setColor("md.onTertiary", QColor("#FFFFFF"));
+        scheme.setColor("md.tertiaryContainer", tertiaryPalette[9].native_color());
+        scheme.setColor("md.onTertiaryContainer", tertiaryPalette[0].native_color());
 
         // Error colors (fixed red-based)
-        r.register_dynamic<CFColor>("md.error", CFColor("#B3261E"));
-        r.register_dynamic<CFColor>("md.onError", CFColor("#FFFFFF"));
-        r.register_dynamic<CFColor>("md.errorContainer", CFColor("#F9DEDC"));
-        r.register_dynamic<CFColor>("md.onErrorContainer", CFColor("#410E0B"));
+        scheme.setColor("md.error", QColor("#B3261E"));
+        scheme.setColor("md.onError", QColor("#FFFFFF"));
+        scheme.setColor("md.errorContainer", QColor("#F9DEDC"));
+        scheme.setColor("md.onErrorContainer", QColor("#410E0B"));
 
         // Surface colors
-        r.register_dynamic<CFColor>("md.background", CFColor("#FFFBFE"));
-        r.register_dynamic<CFColor>("md.onBackground", CFColor("#1C1B1F"));
-        r.register_dynamic<CFColor>("md.surface", CFColor("#FFFBFE"));
-        r.register_dynamic<CFColor>("md.onSurface", CFColor("#1C1B1F"));
-        r.register_dynamic<CFColor>("md.surfaceVariant", getTone(11));
-        r.register_dynamic<CFColor>("md.onSurfaceVariant", getTone(2));
-        r.register_dynamic<CFColor>("md.outline", getTone(7));
-        r.register_dynamic<CFColor>("md.outlineVariant", getTone(10));
+        scheme.setColor("md.background", QColor("#FFFBFE"));
+        scheme.setColor("md.onBackground", QColor("#1C1B1F"));
+        scheme.setColor("md.surface", QColor("#FFFBFE"));
+        scheme.setColor("md.onSurface", QColor("#1C1B1F"));
+        scheme.setColor("md.surfaceVariant", getTone(11).native_color());
+        scheme.setColor("md.onSurfaceVariant", getTone(2).native_color());
+        scheme.setColor("md.outline", getTone(7).native_color());
+        scheme.setColor("md.outlineVariant", getTone(10).native_color());
 
         // Utility colors
-        r.register_dynamic<CFColor>("md.shadow", CFColor("#000000"));
-        r.register_dynamic<CFColor>("md.scrim", CFColor("#000000"));
-        r.register_dynamic<CFColor>("md.inverseSurface", CFColor("#313033"));
-        r.register_dynamic<CFColor>("md.inverseOnSurface", CFColor("#F4EFF4"));
-        r.register_dynamic<CFColor>("md.inversePrimary", getTone(8));
+        scheme.setColor("md.shadow", QColor("#000000"));
+        scheme.setColor("md.scrim", QColor("#000000"));
+        scheme.setColor("md.inverseSurface", QColor("#313033"));
+        scheme.setColor("md.inverseOnSurface", QColor("#F4EFF4"));
+        scheme.setColor("md.inversePrimary", getTone(8).native_color());
     } else {
         // Dark scheme generation
-        r.register_dynamic<CFColor>("md.primary", getTone(8));             // Tone 80
-        r.register_dynamic<CFColor>("md.onPrimary", getTone(0));           // Tone 0
-        r.register_dynamic<CFColor>("md.primaryContainer", getTone(3));    // Tone 30
-        r.register_dynamic<CFColor>("md.onPrimaryContainer", getTone(11)); // Tone 95
+        scheme.setColor("md.primary", getTone(8).native_color());
+        scheme.setColor("md.onPrimary", getTone(0).native_color());
+        scheme.setColor("md.primaryContainer", getTone(3).native_color());
+        scheme.setColor("md.onPrimaryContainer", getTone(11).native_color());
 
         // Secondary
-        CFColor secondaryKey(std::fmod(keyColor.hue() + 60.0f, 360.0f), keyColor.chroma() * 0.8f,
-                             keyColor.tone());
-        QList<CFColor> secondaryPalette = tonalPalette(secondaryKey);
-        r.register_dynamic<CFColor>("md.secondary", secondaryPalette[8]);
-        r.register_dynamic<CFColor>("md.onSecondary", secondaryPalette[0]);
-        r.register_dynamic<CFColor>("md.secondaryContainer", secondaryPalette[3]);
-        r.register_dynamic<CFColor>("md.onSecondaryContainer", secondaryPalette[11]);
+        cf::ui::base::CFColor secondaryKey(std::fmod(keyColor.hue() + 60.0f, 360.0f),
+                                           keyColor.chroma() * 0.8f, keyColor.tone());
+        QList<cf::ui::base::CFColor> secondaryPalette = tonalPalette(secondaryKey);
+        scheme.setColor("md.secondary", secondaryPalette[8].native_color());
+        scheme.setColor("md.onSecondary", secondaryPalette[0].native_color());
+        scheme.setColor("md.secondaryContainer", secondaryPalette[3].native_color());
+        scheme.setColor("md.onSecondaryContainer", secondaryPalette[11].native_color());
 
         // Tertiary
-        CFColor tertiaryKey(std::fmod(keyColor.hue() + 120.0f, 360.0f), keyColor.chroma() * 0.6f,
-                            keyColor.tone());
-        QList<CFColor> tertiaryPalette = tonalPalette(tertiaryKey);
-        r.register_dynamic<CFColor>("md.tertiary", tertiaryPalette[8]);
-        r.register_dynamic<CFColor>("md.onTertiary", tertiaryPalette[0]);
-        r.register_dynamic<CFColor>("md.tertiaryContainer", tertiaryPalette[3]);
-        r.register_dynamic<CFColor>("md.onTertiaryContainer", tertiaryPalette[11]);
+        cf::ui::base::CFColor tertiaryKey(std::fmod(keyColor.hue() + 120.0f, 360.0f),
+                                          keyColor.chroma() * 0.6f, keyColor.tone());
+        QList<cf::ui::base::CFColor> tertiaryPalette = tonalPalette(tertiaryKey);
+        scheme.setColor("md.tertiary", tertiaryPalette[8].native_color());
+        scheme.setColor("md.onTertiary", tertiaryPalette[0].native_color());
+        scheme.setColor("md.tertiaryContainer", tertiaryPalette[3].native_color());
+        scheme.setColor("md.onTertiaryContainer", tertiaryPalette[11].native_color());
 
         // Error colors (fixed red-based for dark)
-        r.register_dynamic<CFColor>("md.error", CFColor("#F2B8B5"));
-        r.register_dynamic<CFColor>("md.onError", CFColor("#601410"));
-        r.register_dynamic<CFColor>("md.errorContainer", CFColor("#8C1D18"));
-        r.register_dynamic<CFColor>("md.onErrorContainer", CFColor("#F9DEDC"));
+        scheme.setColor("md.error", QColor("#F2B8B5"));
+        scheme.setColor("md.onError", QColor("#601410"));
+        scheme.setColor("md.errorContainer", QColor("#8C1D18"));
+        scheme.setColor("md.onErrorContainer", QColor("#F9DEDC"));
 
         // Surface colors
-        r.register_dynamic<CFColor>("md.background", CFColor("#1C1B1F"));
-        r.register_dynamic<CFColor>("md.onBackground", CFColor("#E6E1E5"));
-        r.register_dynamic<CFColor>("md.surface", CFColor("#1C1B1F"));
-        r.register_dynamic<CFColor>("md.onSurface", CFColor("#E6E1E5"));
-        r.register_dynamic<CFColor>("md.surfaceVariant", getTone(2));
-        r.register_dynamic<CFColor>("md.onSurfaceVariant", getTone(10));
-        r.register_dynamic<CFColor>("md.outline", getTone(5));
-        r.register_dynamic<CFColor>("md.outlineVariant", getTone(2));
+        scheme.setColor("md.background", QColor("#1C1B1F"));
+        scheme.setColor("md.onBackground", QColor("#E6E1E5"));
+        scheme.setColor("md.surface", QColor("#1C1B1F"));
+        scheme.setColor("md.onSurface", QColor("#E6E1E5"));
+        scheme.setColor("md.surfaceVariant", getTone(2).native_color());
+        scheme.setColor("md.onSurfaceVariant", getTone(10).native_color());
+        scheme.setColor("md.outline", getTone(5).native_color());
+        scheme.setColor("md.outlineVariant", getTone(2).native_color());
 
         // Utility colors
-        r.register_dynamic<CFColor>("md.shadow", CFColor("#000000"));
-        r.register_dynamic<CFColor>("md.scrim", CFColor("#000000"));
-        r.register_dynamic<CFColor>("md.inverseSurface", CFColor("#E6E1E5"));
-        r.register_dynamic<CFColor>("md.inverseOnSurface", CFColor("#313033"));
-        r.register_dynamic<CFColor>("md.inversePrimary", getTone(4));
+        scheme.setColor("md.shadow", QColor("#000000"));
+        scheme.setColor("md.scrim", QColor("#000000"));
+        scheme.setColor("md.inverseSurface", QColor("#E6E1E5"));
+        scheme.setColor("md.inverseOnSurface", QColor("#313033"));
+        scheme.setColor("md.inversePrimary", getTone(4).native_color());
     }
 
     return scheme;
 }
 
 QByteArray toJson(const MaterialColorScheme& scheme) {
-    QJsonObject root;
     QJsonObject lightScheme;
 
-    auto& r = scheme.registry();
-
-    // Helper to get color string from registry
-    auto getColorString = [&r](const char* key) -> QString {
-        auto result = r.get_dynamic_const<::cf::ui::base::CFColor>(key);
-        if (result && *result) {
-            return (*result)->native_color().name();
-        }
-        return "#000000";
+    // Helper to get color string from scheme
+    auto getColorString = [&scheme](const char* key) -> QString {
+        QColor color = scheme.queryColor(key);
+        return color.isValid() ? color.name() : "#000000";
     };
 
     // Build scheme object
@@ -438,6 +414,7 @@ QByteArray toJson(const MaterialColorScheme& scheme) {
     QJsonObject schemes;
     schemes["light"] = lightScheme;
 
+    QJsonObject root;
     root["schemes"] = schemes;
 
     QJsonDocument doc(root);

@@ -16,12 +16,8 @@
 #include "application_support/application.h"
 #include "base/device_pixel.h"
 #include "base/easing.h"
-#include "cfmaterial_animation_factory.h"
 #include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/ripple_helper.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QFontMetrics>
@@ -33,7 +29,6 @@ namespace cf::ui::widget::material {
 
 using namespace cf::ui::base;
 using namespace cf::ui::base::device;
-using namespace cf::ui::components;
 using namespace cf::ui::components::material;
 using namespace cf::ui::core;
 using namespace cf::ui::core::token::literals;
@@ -42,14 +37,12 @@ using namespace cf::ui::widget::application_support;
 
 // Material Design 3 specifications for RadioButton
 namespace {
-// Radio button size specifications (in dp)
 constexpr float RADIO_SIZE_DP = 20.0f;        // Outer ring diameter
 constexpr float INNER_CIRCLE_SIZE_DP = 10.0f; // Inner circle diameter (50% of outer)
 constexpr float TOUCH_TARGET_DP = 48.0f;      // Minimum touch target size
 constexpr float TEXT_SPACING_DP = 8.0f;       // Spacing between radio and text
 constexpr float STROKE_WIDTH_DP = 2.0f;       // Outer ring stroke width
 
-// Inner circle animation scale values
 constexpr float INNER_CIRCLE_SCALE_UNCHECKED = 0.0f;
 constexpr float INNER_CIRCLE_SCALE_CHECKED = 1.0f;
 } // namespace
@@ -77,29 +70,9 @@ inline CFColor fallbackError() {
 // Constructor / Destructor
 // ============================================================================
 
-RadioButton::RadioButton(QWidget* parent) : QRadioButton(parent) {
-    // Get animation factory from Application
-    m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_ripple = new RippleHelper(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    // Set ripple mode to bounded (clipped by widget bounds)
-    m_ripple->setMode(RippleHelper::Mode::Bounded);
-
-    // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-
-    // Set default font
+RadioButton::RadioButton(QWidget* parent)
+    : QRadioButton(parent), m_material(this, MaterialWidgetBase::Config{.useElevation = false}) {
     setFont(labelFont());
-
-    // Initialize inner circle scale based on checked state
     m_innerCircleScale = isChecked() ? INNER_CIRCLE_SCALE_CHECKED : INNER_CIRCLE_SCALE_UNCHECKED;
 }
 
@@ -117,80 +90,51 @@ RadioButton::~RadioButton() {
 
 void RadioButton::enterEvent(QEnterEvent* event) {
     QRadioButton::enterEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onHoverEnter();
-    }
-    update();
+    m_material.onEnterEvent();
 }
 
 void RadioButton::leaveEvent(QEvent* event) {
     QRadioButton::leaveEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onHoverLeave();
-    }
-    if (m_ripple) {
-        m_ripple->onCancel();
-    }
-    update();
+    m_material.onLeaveEvent();
 }
 
 void RadioButton::mousePressEvent(QMouseEvent* event) {
     QRadioButton::mousePressEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onPress(event->pos());
-    }
-    if (m_ripple && m_pressEffectEnabled) {
-        // Calculate radio rect for ripple clipping
+    if (m_pressEffectEnabled) {
         QRectF radioRect = calculateRadioRect();
-        m_ripple->onPress(event->pos(), radioRect.united(calculateTextRect(radioRect)));
+        m_material.onMousePress(event->pos(), radioRect.united(calculateTextRect(radioRect)));
+    } else {
+        m_material.stateMachine()->onPress(event->pos());
+        update();
     }
-    update();
 }
 
 void RadioButton::mouseReleaseEvent(QMouseEvent* event) {
     QRadioButton::mouseReleaseEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onRelease();
+    if (m_pressEffectEnabled) {
+        m_material.onMouseRelease();
+    } else {
+        m_material.stateMachine()->onRelease();
+        if (m_material.ripple())
+            m_material.ripple()->onRelease();
+        update();
     }
-    if (m_ripple && m_pressEffectEnabled) {
-        m_ripple->onRelease();
-    }
-    update();
 }
 
 void RadioButton::focusInEvent(QFocusEvent* event) {
     QRadioButton::focusInEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onFocusIn();
-    }
-    if (m_focusIndicator) {
-        m_focusIndicator->onFocusIn();
-    }
-    update();
+    m_material.onFocusIn();
 }
 
 void RadioButton::focusOutEvent(QFocusEvent* event) {
     QRadioButton::focusOutEvent(event);
-    if (m_stateMachine) {
-        m_stateMachine->onFocusOut();
-    }
-    if (m_focusIndicator) {
-        m_focusIndicator->onFocusOut();
-    }
-    update();
+    m_material.onFocusOut();
 }
 
 void RadioButton::changeEvent(QEvent* event) {
     QRadioButton::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
-        update();
+        m_material.onEnabledChange(isEnabled());
     }
 }
 
@@ -199,10 +143,9 @@ void RadioButton::nextCheckState() {
     QRadioButton::nextCheckState();
     bool isCheckedNow = isChecked();
 
-    // Update inner circle animation when checked state changes
     if (wasChecked != isCheckedNow) {
-        if (m_stateMachine) {
-            m_stateMachine->onCheckedChanged(isCheckedNow);
+        if (m_material.stateMachine()) {
+            m_material.stateMachine()->onCheckedChanged(isCheckedNow);
         }
         startInnerCircleAnimation(isCheckedNow);
     }
@@ -211,19 +154,16 @@ void RadioButton::nextCheckState() {
 void RadioButton::setChecked(bool checked) {
     bool wasChecked = isChecked();
     if (wasChecked == checked) {
-        return; // No change
+        return;
     }
 
     QRadioButton::setChecked(checked);
     bool isCheckedNow = isChecked();
 
-    // Sync inner circle scale with checked state
-    // This handles programmatic setChecked() calls which don't trigger nextCheckState
     if (wasChecked != isCheckedNow) {
-        if (m_stateMachine) {
-            m_stateMachine->onCheckedChanged(isCheckedNow);
+        if (m_material.stateMachine()) {
+            m_material.stateMachine()->onCheckedChanged(isCheckedNow);
         }
-        // For programmatic checked change, set scale immediately without animation
         m_innerCircleScale =
             isCheckedNow ? INNER_CIRCLE_SCALE_CHECKED : INNER_CIRCLE_SCALE_UNCHECKED;
         update();
@@ -257,8 +197,6 @@ void RadioButton::setPressEffectEnabled(bool enabled) {
 }
 
 bool RadioButton::hitButton(const QPoint& pos) const {
-    // For custom-drawn radio button, entire widget area is clickable
-    // This ensures proper click handling even when text is empty
     return rect().contains(pos);
 }
 
@@ -269,23 +207,13 @@ bool RadioButton::hitButton(const QPoint& pos) const {
 QSize RadioButton::sizeHint() const {
     CanvasUnitHelper helper(qApp->devicePixelRatio());
 
-    // Material Design 3 specifications:
-    // - Radio size: 20dp
-    // - Spacing between radio and text: 8dp
-    // - Left padding (for stroke clipping): 12dp
-    // - Touch target: 48dp minimum
-
     float leftPadding = helper.dpToPx(12.0f);
     float radioSize = helper.dpToPx(RADIO_SIZE_DP);
     float textSpacing = helper.dpToPx(TEXT_SPACING_DP);
 
-    // Text width
     float textWidth = text().isEmpty() ? 0.0f : fontMetrics().horizontalAdvance(text());
 
-    // Total width
     float totalWidth = leftPadding + radioSize + textSpacing + textWidth;
-
-    // Height is at least the touch target size
     float height = helper.dpToPx(TOUCH_TARGET_DP);
 
     return QSize(int(std::ceil(totalWidth)), int(std::ceil(height)));
@@ -310,12 +238,10 @@ QSize RadioButton::minimumSizeHint() const {
 // ============================================================================
 
 CFColor RadioButton::radioColor() const {
-    // Error state takes priority
     if (m_hasError) {
         return errorColor();
     }
 
-    // Checked state uses primary, unchecked uses outline
     if (isChecked()) {
         auto* app = Application::instance();
         if (!app) {
@@ -361,7 +287,6 @@ CFColor RadioButton::onRadioColor() const {
 }
 
 CFColor RadioButton::stateLayerColor() const {
-    // State layer uses the same color as the radio (primary when checked, onSurface when unchecked)
     if (isChecked()) {
         return radioColor();
     } else {
@@ -398,7 +323,6 @@ CFColor RadioButton::errorColor() const {
 QFont RadioButton::labelFont() const {
     auto* app = Application::instance();
     if (!app) {
-        // Fallback to system font with reasonable size
         QFont font = QRadioButton::font();
         font.setPixelSize(14);
         font.setWeight(QFont::Normal);
@@ -425,9 +349,6 @@ QRectF RadioButton::calculateRadioRect() const {
     CanvasUnitHelper helper(qApp->devicePixelRatio());
     float radioSize = helper.dpToPx(RADIO_SIZE_DP);
     float y = (height() - radioSize) / 2.0f;
-
-    // Add left padding (for focus indicator and to prevent stroke clipping)
-    // This ensures the outer ring stroke is not clipped at the left edge
     float x = helper.dpToPx(12.0f);
 
     return QRectF(x, y, radioSize, radioSize);
@@ -449,23 +370,21 @@ void RadioButton::startInnerCircleAnimation(bool checked) {
     float targetScale = checked ? INNER_CIRCLE_SCALE_CHECKED : INNER_CIRCLE_SCALE_UNCHECKED;
     float fromScale = m_innerCircleScale;
 
-    if (!m_animationFactory) {
-        // No factory, set directly
+    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+        Application::animationFactory());
+
+    if (!factory) {
         m_innerCircleScale = targetScale;
         update();
         return;
     }
 
-    // Create property animation
-    auto anim = m_animationFactory->createPropertyAnimation(
-        &m_innerCircleScale, fromScale, targetScale, 200,
-        cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
+    auto anim =
+        factory->createPropertyAnimation(&m_innerCircleScale, fromScale, targetScale, 200,
+                                         cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
 
     if (anim) {
-        // IMPORTANT: Update range to fix cached animation's stale from/to values
-        if (auto* propAnim =
-                dynamic_cast<cf::ui::components::material::CFMaterialPropertyAnimation*>(
-                    anim.Get())) {
+        if (auto* propAnim = dynamic_cast<CFMaterialPropertyAnimation*>(anim.Get())) {
             propAnim->setRange(fromScale, targetScale);
         }
         anim->start();
@@ -485,7 +404,6 @@ void RadioButton::paintEvent(QPaintEvent* event) {
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing);
 
-    // Calculate layout
     QRectF radioRect = calculateRadioRect();
     QRectF textRect = calculateTextRect(radioRect);
 
@@ -513,24 +431,21 @@ void RadioButton::paintEvent(QPaintEvent* event) {
 // ============================================================================
 
 void RadioButton::drawStateLayer(QPainter& p, const QRectF& radioRect) {
-    if (!isEnabled() || !m_stateMachine) {
+    if (!isEnabled() || !m_material.stateMachine()) {
         return;
     }
 
-    float opacity = m_stateMachine->stateLayerOpacity();
+    float opacity = m_material.stateMachine()->stateLayerOpacity();
     if (opacity <= 0.0f) {
         return;
     }
 
-    // MD3 spec: state layer is 40dp circle (2x radio size), centered on radio
-    // This corresponds to the 48dp touch target
     CanvasUnitHelper helper(qApp->devicePixelRatio());
     float stateLayerSize = helper.dpToPx(RADIO_SIZE_DP * 2.0f); // 40dp
     QPointF center = radioRect.center();
     QRectF stateLayerRect(center.x() - stateLayerSize / 2.0f, center.y() - stateLayerSize / 2.0f,
                           stateLayerSize, stateLayerSize);
 
-    // Create circular state layer path
     QPainterPath circlePath;
     circlePath.addEllipse(stateLayerRect);
 
@@ -542,25 +457,22 @@ void RadioButton::drawStateLayer(QPainter& p, const QRectF& radioRect) {
 }
 
 void RadioButton::drawRipple(QPainter& p, const QRectF& radioRect) {
-    if (!m_ripple || !m_pressEffectEnabled) {
+    if (!m_material.ripple() || !m_pressEffectEnabled) {
         return;
     }
 
-    // Set ripple color based on state
-    m_ripple->setColor(stateLayerColor());
+    m_material.ripple()->setColor(stateLayerColor());
 
-    // MD3 spec: ripple is clipped to 40dp circle (2x radio size), centered on radio
     CanvasUnitHelper helper(qApp->devicePixelRatio());
     float stateLayerSize = helper.dpToPx(RADIO_SIZE_DP * 2.0f); // 40dp
     QPointF center = radioRect.center();
     QRectF stateLayerRect(center.x() - stateLayerSize / 2.0f, center.y() - stateLayerSize / 2.0f,
                           stateLayerSize, stateLayerSize);
 
-    // Create clipping path for the state layer circle
     QPainterPath clipPath;
     clipPath.addEllipse(stateLayerRect);
 
-    m_ripple->paint(&p, clipPath);
+    m_material.ripple()->paint(&p, clipPath);
 }
 
 void RadioButton::drawOuterRing(QPainter& p, const QRectF& radioRect) {
@@ -570,25 +482,20 @@ void RadioButton::drawOuterRing(QPainter& p, const QRectF& radioRect) {
     CFColor ringColor = radioColor();
     QColor color = ringColor.native_color();
 
-    // Handle disabled state
     if (!isEnabled()) {
-        color.setAlphaF(0.38f); // 38% opacity for disabled
+        color.setAlphaF(0.38f);
     }
 
     p.save();
 
-    // Inset the rect by half the stroke width to ensure the stroke stays within bounds
-    // This prevents the left edge from being clipped when x=0
     float inset = strokeWidth / 2.0f;
     QRectF insetRect = radioRect.adjusted(inset, inset, -inset, -inset);
 
-    // Create the outer ring path from the inset rect
     QPainterPath ringPath;
     ringPath.addEllipse(insetRect);
 
-    // Set pen for stroking the ring
     QPen pen(color, strokeWidth);
-    pen.setCosmetic(false); // Use device pixels for consistent stroke width
+    pen.setCosmetic(false);
     p.setPen(pen);
     p.setBrush(Qt::NoBrush);
 
@@ -602,23 +509,20 @@ void RadioButton::drawInnerCircle(QPainter& p, const QRectF& radioRect) {
         return;
     }
 
-    // Calculate inner circle dimensions based on scale
     float outerRadius = radioRect.width() / 2.0f;
-    float innerRadius = outerRadius * 0.5f; // Inner circle is 50% of outer
+    float innerRadius = outerRadius * 0.5f;
     float scaledRadius = innerRadius * m_innerCircleScale;
 
     QPointF center = radioRect.center();
 
     p.save();
 
-    // Create inner circle path
     QPainterPath innerCirclePath;
     innerCirclePath.addEllipse(center, scaledRadius, scaledRadius);
 
     CFColor fillColor = radioColor();
     QColor color = fillColor.native_color();
 
-    // Handle disabled state
     if (!isEnabled()) {
         color.setAlphaF(0.38f);
     }
@@ -659,29 +563,25 @@ void RadioButton::drawText(QPainter& p, const QRectF& textRect) {
         p.setPen(textColor.native_color());
     }
 
-    // Use label font
     QFont font = labelFont();
     p.setFont(font);
 
-    // Draw text with vertical center alignment and left alignment
     p.drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, text());
 }
 
 void RadioButton::drawFocusIndicator(QPainter& p, const QRectF& radioRect) {
-    if (!m_focusIndicator) {
+    if (!m_material.focusIndicator()) {
         return;
     }
 
-    // Create focus indicator path (slightly larger than the radio button)
     QPainterPath focusPath;
     CanvasUnitHelper helper(qApp->devicePixelRatio());
-    float focusPadding = helper.dpToPx(4.0f); // 4dp padding for focus ring
+    float focusPadding = helper.dpToPx(4.0f);
     focusPath.addEllipse(
         radioRect.adjusted(-focusPadding, -focusPadding, focusPadding, focusPadding));
 
-    // Use the radio color for the focus indicator
     CFColor indicatorColor = radioColor();
-    m_focusIndicator->paint(&p, focusPath, indicatorColor);
+    m_material.focusIndicator()->paint(&p, focusPath, indicatorColor);
 }
 
 } // namespace cf::ui::widget::material

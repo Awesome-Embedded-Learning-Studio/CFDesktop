@@ -14,23 +14,15 @@
  */
 #pragma once
 
-#include "base/include/base/weak_ptr/weak_ptr.h"
-#include "cfmaterial_animation_factory.h"
-#include "color.h"
+#include "base/color.h"
 #include "export.h"
+#include "widget/material/base/material_widget_base.h"
 #include <QRadioButton>
 #include <QWidget>
 
-using CFColor = cf::ui::base::CFColor;
-
 namespace cf::ui::widget::material {
 
-// Forward declarations
-namespace base {
-class StateMachine;
-class RippleHelper;
-class MdFocusIndicator;
-} // namespace base
+using CFColor = cf::ui::base::CFColor;
 
 /**
  * @brief  Material Design 3 RadioButton widget.
@@ -335,10 +327,7 @@ class CF_UI_EXPORT RadioButton : public QRadioButton {
     void startInnerCircleAnimation(bool checked);
 
     // Behavior components
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animationFactory;
-    base::StateMachine* m_stateMachine;
-    base::RippleHelper* m_ripple;
-    base::MdFocusIndicator* m_focusIndicator;
+    base::MaterialWidgetBase m_material;
 
     // Animation state
     float m_innerCircleScale = 0.0f;

@@ -39,8 +39,6 @@ using namespace cf::ui::components;
 StateMachine::StateMachine(cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
                            QObject* parent)
     : QObject(parent), m_state(State::StateNormal), m_opacity(0.0f) {
-    // WeakPtr is stored but not locked here to avoid circular dependency
-    // Store the WeakPtr in a member variable for later use
     m_animator = factory;
 }
 
@@ -61,8 +59,6 @@ StateMachine::~StateMachine() {
  */
 float StateMachine::targetOpacityForState(States s) const {
     // Priority order: Disabled > Pressed > Dragged > Focused > Hovered > Normal
-    // When multiple states are active, use the highest priority
-
     if (s & State::StateDisabled) {
         return 0.0f;
     }
@@ -79,10 +75,10 @@ float StateMachine::targetOpacityForState(States s) const {
         return 0.08f;
     }
     if (s & State::StateChecked) {
-        return 0.08f; // Checked state uses same as hovered
+        return 0.08f;
     }
 
-    return 0.0f; // StateNormal
+    return 0.0f;
 }
 
 /**
@@ -99,17 +95,12 @@ void StateMachine::cancelCurrentAnimation() {
     if (m_currentAnimation) {
         auto* anim = m_currentAnimation.Get();
         if (anim) {
-            // Disconnect all signals from this animation to this object FIRST
-            // This prevents any late-arriving progressChanged signals after we've stopped
             disconnect(anim, &components::ICFAbstractAnimation::progressChanged, this, nullptr);
             disconnect(anim, &components::ICFAbstractAnimation::finished, this, nullptr);
-            // Stop the animation
             anim->stop();
         }
         m_currentAnimation = nullptr;
     }
-    // Reset m_opacity to the correct target value for the current state
-    // This ensures we don't carry over stale progress values from cancelled animations
     m_opacity = targetOpacityForState(m_state);
     emit stateLayerOpacityChanged(m_opacity);
 }
@@ -118,13 +109,10 @@ void StateMachine::cancelCurrentAnimation() {
  * @brief Slot called when the current animation finishes.
  *
  * Clears the animation reference and ensures m_opacity is set to the
- * correct target value for the current state. This prevents stale
- * intermediate values from being used when a new animation starts.
+ * correct target value for the current state.
  */
 void StateMachine::onAnimationFinished() {
     m_currentAnimation = nullptr;
-    // Ensure m_opacity is exactly at the target value for the current state
-    // This guards against any rounding errors or incomplete animations
     float targetOpacity = targetOpacityForState(m_state);
     if (m_opacity != targetOpacity) {
         m_opacity = targetOpacity;
@@ -141,7 +129,6 @@ void StateMachine::onAnimationFinished() {
  * @param to Target opacity value.
  */
 void StateMachine::animateOpacityTo(float to) {
-    // Performance mode check: if animations are disabled, set directly
     auto* factory = m_animator.Get();
     if (!factory || !factory->isAllEnabled()) {
         m_opacity = to;
@@ -149,63 +136,46 @@ void StateMachine::animateOpacityTo(float to) {
         return;
     }
 
-    // CRITICAL FIX: Cancel any currently running animation before starting a new one.
-    // This prevents multiple animations from competing to update m_opacity,
-    // which causes visual glitches like flickering or incorrect opacity values
-    // during rapid hover enter/leave events.
     cancelCurrentAnimation();
 
-    // Start animation from current opacity value
     float from = m_opacity;
 
-    // IMPORTANT: Use createAnimation instead of getAnimation to avoid sharing
-    // the same animation instance across multiple StateMachines.
-    // getAnimation returns a cached animation per token, which causes multiple
-    // StateMachines to connect their lambdas to the same animation object,
-    // resulting in cross-talk when any animation progresses.
-    // createAnimation creates a separate animation instance per call.
-    // See ElevationController::animatePressOffsetTo for the same pattern.
-    AnimationDescriptor desc(
-        "fade",                 // Animation type
-        "md.motion.shortEnter", // Motion spec (short duration for hover states)
-        "opacity",              // Property (we'll override with setRange)
-        from,                   // Start value
-        to                      // End value
-    );
+    AnimationDescriptor desc("fade", "md.motion.shortEnter", "opacity", from, to);
 
     auto anim = factory->createAnimation(desc, nullptr, this);
     if (!anim) {
-        // Fallback: direct set if animation creation fails
         m_opacity = to;
         emit stateLayerOpacityChanged(m_opacity);
         return;
     }
 
-    // Save animation reference for cancellation
     m_currentAnimation = anim;
-
-    // Get raw pointer
     auto* rawAnim = anim.Get();
 
-    // Connect progress signal
-    // Note: Qt::UniqueConnection cannot be used with lambdas, but cancelCurrentAnimation()
-    // disconnects all signals before starting a new animation, preventing duplicates
-    //
-    // CRITICAL: progressChanged emits 0-1 normalized progress, NOT actual opacity values.
-    // We must interpolate between from and to to get the actual opacity.
     connect(rawAnim, &components::ICFAbstractAnimation::progressChanged, this,
             [this, from, to](float progress) {
-                // progress is 0-1, interpolate to get actual opacity value
                 m_opacity = from + (to - from) * progress;
                 emit stateLayerOpacityChanged(m_opacity);
             });
 
-    // Connect finished signal to clear the animation reference
     connect(rawAnim, &components::ICFAbstractAnimation::finished, this,
             &StateMachine::onAnimationFinished, Qt::UniqueConnection);
 
-    // Start animation
     rawAnim->start(components::ICFAbstractAnimation::Direction::Forward);
+}
+
+// ============================================================================
+// State Transition
+// ============================================================================
+
+void StateMachine::transitionTo(States newState) {
+    if (m_state == newState) {
+        return;
+    }
+    States oldState = m_state;
+    m_state = newState;
+    emit stateChanged(m_state, oldState);
+    animateOpacityTo(targetOpacityForState(m_state));
 }
 
 // ============================================================================
@@ -215,108 +185,49 @@ void StateMachine::animateOpacityTo(float to) {
 void StateMachine::onHoverEnter() {
     if (m_state & State::StateDisabled)
         return;
-
-    States oldState = m_state;
-    m_state |= State::StateHovered;
-
-    if (oldState != m_state) {
-        emit stateChanged(m_state, oldState);
-        animateOpacityTo(targetOpacityForState(m_state));
-    }
+    transitionTo(m_state | State::StateHovered);
 }
 
 void StateMachine::onHoverLeave() {
-    States oldState = m_state;
-    m_state &= ~static_cast<States>(State::StateHovered);
-
-    if (oldState != m_state) {
-        emit stateChanged(m_state, oldState);
-        animateOpacityTo(targetOpacityForState(m_state));
-    }
+    transitionTo(m_state & ~static_cast<States>(State::StateHovered));
 }
 
 void StateMachine::onPress(const QPoint& pos) {
     Q_UNUSED(pos)
     if (m_state & State::StateDisabled)
         return;
-
-    States oldState = m_state;
-    m_state |= State::StatePressed;
-
-    if (oldState != m_state) {
-        emit stateChanged(m_state, oldState);
-        animateOpacityTo(targetOpacityForState(m_state));
-    }
+    transitionTo(m_state | State::StatePressed);
 }
 
 void StateMachine::onRelease() {
-    States oldState = m_state;
-    m_state &= ~static_cast<States>(State::StatePressed);
-
-    if (oldState != m_state) {
-        emit stateChanged(m_state, oldState);
-        animateOpacityTo(targetOpacityForState(m_state));
-    }
+    transitionTo(m_state & ~static_cast<States>(State::StatePressed));
 }
 
 void StateMachine::onFocusIn() {
     if (m_state & State::StateDisabled)
         return;
-
-    States oldState = m_state;
-    m_state |= State::StateFocused;
-
-    if (oldState != m_state) {
-        emit stateChanged(m_state, oldState);
-        animateOpacityTo(targetOpacityForState(m_state));
-    }
+    transitionTo(m_state | State::StateFocused);
 }
 
 void StateMachine::onFocusOut() {
-    States oldState = m_state;
-    m_state &= ~static_cast<States>(State::StateFocused);
-
-    if (oldState != m_state) {
-        emit stateChanged(m_state, oldState);
-        animateOpacityTo(targetOpacityForState(m_state));
-    }
+    transitionTo(m_state & ~static_cast<States>(State::StateFocused));
 }
 
 void StateMachine::onEnable() {
-    States oldState = m_state;
-    m_state &= ~static_cast<States>(State::StateDisabled);
-
-    if (oldState != m_state) {
-        emit stateChanged(m_state, oldState);
-        animateOpacityTo(targetOpacityForState(m_state));
-    }
+    transitionTo(m_state & ~static_cast<States>(State::StateDisabled));
 }
 
 void StateMachine::onDisable() {
-    States oldState = m_state;
-    m_state |= State::StateDisabled;
-
-    if (oldState != m_state) {
-        emit stateChanged(m_state, oldState);
-        animateOpacityTo(targetOpacityForState(m_state));
-    }
+    transitionTo(m_state | State::StateDisabled);
 }
 
 void StateMachine::onCheckedChanged(bool checked) {
     if (m_state & State::StateDisabled)
         return;
-
-    States oldState = m_state;
-
     if (checked) {
-        m_state |= State::StateChecked;
+        transitionTo(m_state | State::StateChecked);
     } else {
-        m_state &= ~static_cast<States>(State::StateChecked);
-    }
-
-    if (oldState != m_state) {
-        emit stateChanged(m_state, oldState);
-        animateOpacityTo(targetOpacityForState(m_state));
+        transitionTo(m_state & ~static_cast<States>(State::StateChecked));
     }
 }
 

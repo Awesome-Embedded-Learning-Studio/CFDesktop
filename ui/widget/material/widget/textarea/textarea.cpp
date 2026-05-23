@@ -17,11 +17,7 @@
 #include "application_support/application.h"
 #include "base/device_pixel.h"
 #include "base/geometry_helper.h"
-#include "cfmaterial_animation_factory.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/ripple_helper.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QFontMetrics>
@@ -75,9 +71,15 @@ inline CFColor fallbackPrimary() {
 // ============================================================================
 
 TextArea::TextArea(TextAreaVariant variant, QWidget* parent)
-    : QTextEdit(parent), m_variant(variant), m_showCharacterCounter(false), m_maxLength(0),
-      m_minLines(1), m_maxLines(0), m_isFloating(false), m_hasError(false),
-      m_floatingProgress(0.0f), m_updatingGeometry(false) {
+    : QTextEdit(parent), m_material(this,
+                                    MaterialWidgetBase::Config{
+                                        .useRipple = true,
+                                        .useElevation = false,
+                                        .useFocusIndicator = true,
+                                    }),
+      m_variant(variant), m_showCharacterCounter(false), m_maxLength(0), m_minLines(1),
+      m_maxLines(0), m_isFloating(false), m_hasError(false), m_floatingProgress(0.0f),
+      m_updatingGeometry(false) {
 
     // Disable native frame
     setFrameStyle(QFrame::NoFrame);
@@ -85,24 +87,6 @@ TextArea::TextArea(TextAreaVariant variant, QWidget* parent)
     setViewportMargins(0, 0, 0, 0);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-
-    // Get animation factory from Application
-    m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_ripple = new RippleHelper(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    // Set ripple mode
-    m_ripple->setMode(RippleHelper::Mode::Bounded);
-
-    // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Connect text change signal
     connect(this, &QTextEdit::textChanged, this, &TextArea::textChanged);
@@ -141,53 +125,30 @@ TextArea::~TextArea() {
 
 void TextArea::mousePressEvent(QMouseEvent* event) {
     QTextEdit::mousePressEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onPress(event->pos());
-    if (m_ripple)
-        m_ripple->onPress(event->pos(), rect());
-    update();
+    m_material.onMousePress(event->pos(), rect());
 }
 
 void TextArea::mouseReleaseEvent(QMouseEvent* event) {
     QTextEdit::mouseReleaseEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onRelease();
-    if (m_ripple)
-        m_ripple->onRelease();
-    update();
+    m_material.onMouseRelease();
 }
 
 void TextArea::focusInEvent(QFocusEvent* event) {
     QTextEdit::focusInEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusIn();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusIn();
+    m_material.onFocusIn();
     updateFloatingState(true);
-    update();
 }
 
 void TextArea::focusOutEvent(QFocusEvent* event) {
     QTextEdit::focusOutEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusOut();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusOut();
+    m_material.onFocusOut();
     updateFloatingState(!toPlainText().isEmpty());
-    update();
 }
 
 void TextArea::changeEvent(QEvent* event) {
     QTextEdit::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
-        update();
+        m_material.onEnabledChange(isEnabled());
     }
 }
 
@@ -815,16 +776,16 @@ void TextArea::drawCharacterCounter(QPainter& p, const QRectF& helperRect) {
 void TextArea::drawFocusIndicator(QPainter& p, const QRectF& fieldRect) {
     if (!p.isActive())
         return; // guard
-    if (m_focusIndicator && hasFocus()) {
+    if (m_material.focusIndicator() && hasFocus()) {
         QPainterPath shape = roundedRect(fieldRect, cornerRadius());
-        m_focusIndicator->paint(&p, shape, focusOutlineColor());
+        m_material.focusIndicator()->paint(&p, shape, focusOutlineColor());
     }
 }
 
 void TextArea::drawRipple(QPainter& p, const QRectF& fieldRect) {
     if (!p.isActive())
         return; // guard
-    if (m_ripple) {
+    if (m_material.ripple()) {
         QPainterPath shape;
         if (m_variant == TextAreaVariant::Outlined) {
             shape = roundedRect(fieldRect, cornerRadius());
@@ -832,7 +793,7 @@ void TextArea::drawRipple(QPainter& p, const QRectF& fieldRect) {
             // For filled variant, clip to background
             shape.addRect(fieldRect);
         }
-        m_ripple->paint(&p, shape);
+        m_material.ripple()->paint(&p, shape);
     }
 }
 
@@ -856,16 +817,19 @@ void TextArea::animateFloatingTo(bool floating) {
         return;
     }
 
-    if (!m_animationFactory) {
+    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+        application_support::Application::animationFactory());
+
+    if (!factory) {
         m_floatingProgress = target;
         update();
         return;
     }
 
     // Create property animation for floating progress (same approach as TextField)
-    auto anim = m_animationFactory->createPropertyAnimation(
-        &m_floatingProgress, m_floatingProgress, target, 200,
-        cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
+    auto anim =
+        factory->createPropertyAnimation(&m_floatingProgress, m_floatingProgress, target, 200,
+                                         cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
 
     if (anim) {
         anim->start();

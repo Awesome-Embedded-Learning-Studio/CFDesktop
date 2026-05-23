@@ -20,7 +20,7 @@ ConfigStore 采用四层优先级架构，支持配置的自然覆盖：
 | **Temp** | 最高 (3) | 读写 | 内存 | 临时配置，测试用，不持久化 |
 | **App** | 高 (2) | 读写 | `<app>/config/app.ini` | 应用运行时配置 |
 | **User** | 中 (1) | 读写 | `~/.config/cfdesktop/user.ini` | 用户个人配置 |
-| **System** | 低 (0) | 读写 | `/etc/cfdesktop/system.ini` | 系统默认配置 |
+| **System** | 低 (0) | 读写 | `{app_dir}/system.ini` | 系统默认配置 (CFDesktop 自管理目录) |
 
 查询时按优先级从高到低查找，写入时默认写入 App 层。
 

@@ -462,7 +462,7 @@ flush();
 |------|--------|------|------|
 | QSSProcessor | P2 | - | 待规划 |
 | VariableResolver | P2 | - | 待规划 |
-| HWTier 降级逻辑 | P1 | HWTier | 待规划 |
+| HWTier 降级逻辑 | P1 | HWTier | ✅ 已实现 (hardware_tier_policy) |
 | 屏幕参数检测 | P2 | - | 待规划 |
 | 模拟器注入接口 | P2 | - | 待规划 |
 
