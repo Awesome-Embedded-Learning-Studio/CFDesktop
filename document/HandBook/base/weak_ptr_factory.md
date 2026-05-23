@@ -70,7 +70,7 @@ assert(weak1.Get() == weak2.Get());
 assert(weak2.Get() == weak3.Get());
 ```text
 
-每次调用都创建一个新的 `WeakPtr` 对象，但它们共享同一个内部的"存活标志"。对象销毁或调用 `InvalidateWeakPtrs()` 后，所有弱引用同时失效。
+每次调用都创建一个新的 `WeakPtr` 对象，但它们共享同一个内部的"存活标志"。对象销毁或调用 `InvalidateWeakPtrs()` 后，所有弱引用同时失效。存活标志（`WeakReferenceFlag`）直接嵌入在 `WeakPtrFactory` 内部，不涉及任何堆分配。所有 `WeakPtr` 实例通过裸指针引用这个标志，因此 `WeakPtr` 的创建开销极小。
 
 ## 手动失效
 
@@ -95,31 +95,9 @@ private:
 };
 ```text
 
-`InvalidateWeakPtrs()` 会把当前的存活标志设为失效，然后分配一个新的。失效前创建的所有弱引用都会变成无效，失效后调用 `GetWeakPtr()` 得到的新弱引用使用新的标志，所以是有效的。
+`InvalidateWeakPtrs()` 会把内部的存活标志设为失效。失效前创建的所有弱引用都会变成无效。注意，与旧版实现不同，失效后**不能再创建新的弱引用**——后续调用 `GetWeakPtr()` 会触发断言失败。这是因为标志直接嵌入在工厂中，失效操作只是将 `std::atomic<bool>` 设为 `false`，不会分配新的标志。
 
-这个功能在对象"重置"或"重启"时很有用——你想通知所有观察者旧的状态已经不可用，但对象本身还在。
-
-## 检查外部引用
-
-`HasWeakPtrs()` 可以检查是否有外部持有的弱引用：
-
-```cpp
-class Service {
-public:
-    void Shutdown() {
-        if (weak_factory_.HasWeakPtrs()) {
-            // 通知所有持有弱引用的地方
-            NotifyShutdown();
-        }
-        // 实际关闭服务...
-    }
-
-private:
-    cf::WeakPtrFactory<Service> weak_factory_{this};
-};
-```text
-
-这个接口通过内部的 `shared_ptr` 引用计数实现，所以是 O(1) 的。如果 `use_count() > 1`，说明有外部弱引用存在。注意这个检查不是实时的——调用完 `HasWeakPtrs()` 后，其他线程可能立即创建或销毁弱引用。
+这个功能在对象"重置"或"关闭"时很有用——你想通知所有观察者对象不再可用，但对象本身还在。如果你需要"重启"后继续创建弱引用，应该考虑使用一个全新的工厂实例。
 
 ## 不可复制不可移动
 
@@ -193,23 +171,24 @@ private:
 };
 ```text
 
-### 延迟销毁检查
+### 单次失效模式
+
+由于 `InvalidateWeakPtrs()` 后不能再创建新的弱引用，推荐的使用模式是"失效即终局"——调用一次 `InvalidateWeakPtrs()` 表示对象进入不可用状态，之后不再创建新的弱引用：
 
 ```cpp
 class ResourceManager {
 public:
     void UnloadResource(const std::string& id) {
-        // 先让弱引用失效
+        // 让所有弱引用失效，之后不能再创建新的
         weak_factory_.InvalidateWeakPtrs();
 
-        // 检查是否有地方还在使用
-        if (weak_factory_.HasWeakPtrs()) {
-            // 有外部引用，延迟销毁
-            ScheduleDeferredUnload(id);
-        } else {
-            // 立即销毁
-            resources_.erase(id);
-        }
+        // 安全地清理资源，所有外部弱引用已失效
+        resources_.erase(id);
+    }
+
+    // 注意：UnloadResource 后 GetWeakPtr() 会断言失败
+    cf::WeakPtr<ResourceManager> GetWeakPtr() {
+        return weak_factory_.GetWeakPtr();
     }
 
 private:
@@ -221,13 +200,15 @@ private:
 
 第一，不要在构造函数里就把 `this` 传给其他地方。对象构造完成前，其他成员还没初始化，通过弱引用访问会导致未定义行为。`WeakPtrFactory` 的构造函数里有断言检查 `this` 非空，但不会检查构造是否完成。
 
-第二，不要在析构函数里调用 `GetWeakPtr()`。对象已经在销毁过程中，创建新的弱引用没有意义。如果你确实需要，重新考虑设计——为什么在析构函数里还要传递自己的引用？
+第二，不要在析构函数里调用 `GetWeakPtr()`。对象已经在销毁过程中，创建新的弱引用没有意义。`WeakPtrFactory` 的析构函数会自动调用 `InvalidateWeakPtrs()`，之后 `GetWeakPtr()` 会断言失败。
 
-第三，`InvalidateWeakPtrs()` 不是原子的。多线程环境下如果一边失效一边创建新的弱引用，可能会出现新创建的弱引用意外失效。如果有这种需求，得自己加锁保护。
+第三，存活标志使用 `std::atomic<bool>` 实现，`IsAlive()` 和 `Invalidate()` 本身是线程安全的。但 `WeakPtr` 的"检查有效性 + 访问对象"两步操作不是原子的，仍然需要在同一线程（或序列）中使用。
+
+第四，所有 `WeakPtr` 实例的生命周期不能超过工厂。因为 `WeakPtr` 持有的是指向工厂内嵌标志的裸指针（不是 `shared_ptr`），工厂析构后，任何对 `WeakPtr` 的访问都是未定义行为。这也是为什么工厂必须声明为最后一个成员——确保标志在其他成员的析构函数运行之前就失效，而不是等到工厂自身析构。
 
 ## 与标准库的对比
 
-`WeakPtrFactory` 没有标准库的直接对应物。`std::enable_shared_from_this` 提供了类似的功能，但它是配合 `shared_ptr` 使用的，而我们假设对象有明确的唯一拥有者。
+`WeakPtrFactory` 没有标准库的直接对应物。`std::enable_shared_from_this` 提供了类似的功能，但它是配合 `shared_ptr` 使用的，而我们假设对象有明确的唯一拥有者。内部标志直接嵌入在工厂中（无堆分配），`WeakPtr` 通过裸指针引用该标志，整体开销比 `shared_ptr` 方案小得多。
 
 如果你需要在已有代码中引入 `WeakPtrFactory`，最简单的迁移方式是把原来持有裸指针或引用的地方改成持有 `WeakPtr`。这通常不需要大幅改动调用代码，只需要在使用前检查有效性。
 

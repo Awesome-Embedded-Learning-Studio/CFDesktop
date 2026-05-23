@@ -79,3 +79,5 @@ For detailed API reference, implementation notes, and usage examples, see the Ha
 - Memory API: [document/HandBook/api/system/memory/memory_info.md](../document/HandBook/api/system/memory/memory_info.md)
 - Windows CPU implementation: [document/HandBook/implementation/windows/cpu_implementation.md](../document/HandBook/implementation/windows/cpu_implementation.md)
 - Linux CPU implementation: [document/HandBook/implementation/linux/cpu_implementation.md](../document/HandBook/implementation/linux/cpu_implementation.md)
+
+> 完整 API 手册: [document/HandBook/base/overview.md](../document/HandBook/base/overview.md)

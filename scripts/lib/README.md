@@ -366,3 +366,5 @@ eval "$(get_ini_config "$CONFIG_FILE")"
 | 日志函数重复 | 25 次 | 1 次 | -96% |
 | 配置解析重复 | 15 次 | 1 次 | -93% |
 | 总重复代码 | ~2,400 行 | ~600 行 | -75% |
+
+> 完整库文档: [document/scripts/lib/](../../../document/scripts/lib/)

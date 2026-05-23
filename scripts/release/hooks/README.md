@@ -31,3 +31,5 @@ bash scripts/release/hooks/install_hooks.sh
 ## 详细文档
 
 完整使用指南请参考: [document/release_rule/git_hooks_guide.md](../../../document/release_rule/git_hooks_guide.md)
+
+> 完整脚本文档: [document/scripts/release/hooks/](../../../document/scripts/release/hooks/)

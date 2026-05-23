@@ -162,4 +162,6 @@ bash scripts/develop/remove_trailing_space.sh
 .\scripts\develop\remove_trailing_space.ps1
 ```
 
+> 完整脚本文档: [document/scripts/](../document/scripts/)
+
 

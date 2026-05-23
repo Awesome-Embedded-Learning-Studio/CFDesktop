@@ -126,3 +126,5 @@ desktop/base/logger/
 - [Performance](../../../document/HandBook/desktop/base/logger/performance.md)
 - [Best Practices](../../../document/HandBook/desktop/base/logger/best_practices.md)
 - [Troubleshooting](../../../document/HandBook/desktop/base/logger/troubleshooting.md)
+
+> 完整日志手册: [document/HandBook/desktop/base/logger/](../../../document/HandBook/desktop/base/logger/)
