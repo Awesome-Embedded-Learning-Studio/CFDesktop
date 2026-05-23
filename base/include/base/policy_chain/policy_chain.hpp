@@ -25,6 +25,25 @@
 
 namespace cf {
 
+namespace policy_chain_detail {
+
+#if defined(__clang__) && (__clang_major__ < 19)
+#    define CF_POLICY_CHAIN_INVOKE_BARRIER __attribute__((noinline, optnone))
+#else
+#    define CF_POLICY_CHAIN_INVOKE_BARRIER
+#endif
+
+// Clang 18 can miscompile inlined std::optional-returning fallback chains under -O3.
+template <typename Policy, typename... CallArgs> [[nodiscard]] CF_POLICY_CHAIN_INVOKE_BARRIER auto
+invoke_policy(Policy const& policy, CallArgs&&... args)
+    -> decltype(policy(std::forward<CallArgs>(args)...)) {
+    return policy(std::forward<CallArgs>(args)...);
+}
+
+#undef CF_POLICY_CHAIN_INVOKE_BARRIER
+
+} // namespace policy_chain_detail
+
 /**
  * @brief PolicyChain with fallback mechanism
  *
@@ -91,7 +110,7 @@ template <typename Ret, typename... Args> class PolicyChain {
      */
     [[nodiscard]] std::optional<Ret> execute(Args... args) const {
         for (const auto& policy : policies_) {
-            auto result = policy(args...);
+            auto result = policy_chain_detail::invoke_policy(policy, args...);
             if (result.has_value()) {
                 return std::move(result);
             }
