@@ -28,11 +28,7 @@ add_subdirectory(models)
 
 add_library(cfui SHARED)
 
-# Force all objects into cfui.dll (PRIVATE: only affects cfui's own link step).
-# cfui has no own sources, so the linker would otherwise skip static lib objects.
-# Note: cf_ui_widget is an INTERFACE library — use its actual static lib deps instead.
-target_link_libraries(cfui PRIVATE
-    -Wl,--whole-archive
+set(CFUI_STATIC_LIBS
     cf_ui_base
     cf_ui_core
     cf_ui_core_material
@@ -40,8 +36,25 @@ target_link_libraries(cfui PRIVATE
     cf_ui_application_support
     cf_ui_components_material
     cf_ui_components
-    -Wl,--no-whole-archive
 )
+
+# Force all objects into cfui.dll (PRIVATE: only affects cfui's own link step).
+# cfui has no own sources, so the linker would otherwise skip static lib objects.
+# Note: cf_ui_widget is an INTERFACE library — use its actual static lib deps instead.
+if(MSVC)
+    target_link_libraries(cfui PRIVATE ${CFUI_STATIC_LIBS})
+    foreach(_cfui_module IN LISTS CFUI_STATIC_LIBS)
+        target_link_options(cfui PRIVATE "/WHOLEARCHIVE:$<TARGET_FILE:${_cfui_module}>")
+    endforeach()
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND NOT APPLE)
+    target_link_libraries(cfui PRIVATE
+        -Wl,--whole-archive
+        ${CFUI_STATIC_LIBS}
+        -Wl,--no-whole-archive
+    )
+else()
+    target_link_libraries(cfui PRIVATE ${CFUI_STATIC_LIBS})
+endif()
 
 # Set include directories
 target_include_directories(cfui PUBLIC
