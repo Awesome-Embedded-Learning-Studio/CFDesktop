@@ -108,6 +108,14 @@ jobs:
           restore-keys: |
             ccache-linux-gcc-
 
+      - name: Restore GCC build directory
+        uses: actions/cache/restore@v4
+        with:
+          path: out/build_ci
+          key: build-linux-gcc-${{ github.sha }}
+          restore-keys: |
+            build-linux-gcc-
+
       - name: Configure and build
         run: |
           docker run --rm \
@@ -121,6 +129,13 @@ jobs:
             -w /project \
             ${{ env.GHCR_IMAGE }}:latest \
             bash -lc 'ccache --max-size=5G; ccache --set-config=compression=true; ccache --set-config=compression_level=1; ccache -z; bash scripts/build_helpers/linux_fast_develop_build.sh ci -c build_ci_config.ini'
+
+      - name: Save GCC build cache
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: out/build_ci
+          key: build-linux-gcc-${{ github.sha }}
 
       - name: Run tests
         run: |
@@ -193,6 +208,14 @@ jobs:
           restore-keys: |
             ccache-linux-clang-
 
+      - name: Restore Clang build directory
+        uses: actions/cache/restore@v4
+        with:
+          path: out/build_ci_clang
+          key: build-linux-clang-${{ github.sha }}
+          restore-keys: |
+            build-linux-clang-
+
       - name: Configure and build
         run: |
           docker run --rm \
@@ -206,6 +229,13 @@ jobs:
             -w /project \
             ${{ env.GHCR_IMAGE }}:latest \
             bash -lc 'ccache --max-size=5G; ccache --set-config=compression=true; ccache --set-config=compression_level=1; ccache -z; bash scripts/build_helpers/linux_fast_develop_build.sh ci -c build_ci_clang_config.ini'
+
+      - name: Save Clang build cache
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: out/build_ci_clang
+          key: build-linux-clang-${{ github.sha }}
 
       - name: Run tests
         run: |
@@ -298,6 +328,21 @@ jobs:
             -O C:\Qt `
             -m qt5compat qtserialport qtimageformats
 
+      - name: Save Qt cache immediately
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.QT_DIR }}
+          key: qt-${{ env.QT_VERSION }}-${{ env.QT_ARCH }}-v1
+
+      - name: Restore MSVC build directory
+        uses: actions/cache/restore@v4
+        with:
+          path: out\build_ci_windows
+          key: build-windows-msvc-${{ github.sha }}
+          restore-keys: |
+            build-windows-msvc-
+
       - name: Configure and build
         shell: pwsh
         env:
@@ -308,6 +353,13 @@ jobs:
         run: |
           ccache -z
           pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File scripts/build_helpers/windows_fast_develop_build.ps1 -Config ci
+
+      - name: Save MSVC build cache
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: out\build_ci_windows
+          key: build-windows-msvc-${{ github.sha }}
 
       - name: Run tests
         shell: pwsh
