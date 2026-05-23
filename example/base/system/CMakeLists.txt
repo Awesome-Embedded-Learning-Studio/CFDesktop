@@ -25,3 +25,9 @@ add_executable(example_gpu_info example_gpu_info.cpp)
 target_link_libraries(example_gpu_info PRIVATE cfbase)
 cf_set_example_output_dir(example_gpu_info "base")
 cf_register_example_launcher(example_gpu_info "base")
+
+# Hardware Tier Assessment
+add_executable(example_hardware_tier example_hardware_tier.cpp)
+target_link_libraries(example_hardware_tier PRIVATE cfbase)
+cf_set_example_output_dir(example_hardware_tier "base")
+cf_register_example_launcher(example_hardware_tier "base")

@@ -27,6 +27,7 @@ set(CFBASE_MODULE_TARGETS
     cfbase_network
     cfbase_gpu
     cfbase_console
+    cfbase_hardware_tier
 )
 
 # Link static libraries from sub-modules with --whole-archive to ensure
