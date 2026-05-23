@@ -15,9 +15,12 @@
  * @ingroup base_policy_chain
  */
 
+#include <cstddef>
 #include <functional>
 #include <list>
+#include <memory>
 #include <optional>
+#include <type_traits>
 #include <utility>
 
 namespace cf {
@@ -60,19 +63,27 @@ template <typename Ret, typename... Args> class PolicyChain {
   public:
     using PolicyType = std::function<std::optional<Ret>(Args...)>;
     using ValueType = Ret;
-    using SizeType = size_t;
+    using SizeType = std::size_t;
 
     PolicyChain() = default;
+    PolicyChain(const PolicyChain&) = default;
+    PolicyChain& operator=(const PolicyChain&) = default;
+    PolicyChain(PolicyChain&&) noexcept = default;
+    PolicyChain& operator=(PolicyChain&&) noexcept = default;
 
     /**
      * @brief Add a policy to the front of the chain (highest priority)
      */
-    void add_front(PolicyType policy) { policies_.push_front(std::move(policy)); }
+    template <typename Policy> void add_front(Policy&& policy) {
+        policies_.emplace_front(std::forward<Policy>(policy));
+    }
 
     /**
      * @brief Add a policy to the back of the chain (lowest priority)
      */
-    void add_back(PolicyType policy) { policies_.push_back(std::move(policy)); }
+    template <typename Policy> void add_back(Policy&& policy) {
+        policies_.emplace_back(std::forward<Policy>(policy));
+    }
 
     /**
      * @brief Execute policies in chain order until one succeeds
@@ -80,8 +91,9 @@ template <typename Ret, typename... Args> class PolicyChain {
      */
     [[nodiscard]] std::optional<Ret> execute(Args... args) const {
         for (const auto& policy : policies_) {
-            if (auto result = policy(args...); result.has_value()) {
-                return result;
+            auto result = policy(args...);
+            if (result.has_value()) {
+                return std::move(result);
             }
         }
         return std::nullopt;
@@ -118,7 +130,60 @@ template <typename Ret, typename... Args> class PolicyChain {
     [[nodiscard]] auto end() const { return policies_.end(); }
 
   private:
-    std::list<PolicyType> policies_;
+    struct PolicyConcept {
+        virtual ~PolicyConcept() = default;
+        [[nodiscard]] virtual std::optional<Ret> invoke(Args... args) const = 0;
+        [[nodiscard]] virtual std::unique_ptr<PolicyConcept> clone() const = 0;
+    };
+
+    template <typename Policy> struct PolicyModel final : PolicyConcept {
+        explicit PolicyModel(Policy policy) : policy_(std::move(policy)) {}
+
+        [[nodiscard]] std::optional<Ret> invoke(Args... args) const override {
+            return std::invoke(policy_, args...);
+        }
+
+        [[nodiscard]] std::unique_ptr<PolicyConcept> clone() const override {
+            return std::make_unique<PolicyModel>(policy_);
+        }
+
+        mutable Policy policy_;
+    };
+
+    class PolicyEntry {
+      public:
+        template <typename Policy> explicit PolicyEntry(Policy&& policy)
+            : policy_(make_policy_model(std::forward<Policy>(policy))) {}
+
+        PolicyEntry(const PolicyEntry& other) : policy_(other.policy_->clone()) {}
+        PolicyEntry(PolicyEntry&&) noexcept = default;
+
+        PolicyEntry& operator=(const PolicyEntry& other) {
+            if (this != &other) {
+                policy_ = other.policy_->clone();
+            }
+            return *this;
+        }
+
+        PolicyEntry& operator=(PolicyEntry&&) noexcept = default;
+
+        [[nodiscard]] std::optional<Ret> operator()(Args... args) const {
+            return policy_->invoke(args...);
+        }
+
+      private:
+        template <typename Policy>
+        [[nodiscard]] static std::unique_ptr<PolicyConcept> make_policy_model(Policy&& policy) {
+            using StoredPolicy = std::decay_t<Policy>;
+            static_assert(std::is_copy_constructible_v<StoredPolicy>,
+                          "PolicyChain policies must be copy constructible");
+            return std::make_unique<PolicyModel<StoredPolicy>>(std::forward<Policy>(policy));
+        }
+
+        std::unique_ptr<PolicyConcept> policy_;
+    };
+
+    std::list<PolicyEntry> policies_;
 };
 
 // ============================================================================
@@ -199,8 +264,8 @@ template <typename Ret, typename... Args> class PolicyChainBuilder {
      * @since            0.13.0
      * @ingroup          base_policy_chain
      */
-    PolicyChainBuilder& then(PolicyType policy) {
-        chain_.add_back(std::move(policy));
+    template <typename Policy> PolicyChainBuilder& then(Policy&& policy) {
+        chain_.add_back(std::forward<Policy>(policy));
         return *this;
     }
 
