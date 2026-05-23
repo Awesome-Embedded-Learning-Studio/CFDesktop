@@ -80,11 +80,12 @@ Switch::Switch(QWidget* parent) : QCheckBox(parent) {
     m_elevation->setElevation(1);
 
     // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this, QOverload<>::of(&Switch::update));
+    connect(m_ripple, &RippleHelper::repaintNeeded, this,
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&Switch::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_elevation, &MdElevationController::pressOffsetChanged, this,
-            QOverload<>::of(&Switch::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Initialize thumb position based on current state
     m_thumbPosition = isChecked() ? 1.0f : 0.0f;

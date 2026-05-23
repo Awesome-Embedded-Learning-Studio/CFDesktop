@@ -62,9 +62,10 @@ CheckBox::CheckBox(QWidget* parent) : QCheckBox(parent) {
     m_ripple->setMode(RippleHelper::Mode::Bounded);
 
     // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this, QOverload<>::of(&CheckBox::update));
+    connect(m_ripple, &RippleHelper::repaintNeeded, this,
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&CheckBox::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Initialize check animation based on current state
     // Both PartiallyChecked and Checked use 1.0 for full mark visibility

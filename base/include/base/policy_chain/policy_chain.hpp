@@ -159,7 +159,14 @@ template <typename Ret, typename... Args> class PolicyChain {
         explicit PolicyModel(Policy policy) : policy_(std::move(policy)) {}
 
         [[nodiscard]] std::optional<Ret> invoke(Args... args) const override {
-            return std::invoke(policy_, args...);
+            auto result = std::invoke(policy_, args...);
+#if defined(__clang__) && (__clang_major__ < 19)
+            // Clang 18 can mispack disengaged small std::optional returns under -O3.
+            if (!result.has_value()) {
+                return std::nullopt;
+            }
+#endif
+            return result;
         }
 
         [[nodiscard]] std::unique_ptr<PolicyConcept> clone() const override {

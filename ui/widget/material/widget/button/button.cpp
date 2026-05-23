@@ -65,11 +65,12 @@ Button::Button(ButtonVariant variant, QWidget* parent) : QPushButton(parent), va
     m_ripple->setMode(RippleHelper::Mode::Bounded);
 
     // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this, QOverload<>::of(&Button::update));
+    connect(m_ripple, &RippleHelper::repaintNeeded, this,
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&Button::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_elevation, &MdElevationController::pressOffsetChanged, this,
-            QOverload<>::of(&Button::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Set default font
     setFont(labelFont());

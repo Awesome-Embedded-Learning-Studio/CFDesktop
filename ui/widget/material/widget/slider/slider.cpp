@@ -84,11 +84,12 @@ Slider::Slider(QWidget* parent) : QSlider(Qt::Horizontal, parent) {
     m_elevation->setElevation(1);
 
     // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this, QOverload<>::of(&Slider::update));
+    connect(m_ripple, &RippleHelper::repaintNeeded, this,
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&Slider::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_elevation, &MdElevationController::pressOffsetChanged, this,
-            QOverload<>::of(&Slider::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Set default cursor
     setCursor(Qt::PointingHandCursor);
@@ -119,11 +120,12 @@ Slider::Slider(Qt::Orientation orientation, QWidget* parent) : QSlider(orientati
     m_elevation->setElevation(1);
 
     // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this, QOverload<>::of(&Slider::update));
+    connect(m_ripple, &RippleHelper::repaintNeeded, this,
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&Slider::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_elevation, &MdElevationController::pressOffsetChanged, this,
-            QOverload<>::of(&Slider::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Set default cursor
     setCursor(Qt::PointingHandCursor);

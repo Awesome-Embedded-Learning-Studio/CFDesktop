@@ -88,9 +88,10 @@ ComboBox::ComboBox(QWidget* parent) : QComboBox(parent), variant_(ComboBoxVarian
     m_ripple->setMode(RippleHelper::Mode::Bounded);
 
     // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this, QOverload<>::of(&ComboBox::update));
+    connect(m_ripple, &RippleHelper::repaintNeeded, this,
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&ComboBox::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Initialize popup animation
     m_popupAnimation = new QPropertyAnimation(this);

@@ -97,9 +97,10 @@ SpinBox::SpinBox(QWidget* parent)
     m_ripple->setMode(RippleHelper::Mode::Bounded);
 
     // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this, QOverload<>::of(&SpinBox::update));
+    connect(m_ripple, &RippleHelper::repaintNeeded, this,
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&SpinBox::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Set default font
     setFont(textFont());
