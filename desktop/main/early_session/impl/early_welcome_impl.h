@@ -11,6 +11,8 @@
 #pragma once
 #include "../init_chain/init_stage.h"
 
+#include <string>
+
 namespace cf::desktop::early_stage {
 
 /**

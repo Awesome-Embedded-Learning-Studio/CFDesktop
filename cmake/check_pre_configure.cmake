@@ -62,7 +62,7 @@ endif()
 include(cmake/generate_develop_helpers.cmake)
 
 # Skip VSCode config generation in CI environment (docker builds)
-if(NOT USE_TOOLCHAIN STREQUAL "linux/ci")
+if(NOT USE_TOOLCHAIN MATCHES "^linux/ci")
     log_info("DevHelpers" "Will Generate VSCode clangd configuration")
     generate_vscode_clangd()
 

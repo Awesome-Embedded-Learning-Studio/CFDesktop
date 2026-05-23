@@ -81,9 +81,10 @@ TreeView::TreeView(QWidget* parent)
 
     // Connect repaint signals
     // QTreeView paints on viewport, so connect to viewport() for ripple updates
-    connect(m_ripple, &RippleHelper::repaintNeeded, viewport(), QOverload<>::of(&QWidget::update));
+    connect(m_ripple, &RippleHelper::repaintNeeded, viewport(),
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&TreeView::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Configure tree view for Material appearance
     setHeaderHidden(true);

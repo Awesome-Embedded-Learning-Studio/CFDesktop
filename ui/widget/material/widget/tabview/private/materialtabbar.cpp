@@ -74,7 +74,7 @@ MaterialTabBar::MaterialTabBar(TabView* parent)
     m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
 
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&MaterialTabBar::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(this, &QTabBar::currentChanged, this, &MaterialTabBar::animateIndicatorTo);
 }
 

@@ -48,6 +48,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Set INSTALL_DEPS=0 to skip automatic dependency installation
 # Useful for interactive mode where you want to install manually
 # =============================================================================
+ARG CI=false
+ENV CI=${CI}
+
 ARG INSTALL_DEPS=1
 
 COPY scripts/dependency/install_build_dependencies.sh /tmp/install_deps.sh

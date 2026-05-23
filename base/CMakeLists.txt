@@ -21,19 +21,32 @@ add_subdirectory(device)
 # Create the unified shared library
 add_library(cfbase SHARED)
 
-# Link static libraries from sub-modules with --whole-archive to ensure
-# all symbols (including dllexport) are included in cfbase.dll.
-# Without this, the linker skips static lib objects since cfbase has no own sources.
-# Force all objects into cfbase.dll (PRIVATE: only affects cfbase's link step)
-target_link_libraries(cfbase PRIVATE
-    -Wl,--whole-archive
+set(CFBASE_MODULE_TARGETS
     cfbase_cpu
     cfbase_memory
     cfbase_network
     cfbase_gpu
     cfbase_console
-    -Wl,--no-whole-archive
 )
+
+# Link static libraries from sub-modules with --whole-archive to ensure
+# all symbols (including dllexport) are included in cfbase.dll.
+# Without this, the linker skips static lib objects since cfbase has no own sources.
+# Force all objects into cfbase.dll (PRIVATE: only affects cfbase's link step).
+if(MSVC)
+    target_link_libraries(cfbase PRIVATE ${CFBASE_MODULE_TARGETS})
+    foreach(_cfbase_module IN LISTS CFBASE_MODULE_TARGETS)
+        target_link_options(cfbase PRIVATE "/WHOLEARCHIVE:$<TARGET_FILE:${_cfbase_module}>")
+    endforeach()
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND NOT APPLE)
+    target_link_libraries(cfbase PRIVATE
+        -Wl,--whole-archive
+        ${CFBASE_MODULE_TARGETS}
+        -Wl,--no-whole-archive
+    )
+else()
+    target_link_libraries(cfbase PRIVATE ${CFBASE_MODULE_TARGETS})
+endif()
 
 # Set include directories
 # Expose both include/ (for public headers) and . (for sub-module headers like device/console)

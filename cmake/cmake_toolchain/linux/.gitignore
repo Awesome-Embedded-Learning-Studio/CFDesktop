@@ -4,4 +4,5 @@
 *.cmake
 !ci-aarch64-toolchain.cmake
 !ci-armhf-toolchain.cmake
+!ci-clang-x86_64-toolchain.cmake
 !ci-x86_64-toolchain.cmake

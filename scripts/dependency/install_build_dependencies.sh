@@ -102,81 +102,93 @@ main() {
     # 标记是否已成功配置镜像（避免重复 apt update）
     _mirror_configured=false
 
-    # 检查 ca-certificates 是否已安装
-    if ! dpkg -s ca-certificates &>/dev/null; then
-        # 未安装 CA 证书，先用 HTTP 镜像绕过
-        log_warn "ca-certificates missing, trying HTTP bootstrap..."
-
-        _write_http_mirror() {
-            local mirror="$1"
-            local sources_file="/etc/apt/sources.list.d/ubuntu.sources"
-            [ -f "$sources_file" ] || return 1
-            cp "$sources_file" "${sources_file}.bak"
-            local ports_mirror="$mirror"
-            [[ "$mirror" != *"/ubuntu-ports" ]] && ports_mirror="${mirror%/ubuntu}/ubuntu-ports"
-            sed -i \
-                -e "s|https\?://archive.ubuntu.com/ubuntu|$mirror|g" \
-                -e "s|https\?://security.ubuntu.com/ubuntu|$mirror|g" \
-                -e "s|https\?://ports.ubuntu.com/ubuntu-ports|$ports_mirror|g" \
-                "$sources_file"
-        }
-
-        local arch="$(uname -m)"
-        local http_mirror="http://mirrors.aliyun.com/ubuntu"
-        [[ "$arch" == "aarch64" ]] && http_mirror="http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports"
-        HTTP_MIRROR="${QT_MIRROR_APT:-$http_mirror}"
-
-        if _write_http_mirror "$HTTP_MIRROR" && timeout 60 apt update 2>/dev/null; then
-            log_success "HTTP mirror active: $HTTP_MIRROR"
-            rm -f /etc/apt/sources.list.d/ubuntu.sources.bak 2>/dev/null || true
-            _mirror_configured=true
-        else
-            log_warn "HTTP mirror failed, using default sources"
-            cp /etc/apt/sources.list.d/ubuntu.sources.bak /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null || true
-        fi
+    # CI 环境（GitHub Actions 等）直接使用默认 Ubuntu 源，跳过镜像配置
+    if [[ "${CI:-}" == "true" ]]; then
+        log_info "CI environment detected, using default Ubuntu sources"
+        apt update
+        _mirror_configured=true
     fi
 
-    # 如果还没配置成功镜像，配置 HTTPS 镜像
+    # 非 CI 环境配置国内镜像加速（仅本地 / 开发 Docker 使用）
     if [[ "$_mirror_configured" == "false" ]]; then
-        local arch="$(uname -m)"
-        local mirrors=()
-        if [[ "$arch" == "aarch64" ]]; then
-            mirrors=(
-                "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports"
-                "https://mirrors.ustc.edu.cn/ubuntu-ports"
-            )
-        else
-            mirrors=(
-                "https://mirrors.aliyun.com/ubuntu"
-                "https://mirrors.tuna.tsinghua.edu.cn/ubuntu"
-            )
-        fi
+        # 检查 ca-certificates 是否已安装
+        if ! dpkg -s ca-certificates &>/dev/null; then
+            # 未安装 CA 证书，先用 HTTP 镜像绕过
+            log_warn "ca-certificates missing, trying HTTP bootstrap..."
 
-        local sources_file="/etc/apt/sources.list.d/ubuntu.sources"
-        if [ -f "$sources_file" ]; then
-            cp "$sources_file" "${sources_file}.bak"
-            for mirror in "${mirrors[@]}"; do
-                log_info "Trying APT mirror: $mirror"
+            _write_http_mirror() {
+                local mirror="$1"
+                local sources_file="/etc/apt/sources.list.d/ubuntu.sources"
+                [ -f "$sources_file" ] || return 1
+                cp "$sources_file" "${sources_file}.bak"
                 local ports_mirror="$mirror"
                 [[ "$mirror" != *"/ubuntu-ports" ]] && ports_mirror="${mirror%/ubuntu}/ubuntu-ports"
                 sed -i \
-                    -e "s|http://archive.ubuntu.com/ubuntu|$mirror|g" \
-                    -e "s|https://archive.ubuntu.com/ubuntu|$mirror|g" \
-                    -e "s|http://security.ubuntu.com/ubuntu|$mirror|g" \
-                    -e "s|http://ports.ubuntu.com/ubuntu-ports|$ports_mirror|g" \
-                    -e "s|https://ports.ubuntu.com/ubuntu-ports|$ports_mirror|g" \
+                    -e "s|https\?://archive.ubuntu.com/ubuntu|$mirror|g" \
+                    -e "s|https\?://security.ubuntu.com/ubuntu|$mirror|g" \
+                    -e "s|https\?://ports.ubuntu.com/ubuntu-ports|$ports_mirror|g" \
                     "$sources_file"
+            }
 
-                if timeout 60 apt update 2>/dev/null; then
-                    log_success "APT mirror active: $mirror"
-                    rm -f "${sources_file}.bak" 2>/dev/null || true
-                    _mirror_configured=true
-                    break
-                fi
-                log_warn "Mirror failed: $mirror, trying next..."
-                cp "${sources_file}.bak" "$sources_file"
-            done
-            rm -f "${sources_file}.bak" 2>/dev/null || true
+            local arch="$(uname -m)"
+            local http_mirror="http://mirrors.aliyun.com/ubuntu"
+            [[ "$arch" == "aarch64" ]] && http_mirror="http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports"
+            HTTP_MIRROR="${QT_MIRROR_APT:-$http_mirror}"
+
+            if _write_http_mirror "$HTTP_MIRROR" && timeout 300 apt update 2>/dev/null; then
+                log_success "HTTP mirror active: $HTTP_MIRROR"
+                rm -f /etc/apt/sources.list.d/ubuntu.sources.bak 2>/dev/null || true
+                _mirror_configured=true
+                apt install -y --no-install-recommends ca-certificates 2>/dev/null && \
+                    log_success "ca-certificates installed via HTTP bootstrap"
+            else
+                log_warn "HTTP mirror failed, using default sources"
+                cp /etc/apt/sources.list.d/ubuntu.sources.bak /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null || true
+            fi
+        fi
+
+        # 如果还没配置成功镜像，配置 HTTPS 镜像（需要 ca-certificates）
+        if [[ "$_mirror_configured" == "false" ]] && dpkg -s ca-certificates &>/dev/null; then
+            local arch="$(uname -m)"
+            local mirrors=()
+            if [[ "$arch" == "aarch64" ]]; then
+                mirrors=(
+                    "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports"
+                    "https://mirrors.ustc.edu.cn/ubuntu-ports"
+                )
+            else
+                mirrors=(
+                    "https://mirrors.aliyun.com/ubuntu"
+                    "https://mirrors.tuna.tsinghua.edu.cn/ubuntu"
+                )
+            fi
+
+            local sources_file="/etc/apt/sources.list.d/ubuntu.sources"
+            if [ -f "$sources_file" ]; then
+                cp "$sources_file" "${sources_file}.bak"
+                for mirror in "${mirrors[@]}"; do
+                    log_info "Trying APT mirror: $mirror"
+                    local ports_mirror="$mirror"
+                    [[ "$mirror" != *"/ubuntu-ports" ]] && ports_mirror="${mirror%/ubuntu}/ubuntu-ports"
+                    sed -i \
+                        -e "s|http://archive.ubuntu.com/ubuntu|$mirror|g" \
+                        -e "s|https://archive.ubuntu.com/ubuntu|$mirror|g" \
+                        -e "s|http://security.ubuntu.com/ubuntu|$mirror|g" \
+                        -e "s|http://ports.ubuntu.com/ubuntu-ports|$ports_mirror|g" \
+                        -e "s|https://ports.ubuntu.com/ubuntu-ports|$ports_mirror|g" \
+                        "$sources_file"
+
+                    if timeout 60 apt update 2>/dev/null; then
+                        log_success "APT mirror active: $mirror"
+                        rm -f "${sources_file}.bak" 2>/dev/null || true
+                        _mirror_configured=true
+                        break
+                    fi
+                    log_warn "Mirror failed: $mirror, trying next..."
+                    cp "${sources_file}.bak" "$sources_file"
+                done
+                rm -f "${sources_file}.bak" 2>/dev/null || true
+            fi
         fi
     fi
 
@@ -187,7 +199,7 @@ main() {
     # 注意：ca-certificates 包含在此列表，用于 HTTP bootstrap 后的补装
     apt install -y --no-install-recommends \
         `# === 编译工具链 ===` \
-        build-essential cmake ninja-build ccache git wget curl \
+        build-essential clang cmake ninja-build ccache git wget curl \
         `# === Python ===` \
         python3 python3-pip \
         `# === 证书（Bootstrap 时可能未安装）===` \

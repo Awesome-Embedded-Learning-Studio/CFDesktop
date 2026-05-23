@@ -12,9 +12,16 @@
 #include <intrin.h>
 
 namespace {
+#if defined(_MSC_VER) && !defined(__clang__)
+static unsigned long long read_xcr0() noexcept {
+    return static_cast<unsigned long long>(_xgetbv(0));
+}
+#else
 __attribute__((target("xsave"))) static unsigned long long read_xcr0() {
     return _xgetbv(0);
 }
+#endif
+
 void addFeatureIfSupported(bool condition, const char* name, std::vector<std::string>& feats) {
     if (condition) {
         feats.emplace_back(name);

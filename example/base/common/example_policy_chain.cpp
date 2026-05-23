@@ -1,6 +1,7 @@
 #include "base/policy_chain/policy_chain.hpp"
 #include <cassert>
 #include <iostream>
+#include <string>
 
 void example_basic_usage() {
     std::cout << "=== Basic Usage ===" << std::endl;

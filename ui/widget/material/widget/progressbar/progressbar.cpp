@@ -70,7 +70,7 @@ ProgressBar::ProgressBar(QWidget* parent) : QProgressBar(parent) {
 
     // Connect repaint signals
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&ProgressBar::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Start indeterminate animation if in indeterminate mode
     if (minimum() == 0 && maximum() == 0) {

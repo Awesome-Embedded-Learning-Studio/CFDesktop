@@ -1,5 +1,6 @@
 # ignores
 .cache
+.ccache/
 .claude
 CLAUDE.md
 MEMORY.md

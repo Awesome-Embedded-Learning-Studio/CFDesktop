@@ -49,17 +49,14 @@ target_sources(CFDesktop_shared PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/desktop_run_session.cpp
 )
 
-# Link all static libraries using --whole-archive
-# This ensures all symbols are included even if not directly referenced
-# Supported on both Unix and MinGW/Windows
-if(UNIX AND NOT APPLE)
-    target_link_libraries(CFDesktop_shared PRIVATE
-        "-Wl,--whole-archive"
-        ${CFDESKTOP_STATIC_LIBS}
-        "-Wl,--no-whole-archive"
-    )
-elseif(WIN32)
-    # MinGW supports --whole-archive on Windows too - required for DLL symbol export
+# Link all static libraries using whole-archive semantics.
+# This ensures all symbols are included even if not directly referenced.
+if(MSVC)
+    target_link_libraries(CFDesktop_shared PRIVATE ${CFDESKTOP_STATIC_LIBS})
+    foreach(_cfdesktop_module IN LISTS CFDESKTOP_STATIC_LIBS)
+        target_link_options(CFDesktop_shared PRIVATE "/WHOLEARCHIVE:$<TARGET_FILE:${_cfdesktop_module}>")
+    endforeach()
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND NOT APPLE)
     target_link_libraries(CFDesktop_shared PRIVATE
         "-Wl,--whole-archive"
         ${CFDESKTOP_STATIC_LIBS}

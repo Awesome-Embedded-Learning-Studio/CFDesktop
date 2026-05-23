@@ -106,9 +106,10 @@ ListView::ListView(QWidget* parent)
     viewport()->setMouseTracking(true);
 
     // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, viewport(), QOverload<>::of(&QWidget::update));
+    connect(m_ripple, &RippleHelper::repaintNeeded, viewport(),
+            static_cast<void (QWidget::*)()>(&QWidget::update));
     connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            QOverload<>::of(&ListView::update));
+            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Set default selection mode
     setSelectionMode(QAbstractItemView::SingleSelection);

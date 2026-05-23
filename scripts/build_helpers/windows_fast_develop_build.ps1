@@ -1,6 +1,11 @@
 # This script configures and builds the project (FAST version - no cleaning)
 # It calls the configure script first, then builds
 
+param(
+    [Parameter(Mandatory = $false)]
+    [string]$Config = "develop"
+)
+
 # 导入库模块
 $LibDir = Join-Path (Split-Path -Parent $PSScriptRoot) "lib\powershell"
 Import-Module (Join-Path $LibDir "LibCommon.psm1") -Force
@@ -34,10 +39,10 @@ Write-LogInfo "Step 1: Configuring with CMake"
 Write-LogSeparator
 
 $ConfigureScript = Join-Path $ScriptDir "windows_configure.ps1"
-Write-LogInfo "Executing: $ConfigureScript -Config develop"
+Write-LogInfo "Executing: $ConfigureScript -Config $Config"
 
 try {
-    & $ConfigureScript -Config "develop"
+    & $ConfigureScript -Config $Config
     if ($LASTEXITCODE -ne 0) {
         Write-LogError "Configure script failed with exit code: $LASTEXITCODE"
         Stop-BuildTimer
@@ -51,7 +56,15 @@ catch {
 }
 
 # Step 2: Load config for build
-$ConfigFile = Join-Path $ScriptDir "build_develop_config.ini"
+$ConfigFileName = switch ($Config) {
+    "develop" { "build_develop_config.ini" }
+    "deploy" { "build_deploy_config.ini" }
+    "ci" { "build_ci_windows_config.ini" }
+    default {
+        if ($Config -like "*.ini") { $Config } else { "$Config.ini" }
+    }
+}
+$ConfigFile = Join-Path $ScriptDir $ConfigFileName
 
 # Safety check: config file must exist
 if (!(Test-Path $ConfigFile)) {
@@ -64,17 +77,36 @@ if (!(Test-Path $ConfigFile)) {
     exit 1
 }
 
-$Config = Get-IniConfig -FilePath $ConfigFile
-$BuildDir = $Config["paths"]["build_dir"]
+try {
+    $ConfigData = Get-IniConfig -FilePath $ConfigFile
+}
+catch {
+    Write-LogError "Failed to load configuration: $_"
+    Stop-BuildTimer
+    exit 1
+}
+
+if (-not $ConfigData -or -not $ConfigData.ContainsKey("paths")) {
+    Write-LogError "Configuration error: [paths] section is missing in config file"
+    Write-LogError "Please check: $ConfigFile"
+    Stop-BuildTimer
+    exit 1
+}
+
+$BuildDir = $ConfigData["paths"]["build_dir"]
 
 # Safety check: BUILD_DIR must not be empty
 if ([string]::IsNullOrWhiteSpace($BuildDir)) {
     Write-LogError "Configuration error: build_dir is not set in config file"
     Write-LogError "Please check the [paths] section in: $ConfigFile"
+    Stop-BuildTimer
     exit 1
 }
 
-$Jobs = if ($Config["options"] -and $Config["options"]["jobs"]) { $Config["options"]["jobs"] } else { "" }
+$Jobs = ""
+if ($ConfigData.ContainsKey("options") -and $ConfigData["options"].ContainsKey("jobs")) {
+    $Jobs = $ConfigData["options"]["jobs"]
+}
 
 # Step 3: Build with CMake
 Write-LogSeparator

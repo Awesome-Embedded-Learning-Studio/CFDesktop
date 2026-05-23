@@ -5,45 +5,382 @@ on:
     branches:
       - main
       - release/*
+      - develop
     types:
       - opened
       - synchronize
       - reopened
+      - labeled
   workflow_dispatch:
 
 permissions:
   contents: read
+  packages: read
+
+env:
+  GHCR_IMAGE: ghcr.io/${{ github.repository_owner }}/cfdesktop-build-env
 
 jobs:
-  linux-build-test:
-    name: Linux build and tests
+  check-trigger:
+    name: Check CI trigger
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+      run_clang: ${{ steps.check.outputs.run_clang }}
+      run_msvc: ${{ steps.check.outputs.run_msvc }}
+    steps:
+      - name: Determine CI scope
+        id: check
+        run: |
+          BASE="${{ github.base_ref }}"
+          LABELS="${{ join(github.event.pull_request.labels.*.name, ',') }}"
+
+          echo "should_run=true" >> "$GITHUB_OUTPUT"
+
+          # Clang: build-clang label or main/release (always full)
+          if echo "$LABELS" | grep -qw "build-clang" || [[ "$BASE" != "develop" ]]; then
+            echo "run_clang=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_clang=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          # MSVC: build-msvc label or main/release (always full)
+          if echo "$LABELS" | grep -qw "build-msvc" || [[ "$BASE" != "develop" ]]; then
+            echo "run_msvc=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_msvc=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "--- CI Scope ---"
+          echo "Base branch: $BASE"
+          echo "Labels: $LABELS"
+          echo "GCC:    always"
+          echo "Clang:  $(echo "$LABELS" | grep -qE 'build-(clang|all-platform)' && echo 'yes' || { [[ "$BASE" != "develop" ]] && echo 'yes' || echo 'no'; })"
+          echo "MSVC:   $(echo "$LABELS" | grep -qE 'build-(msvc|all-platform)' && echo 'yes' || { [[ "$BASE" != "develop" ]] && echo 'yes' || echo 'no'; })"
+
+  linux-gcc:
+    name: Linux GCC
+    needs: check-trigger
+    if: needs.check-trigger.outputs.should_run == 'true'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Docker image
+      - name: Normalize Docker image name
+        run: echo "GHCR_IMAGE=$(echo '${{ env.GHCR_IMAGE }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull pre-built Docker image
         run: |
+          if docker pull ${{ env.GHCR_IMAGE }}:latest; then
+            echo "GHCR_PULL_FAILED=false" >> "$GITHUB_ENV"
+          else
+            echo "::warning::GHCR image pull failed, falling back to local Docker build."
+            echo "GHCR_PULL_FAILED=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build Docker image (fallback)
+        if: env.GHCR_PULL_FAILED == 'true'
+        run: |
+          echo "::warning::GHCR image not available, building locally..."
           docker build \
+            --progress=plain \
             --platform linux/amd64 \
             --build-arg QT_ARCH=linux_gcc_64 \
+            --build-arg CI=true \
             -f scripts/docker/Dockerfile.build \
-            -t cfdesktop-build \
+            -t ${{ env.GHCR_IMAGE }}:latest \
             .
 
-      - name: Configure, build, and test
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache/gcc
+          key: ccache-linux-gcc-${{ github.sha }}
+          restore-keys: |
+            ccache-linux-gcc-
+
+      - name: Restore GCC build directory
+        uses: actions/cache/restore@v4
+        with:
+          path: out/build_ci
+          key: build-linux-gcc-${{ github.sha }}
+          restore-keys: |
+            build-linux-gcc-
+
+      - name: Configure and build
+        run: |
+          docker run --rm \
+            --platform linux/amd64 \
+            -e QT_QPA_PLATFORM=offscreen \
+            -e CCACHE_DIR=/project/.ccache/gcc \
+            -e CCACHE_BASEDIR=/project \
+            -e CCACHE_COMPILERCHECK=content \
+            -e CCACHE_NOHASHDIR=true \
+            -v "$PWD:/project" \
+            -w /project \
+            ${{ env.GHCR_IMAGE }}:latest \
+            bash -lc 'ccache --max-size=5G; ccache --set-config=compression=true; ccache --set-config=compression_level=1; ccache -z; bash scripts/build_helpers/linux_fast_develop_build.sh ci -c build_ci_config.ini'
+
+      - name: Save GCC build cache
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: out/build_ci
+          key: build-linux-gcc-${{ github.sha }}
+
+      - name: Run tests
         run: |
           docker run --rm \
             --platform linux/amd64 \
             -e QT_QPA_PLATFORM=offscreen \
             -v "$PWD:/project" \
             -w /project \
-            cfdesktop-build \
-            bash -lc "bash scripts/build_helpers/linux_develop_build.sh ci -c build_ci_config.ini && bash scripts/build_helpers/linux_run_tests.sh ci -c build_ci_config.ini"
+            ${{ env.GHCR_IMAGE }}:latest \
+            bash -lc 'bash scripts/build_helpers/linux_run_tests.sh ci -c build_ci_config.ini'
+
+      - name: Show ccache stats
+        if: always()
+        run: |
+          docker run --rm \
+            --platform linux/amd64 \
+            -e CCACHE_DIR=/project/.ccache/gcc \
+            -v "$PWD:/project" \
+            -w /project \
+            ${{ env.GHCR_IMAGE }}:latest \
+            bash -lc 'ccache -s || true' || true
+
+  linux-clang:
+    name: Linux Clang
+    needs: check-trigger
+    if: needs.check-trigger.outputs.run_clang == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Normalize Docker image name
+        run: echo "GHCR_IMAGE=$(echo '${{ env.GHCR_IMAGE }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull pre-built Docker image
+        run: |
+          if docker pull ${{ env.GHCR_IMAGE }}:latest; then
+            echo "GHCR_PULL_FAILED=false" >> "$GITHUB_ENV"
+          else
+            echo "::warning::GHCR image pull failed, falling back to local Docker build."
+            echo "GHCR_PULL_FAILED=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build Docker image (fallback)
+        if: env.GHCR_PULL_FAILED == 'true'
+        run: |
+          echo "::warning::GHCR image not available, building locally..."
+          docker build \
+            --progress=plain \
+            --platform linux/amd64 \
+            --build-arg QT_ARCH=linux_gcc_64 \
+            --build-arg CI=true \
+            -f scripts/docker/Dockerfile.build \
+            -t ${{ env.GHCR_IMAGE }}:latest \
+            .
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache/clang
+          key: ccache-linux-clang-${{ github.sha }}
+          restore-keys: |
+            ccache-linux-clang-
+
+      - name: Restore Clang build directory
+        uses: actions/cache/restore@v4
+        with:
+          path: out/build_ci_clang
+          key: build-linux-clang-${{ github.sha }}
+          restore-keys: |
+            build-linux-clang-
+
+      - name: Configure and build
+        run: |
+          docker run --rm \
+            --platform linux/amd64 \
+            -e QT_QPA_PLATFORM=offscreen \
+            -e CCACHE_DIR=/project/.ccache/clang \
+            -e CCACHE_BASEDIR=/project \
+            -e CCACHE_COMPILERCHECK=content \
+            -e CCACHE_NOHASHDIR=true \
+            -v "$PWD:/project" \
+            -w /project \
+            ${{ env.GHCR_IMAGE }}:latest \
+            bash -lc 'ccache --max-size=5G; ccache --set-config=compression=true; ccache --set-config=compression_level=1; ccache -z; bash scripts/build_helpers/linux_fast_develop_build.sh ci -c build_ci_clang_config.ini'
+
+      - name: Save Clang build cache
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: out/build_ci_clang
+          key: build-linux-clang-${{ github.sha }}
+
+      - name: Run tests
+        run: |
+          docker run --rm \
+            --platform linux/amd64 \
+            -e QT_QPA_PLATFORM=offscreen \
+            -v "$PWD:/project" \
+            -w /project \
+            ${{ env.GHCR_IMAGE }}:latest \
+            bash -lc 'bash scripts/build_helpers/linux_run_tests.sh ci -c build_ci_clang_config.ini'
+
+      - name: Show ccache stats
+        if: always()
+        run: |
+          docker run --rm \
+            --platform linux/amd64 \
+            -e CCACHE_DIR=/project/.ccache/clang \
+            -v "$PWD:/project" \
+            -w /project \
+            ${{ env.GHCR_IMAGE }}:latest \
+            bash -lc 'ccache -s || true' || true
+
+  windows-msvc:
+    name: Windows MSVC
+    needs: check-trigger
+    if: needs.check-trigger.outputs.run_msvc == 'true'
+    runs-on: windows-latest
+
+    env:
+      QT_VERSION: 6.8.1
+      QT_ARCH: win64_msvc2022_64
+      QT_DIR: C:\Qt\6.8.1\msvc2022_64
+      CCACHE_DIR: ${{ github.workspace }}\.ccache\msvc
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC developer environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install ccache
+        shell: pwsh
+        run: |
+          if (-not (Get-Command ccache -ErrorAction SilentlyContinue)) {
+            choco install ccache -y --no-progress
+          }
+          ccache --version
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache\msvc
+          key: ccache-windows-msvc-${{ github.sha }}
+          restore-keys: |
+            ccache-windows-msvc-
+
+      - name: Configure ccache
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path $env:CCACHE_DIR | Out-Null
+          ccache --set-config="cache_dir=$env:CCACHE_DIR"
+          ccache --set-config=max_size=5G
+          ccache --set-config=compiler_check=content
+          ccache --set-config=compression=true
+          ccache --set-config=compression_level=1
+          ccache -z
+          ccache -s
+
+      - name: Cache Qt installation
+        id: cache-qt
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.QT_DIR }}
+          key: qt-${{ env.QT_VERSION }}-${{ env.QT_ARCH }}-v1
+
+      - name: Install aqtinstall
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: pip install aqtinstall
+
+      - name: Install Qt
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        run: |
+          python -m aqt install-qt windows desktop ${{ env.QT_VERSION }} ${{ env.QT_ARCH }} `
+            -O C:\Qt `
+            -m qt5compat qtserialport qtimageformats
+
+      - name: Save Qt cache immediately
+        if: steps.cache-qt.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.QT_DIR }}
+          key: qt-${{ env.QT_VERSION }}-${{ env.QT_ARCH }}-v1
+
+      - name: Restore MSVC build directory
+        uses: actions/cache/restore@v4
+        with:
+          path: out\build_ci_windows
+          key: build-windows-msvc-${{ github.sha }}
+          restore-keys: |
+            build-windows-msvc-
+
+      - name: Configure and build
+        shell: pwsh
+        env:
+          Qt6_DIR: ${{ env.QT_DIR }}\lib\cmake\Qt6
+          CCACHE_BASEDIR: ${{ github.workspace }}
+          CCACHE_COMPILERCHECK: content
+          CCACHE_NOHASHDIR: true
+        run: |
+          ccache -z
+          pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File scripts/build_helpers/windows_fast_develop_build.ps1 -Config ci
+
+      - name: Save MSVC build cache
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: out\build_ci_windows
+          key: build-windows-msvc-${{ github.sha }}
+
+      - name: Run tests
+        shell: pwsh
+        env:
+          Qt6_DIR: ${{ env.QT_DIR }}\lib\cmake\Qt6
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File scripts/build_helpers/windows_run_tests.ps1 -Config ci
+
+      - name: Show ccache stats
+        if: always()
+        shell: pwsh
+        run: |
+          if (Get-Command ccache -ErrorAction SilentlyContinue) {
+            ccache -s
+          }
 
   docs-build:
     name: VitePress docs build
+    needs: check-trigger
+    if: needs.check-trigger.outputs.should_run == 'true'
     runs-on: ubuntu-latest
 
     steps:
