@@ -14,6 +14,7 @@
 #include <QByteArray>
 
 #include "../../export.h"
+#include "base/color.h"
 #include "base/expected/expected.hpp"
 #include "cfmaterial_fonttype.h"
 #include "cfmaterial_motion.h"

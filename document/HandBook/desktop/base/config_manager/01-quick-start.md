@@ -36,7 +36,7 @@ auto& config = ConfigStore::instance();
 class CustomPathProvider : public IConfigStorePathProvider {
 public:
     QString system_path() const override {
-        return "/etc/myapp/system.ini";
+        return "{app_dir}/system.ini";  // CFDesktop 自管理目录内
     }
 
     QString user_dir() const override {

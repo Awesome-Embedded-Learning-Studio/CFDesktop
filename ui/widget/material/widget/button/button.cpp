@@ -17,12 +17,7 @@
 #include "application_support/application.h"
 #include "base/device_pixel.h"
 #include "base/geometry_helper.h"
-#include "cfmaterial_animation_factory.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/elevation_controller.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/ripple_helper.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QFontMetrics>
@@ -35,8 +30,6 @@ namespace cf::ui::widget::material {
 using namespace cf::ui::base;
 using namespace cf::ui::base::device;
 using namespace cf::ui::base::geometry;
-using namespace cf::ui::components;
-using namespace cf::ui::components::material;
 using namespace cf::ui::core;
 using namespace cf::ui::core::token::literals;
 using namespace cf::ui::widget::material::base;
@@ -46,33 +39,13 @@ using namespace cf::ui::widget::application_support;
 // Constructor / Destructor
 // ============================================================================
 
-Button::Button(ButtonVariant variant, QWidget* parent) : QPushButton(parent), variant_(variant) {
-    // Get animation factory from Application
-    m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_ripple = new RippleHelper(m_animationFactory, this);
-    m_elevation = new MdElevationController(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    // Set initial elevation based on variant
-    // All buttons now have elevation 2 by default for press effect
-    m_elevation->setElevation(2);
-
-    // Set ripple mode
-    m_ripple->setMode(RippleHelper::Mode::Bounded);
-
-    // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_elevation, &MdElevationController::pressOffsetChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-
-    // Set default font
+Button::Button(ButtonVariant variant, QWidget* parent)
+    : QPushButton(parent), m_material(this,
+                                      MaterialWidgetBase::Config{
+                                          .useElevation = true,
+                                          .initialElevation = 2,
+                                      }),
+      variant_(variant) {
     setFont(labelFont());
 }
 
@@ -91,71 +64,52 @@ Button::~Button() {
 
 void Button::enterEvent(QEnterEvent* event) {
     QPushButton::enterEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverEnter();
-    update();
+    m_material.onEnterEvent();
 }
 
 void Button::leaveEvent(QEvent* event) {
     QPushButton::leaveEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverLeave();
-    if (m_ripple)
-        m_ripple->onCancel();
-    update();
+    m_material.onLeaveEvent();
 }
 
 void Button::mousePressEvent(QMouseEvent* event) {
     QPushButton::mousePressEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onPress(event->pos());
-    if (m_ripple)
-        m_ripple->onPress(event->pos(), rect());
-    if (m_elevation && m_pressEffectEnabled)
-        m_elevation->setPressed(true);
-    update();
+    if (m_pressEffectEnabled) {
+        m_material.onMousePress(event->pos(), rect());
+    } else {
+        m_material.stateMachine()->onPress(event->pos());
+        if (m_material.ripple())
+            m_material.ripple()->onPress(event->pos(), rect());
+        update();
+    }
 }
 
 void Button::mouseReleaseEvent(QMouseEvent* event) {
     QPushButton::mouseReleaseEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onRelease();
-    if (m_ripple)
-        m_ripple->onRelease();
-    if (m_elevation && m_pressEffectEnabled)
-        m_elevation->setPressed(false);
-    update();
+    if (m_pressEffectEnabled) {
+        m_material.onMouseRelease();
+    } else {
+        m_material.stateMachine()->onRelease();
+        if (m_material.ripple())
+            m_material.ripple()->onRelease();
+        update();
+    }
 }
 
 void Button::focusInEvent(QFocusEvent* event) {
     QPushButton::focusInEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusIn();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusIn();
-    update();
+    m_material.onFocusIn();
 }
 
 void Button::focusOutEvent(QFocusEvent* event) {
     QPushButton::focusOutEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusOut();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusOut();
-    update();
+    m_material.onFocusOut();
 }
 
 void Button::changeEvent(QEvent* event) {
     QPushButton::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
-        update();
+        m_material.onEnabledChange(isEnabled());
     }
 }
 
@@ -164,25 +118,25 @@ void Button::changeEvent(QEvent* event) {
 // ============================================================================
 
 int Button::elevation() const {
-    return m_elevation ? m_elevation->elevation() : 0;
+    return m_material.elevation() ? m_material.elevation()->elevation() : 0;
 }
 
 void Button::setElevation(int level) {
-    if (m_elevation) {
-        m_elevation->setElevation(level);
+    if (m_material.elevation()) {
+        m_material.elevation()->setElevation(level);
         update();
     }
 }
 
 void Button::setLightSourceAngle(float degrees) {
-    if (m_elevation) {
-        m_elevation->setLightSourceAngle(degrees);
+    if (m_material.elevation()) {
+        m_material.elevation()->setLightSourceAngle(degrees);
         update();
     }
 }
 
 float Button::lightSourceAngle() const {
-    return m_elevation ? m_elevation->lightSourceAngle() : 15.0f;
+    return m_material.elevation() ? m_material.elevation()->lightSourceAngle() : 15.0f;
 }
 
 void Button::setLeadingIcon(const QIcon& icon) {
@@ -454,8 +408,8 @@ void Button::paintEvent(QPaintEvent* event) {
 
     // 计算按压偏移
     float pressOffset = 0.0f;
-    if (m_pressEffectEnabled && m_elevation) {
-        pressOffset = m_elevation->pressOffset();
+    if (m_pressEffectEnabled && m_material.elevation()) {
+        pressOffset = m_material.elevation()->pressOffset();
     }
 
     // Calculate content area (inset to make room for shadow)
@@ -499,7 +453,7 @@ void Button::paintEvent(QPaintEvent* event) {
 
 // Calculate shadow margin (extra space needed for shadow)
 QMarginsF Button::shadowMargin() const {
-    if (!m_elevation || m_elevation->elevation() <= 0) {
+    if (!m_material.elevation() || m_material.elevation()->elevation() <= 0) {
         return QMarginsF(0, 0, 0, 0);
     }
 
@@ -507,14 +461,14 @@ QMarginsF Button::shadowMargin() const {
     // 根据 elevation 级别动态计算边距
     // Level 2: blur=4dp, offset=2dp, 最大偏移约 3dp
     // 预留边距 = offset + blur/2，更精确的阴影空间
-    int level = m_elevation->elevation();
+    int level = m_material.elevation()->elevation();
     float margin = helper.dpToPx(2.0f + level * 1.5f); // level 2: 约 5dp
     return QMarginsF(margin, margin, margin, margin);
 }
 
 void Button::drawShadow(QPainter& p, const QRectF& contentRect, const QPainterPath& shape) {
-    if (m_elevation && m_elevation->elevation() > 0) {
-        m_elevation->paintShadow(&p, shape);
+    if (m_material.elevation() && m_material.elevation()->elevation() > 0) {
+        m_material.elevation()->paintShadow(&p, shape);
     }
 }
 
@@ -538,11 +492,11 @@ void Button::drawBackground(QPainter& p, const QPainterPath& shape) {
 }
 
 void Button::drawStateLayer(QPainter& p, const QPainterPath& shape) {
-    if (!isEnabled() || !m_stateMachine) {
+    if (!isEnabled() || !m_material.stateMachine()) {
         return;
     }
 
-    float opacity = m_stateMachine->stateLayerOpacity();
+    float opacity = m_material.stateMachine()->stateLayerOpacity();
     if (opacity <= 0.0f) {
         return;
     }
@@ -555,10 +509,10 @@ void Button::drawStateLayer(QPainter& p, const QPainterPath& shape) {
 }
 
 void Button::drawRipple(QPainter& p, const QPainterPath& shape) {
-    if (m_ripple) {
+    if (m_material.ripple()) {
         // Set ripple color based on label color (content color)
-        m_ripple->setColor(labelColor());
-        m_ripple->paint(&p, shape);
+        m_material.ripple()->setColor(labelColor());
+        m_material.ripple()->paint(&p, shape);
     }
 }
 
@@ -637,8 +591,8 @@ void Button::drawContent(QPainter& p, const QRectF& contentRect) {
 }
 
 void Button::drawFocusIndicator(QPainter& p, const QPainterPath& shape) {
-    if (m_focusIndicator) {
-        m_focusIndicator->paint(&p, shape, labelColor());
+    if (m_material.focusIndicator()) {
+        m_material.focusIndicator()->paint(&p, shape, labelColor());
     }
 }
 

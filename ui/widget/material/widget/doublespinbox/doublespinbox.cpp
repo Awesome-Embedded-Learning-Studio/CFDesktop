@@ -17,11 +17,7 @@
 #include "application_support/application.h"
 #include "base/device_pixel.h"
 #include "base/geometry_helper.h"
-#include "cfmaterial_animation_factory.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/ripple_helper.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QFontMetrics>
@@ -35,8 +31,6 @@ namespace cf::ui::widget::material {
 using namespace cf::ui::base;
 using namespace cf::ui::base::device;
 using namespace cf::ui::base::geometry;
-using namespace cf::ui::components;
-using namespace cf::ui::components::material;
 using namespace cf::ui::core;
 using namespace cf::ui::core::token::literals;
 using namespace cf::ui::widget::material::base;
@@ -70,7 +64,14 @@ inline CFColor fallbackPrimary() {
 // ============================================================================
 
 DoubleSpinBox::DoubleSpinBox(QWidget* parent)
-    : QDoubleSpinBox(parent), m_hoveringIncrementButton(false), m_hoveringDecrementButton(false),
+    : QDoubleSpinBox(parent), m_material(this,
+                                         MaterialWidgetBase::Config{
+                                             .useRipple = true,
+                                             .useElevation = true,
+                                             .useFocusIndicator = true,
+                                             .initialElevation = 0,
+                                         }),
+      m_hoveringIncrementButton(false), m_hoveringDecrementButton(false),
       m_pressingIncrementButton(false), m_pressingDecrementButton(false) {
 
     // Disable native frame and background
@@ -88,24 +89,6 @@ DoubleSpinBox::DoubleSpinBox(QWidget* parent)
         // Set alignment to right-align numbers (standard for numeric input)
         lineEdit()->setAlignment(Qt::AlignRight);
     }
-
-    // Get animation factory from Application
-    m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_ripple = new RippleHelper(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    // Set ripple mode
-    m_ripple->setMode(RippleHelper::Mode::Bounded);
-
-    // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Set default font
     setFont(textFont());
@@ -127,22 +110,16 @@ DoubleSpinBox::~DoubleSpinBox() {
 
 void DoubleSpinBox::enterEvent(QEnterEvent* event) {
     QDoubleSpinBox::enterEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverEnter();
-    update();
+    m_material.onEnterEvent();
 }
 
 void DoubleSpinBox::leaveEvent(QEvent* event) {
     QDoubleSpinBox::leaveEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverLeave();
-    if (m_ripple)
-        m_ripple->onCancel();
+    m_material.onLeaveEvent();
 
     // Reset button hover states
     m_hoveringIncrementButton = false;
     m_hoveringDecrementButton = false;
-    update();
 }
 
 void DoubleSpinBox::mousePressEvent(QMouseEvent* event) {
@@ -162,11 +139,7 @@ void DoubleSpinBox::mousePressEvent(QMouseEvent* event) {
     }
 
     QDoubleSpinBox::mousePressEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onPress(event->pos());
-    if (m_ripple)
-        m_ripple->onPress(event->pos(), rect());
-    update();
+    m_material.onMousePress(event->pos(), rect());
 }
 
 void DoubleSpinBox::mouseReleaseEvent(QMouseEvent* event) {
@@ -179,11 +152,7 @@ void DoubleSpinBox::mouseReleaseEvent(QMouseEvent* event) {
     }
 
     QDoubleSpinBox::mouseReleaseEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onRelease();
-    if (m_ripple)
-        m_ripple->onRelease();
-    update();
+    m_material.onMouseRelease();
 }
 
 void DoubleSpinBox::mouseMoveEvent(QMouseEvent* event) {
@@ -193,32 +162,18 @@ void DoubleSpinBox::mouseMoveEvent(QMouseEvent* event) {
 
 void DoubleSpinBox::focusInEvent(QFocusEvent* event) {
     QDoubleSpinBox::focusInEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusIn();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusIn();
-    update();
+    m_material.onFocusIn();
 }
 
 void DoubleSpinBox::focusOutEvent(QFocusEvent* event) {
     QDoubleSpinBox::focusOutEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusOut();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusOut();
-    update();
+    m_material.onFocusOut();
 }
 
 void DoubleSpinBox::changeEvent(QEvent* event) {
     QDoubleSpinBox::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
+        m_material.onEnabledChange(isEnabled());
         updateTextColor();
         update();
     }
@@ -522,11 +477,11 @@ void DoubleSpinBox::drawBackground(QPainter& p, const QPainterPath& shape) {
 }
 
 void DoubleSpinBox::drawStateLayer(QPainter& p, const QPainterPath& shape) {
-    if (!isEnabled() || !m_stateMachine) {
+    if (!isEnabled() || !m_material.stateMachine()) {
         return;
     }
 
-    float opacity = m_stateMachine->stateLayerOpacity();
+    float opacity = m_material.stateMachine()->stateLayerOpacity();
     if (opacity <= 0.0f) {
         return;
     }
@@ -539,10 +494,10 @@ void DoubleSpinBox::drawStateLayer(QPainter& p, const QPainterPath& shape) {
 }
 
 void DoubleSpinBox::drawRipple(QPainter& p, const QPainterPath& shape) {
-    if (m_ripple) {
+    if (m_material.ripple()) {
         // Set ripple color based on text color
-        m_ripple->setColor(textColor());
-        m_ripple->paint(&p, shape);
+        m_material.ripple()->setColor(textColor());
+        m_material.ripple()->paint(&p, shape);
     }
 }
 
@@ -692,8 +647,8 @@ void DoubleSpinBox::drawButtons(QPainter& p, const QRectF& buttonRect) {
 }
 
 void DoubleSpinBox::drawFocusIndicator(QPainter& p, const QPainterPath& shape) {
-    if (m_focusIndicator && hasFocus()) {
-        m_focusIndicator->paint(&p, shape, focusOutlineColor());
+    if (m_material.focusIndicator() && hasFocus()) {
+        m_material.focusIndicator()->paint(&p, shape, focusOutlineColor());
     }
 }
 

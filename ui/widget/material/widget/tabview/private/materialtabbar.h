@@ -21,20 +21,14 @@
 #include "base/device_pixel.h"
 
 #include "base/include/base/weak_ptr/weak_ptr.h"
-#include "cfmaterial_animation_factory.h"
-#include "material/base/elevation_controller.h"
 #include "material/widget/button/button.h"
+#include "widget/material/base/material_widget_base.h"
 
 namespace cf::ui::widget::material {
 
 // Forward declarations
 class TabView;
-namespace base {
-class StateMachine;
-class MdFocusIndicator;
-} // namespace base
 
-using namespace cf::ui::components::material;
 using CFColor = base::CFColor;
 /**
  * @brief Internal Material TabBar implementation.
@@ -389,10 +383,8 @@ class MaterialTabBar : public QTabBar {
 
     QSet<int> m_closeableTabs; // Set of closeable tab indices
 
-    cf::WeakPtr<CFMaterialAnimationFactory> m_animationFactory;
-    base::StateMachine* m_stateMachine;
-    base::MdFocusIndicator* m_focusIndicator;
     cf::WeakPtr<components::ICFAbstractAnimation> m_indicatorAnimation;
+    base::MaterialWidgetBase m_material;
 };
 
 } // namespace cf::ui::widget::material

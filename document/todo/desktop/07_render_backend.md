@@ -66,7 +66,7 @@ description: "状态: 🚧 部分完成 (接口已实现，具体后端待开发
   - [ ] Mid Tier: 软件降级可选
   - [ ] Low Tier: LinuxFB 直连
 - [ ] 实现屏幕尺寸配置
-  - [ ] 读取 `/etc/CFDesktop/display.conf`
+  - [ ] 读取 `{desktop_root}/config/display.conf`
   - [ ] 命令行参数 `--screen-size=WxH`
   - [ ] 环境变量 `CFDESKTOP_SCREEN_SIZE`
 - [ ] 实现 DRM 设备选择
@@ -174,7 +174,7 @@ description: "状态: 🚧 部分完成 (接口已实现，具体后端待开发
 - [ ] `src/desktop/render/screen_simulator.cpp`
 
 ### 配置文件
-- [ ] `/etc/CFDesktop/display.conf` （Linux）
+- [ ] `{desktop_root}/config/display.conf` （Linux）
 - [ ] `configs/display.conf` （Windows 开发）
 
 ### 测试文件

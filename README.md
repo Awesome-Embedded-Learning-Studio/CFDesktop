@@ -4,7 +4,7 @@
 
   ### 为嵌入式设备打造的现代化 Material Design 3 桌面框架
 
-  [![License: MIT][license-badge]] [![Version: 0.18.0][version-badge]]
+  [![License: MIT][license-badge]] [![Version: 0.19.0][version-badge]]
   [![C++23][cpp-badge]] [![Qt 6.8][qt-badge]] [![CMake][cmake-badge]]
   [![Documentation][docs-badge]]
 

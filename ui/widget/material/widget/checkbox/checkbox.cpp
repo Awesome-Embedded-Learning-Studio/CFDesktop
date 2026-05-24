@@ -17,12 +17,8 @@
 #include "base/device_pixel.h"
 #include "base/easing.h"
 #include "base/geometry_helper.h"
-#include "components/material/cfmaterial_animation_factory.h"
 #include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/ripple_helper.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QFontMetrics>
@@ -35,7 +31,6 @@ namespace cf::ui::widget::material {
 using namespace cf::ui::base;
 using namespace cf::ui::base::device;
 using namespace cf::ui::base::geometry;
-using namespace cf::ui::components;
 using namespace cf::ui::components::material;
 using namespace cf::ui::core;
 using namespace cf::ui::core::token::literals;
@@ -45,38 +40,17 @@ using namespace cf::ui::widget::material::base;
 // Constructor / Destructor
 // ============================================================================
 
-CheckBox::CheckBox(QWidget* parent) : QCheckBox(parent) {
-    // Set size policy - Preferred allows proper layout behavior
+CheckBox::CheckBox(QWidget* parent)
+    : QCheckBox(parent), m_material(this, MaterialWidgetBase::Config{.useElevation = false}) {
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    // Get animation factory from Application
-    m_animationFactory = cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(
-        application_support::Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_ripple = new RippleHelper(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    // Set ripple mode to bounded (checkbox has defined bounds)
-    m_ripple->setMode(RippleHelper::Mode::Bounded);
-
-    // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-
-    // Initialize check animation based on current state
-    // Both PartiallyChecked and Checked use 1.0 for full mark visibility
     if (checkState() == Qt::Checked) {
         m_checkAnimationProgress = 1.0f;
-        m_stateMachine->onCheckedChanged(true);
+        m_material.stateMachine()->onCheckedChanged(true);
     } else if (checkState() == Qt::PartiallyChecked) {
         m_checkAnimationProgress = 1.0f;
     }
 
-    // Set default cursor
     setCursor(Qt::PointingHandCursor);
 }
 
@@ -119,8 +93,8 @@ void CheckBox::setCheckState(Qt::CheckState state) {
 
 void CheckBox::updateAnimationProgress(float progress, bool checked) {
     m_checkAnimationProgress = progress;
-    if (m_stateMachine) {
-        m_stateMachine->onCheckedChanged(checked);
+    if (m_material.stateMachine()) {
+        m_material.stateMachine()->onCheckedChanged(checked);
     }
     update();
 }
@@ -128,23 +102,21 @@ void CheckBox::updateAnimationProgress(float progress, bool checked) {
 void CheckBox::startCheckMarkAnimation(float target) {
     float fromValue = m_checkAnimationProgress;
 
-    if (!m_animationFactory) {
-        // No factory, set directly
+    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+        application_support::Application::animationFactory());
+
+    if (!factory) {
         m_checkAnimationProgress = target;
         update();
         return;
     }
 
-    // Create property animation
-    auto anim = m_animationFactory->createPropertyAnimation(
-        &m_checkAnimationProgress, fromValue, target, 300,
-        cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
+    auto anim =
+        factory->createPropertyAnimation(&m_checkAnimationProgress, fromValue, target, 300,
+                                         cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
 
     if (anim) {
-        // IMPORTANT: Update range to fix cached animation's stale from/to values
-        if (auto* propAnim =
-                dynamic_cast<cf::ui::components::material::CFMaterialPropertyAnimation*>(
-                    anim.Get())) {
+        if (auto* propAnim = dynamic_cast<CFMaterialPropertyAnimation*>(anim.Get())) {
             propAnim->setRange(fromValue, target);
         }
         anim->start();
@@ -164,78 +136,46 @@ CheckBox::~CheckBox() {
 
 void CheckBox::enterEvent(QEnterEvent* event) {
     QCheckBox::enterEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverEnter();
-    update();
+    m_material.onEnterEvent();
 }
 
 void CheckBox::leaveEvent(QEvent* event) {
     QCheckBox::leaveEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onHoverLeave();
-    if (m_ripple)
-        m_ripple->onCancel();
-    update();
+    m_material.onLeaveEvent();
 }
 
 void CheckBox::mousePressEvent(QMouseEvent* event) {
     QCheckBox::mousePressEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onPress(event->pos());
-    if (m_ripple)
-        m_ripple->onPress(event->pos(), checkboxRect());
-    update();
+    m_material.onMousePress(event->pos(), checkboxRect());
 }
 
 void CheckBox::mouseReleaseEvent(QMouseEvent* event) {
     QCheckBox::mouseReleaseEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onRelease();
-    if (m_ripple)
-        m_ripple->onRelease();
-    update();
+    m_material.onMouseRelease();
 }
 
 void CheckBox::focusInEvent(QFocusEvent* event) {
     QCheckBox::focusInEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusIn();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusIn();
-    update();
+    m_material.onFocusIn();
 }
 
 void CheckBox::focusOutEvent(QFocusEvent* event) {
     QCheckBox::focusOutEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusOut();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusOut();
-    update();
+    m_material.onFocusOut();
 }
 
 void CheckBox::changeEvent(QEvent* event) {
     QCheckBox::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
-        update();
+        m_material.onEnabledChange(isEnabled());
     }
 }
 
 void CheckBox::nextCheckState() {
-    // Animate from current state to new state
     Qt::CheckState oldState = checkState();
     QCheckBox::nextCheckState();
     Qt::CheckState newState = checkState();
 
-    // Determine target progress based on new state
-    // Both PartiallyChecked and Checked use 1.0 for full mark visibility
     float newTarget = 0.0f;
     bool checked = false;
 
@@ -254,18 +194,14 @@ void CheckBox::nextCheckState() {
             break;
     }
 
-    // Update state machine checked state
-    if (m_stateMachine) {
-        m_stateMachine->onCheckedChanged(checked);
+    if (m_material.stateMachine()) {
+        m_material.stateMachine()->onCheckedChanged(checked);
     }
 
-    // Start 1-second check mark animation
     startCheckMarkAnimation(newTarget);
 }
 
 bool CheckBox::hitButton(const QPoint& pos) const {
-    // For custom-drawn checkbox, entire widget area is clickable
-    // This ensures proper click handling even when text is empty
     return rect().contains(pos);
 }
 
@@ -292,13 +228,6 @@ void CheckBox::setError(bool error) {
 QSize CheckBox::sizeHint() const {
     CanvasUnitHelper helper(qApp->devicePixelRatio());
 
-    // Material Design checkbox specifications:
-    // - Checkbox size: 18dp
-    // - Spacing between checkbox and text: 12dp
-    // - Left padding (for focus indicator): 12dp
-    // - Right padding: 12dp
-    // - Touch target: 48dp minimum
-
     float leftPadding = helper.dpToPx(12.0f);
     float rightPadding = helper.dpToPx(12.0f);
     float boxSize = helper.dpToPx(18.0f);
@@ -306,8 +235,6 @@ QSize CheckBox::sizeHint() const {
     float textWidth = text().isEmpty() ? 0.0f : fontMetrics().horizontalAdvance(text());
 
     float width = leftPadding + boxSize + spacing + textWidth + rightPadding;
-
-    // Ensure minimum 48dp width for easy clicking (even without text)
     float minWidth = helper.dpToPx(48.0f);
     width = std::max(width, minWidth);
 
@@ -317,8 +244,6 @@ QSize CheckBox::sizeHint() const {
 }
 
 QSize CheckBox::minimumSizeHint() const {
-    // Return the same as sizeHint to prevent text truncation
-    // This ensures the checkbox always has enough space for its text
     return sizeHint();
 }
 
@@ -327,7 +252,6 @@ QSize CheckBox::minimumSizeHint() const {
 // ============================================================================
 
 namespace {
-// Fallback colors when theme is not available
 inline CFColor fallbackPrimary() {
     return CFColor(103, 80, 164);
 } // Purple 700
@@ -356,7 +280,6 @@ CFColor CheckBox::checkmarkColor() const {
             return CFColor(colorScheme.queryColor(ERROR));
         }
 
-        // Text uses PRIMARY for checked/indeterminate, ON_SURFACE for unchecked
         if (isChecked() || checkState() == Qt::PartiallyChecked) {
             return CFColor(colorScheme.queryColor(PRIMARY));
         }
@@ -366,11 +289,9 @@ CFColor CheckBox::checkmarkColor() const {
     }
 }
 
-// Color for the check mark/indeterminate line (drawn on colored background)
 CFColor CheckBox::markDrawColor() const {
     auto* app = application_support::Application::instance();
     if (!app) {
-        // White mark on primary background
         return CFColor(255, 255, 255);
     }
 
@@ -397,7 +318,6 @@ CFColor CheckBox::borderColor() const {
             return CFColor(colorScheme.queryColor(ERROR));
         }
 
-        // Checked/indeterminate uses primary, unchecked uses outline
         if (isChecked() || checkState() == Qt::PartiallyChecked) {
             return CFColor(colorScheme.queryColor(PRIMARY));
         }
@@ -411,7 +331,6 @@ CFColor CheckBox::borderColor() const {
 CFColor CheckBox::backgroundColor() const {
     auto* app = application_support::Application::instance();
     if (!app) {
-        // No background for unchecked
         return CFColor(Qt::transparent);
     }
 
@@ -419,7 +338,6 @@ CFColor CheckBox::backgroundColor() const {
         const auto& theme = app->currentTheme();
         auto& colorScheme = theme.color_scheme();
 
-        // Only checked/indeterminate has background
         if (isChecked() || checkState() == Qt::PartiallyChecked) {
             return CFColor(colorScheme.queryColor(PRIMARY));
         }
@@ -430,24 +348,20 @@ CFColor CheckBox::backgroundColor() const {
 }
 
 CFColor CheckBox::stateLayerColor() const {
-    // State layer uses the same color as the checkbox
     return checkmarkColor();
 }
 
 float CheckBox::cornerRadius() const {
-    // Checkbox uses small corner radius (2dp)
     CanvasUnitHelper helper(qApp->devicePixelRatio());
     return helper.dpToPx(2.0f);
 }
 
 float CheckBox::checkboxSize() const {
-    // Material Design checkbox is 18dp
     CanvasUnitHelper helper(qApp->devicePixelRatio());
     return helper.dpToPx(18.0f);
 }
 
 float CheckBox::strokeWidth() const {
-    // Border stroke width is 2dp
     CanvasUnitHelper helper(qApp->devicePixelRatio());
     return helper.dpToPx(2.0f);
 }
@@ -459,11 +373,8 @@ float CheckBox::strokeWidth() const {
 QRectF CheckBox::checkboxRect() const {
     CanvasUnitHelper helper(qApp->devicePixelRatio());
 
-    // Calculate vertical centering
     float boxSize = checkboxSize();
     float y = (height() - boxSize) / 2.0f;
-
-    // Add padding from left (for focus indicator spacing)
     float x = helper.dpToPx(12.0f);
 
     return QRectF(x, y, boxSize, boxSize);
@@ -501,15 +412,12 @@ void CheckBox::paintEvent(QPaintEvent* event) {
     drawBorder(p, box);
 
     // Step 3: Draw check mark or indeterminate mark
-    // Draw based on actual checkState, not animation progress
-    // This ensures visual consistency even during animation
     Qt::CheckState state = checkState();
     if (state == Qt::PartiallyChecked) {
         drawIndeterminateMark(p, box);
     } else if (state == Qt::Checked) {
         drawCheckMark(p, box);
     }
-    // Unchecked: no mark to draw
 
     // Step 4: Draw ripple
     drawRipple(p, box);
@@ -529,13 +437,12 @@ void CheckBox::paintEvent(QPaintEvent* event) {
 
 void CheckBox::drawBackground(QPainter& p, const QRectF& rect) {
     if (checkState() == Qt::Unchecked) {
-        return; // No background for unchecked
+        return;
     }
 
     CFColor bgColor = backgroundColor();
     QColor color = bgColor.native_color();
 
-    // Handle disabled state
     if (!isEnabled()) {
         color.setAlphaF(0.38f);
     }
@@ -548,20 +455,17 @@ void CheckBox::drawBorder(QPainter& p, const QRectF& rect) {
     CFColor bColor = borderColor();
     QColor color = bColor.native_color();
 
-    // Handle disabled state
     if (!isEnabled()) {
         color.setAlphaF(0.38f);
     }
 
-    // Handle state layer overlay
-    if (m_stateMachine && isEnabled()) {
-        float opacity = m_stateMachine->stateLayerOpacity();
+    if (m_material.stateMachine() && isEnabled()) {
+        float opacity = m_material.stateMachine()->stateLayerOpacity();
         if (opacity > 0.0f) {
             CFColor stateColor = stateLayerColor();
             QColor stateQColor = stateColor.native_color();
             stateQColor.setAlphaF(opacity);
 
-            // Blend state color with border color
             int r = int(color.red() * (1.0f - opacity) + stateQColor.red() * opacity);
             int g = int(color.green() * (1.0f - opacity) + stateQColor.green() * opacity);
             int b = int(color.blue() * (1.0f - opacity) + stateQColor.blue() * opacity);
@@ -571,7 +475,6 @@ void CheckBox::drawBorder(QPainter& p, const QRectF& rect) {
 
     p.save();
 
-    // Create inset path for border
     float inset = strokeWidth() / 2.0f;
     QRectF insetRect = rect.adjusted(inset, inset, -inset, -inset);
     float adjustedRadius = std::max(0.0f, cornerRadius() - inset);
@@ -600,14 +503,9 @@ void CheckBox::drawCheckMark(QPainter& p, const QRectF& rect) {
     pen.setJoinStyle(Qt::RoundJoin);
     p.setPen(pen);
 
-    // Draw check mark with animation progress
-    // The check mark has two segments:
-    // 1. From bottom-left to center (0.0 to 0.5 progress)
-    // 2. From center to top-right (0.5 to 1.0 progress)
     float w = rect.width();
     float h = rect.height();
 
-    // Define check mark points (relative to rect, with margins)
     float left = rect.left() + w * 0.25f;
     float bottom = rect.top() + h * 0.55f;
 
@@ -617,20 +515,17 @@ void CheckBox::drawCheckMark(QPainter& p, const QRectF& rect) {
     float right = rect.left() + w * 0.75f;
     float top = rect.top() + h * 0.35f;
 
-    // Get animation progress
     float progress = m_checkAnimationProgress;
 
-    // Draw the first segment (bottom-left to center)
     if (progress > 0.0f) {
-        float segment1Progress = std::min(progress * 2.0f, 1.0f); // 0.0-0.5 maps to 0.0-1.0
+        float segment1Progress = std::min(progress * 2.0f, 1.0f);
         float currentX = left + (centerX - left) * segment1Progress;
         float currentY = bottom + (centerY - bottom) * segment1Progress;
         p.drawLine(QPointF(left, bottom), QPointF(currentX, currentY));
     }
 
-    // Draw the second segment (center to top-right)
     if (progress > 0.5f) {
-        float segment2Progress = (progress - 0.5f) * 2.0f; // 0.5-1.0 maps to 0.0-1.0
+        float segment2Progress = (progress - 0.5f) * 2.0f;
         float currentX = centerX + (right - centerX) * segment2Progress;
         float currentY = centerY + (top - centerY) * segment2Progress;
         p.drawLine(QPointF(centerX, centerY), QPointF(currentX, currentY));
@@ -652,8 +547,6 @@ void CheckBox::drawIndeterminateMark(QPainter& p, const QRectF& rect) {
     pen.setCapStyle(Qt::RoundCap);
     p.setPen(pen);
 
-    // Indeterminate mark is a horizontal line at center
-    // Animated from left to right using the same progress as check mark
     float w = rect.width();
     float h = rect.height();
 
@@ -662,10 +555,8 @@ void CheckBox::drawIndeterminateMark(QPainter& p, const QRectF& rect) {
     float x1 = rect.left() + margin;
     float x2 = rect.right() - margin;
 
-    // Get animation progress
     float progress = m_checkAnimationProgress;
 
-    // Draw animated indeterminate line (left to right)
     if (progress > 0.0f) {
         float currentX = x1 + (x2 - x1) * progress;
         p.drawLine(QPointF(x1, y), QPointF(currentX, y));
@@ -675,12 +566,11 @@ void CheckBox::drawIndeterminateMark(QPainter& p, const QRectF& rect) {
 }
 
 void CheckBox::drawRipple(QPainter& p, const QRectF& rect) {
-    if (m_ripple) {
-        // Update ripple color based on current state
-        m_ripple->setColor(stateLayerColor());
+    if (m_material.ripple()) {
+        m_material.ripple()->setColor(stateLayerColor());
 
         QPainterPath clipPath = roundedRect(rect, cornerRadius());
-        m_ripple->paint(&p, clipPath);
+        m_material.ripple()->paint(&p, clipPath);
     }
 }
 
@@ -695,23 +585,20 @@ void CheckBox::drawText(QPainter& p, const QRectF& rect) {
         p.setPen(textColor.native_color());
     }
 
-    // Use widget's font
     p.setFont(font());
 
-    // Draw text vertically centered, left aligned
-    QRectF textBounds = rect.adjusted(0, 2, 0, -2); // Small adjustment for visual centering
+    QRectF textBounds = rect.adjusted(0, 2, 0, -2);
     p.drawText(textBounds, Qt::AlignLeft | Qt::AlignVCenter, text());
 }
 
 void CheckBox::drawFocusIndicator(QPainter& p, const QRectF& rect) {
-    if (m_focusIndicator) {
-        // Expand rect slightly for focus ring
+    if (m_material.focusIndicator()) {
         CanvasUnitHelper helper(qApp->devicePixelRatio());
         float margin = helper.dpToPx(4.0f);
         QRectF focusRect = rect.adjusted(-margin, -margin, margin, margin);
 
         QPainterPath shape = roundedRect(focusRect, cornerRadius() + margin);
-        m_focusIndicator->paint(&p, shape, checkmarkColor());
+        m_material.focusIndicator()->paint(&p, shape, checkmarkColor());
     }
 }
 

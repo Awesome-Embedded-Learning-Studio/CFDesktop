@@ -1,7 +1,7 @@
 /**
  * @file cfmaterial_motion.h
  * @author Charliechen114514 (chengh1922@mails.jlu.edu.cn)
- * @brief Material Design 3 Motion Scheme with EmbeddedTokenRegistry
+ * @brief Material Design 3 Motion Scheme
  * @version 0.1
  * @date 2026-02-26
  *
@@ -9,8 +9,7 @@
  *
  * @details
  * Implements the complete Material Design 3 motion system with duration,
- * easing, and delay specifications. Motion specs are stored in an embedded
- * registry for independent scheme instances.
+ * easing, and delay specifications.
  */
 #pragma once
 #include <QEasingCurve>
@@ -18,44 +17,10 @@
 #include <unordered_map>
 
 #include "../motion_spec.h"
-#include "../token.hpp"
-#include "../token/motion/cfmaterial_motion_token_literals.h"
 #include "base/easing.h"
-#include "base/hash/constexpr_fnv1a.hpp"
 #include "export.h"
 
 namespace cf::ui::core {
-
-// =============================================================================
-// Motion Token Type Aliases - Material Motion System
-// =============================================================================
-namespace tokens {
-using namespace cf::ui::core::token::literals;
-
-// Duration tokens
-using ShortEnterDurationToken = StaticToken<int, cf::hash::fnv1a64(MOTION_SHORT_ENTER_DURATION)>;
-using ShortExitDurationToken = StaticToken<int, cf::hash::fnv1a64(MOTION_SHORT_EXIT_DURATION)>;
-using MediumEnterDurationToken = StaticToken<int, cf::hash::fnv1a64(MOTION_MEDIUM_ENTER_DURATION)>;
-using MediumExitDurationToken = StaticToken<int, cf::hash::fnv1a64(MOTION_MEDIUM_EXIT_DURATION)>;
-using LongEnterDurationToken = StaticToken<int, cf::hash::fnv1a64(MOTION_LONG_ENTER_DURATION)>;
-using LongExitDurationToken = StaticToken<int, cf::hash::fnv1a64(MOTION_LONG_EXIT_DURATION)>;
-using StateChangeDurationToken = StaticToken<int, cf::hash::fnv1a64(MOTION_STATE_CHANGE_DURATION)>;
-using RippleExpandDurationToken =
-    StaticToken<int, cf::hash::fnv1a64(MOTION_RIPPLE_EXPAND_DURATION)>;
-using RippleFadeDurationToken = StaticToken<int, cf::hash::fnv1a64(MOTION_RIPPLE_FADE_DURATION)>;
-
-// Easing tokens (stored as int enum values)
-using ShortEnterEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_SHORT_ENTER_EASING)>;
-using ShortExitEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_SHORT_EXIT_EASING)>;
-using MediumEnterEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_MEDIUM_ENTER_EASING)>;
-using MediumExitEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_MEDIUM_EXIT_EASING)>;
-using LongEnterEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_LONG_ENTER_EASING)>;
-using LongExitEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_LONG_EXIT_EASING)>;
-using StateChangeEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_STATE_CHANGE_EASING)>;
-using RippleExpandEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_RIPPLE_EXPAND_EASING)>;
-using RippleFadeEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_RIPPLE_FADE_EASING)>;
-
-} // namespace tokens
 
 // =============================================================================
 // Motion Data Structure
@@ -65,8 +30,7 @@ using RippleFadeEasingToken = StaticToken<int, cf::hash::fnv1a64(MOTION_RIPPLE_F
  * @brief Motion specification structure.
  *
  * Describes a complete animation specification with duration,
- * easing curve, and optional delay. This is a widget-independent,
- * reusable description of animation behavior.
+ * easing curve, and optional delay.
  *
  * @since 0.1
  * @ingroup ui_core
@@ -78,8 +42,6 @@ struct MotionSpec {
 
     /**
      * @brief  Convert easing type to QEasingCurve.
-     *
-     * Convenience method to convert the easing type to a Qt easing curve.
      *
      * @return         QEasingCurve corresponding to the easing type.
      *
@@ -126,13 +88,9 @@ struct MotionPresets {
      * @brief  Short enter motion preset.
      *
      * Duration: 200ms, Easing: EmphasizedDecelerate
-     * Used for: Small elements entering the screen
      *
      * @return         MotionSpec with duration 200ms and EmphasizedDecelerate easing.
      *
-     * @throws         None
-     * @note           None
-     * @warning        None
      * @since          0.1
      * @ingroup        ui_core
      */
@@ -144,13 +102,9 @@ struct MotionPresets {
      * @brief  Short exit motion preset.
      *
      * Duration: 150ms, Easing: EmphasizedAccelerate
-     * Used for: Small elements exiting the screen
      *
      * @return         MotionSpec with duration 150ms and EmphasizedAccelerate easing.
      *
-     * @throws         None
-     * @note           None
-     * @warning        None
      * @since          0.1
      * @ingroup        ui_core
      */
@@ -162,13 +116,9 @@ struct MotionPresets {
      * @brief  Medium enter motion preset.
      *
      * Duration: 300ms, Easing: EmphasizedDecelerate
-     * Used for: Medium-sized elements entering the screen
      *
      * @return         MotionSpec with duration 300ms and EmphasizedDecelerate easing.
      *
-     * @throws         None
-     * @note           None
-     * @warning        None
      * @since          0.1
      * @ingroup        ui_core
      */
@@ -180,13 +130,9 @@ struct MotionPresets {
      * @brief  Medium exit motion preset.
      *
      * Duration: 250ms, Easing: EmphasizedAccelerate
-     * Used for: Medium-sized elements exiting the screen
      *
      * @return         MotionSpec with duration 250ms and EmphasizedAccelerate easing.
      *
-     * @throws         None
-     * @note           None
-     * @warning        None
      * @since          0.1
      * @ingroup        ui_core
      */
@@ -198,13 +144,9 @@ struct MotionPresets {
      * @brief  Long enter motion preset.
      *
      * Duration: 450ms, Easing: Emphasized
-     * Used for: Large elements entering the screen
      *
      * @return         MotionSpec with duration 450ms and Emphasized easing.
      *
-     * @throws         None
-     * @note           None
-     * @warning        None
      * @since          0.1
      * @ingroup        ui_core
      */
@@ -214,13 +156,9 @@ struct MotionPresets {
      * @brief  Long exit motion preset.
      *
      * Duration: 400ms, Easing: Emphasized
-     * Used for: Large elements exiting the screen
      *
      * @return         MotionSpec with duration 400ms and Emphasized easing.
      *
-     * @throws         None
-     * @note           None
-     * @warning        None
      * @since          0.1
      * @ingroup        ui_core
      */
@@ -230,13 +168,9 @@ struct MotionPresets {
      * @brief  State change motion preset.
      *
      * Duration: 200ms, Easing: Standard
-     * Used for: State layer animations
      *
      * @return         MotionSpec with duration 200ms and Standard easing.
      *
-     * @throws         None
-     * @note           None
-     * @warning        None
      * @since          0.1
      * @ingroup        ui_core
      */
@@ -246,13 +180,9 @@ struct MotionPresets {
      * @brief  Ripple expand motion preset.
      *
      * Duration: 400ms, Easing: Standard
-     * Used for: Ripple effect expansion
      *
      * @return         MotionSpec with duration 400ms and Standard easing.
      *
-     * @throws         None
-     * @note           None
-     * @warning        None
      * @since          0.1
      * @ingroup        ui_core
      */
@@ -262,13 +192,9 @@ struct MotionPresets {
      * @brief  Ripple fade motion preset.
      *
      * Duration: 150ms, Easing: Linear
-     * Used for: Ripple effect fade out
      *
      * @return         MotionSpec with duration 150ms and Linear easing.
      *
-     * @throws         None
-     * @note           None
-     * @warning        None
      * @since          0.1
      * @ingroup        ui_core
      */
@@ -280,11 +206,10 @@ struct MotionPresets {
 // =============================================================================
 
 /**
- * @brief  Material Design 3 Motion Scheme with EmbeddedTokenRegistry.
+ * @brief  Material Design 3 Motion Scheme.
  *
  * @details Implements the complete Material Design 3 motion system with
- * duration and easing specifications. Motion values are stored in
- * an embedded registry for independent scheme instances.
+ * duration and easing specifications.
  *
  * Factory functions are available in the cf::ui::core::material namespace.
  *
@@ -297,10 +222,7 @@ struct MotionPresets {
  * @code
  * #include "material_factory.hpp"
  *
- * // Create the default motion scheme
  * auto motionScheme = cf::ui::core::material::motion();
- *
- * // Query motion by name
  * int duration = motionScheme.queryDuration("shortEnter");  // 200
  * @endcode
  */
@@ -388,38 +310,6 @@ class CF_UI_EXPORT MaterialMotionScheme : public IMotionSpec {
     MotionSpec getMotionSpec(const char* name);
 
     /**
-     * @brief Access the embedded token registry.
-     *
-     * @return Reference to the EmbeddedTokenRegistry.
-     *
-     * @throws    None.
-     *
-     * @note      Provides direct access to internal token storage.
-     *
-     * @warning   Modifying tokens directly may affect color scheme behavior.
-     *
-     * @since     0.1
-     * @ingroup   ui_core
-     */
-    EmbeddedTokenRegistry& registry() { return registry_; }
-
-    /**
-     * @brief Access the embedded token registry (const overload).
-     *
-     * @return Const reference to the EmbeddedTokenRegistry.
-     *
-     * @throws    None.
-     *
-     * @note      Read-only access to internal token storage.
-     *
-     * @warning   None.
-     *
-     * @since     0.1
-     * @ingroup   ui_core
-     */
-    const EmbeddedTokenRegistry& registry() const { return registry_; }
-
-    /**
      * @brief Motion presets group structure.
      *
      * Contains all predefined motion specifications.
@@ -454,7 +344,8 @@ class CF_UI_EXPORT MaterialMotionScheme : public IMotionSpec {
     }
 
   private:
-    EmbeddedTokenRegistry registry_;
+    std::unordered_map<std::string, int> durations_;
+    std::unordered_map<std::string, int> easings_;
     mutable std::unordered_map<std::string, MotionSpec> spec_cache_;
 };
 

@@ -15,20 +15,12 @@
 #pragma once
 
 #include "base/color.h"
-#include "base/include/base/weak_ptr/weak_ptr.h"
-#include "cfmaterial_animation_factory.h"
 #include "export.h"
+#include "widget/material/base/material_widget_base.h"
 #include <QCheckBox>
 #include <QWidget>
 
 namespace cf::ui::widget::material {
-
-// Forward declarations
-namespace base {
-class StateMachine;
-class RippleHelper;
-class MdFocusIndicator;
-} // namespace base
 
 using CFColor = cf::ui::base::CFColor;
 
@@ -325,7 +317,7 @@ class CF_UI_EXPORT CheckBox : public QCheckBox {
 
     // Color access methods
     CFColor checkmarkColor() const;
-    CFColor markDrawColor() const;  // Color for check/indeterminate mark on background
+    CFColor markDrawColor() const; // Color for check/indeterminate mark on background
     CFColor borderColor() const;
     CFColor backgroundColor() const;
     CFColor stateLayerColor() const;
@@ -336,10 +328,7 @@ class CF_UI_EXPORT CheckBox : public QCheckBox {
     float strokeWidth() const;
 
     // Behavior components
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animationFactory;
-    base::StateMachine* m_stateMachine;
-    base::RippleHelper* m_ripple;
-    base::MdFocusIndicator* m_focusIndicator;
+    base::MaterialWidgetBase m_material;
 
     // Check mark animation progress (0.0 to 1.0)
     float m_checkAnimationProgress = 0.0f;

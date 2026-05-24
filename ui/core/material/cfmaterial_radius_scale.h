@@ -1,7 +1,7 @@
 /**
  * @file cfmaterial_radius_scale.h
  * @author Charliechen114514 (chengh1922@mails.jlu.edu.cn)
- * @brief Material Design 3 Radius Scale with EmbeddedTokenRegistry
+ * @brief Material Design 3 Radius Scale
  * @version 0.1
  * @date 2026-02-26
  *
@@ -9,7 +9,6 @@
  *
  * @details
  * Implements the complete Material Design 3 corner radius system with 7 scales.
- * Radii are stored in an embedded registry for independent radius scale instances.
  */
 
 #pragma once
@@ -18,50 +17,26 @@
 #include <unordered_map>
 
 #include "../export.h"
-#include "base/hash/constexpr_fnv1a.hpp"
 #include "radius_scale.h"
-#include "token.hpp"
-#include "token/radius_scale/cfmaterial_radius_scale_literals.h"
 
 namespace cf::ui::core {
 
-// =============================================================================
-// Radius Scale Token Type Aliases - Material Radius Scale System
-// =============================================================================
-namespace tokens {
-using namespace cf::ui::core::token::literals;
-
-using CornerNoneToken = StaticToken<float, cf::hash::fnv1a64(CORNER_NONE)>;
-using CornerExtraSmallToken = StaticToken<float, cf::hash::fnv1a64(CORNER_EXTRA_SMALL)>;
-using CornerSmallToken = StaticToken<float, cf::hash::fnv1a64(CORNER_SMALL)>;
-using CornerMediumToken = StaticToken<float, cf::hash::fnv1a64(CORNER_MEDIUM)>;
-using CornerLargeToken = StaticToken<float, cf::hash::fnv1a64(CORNER_LARGE)>;
-using CornerExtraLargeToken = StaticToken<float, cf::hash::fnv1a64(CORNER_EXTRA_LARGE)>;
-using CornerExtraExtraLargeToken = StaticToken<float, cf::hash::fnv1a64(CORNER_EXTRA_EXTRA_LARGE)>;
-
-} // namespace tokens
-
-// =============================================================================
-// Material Radius Scale - 实现 IRadiusScale 接口
-// =============================================================================
-
 /**
- * @brief  Material Design 3 Radius Scale with EmbeddedTokenRegistry.
+ * @brief  Material Design 3 Radius Scale.
  *
  * @details Implements the complete Material Design 3 Corner Radius system with 7 scales.
- * Radii are stored in an embedded registry for independent radius scale instances.
  *
  * ### Radius Scale Specifications
  *
  * | Token | Name | Value (dp) | Usage |
  * |-------|------|------------|-------|
- * | CORNER_NONE | cornerNone | 0dp | No corner radius |
- * | CORNER_EXTRA_SMALL | cornerExtraSmall | 4dp | Chips, small cards |
- * | CORNER_SMALL | cornerSmall | 8dp | Text fields, checkboxes |
- * | CORNER_MEDIUM | cornerMedium | 12dp | Cards |
- * | CORNER_LARGE | cornerLarge | 16dp | Alert dialogs |
- * | CORNER_EXTRA_LARGE | cornerExtraLarge | 28dp | FAB, modals |
- * | CORNER_EXTRA_EXTRA_LARGE | cornerExtraExtraLarge | 32dp | Drawers |
+ * | cornerNone | cornerNone | 0dp | No corner radius |
+ * | cornerExtraSmall | cornerExtraSmall | 4dp | Chips, small cards |
+ * | cornerSmall | cornerSmall | 8dp | Text fields, checkboxes |
+ * | cornerMedium | cornerMedium | 12dp | Cards |
+ * | cornerLarge | cornerLarge | 16dp | Alert dialogs |
+ * | cornerExtraLarge | cornerExtraLarge | 28dp | FAB, modals |
+ * | cornerExtraExtraLarge | cornerExtraExtraLarge | 32dp | Drawers |
  *
  * @note           None
  * @warning        None
@@ -71,7 +46,7 @@ using CornerExtraExtraLargeToken = StaticToken<float, cf::hash::fnv1a64(CORNER_E
  *
  * @code
  * MaterialRadiusScale radiusScale;
- * float radius = radiusScale.queryRadiusScale("cornerSmall");
+ * float radius = radiusScale.queryRadiusScale("md.shape.cornerSmall");
  * @endcode
  */
 class CF_UI_EXPORT MaterialRadiusScale : public IRadiusScale {
@@ -100,48 +75,18 @@ class CF_UI_EXPORT MaterialRadiusScale : public IRadiusScale {
     float queryRadiusScale(const char* name) override;
 
     /**
-     * @brief  Access the embedded token registry.
+     * @brief  Register a radius by name.
      *
-     * Provides direct access to the internal token registry for
-     * custom token manipulation.
+     * @param[in] name   Radius token name (e.g., "md.shape.cornerSmall").
+     * @param[in] radius Radius value in dp.
      *
-     * @return         Reference to the EmbeddedTokenRegistry.
-     *
-     * @throws         None
-     * @note           None
-     * @warning        None
-     * @since          0.1
-     * @ingroup        ui_core
+     * @since     0.1
+     * @ingroup   ui_core
      */
-    EmbeddedTokenRegistry& registry() { return registry_; }
-
-    /**
-     * @brief  Access the embedded token registry (const overload).
-     *
-     * Provides direct read-only access to the internal token registry.
-     *
-     * @return         Const reference to the EmbeddedTokenRegistry.
-     *
-     * @throws         None
-     * @note           None
-     * @warning        None
-     * @since          0.1
-     * @ingroup        ui_core
-     */
-    const EmbeddedTokenRegistry& registry() const { return registry_; }
+    void setRadius(const std::string& name, float radius);
 
   private:
-    /**
-     * @brief 注册默认圆角半径值
-     *
-     * 按照 Material Design 3 规范注册所有圆角半径。
-     *
-     * @since 0.1
-     */
-    void registerDefaultCorners();
-
-    EmbeddedTokenRegistry registry_;
-    mutable std::unordered_map<std::string, float> radius_cache_;
+    std::unordered_map<std::string, float> radii_;
 };
 
 } // namespace cf::ui::core

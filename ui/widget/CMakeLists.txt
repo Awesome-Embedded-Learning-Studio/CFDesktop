@@ -30,6 +30,7 @@ add_library(cf_ui_widget_material STATIC
     material/base/elevation_controller.cpp
     material/base/focus_ring.cpp
     material/base/painter_layer.cpp
+    material/base/material_widget_base.cpp
     material/widget/button/button.cpp
     material/widget/checkbox/checkbox.cpp
     material/widget/comboBox/combobox.cpp

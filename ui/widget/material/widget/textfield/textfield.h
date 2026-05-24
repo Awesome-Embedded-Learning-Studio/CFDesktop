@@ -19,18 +19,10 @@
 #include <QWidget>
 
 #include "base/color.h"
-#include "base/include/base/weak_ptr/weak_ptr.h"
-#include "cfmaterial_animation_factory.h"
 #include "export.h"
+#include "widget/material/base/material_widget_base.h"
 
 namespace cf::ui::widget::material {
-
-// Forward declarations
-namespace base {
-class StateMachine;
-class RippleHelper;
-class MdFocusIndicator;
-} // namespace base
 
 using CFColor = cf::ui::base::CFColor;
 
@@ -51,8 +43,7 @@ class CF_UI_EXPORT TextField : public QLineEdit {
     Q_PROPERTY(QString helperText READ helperText WRITE setHelperText)
     Q_PROPERTY(QString errorText READ errorText WRITE setErrorText)
     Q_PROPERTY(int maxLength READ maxLength WRITE setMaxLength)
-    Q_PROPERTY(bool showCharacterCounter READ showCharacterCounter WRITE
-                setShowCharacterCounter)
+    Q_PROPERTY(bool showCharacterCounter READ showCharacterCounter WRITE setShowCharacterCounter)
     Q_PROPERTY(bool isFloating READ isFloating NOTIFY floatingChanged)
     Q_PROPERTY(QIcon prefixIcon READ prefixIcon WRITE setPrefixIcon)
     Q_PROPERTY(QIcon suffixIcon READ suffixIcon WRITE setSuffixIcon)
@@ -513,10 +504,7 @@ class CF_UI_EXPORT TextField : public QLineEdit {
     QFont helperFont() const;
 
     // Behavior components
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animationFactory;
-    base::StateMachine* m_stateMachine;
-    base::RippleHelper* m_ripple;
-    base::MdFocusIndicator* m_focusIndicator;
+    base::MaterialWidgetBase m_material;
 
     // Properties
     TextFieldVariant m_variant;

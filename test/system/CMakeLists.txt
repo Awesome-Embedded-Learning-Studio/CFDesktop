@@ -20,3 +20,11 @@ add_gtest_executable(
     LABELS         "base;system"
     LOG_MODULE     base_system
 )
+
+add_gtest_executable(
+    TEST_NAME      test_hardware_tier
+    SOURCE_FILE    test_hardware_tier.cpp
+    LINK_LIBRARIES cfbase;GTest::gtest;GTest::gtest_main
+    LABELS         "base;system"
+    LOG_MODULE     base_system
+)

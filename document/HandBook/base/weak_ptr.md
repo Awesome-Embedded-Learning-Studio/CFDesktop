@@ -87,7 +87,7 @@ assert(!weak.IsValid());
 assert(weak.Get() == nullptr);
 ```text
 
-这个设计避免了 `shared_ptr` 的隐式生命周期延长问题。持有 `WeakPtr` 不会阻止对象被销毁，这也是它和 `std::weak_ptr` 的核心区别之一。
+这个设计避免了 `shared_ptr` 的隐式生命周期延长问题。持有 `WeakPtr` 不会阻止对象被销毁，这也是它和 `std::weak_ptr` 的核心区别之一。同时需要注意的是，`WeakPtr` 内部持有的是指向工厂内嵌标志的裸指针（而非 `shared_ptr`），因此 `WeakPtr` 的生命周期**绝不能**超过工厂——工厂析构后再访问 `WeakPtr` 是未定义行为。
 
 ## 类型转换
 
@@ -126,7 +126,7 @@ if (derived_again) {
 
 ## 线程安全考虑
 
-`WeakPtr` **不是线程安全的**，应该在同一个线程（或序列）中使用。"检查有效性"和"访问对象"这两步操作不是原子的：
+`WeakPtr` **不是完全线程安全的**。内部的存活标志使用 `std::atomic<bool>` 实现，`IsAlive()` 和 `Invalidate()` 本身是线程安全的。但"检查有效性"和"访问对象"这两步操作不是原子的：
 
 ```cpp
 // 危险：多线程环境下
@@ -140,7 +140,7 @@ if (weak.IsValid()) {  // 检查通过
 // 或者用其他同步机制保护整个检查+访问过程
 ```text
 
-这个限制和 `std::weak_ptr::lock()` 不一样。标准库的 `lock()` 是原子的，可以返回一个 `shared_ptr` 保证对象在使用期间存活。我们选择不提供这个功能，是因为项目里的使用场景大多是单线程的，不需要这个开销。
+这个限制和 `std::weak_ptr::lock()` 不一样。标准库的 `lock()` 是原子的，可以返回一个 `shared_ptr` 保证对象在使用期间存活。我们选择不提供这个功能，是因为我们的设计中对象有唯一拥有者，不存在共享所有权。此外，标志直接嵌入在工厂中（无堆分配），`WeakPtr` 只持有裸指针，无法像 `shared_ptr` 那样延长对象生命周期。
 
 ## 手动失效
 
@@ -173,38 +173,20 @@ obj.InvalidateAllRefs();  // 手动失效
 assert(!weak1.IsValid());  // 失效
 assert(!weak2.IsValid());  // 失效
 
-// 失效后仍然可以创建新的弱引用
-auto weak3 = obj.GetWeakPtr();
-assert(weak3.IsValid());  // 新的弱引用有效
+// 注意：失效后不能再调用 GetWeakPtr()，会触发断言失败
+// auto weak3 = obj.GetWeakPtr();  // 断言失败！
 ```text
 
-这个功能在某些场景下很有用，比如你想显式通知所有观察者对象不再可用，但又不想真的销毁对象。注意失效后创建的新弱引用是有效的，因为工厂内部会分配新的标志位。
-
-## 检查外部引用
-
-`WeakPtrFactory::HasWeakPtrs()` 可以检查是否有外部持有的弱引用：
-
-```cpp
-class MyClass {
-private:
-    cf::WeakPtrFactory<MyClass> weak_factory_{this};
-
-public:
-    bool HasExternalReferences() const {
-        return weak_factory_.HasWeakPtrs();
-    }
-};
-```bash
-
-这个接口通过 `shared_ptr::use_count()` 实现，所以是 O(1) 的。如果 `use_count() > 1`，说明除了工厂自己外，还有其他地方持有弱引用标志位。这个功能在调试或内存泄漏排查时有用。
+这个功能在某些场景下很有用，比如你想显式通知所有观察者对象不再可用，但又不想真的销毁对象。与旧版实现不同，失效后**不能再创建新的弱引用**——`GetWeakPtr()` 会触发断言失败。这是因为存活标志直接嵌入在工厂中（使用 `std::atomic<bool>`），失效只是将标志设为 `false`，不会分配新的标志。如果你需要"重启"后继续创建弱引用，应该使用一个全新的工厂实例。
 
 ## 与 std::weak_ptr 的对比
 
 | 特性 | cf::WeakPtr | std::weak_ptr |
 |------|-------------|---------------|
 | 所有权模型 | 独占拥有者 | 引用计数 |
-| 性能开销 | 极小 | 较小（引用计数） |
-| 线程安全 | 不保证 | lock() 原子操作 |
+| 性能开销 | 极小（裸指针 + 原子标志） | 较小（引用计数） |
+| 标志存储 | 工厂内嵌，无堆分配 | 控制块堆分配 |
+| 线程安全 | 标志检查原子，访问不保证 | lock() 原子操作 |
 | 使用场景 | 明确生命周期的对象 | 共享所有权 |
 | 依赖工厂 | 需要 WeakPtrFactory | 需要 shared_ptr |
 

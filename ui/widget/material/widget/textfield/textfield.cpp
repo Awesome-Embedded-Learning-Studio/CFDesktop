@@ -17,12 +17,10 @@
 #include "application_support/application.h"
 #include "base/device_pixel.h"
 #include "base/geometry_helper.h"
+#include "base/include/base/weak_ptr/weak_ptr.h"
 #include "cfmaterial_animation_factory.h"
 #include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "widget/material/base/focus_ring.h"
-#include "widget/material/base/ripple_helper.h"
-#include "widget/material/base/state_machine.h"
 
 #include <QApplication>
 #include <QFontMetrics>
@@ -36,7 +34,6 @@ namespace cf::ui::widget::material {
 using namespace cf::ui::base;
 using namespace cf::ui::base::device;
 using namespace cf::ui::base::geometry;
-using namespace cf::ui::components;
 using namespace cf::ui::components::material;
 using namespace cf::ui::core;
 using namespace cf::ui::core::token::literals;
@@ -74,32 +71,20 @@ inline CFColor fallbackPrimary() {
 // ============================================================================
 
 TextField::TextField(TextFieldVariant variant, QWidget* parent)
-    : QLineEdit(parent), m_variant(variant), m_showCharacterCounter(false), m_maxLength(0),
-      m_isFloating(false), m_hasError(false), m_floatingProgress(0.0f), m_outlineWidth(1.0f),
+    : QLineEdit(parent), m_material(this,
+                                    MaterialWidgetBase::Config{
+                                        .useRipple = true,
+                                        .useElevation = false,
+                                        .useFocusIndicator = true,
+                                    }),
+      m_variant(variant), m_showCharacterCounter(false), m_maxLength(0), m_isFloating(false),
+      m_hasError(false), m_floatingProgress(0.0f), m_outlineWidth(1.0f),
       m_hoveringClearButton(false), m_pressingClearButton(false) {
 
     // Disable native frame and background
     setFrame(false);
     setAttribute(Qt::WA_TranslucentBackground);
     setTextMargins(0, 0, 0, 0);
-
-    // Get animation factory from Application
-    m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
-
-    // Initialize behavior components
-    m_stateMachine = new StateMachine(m_animationFactory, this);
-    m_ripple = new RippleHelper(m_animationFactory, this);
-    m_focusIndicator = new MdFocusIndicator(m_animationFactory, this);
-
-    // Set ripple mode
-    m_ripple->setMode(RippleHelper::Mode::Bounded);
-
-    // Connect repaint signals
-    connect(m_ripple, &RippleHelper::repaintNeeded, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
-    connect(m_stateMachine, &StateMachine::stateLayerOpacityChanged, this,
-            static_cast<void (QWidget::*)()>(&QWidget::update));
 
     // Connect text change signal
     connect(this, &QLineEdit::textChanged, this, &TextField::textChanged);
@@ -134,10 +119,10 @@ void TextField::mousePressEvent(QMouseEvent* event) {
     }
 
     QLineEdit::mousePressEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onPress(event->pos());
-    if (m_ripple)
-        m_ripple->onPress(event->pos(), rect());
+    if (m_material.stateMachine())
+        m_material.stateMachine()->onPress(event->pos());
+    if (m_material.ripple())
+        m_material.ripple()->onPress(event->pos(), rect());
     update();
 }
 
@@ -154,29 +139,29 @@ void TextField::mouseReleaseEvent(QMouseEvent* event) {
     }
 
     QLineEdit::mouseReleaseEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onRelease();
-    if (m_ripple)
-        m_ripple->onRelease();
+    if (m_material.stateMachine())
+        m_material.stateMachine()->onRelease();
+    if (m_material.ripple())
+        m_material.ripple()->onRelease();
     update();
 }
 
 void TextField::focusInEvent(QFocusEvent* event) {
     QLineEdit::focusInEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusIn();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusIn();
+    if (m_material.stateMachine())
+        m_material.stateMachine()->onFocusIn();
+    if (m_material.focusIndicator())
+        m_material.focusIndicator()->onFocusIn();
     updateFloatingState(true);
     update();
 }
 
 void TextField::focusOutEvent(QFocusEvent* event) {
     QLineEdit::focusOutEvent(event);
-    if (m_stateMachine)
-        m_stateMachine->onFocusOut();
-    if (m_focusIndicator)
-        m_focusIndicator->onFocusOut();
+    if (m_material.stateMachine())
+        m_material.stateMachine()->onFocusOut();
+    if (m_material.focusIndicator())
+        m_material.focusIndicator()->onFocusOut();
     updateFloatingState(!text().isEmpty());
     update();
 }
@@ -184,13 +169,7 @@ void TextField::focusOutEvent(QFocusEvent* event) {
 void TextField::changeEvent(QEvent* event) {
     QLineEdit::changeEvent(event);
     if (event->type() == QEvent::EnabledChange) {
-        if (m_stateMachine) {
-            if (isEnabled()) {
-                m_stateMachine->onEnable();
-            } else {
-                m_stateMachine->onDisable();
-            }
-        }
+        m_material.onEnabledChange(isEnabled());
         update();
     }
 }
@@ -1035,14 +1014,14 @@ void TextField::drawCharacterCounter(QPainter& p, const QRectF& helperRect) {
 }
 
 void TextField::drawFocusIndicator(QPainter& p, const QRectF& fieldRect) {
-    if (m_focusIndicator && hasFocus()) {
+    if (m_material.focusIndicator() && hasFocus()) {
         QPainterPath shape = roundedRect(fieldRect, cornerRadius());
-        m_focusIndicator->paint(&p, shape, focusOutlineColor());
+        m_material.focusIndicator()->paint(&p, shape, focusOutlineColor());
     }
 }
 
 void TextField::drawRipple(QPainter& p, const QRectF& fieldRect) {
-    if (m_ripple) {
+    if (m_material.ripple()) {
         QPainterPath shape;
         if (m_variant == TextFieldVariant::Outlined) {
             shape = roundedRect(fieldRect, cornerRadius());
@@ -1050,7 +1029,7 @@ void TextField::drawRipple(QPainter& p, const QRectF& fieldRect) {
             // For filled variant, clip to background
             shape.addRect(fieldRect);
         }
-        m_ripple->paint(&p, shape);
+        m_material.ripple()->paint(&p, shape);
     }
 }
 
@@ -1074,16 +1053,20 @@ void TextField::animateFloatingTo(bool floating) {
         return;
     }
 
-    if (!m_animationFactory) {
+    // Get animation factory locally for custom property animations
+    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+        application_support::Application::animationFactory());
+
+    if (!factory) {
         m_floatingProgress = target;
         update();
         return;
     }
 
     // Create property animation for floating progress
-    auto anim = m_animationFactory->createPropertyAnimation(
-        &m_floatingProgress, m_floatingProgress, target, 200,
-        cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
+    auto anim =
+        factory->createPropertyAnimation(&m_floatingProgress, m_floatingProgress, target, 200,
+                                         cf::ui::base::Easing::Type::EmphasizedDecelerate, this);
 
     if (anim) {
         // IMPORTANT: Update range to fix cached animation's stale from/to values

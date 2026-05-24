@@ -1,241 +1,37 @@
 ---
 title: CFDesktop 多显示后端架构设计
-description: "最后更新: 2026-03-29，在  中增加:"
+description: "多后端运行时选择、三种显示角色模型、组件复用矩阵的设计意图"
 ---
 
-# CFDesktop 多显示后端架构设计
+# CFDesktop 多显示后端架构设计 -- 设计意图
 
-> **状态**: 设计中
-> **版本**: 0.1.0
-> **最后更新**: 2026-03-29
+## 为什么选择这种方案
 
----
+CFDesktop 需要在五种运行场景中工作：Windows 客户端、Linux 有桌面环境客户端、Linux 无桌面 X11 窗口管理器、Linux 无桌面 Wayland 合成器、嵌入式直接渲染。这些场景对显示后端的需求截然不同 -- 有的只需跟踪外部窗口，有的需要自己充当合成器，有的甚至连窗口系统都没有。
 
-## 一、设计目标
+核心设计原则是：**同一套 Shell / Panel / WindowManager 代码在所有场景中复用，通过 `IDisplayServerBackend` 抽象层屏蔽平台差异。** 系统定义了三种运行角色（`Client` / `Compositor` / `DirectRender`），每个后端实现一种角色。运行时通过 `DetectDisplayServerMode()` 自动检测环境（环境变量 -> Wayland/X11 socket -> DRM 设备 -> framebuffer），选择合适的后端实例化。上层代码通过 `capabilities()` 查询能力，对不具备的功能优雅降级。
 
-CFDesktop 需要在以下场景中运行：
+## 关键决策
 
-| 场景 | 角色定位 | 运行环境 |
-|------|---------|---------|
-| Windows 伪桌面 | 客户端应用 | Windows 10/11，覆盖在 Windows 桌面上 |
-| Linux 有桌面环境 | 客户端应用 | 有 Gnome/KDE 等完整桌面环境 |
-| Linux 无桌面 (X11) | X11 窗口管理器 | 仅有 libx11/libxcb，无窗口管理器 |
-| Linux 无桌面 (Wayland) | Wayland 合成器 | 仅有 libwayland，无合成器 |
-| Linux 嵌入式 | 直接渲染 | 仅 libdrm/libgbm 或 linuxfb |
+| 决策 | 理由 | 被否决的替代方案 |
+|------|------|------------------|
+| 三种运行角色（Client/Compositor/DirectRender） | 覆盖所有已知场景，每种角色的能力边界清晰 | 只区分"有/无桌面环境"（无法处理嵌入式场景） |
+| 运行时自动检测后端 | 用户无需配置即可适配当前环境，降低使用门槛 | 编译时硬编码后端（每个平台单独编译，维护成本翻倍） |
+| `IDisplayServerBackend` 作为顶层抽象 | 角色检测、能力查询、生命周期管理集中在一个接口，上层只需对接这一层 | 每个平台各自暴露不同接口（上层需要大量条件分支） |
+| `BackendCapabilities` 能力查询 | 允许上层在运行时根据实际能力做降级决策（如嵌入式不支持多窗口） | 假设所有能力都可用（在功能受限的嵌入式设备上崩溃） |
+| `IShellLayer` 接口解耦 QWidget | Wayland 合成器不继承 QWidget，而是实现纯接口 `IShellLayer` | 强制所有后端都基于 QWidget（Wayland 原生合成器无法实现） |
 
-核心设计原则：**同一套 Shell/Panel/WindowManager 代码在所有场景中复用，通过抽象层屏蔽平台差异。**
+## 平台角色模型
 
----
+| 场景 | 角色 | 典型技术 |
+|------|------|---------|
+| Windows 伪桌面 | Client | QWidget + Win32 API + SetWinEventHook |
+| Linux 有桌面环境 | Client | QWidget + X11/Wayland 客户端 |
+| Linux 无桌面 (X11) | Compositor | XCB SubstructureRedirect + EWMH + XComposite |
+| Linux 无桌面 (Wayland) | Compositor | QtWaylandCompositor + xdg-shell + DRM/KMS |
+| Linux 嵌入式 | DirectRender | Qt EGLFS/linuxfb + libdrm + evdev |
 
-## 二、系统角色模型
-
-```text
-┌─────────────────────────────────────────────────────┐
-│                    CFDesktop Shell                    │
-│  (ShellLayer, PanelManager, WindowManager, IWindow)   │
-├───────────────────────────────────────────────────────┤
-│              IDisplayServerBackend                     │
-│  ┌─────────┬──────────┬──────────┬────────────────┐  │
-│  │ Client  │Compositor│Compositor│  DirectRender  │  │
-│  │  Mode   │ X11 WM   │ Wayland  │  EGLFS/FB      │  │
-│  └────┬────┴────┬─────┴────┬─────┴───────┬────────┘  │
-│       │         │          │             │            │
-│  ┌────▼────┐┌───▼────┐┌───▼────┐┌───────▼──────┐    │
-│  │QWidget  ││XCB WM  ││QtWayland││Qt linuxfb/   │    │
-│  │Windows  ││EWMH    ││Compositor││EGLFS plugin  │    │
-│  └─────────┘└────────┘└────────┘└──────────────┘    │
-├───────────────────────────────────────────────────────┤
-│                  RenderBackend                         │
-│  (RHI abstraction, swapBuffers, capabilities)          │
-├───────────────────────────────────────────────────────┤
-│              硬件层 (GPU / DRM / FB / Win32)            │
-└───────────────────────────────────────────────────────┘
-```bash
-
-### DisplayServerRole 枚举
-
-| 值 | 含义 | 典型场景 |
-|----|------|---------|
-| `Client` | 在已有桌面环境中作为应用运行 | Windows, Linux with DE |
-| `Compositor` | 自己就是显示服务器/合成器 | 无桌面 Linux (X11/Wayland) |
-| `DirectRender` | 直接渲染到 framebuffer | 嵌入式设备 (EGLFS/linuxfb) |
-
----
-
-## 三、新增接口定义
-
-### 3.1 IDisplayServerBackend (新增)
-
-**文件**: `desktop/ui/components/IDisplayServerBackend.h`
-
-```cpp
-class IDisplayServerBackend : public QObject {
-    Q_OBJECT
-public:
-    virtual DisplayServerRole role() const = 0;
-    virtual DisplayServerCapabilities capabilities() const = 0;
-    virtual bool initialize(int argc, char** argv) = 0;
-    virtual void shutdown() = 0;
-    virtual int runEventLoop() = 0;
-    virtual WeakPtr<IWindowBackend> windowBackend() = 0;
-    virtual QList<QRect> outputs() const = 0;
-
-signals:
-    void outputChanged();
-    void externalWindowAppeared(WeakPtr<IWindow> window);
-    void externalWindowDisappeared(WeakPtr<IWindow> window);
-};
-```text
-
-**职责**:
-- 决定 CFDesktop 的运行角色（客户端 / 合成器 / 直接渲染）
-- 管理显示输出的生命周期
-- 在合成器模式下，桥接外部窗口事件到 WindowManager
-
-### 3.2 RenderBackend (新增)
-
-**文件**: `desktop/ui/render/render_backend.h`
-
-```cpp
-class RenderBackend {
-public:
-    virtual ~RenderBackend() = default;
-    virtual bool initialize() = 0;
-    virtual void shutdown() = 0;
-    virtual BackendCapabilities capabilities() const = 0;
-    virtual QSize screenSize() const = 0;
-    virtual void* nativeHandle() const = 0;  // EGLDisplay, HWND 等
-};
-```text
-
-**职责**:
-- 抽象底层渲染硬件初始化
-- 提供渲染能力查询
-- 不负责具体绘制（由 Qt RHI 或 QPainter 负责）
-
-### 3.3 BackendCapabilities (新增)
-
-**文件**: `desktop/ui/render/backend_capabilities.h`
-
-```cpp
-struct BackendCapabilities {
-    bool supportsMultiWindow = true;
-    bool supportsTransparency = true;
-    bool hasHardwareAcceleration = true;
-    bool supportsVSync = true;
-    bool supportsScreenshot = true;
-    int maxTextureSize = 4096;
-};
-```yaml
-
----
-
-## 四、现有接口修改
-
-### 4.1 IWindowBackend — 增加 capabilities()
-
-在 `IWindowBackend` 中增加:
-```cpp
-virtual BackendCapabilities capabilities() const = 0;
-```text
-
-允许 WindowManager 和 Shell 在运行时查询后端能力，做出适配决策。
-
-### 4.2 qt_backend.h — 扩展枚举和检测
-
-```cpp
-enum class LinuxQtBackend {
-    X11,      // X11 窗口系统
-    Wayland,  // Wayland 合成器
-    EGLFS,    // EGL + OpenGL ES (无窗口系统)
-    LinuxFB,  // Linux 帧缓冲 (纯软件渲染)
-    Unknown
-};
-
-enum class DisplayServerMode {
-    Client,        // 有现成的窗口系统可用
-    NeedCompositor, // 需要自己做合成器
-    DirectRender   // 直接渲染到硬件
-};
-
-DisplayServerMode DetectDisplayServerMode();
-```text
-
-`DetectDisplayServerMode()` 检测逻辑:
-1. 检查环境变量 `CFDESKTOP_DISPLAY_SERVER` (强制覆盖)
-2. 检查 `WAYLAND_DISPLAY` 或 `DISPLAY` (有显示服务器 → Client)
-3. 检查 `/dev/dri/card*` (可做 EGLFS → DirectRender)
-4. 检查 `/dev/fb0` (可做 linuxfb → DirectRender)
-5. 默认: Client
-
-### 4.3 ShellLayer — 解耦 QWidget
-
-新增纯接口 `IShellLayer`:
-```cpp
-class IShellLayer {
-public:
-    virtual ~IShellLayer() = default;
-    virtual void setStrategy(std::unique_ptr<IShellLayerStrategy> strategy) = 0;
-    virtual QRect geometry() const = 0;
-};
-```text
-
-`ShellLayer` 同时继承 `IShellLayer` 和 `QWidget`:
-```cpp
-class ShellLayer : public QWidget, public IShellLayer {
-    // QWidget 实现 — Client 模式
-};
-
-// Wayland 合成器可以实现 IShellLayer 而不继承 QWidget
-```bash
-
----
-
-## 五、各后端实现指导
-
-### 5.1 Windows 伪桌面
-
-- **角色**: `DisplayServerRole::Client`
-- **RenderBackend**: WindowsBackend (封装 Win32 + Qt RHI)
-- **IWindowBackend**: 每个窗口 = QWidget 子控件
-- **特殊处理**: 无边框全屏 + WS_EX_TOOLWINDOW 避免任务栏
-- **现有代码复用**: `windows_display_size_policy.cpp`
-
-### 5.2 X11 客户端
-
-- **角色**: `DisplayServerRole::Client`
-- **RenderBackend**: 默认 Qt RHI
-- **IWindowBackend**: QWidget 直接映射为 X11 Window
-- **现有代码复用**: `linux_wsl_display_size_policy.cpp` 的 X11 路径
-
-### 5.3 X11 窗口管理器 (无桌面)
-
-- **角色**: `DisplayServerRole::Compositor`
-- **关键技术**: XCB SubstructureRedirect + EWMH + XComposite
-- **IWindowBackend**: XCB Window → `IWindow` 适配器
-- **合成**: XComposite 重定向到 offscreen pixmap, OpenGL 合成
-- **输入**: XCB 事件循环转发
-
-### 5.4 Wayland 合成器 (无桌面)
-
-- **角色**: `DisplayServerRole::Compositor`
-- **关键技术**: QtWaylandCompositor C++ API + xdg-shell
-- **IWindowBackend**: QWaylandSurface → `IWindow` 适配器
-- **合成**: Qt RHI (OpenGL/Vulkan) 直接合成
-- **输出**: DRM/KMS via QWaylandOutput
-- **依赖**: Qt6::WaylandCompositor, libwayland-server, libdrm
-
-### 5.5 EGLFS / linuxfb
-
-- **角色**: `DisplayServerRole::DirectRender`
-- **关键技术**: Qt EGLFS/linuxfb 平台插件
-- **IWindowBackend**: 全部"窗口" = QWidget 子控件
-- **输入**: evdev (udev) 直接读取
-- **限制**: 无多窗口、无外部应用管理
-
----
-
-## 六、组件复用矩阵
+## 组件复用矩阵
 
 | 组件 | Client | X11 WM | Wayland | DirectRender |
 |------|--------|--------|---------|-------------|
@@ -246,55 +42,6 @@ class ShellLayer : public QWidget, public IShellLayer {
 | `ShellLayer` | QWidget 实现 | QWidget 实现 | IShellLayer 实现 | QWidget 实现 |
 | `IShellLayerStrategy` | 直接复用 | 直接复用 | 需新策略 | 直接复用 |
 
----
+## 当前状态
 
-## 七、构建系统设计
-
-```cmake
-# 条件编译选项
-option(CFDESKTOP_ENABLE_WAYLAND_COMPOSITOR "Enable Wayland compositor backend" ON)
-option(CFDESKTOP_ENABLE_X11_WM "Enable X11 window manager backend" ON)
-option(CFDESKTOP_ENABLE_LINUXFB "Enable linuxfb backend" ON)
-
-# 自动检测依赖
-if(CFDESKTOP_ENABLE_WAYLAND_COMPOSITOR)
-    find_package(Qt6 OPTIONAL_COMPONENTS WaylandCompositor)
-endif()
-
-if(CFDESKTOP_ENABLE_X11_WM)
-    find_package(X11)
-    find_package(PkgConfig)
-    pkg_check_modules(XCB OPTIONAL xcb xcb-composite xcb-ewmh)
-endif()
-```yaml
-
----
-
-## 八、运行时后端选择流程
-
-```text
-CFDesktop 启动
-    │
-    ▼
-DetectDisplayServerMode()
-    │
-    ├── 环境变量 CFDESKTOP_DISPLAY_SERVER?
-    │   └── 强制使用指定后端
-    │
-    ├── WAYLAND_DISPLAY 存在?
-    │   └── Client 模式 (Wayland 客户端)
-    │
-    ├── DISPLAY 存在?
-    │   ├── 有其他 WM 在运行?
-    │   │   └── Client 模式 (X11 客户端)
-    │   └── 无 WM?
-    │       └── Compositor 模式 (X11 WM)
-    │
-    ├── /dev/dri/card* 存在?
-    │   └── DirectRender 模式 (EGLFS)
-    │
-    ├── /dev/fb0 存在?
-    │   └── DirectRender 模式 (linuxfb)
-    │
-    └── 默认: Client 模式
-```text
+部分实现。Windows Client 和 WSL X11 Client 后端已完成；X11 WM、Wayland 合成器、EGLFS/linuxfb 后端规划中。详细接口规格参见 HandBook。
