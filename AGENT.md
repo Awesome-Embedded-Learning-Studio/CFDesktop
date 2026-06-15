@@ -51,6 +51,28 @@ Windows equivalents use `.ps1` scripts in the same directory.
 - **Shared libs**: `cfbase` (DLL), `cfui` (DLL), `CFDesktop_shared` (DLL)
 - **CMake targets**: `cfbase_*`, `cf_ui_*`, `cf_desktop_*`
 
+## Coding Taste
+
+Hard rules live in Code Style above; these are *style preferences* distilled from
+the codebase — write new code to match. Not lint-enforced; they keep the codebase
+coherent and help AI tools generate on-style code.
+
+- **Error handling**: prefer [`cf::expected<T,E>`](base/include/base/) for failable
+  operations in new code; reduce exceptions. Existing exception-based code is
+  tolerated.
+- **Ownership**: default to `std::unique_ptr` + `std::make_unique`; use
+  `std::shared_ptr` only for genuine shared ownership; raw `new` is discouraged
+  (acceptable for Qt parent-ownership like `new QWidget(parent)`, not general
+  allocation).
+- **Modern C++ (heavily used — match this)**: `auto` for local deduction,
+  `constexpr` liberally, `std::string_view` for non-owning string params.
+  `concepts` / `std::span` are early-stage — adoptable, not yet idiomatic.
+- **Interface-driven design**: cross-layer seams are pure-virtual interfaces
+  (`IWindow`, `IStatusBar`, `IPanel`…) with implementations in `platform/` /
+  `private/`; always mark overrides with `override`. `final` is not enforced.
+- **Qt**: use `Q_OBJECT` / `emit` normally; `Q_DISABLE_COPY` is not used in this
+  project (prefer explicit `= delete` if copy-protection is needed).
+
 ## Module Map
 
 ### base/ → cfbase
