@@ -5,10 +5,37 @@ description: "预计周期: 3-5 天，前置依赖: Milestone 1: 桌面骨架可
 
 # Milestone 2: 状态栏
 
-> **状态**: ⬜ 待开始
+> **状态**: ✅ 功能落地（v1 基础 + v2 MD3 美化）
 > **预计周期**: 3-5 天
 > **前置依赖**: [Milestone 1: 桌面骨架可见](../done/SUMMARY.md)
 > **目标**: 屏幕顶部出现一条状态栏，显示时间、基础系统图标
+
+## 实现结果与偏差（2026-06-15）
+
+**已交付**：`StatusBar` 顶层面板，注册到 PanelManager 作为 Top edge panel，
+顶部一条 48dp 状态栏，显示时间 (HH:MM)、系统图标簇（信号/电池/WiFi/音量），
+背景与图标跟随 ThemeManager 主题；offscreen 启动通过、Doxygen lint 通过。
+
+**与原计划的偏差**（实现时发现真实代码与本文档措辞不符，已按代码库实际 API 落地）：
+
+1. **`PanelManager::registerPanel()` 原有 bug**：只校验、不把 panel 存入 `panels`
+   向量，导致面板注册后永远不会被布局。已修复（`panels.push_back(panel)`）。
+2. **主题 API 名称不同**：实际接口是 `ICFTheme::color_scheme()` / `font_type()`
+   （非本文档写的 `colorScheme()` / `typography()`）；且**无 `surfaceContainer` token**，
+   实际用 `SURFACE` / `ON_SURFACE` / `ON_SURFACE_VARIANT` / `OUTLINE_VARIANT`。
+3. **主题管线原本未接通**：`main.cpp` 用裸 `QApplication`，而 Material 主题只在
+   构造 `MaterialApplication` 时才注册到 ThemeManager。已将 `main.cpp` 切到
+   `MaterialApplication`，主题在运行时真正可用（顺带让全部 MD3 控件拿到真实主题色）。
+4. **v2 MD3 美化**（嵌入式安全，纯 QPainter，不引入 `Qt6::Svg` 依赖）：
+   HCT 色调抬升的垂直渐变表面 + 底部接缝处 in-band 软阴影 + 横向渐隐发丝线 +
+   开机 250ms 淡入。图标用 **icons8 单色 PNG 蒙版 + 运行时 `SourceIn` 染色**
+   跟随主题（嵌入式只需 Qt GUI，无需 Svg 模块；资源经 qrc 编译进二进制，
+   无文件系统依赖）。**无静默兜底**：mask 加载失败则该图标留可见空白并打
+   WARNING 日志（不替换掩盖）。资源用 `Q_INIT_RESOURCE`（全局作用域 helper
+   包裹，因该宏不能在命名空间内调用）防止静态库 qrc 被链接器剥离。
+   图标来源/署名见 `desktop/ui/components/statusbar/icons/LICENSE.md`。
+
+**待人工确认**：真机/WSLg 显示下的视觉效果（本地无显示设备，仅 offscreen 验证不崩）。
 
 ---
 

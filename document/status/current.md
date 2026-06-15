@@ -47,7 +47,7 @@ description: CFDesktop 项目进度的唯一事实来源与全局导航。
 
 ## 下一步路线（最小闭环先行）
 
-1. **MS2 状态栏**（顶部时间 + 系统图标）— ⬜ 待开始 · *首个落地任务*（`IStatusBar` / `PanelManager` / `ThemeEngine` 已就绪）
+1. **MS2 状态栏**（顶部时间 + 系统图标）— ✅ 功能落地（`StatusBar` 实现 + 注册 PanelManager + 主题跟随 + MD3 美化；offscreen 启动通过，待真机视觉确认）
 2. **MS3 任务栏**（底部居中图标条 + hover 动画）— ⬜ 待开始
 3. **MS4 应用启动器**（应用网格 + QProcess 启动）— ⬜ 待开始
 4. **MS5 窗口管理**（窗口装饰 + 任务栏联动）— ⬜ 待开始

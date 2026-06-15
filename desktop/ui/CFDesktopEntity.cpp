@@ -8,6 +8,7 @@
 #include "components/DisplayServerBackendFactory.h"
 #include "components/IDisplayServerBackend.h"
 #include "components/PanelManager.h"
+#include "components/statusbar/status_bar.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include "platform/display_backend_helper.h"
 #include "platform/shell_layer_helper.h"
@@ -99,6 +100,12 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // Connect PanelManager geometry changes to ShellLayer
     QObject::connect(panel_mgr, &PanelManager::availableGeometryChanged, desktop_entity_,
                      [shell](const QRect& r) { shell->onAvailableGeometryChanged(r); });
+
+    // ── Status bar: top-edge panel (clock + system icons) ──
+    auto* status_bar = new cf::desktop::desktop_component::StatusBar(desktop_entity_);
+    panel_mgr->registerPanel(status_bar->GetWeak());
+    status_bar->show();
+    panel_mgr->relayout();
 
     // Show the desktop full-screen
     desktop_entity_->showFullScreen();
