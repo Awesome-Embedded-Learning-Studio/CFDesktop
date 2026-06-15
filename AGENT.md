@@ -130,6 +130,27 @@ Reference design docs: `document/design_stage/` (Phase → design-doc mapping in
 - **Labels**: `"module;unit;component"`
 - **Qt signal tests**: link `Qt6::Test`, use `QSignalSpy`
 
+## Code Quality Discipline
+
+Automated checks enforce the conventions above. They run on commit via the
+pre-commit hook and in-editor via clangd.
+
+| Concern | Authority | Enforced by |
+|---|---|---|
+| Code format | [`.clang-format`](.clang-format) | pre-commit (clang-format, auto-formats staged files) |
+| Doxygen comments | [`document/DOXYGEN_REQUEST.md`](document/DOXYGEN_REQUEST.md) | pre-commit (`scripts/doxygen/lint.py`) |
+| Three-layer dependency | Architecture rules above | pre-commit (blocks `base→ui/desktop`, `ui→desktop`) |
+| Naming | [`.clang-tidy`](.clang-tidy) | clangd / manual (config-only; **not** in pre-commit/CI) |
+
+**Hook setup**: `git config core.hooksPath scripts/release/hooks` is set
+**automatically** at configure time by `cmake/install_hooks.cmake` — no manual
+install needed after `clone`. Hooks live in [`scripts/release/hooks/`](scripts/release/hooks/)
+(version-controlled). Bypass with `git commit --no-verify`.
+
+**HandBook sync (manual discipline)**: when changing a public API or component,
+update the corresponding page in [`document/HandBook/`](document/HandBook/) (the
+detail truth source). Not automated — a maintainer responsibility.
+
 ## Slash Commands (Claude Code)
 
 Reusable workflows live in [`.claude/commands/`](.claude/commands/):
