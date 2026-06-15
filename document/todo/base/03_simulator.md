@@ -264,7 +264,7 @@ description: "预计周期: 2~3 周，依赖阶段: Phase 0, Phase 2, Phase 3"
 ## 七、相关文档
 
 - 设计文档: [../../design_stage/04_phase6_simulator.md](../../design_stage/04_phase6_simulator.md)
-- 依赖: [工程骨架状态](../done/00_project_skeleton_status.md), [02_input_layer.md](02_input_layer.md)
+- 依赖: [工程骨架状态](../done/SUMMARY.md), [02_input_layer.md](02_input_layer.md)
 
 ---
 

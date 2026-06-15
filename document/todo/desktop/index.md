@@ -33,7 +33,7 @@ description: 桌面本体 (Desktop Shell) 开发规划
 | 文件 | 里程碑 | 核心交付 | 状态 |
 |------|--------|----------|------|
 | [milestone_00_overview.md](milestone_00_overview.md) | 总览 | 依赖关系 + 可复用资产 + 可跳过模块 | 📋 参考 |
-| [milestone_01_desktop_skeleton.md](milestone_01_desktop_skeleton.md) | MS1: 桌面骨架 | 壁纸/背景 + 面板布局 | ⬜ 待开始 |
+| [../done/SUMMARY.md](../done/SUMMARY.md) | MS1: 桌面骨架 | 壁纸/背景 + 面板布局 | ⬜ 待开始 |
 | [milestone_02_status_bar.md](milestone_02_status_bar.md) | MS2: 状态栏 | 顶部时间+系统图标 | ⬜ 待开始 |
 | [milestone_03_taskbar.md](milestone_03_taskbar.md) | MS3: 任务栏 | 底部居中图标+hover动画 | ⬜ 待开始 |
 | [milestone_04_app_launcher.md](milestone_04_app_launcher.md) | MS4: 应用启动器 | 弹出应用网格+进程启动 | ⬜ 待开始 |
@@ -45,9 +45,9 @@ description: 桌面本体 (Desktop Shell) 开发规划
 ## 已完成归档
 
 详见 [../done/](../done/) 目录，特别是:
-- [../done/14_display_backend_status.md](../done/14_display_backend_status.md) — 显示后端完成状态
-- [../done/13_widget_apps_status.md](../done/13_widget_apps_status.md) — Widget + 控件完成状态
-- [../done/06_infrastructure_status.md](../done/06_infrastructure_status.md) — 基础设施完成状态
+- [../done/SUMMARY.md) — 显示后端完成状态
+- [../done/SUMMARY.md) — Widget + 控件完成状态
+- [../done/SUMMARY.md) — 基础设施完成状态
 
 ---
 

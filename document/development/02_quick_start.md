@@ -310,7 +310,7 @@ cat scripts/docker/logger/ci_build_*.log | tail -50
 
 如果遇到本文未涵盖的问题：
 
-1. 查看[设计文档](../../design_stage/)获取详细信息
+1. 查看[设计文档](../design_stage/)获取详细信息
 2. 参考[构建系统文档](03_build_system.md)
 3. 在 [GitHub](https://github.com/Awesome-Embedded-Learning-Studio/CFDesktop/issues) 上提交 issue
 

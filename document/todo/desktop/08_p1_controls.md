@@ -7,7 +7,7 @@ description: "完成日期: 2026-03-18，详细完成状态: done/13widgetappsst
 
 > **状态**: ✅ 已完成
 > **完成日期**: 2026-03-18
-> **详细完成状态**: [done/13_widget_apps_status.md](../done/13_widget_apps_status.md)
+> **详细完成状态**: [done/SUMMARY.md)
 
 ---
 
@@ -27,7 +27,7 @@ description: "完成日期: 2026-03-18，详细完成状态: done/13widgetappsst
 
 ## 相关文档
 
-- 完成归档: [done/13_widget_apps_status.md](../done/13_widget_apps_status.md)
+- 完成归档: [done/SUMMARY.md)
 - 设计文档: [summary.md](summary.md) Phase C 节
 - Material Design 3 规范: https://m3.material.io/
 

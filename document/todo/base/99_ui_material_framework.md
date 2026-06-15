@@ -189,7 +189,7 @@ Layer 1: Core Math & Utility Layer (math_helper, color, geometry, ...)
 
 ## 五、相关文档
 
-- 依赖: [工程骨架状态](../done/00_project_skeleton_status.md), [02_input_layer.md](02_input_layer.md)
+- 依赖: [工程骨架状态](../done/SUMMARY.md), [02_input_layer.md](02_input_layer.md)
 
 ---
 

@@ -8,13 +8,13 @@ description: "状态: 🚧 部分完成 (接口已实现，具体后端待开发
 > **状态**: 🚧 部分完成 (接口已实现，具体后端待开发)
 > **预计周期**: 2 周
 > **依赖阶段**: Phase 6
-> **已完成归档**: [done/14_display_backend_status.md](../done/14_display_backend_status.md)
+> **已完成归档**: [done/SUMMARY.md)
 
 ## 已完成模块
 
 > RenderBackend 抽象接口、BackendCapabilities、RenderBackendFactory 已实现。
 > 显示后端架构 (IDisplayServerBackend)、Windows 后端、WSL X11 后端已完成。
-> 详细状态请参考: [done/14_display_backend_status.md](../done/14_display_backend_status.md)
+> 详细状态请参考: [done/SUMMARY.md)
 
 ---
 

@@ -9,7 +9,7 @@ description: "预计周期: 贯穿全程，依赖阶段: 所有阶段"
 > **预计周期**: 贯穿全程
 > **依赖阶段**: 所有阶段
 > **目标交付物**: 单元测试框架、集成测试、UI 自动化、CI/CD 配置
-> **完成归档**: [document/todo/done/05_testing_status.md](../done/05_testing_status.md)
+> **完成归档**: [document/todo/done/SUMMARY.md)
 
 
 ---
@@ -237,7 +237,7 @@ description: "预计周期: 贯穿全程，依赖阶段: 所有阶段"
 
 - 设计文档: [../../design_stage/05_phase8_testing.md](../../design_stage/05_phase8_testing.md)
 - 依赖: 所有其他阶段文档
-- 测试状态: [../done/05_testing_status.md](../done/05_testing_status.md)
+- 测试状态: [../done/SUMMARY.md)
 
 ---
 

@@ -33,56 +33,23 @@
 
 ---
 
+## AI Agent 支持
+
+本项目内置 AI agent 协作支持（**Claude Code** 与 **Codex CLI**），项目约定集中在 [`AGENT.md`](AGENT.md)（单一来源，`CLAUDE.md` / `AGENTS.md` 为各工具入口）。使用 AI 时据此快速理解架构与规范；**不使用 AI 可安全忽略** `AGENT.md` / `CLAUDE.md` / `AGENTS.md` 与 `.claude/` 目录，它们不影响构建。
+
+---
+
 ## 项目进度
 
-### 已完成 ✅
+> 项目进度以 [`document/status/current.md`](document/status/current.md) 为唯一事实来源。以下为对外概览，可能滞后，精确状态请查阅该文件。
 
-| 阶段 | 模块 | 完成度 | 说明 |
-|:---|:---|:---:|:---|
-| Phase 0 | 工程骨架 | 100% | CMake 构建系统、代码规范、CI/CD、Docker 多架构构建 |
-| Phase 1 | 硬件探针 | 90% | CPU/Memory/GPU/网络检测完成，缺HWTier/Policy |
-| Phase 2 | Base 库核心 | 85% | ConfigStore(85%)、Logger(90%)、DPI基础转换(ui/base)、ASCII Art、File Operations |
-| Phase 5 | 测试体系 | 65% | Google Test/CTest 集成，本地基线 47 个测试通过 |
-| Phase 6 | UI 框架核心 | 95% | Material Design 3 分层架构 (Layer 1-4 全部完成)，缺布局/手势 |
-| Phase 6 | P0 核心控件 | 100% | Button, TextField, TextArea, Label, CheckBox, RadioButton, GroupBox |
-| Phase 6 | P1 控件 | 100% | Slider, ProgressBar, Switch, ToggleButton, etc. (12个) |
-| Desktop | 桌面模块 | 90% | 配置中心、日志系统、启动初始化、文件操作、显示后端架构 |
-| Display Backend | Windows+WSL X11 | 70% | Windows 后端(100%)、WSL X11 后端(100%)，Wayland/嵌入式待实现 |
+**当前焦点**：跑通「看到桌面 → 点图标 → 开应用」最小闭环。
 
-### 进行中 🚧
+- ✅ **base** 硬件探针层（含 HWTier）完成
+- 🚧 **ui / desktop** 核心就绪，最小闭环控件与后端开发中
+- ⬜ 输入抽象、模拟器、Wayland / 嵌入式后端待开始
 
-| 阶段 | 模块 | 完成度 | 说明 |
-|:---|:---|:---:|:---|
-| Phase 2 | 配置日志增强 | 80% | DPI基础转换已有(ui/base)，缺自动检测/版本控制/迁移/验证/网络日志 |
-| Desktop | 渲染后端实现 | 30% | RenderBackend 接口设计完成，具体实现待开发 |
-
-### 待开始 ⬜
-
-| 阶段 | 模块 | 说明 |
-|:---|:---|:---|
-| Phase 1 | 硬件探针完善 | HWTier 档位、CapabilityPolicy |
-| Phase 6 | 布局系统 | Grid、Stack、ConstraintLayout |
-| Phase 6 | 手势识别 | 触摸/手势统一接口 |
-| Phase 3 | 输入抽象层 | 触摸/按键/旋钮/手势统一接口 |
-| Phase 4 | 多平台模拟器 | 开发调试用模拟器、设备配置、DPI 注入 |
-| Display Backend | Wayland/嵌入式 | Wayland 合成器后端、EGLFS/LinuxFB 直驱后端 |
-| Phase 6 | P2 控件 | 27个高级控件 (DatePicker, MenuBar, Dialog, etc.) |
-| Phase 6 | P3 控件 | 25个专业控件 (SplitView, ChartView, etc.) |
-| Phase 5 | 测试完善 | desktop 模块、性能基准、UI 自动化 |
-| 文档 | VitePress 重排 | 已迁移到 VitePress，API 自动文档二期处理 |
-
-### 快速统计 (2026-03-27 更新)
-
-| 类别 | 完成度 | 说明 |
-|:---|:---:|:---|
-| UI 控件 (P0+P1) | 100% (19个) | 完整实现 |
-| UI 控件 (P2+P3) | 0% (52个) | 待开发 |
-| 文档覆盖 | 60% | ~268个文档 |
-| 示例覆盖 | 50% | ~80个示例 |
-| 测试覆盖 | 65% | CTest 47 项通过，P0/P1 Widget 已有基础测试 |
-
-📋 **完整待办清单**: [document/todo/](document/todo/)
-📊 **当前状态**: [document/status/current.md](document/status/current.md)
+下一步路线与各 Phase 细节见 [`document/status/current.md`](document/status/current.md)，待办清单见 [`document/todo/`](document/todo/)。
 
 ---
 

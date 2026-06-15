@@ -8,14 +8,14 @@ description: "状态: 🚧 部分完成 (~50%)，预计周期: 4~5 周"
 > **状态**: 🚧 部分完成 (~50%)
 > **预计周期**: 4~5 周
 > **依赖阶段**: Phase 1, Phase 2, Phase 3
-> **已完成归档**: [done/06_infrastructure_status.md](../done/06_infrastructure_status.md)
+> **已完成归档**: [done/SUMMARY.md)
 
 ---
 
 ## 已完成模块
 
 > GPU 检测器、Network 检测器、ConfigStore、Logger 已完成。
-> 详细状态请参考: [done/06_infrastructure_status.md](../done/06_infrastructure_status.md)
+> 详细状态请参考: [done/SUMMARY.md)
 
 ---
 
@@ -277,7 +277,7 @@ description: "状态: 🚧 部分完成 (~50%)，预计周期: 4~5 周"
 ## 五、相关文档
 
 - 设计文档: [../desktop/summary.md](summary.md) Phase A 节
-- 依赖: [硬件探针状态](../done/01_hardware_probe_status.md), [Base库状态](../done/02_base_library_status.md)
+- 依赖: [硬件探针状态](../done/SUMMARY.md), [Base库状态](../done/SUMMARY.md)
 - CMake 配置: `../../cmake/` （参考现有模块集成方式）
 
 ---

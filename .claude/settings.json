@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash scripts/build_helpers/linux_configure.sh)",
+      "Bash(bash scripts/build_helpers/linux_fast_develop_build.sh)",
+      "Bash(bash scripts/build_helpers/linux_develop_build.sh)",
+      "Bash(bash scripts/build_helpers/linux_run_tests.sh)",
+      "Bash(python3 scripts/doxygen/lint.py)"
+    ]
+  }
+}

@@ -7,7 +7,7 @@ description: "预计周期: 3-5 天，前置依赖: Milestone 1: 桌面骨架可
 
 > **状态**: ⬜ 待开始
 > **预计周期**: 3-5 天
-> **前置依赖**: [Milestone 1: 桌面骨架可见](milestone_01_desktop_skeleton.md)
+> **前置依赖**: [Milestone 1: 桌面骨架可见](../done/SUMMARY.md)
 > **目标**: 屏幕顶部出现一条状态栏，显示时间、基础系统图标
 
 ---

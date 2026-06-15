@@ -8,13 +8,13 @@ description: "状态: 🚧 部分完成，依赖阶段: Phase 6, Phase 7"
 > **状态**: 🚧 部分完成
 > **预计周期**: 3 周
 > **依赖阶段**: Phase 6, Phase 7
-> **已完成归档**: [done/14_display_backend_status.md](../done/14_display_backend_status.md)
+> **已完成归档**: [done/SUMMARY.md)
 
 ## 已完成模块
 
 > 基础 WindowManager (弱引用模式)、基础 IWindow 接口、IWindowBackend 接口已完成。
 > Windows 和 WSL X11 平台后端已实现。
-> 详细状态: [done/14_display_backend_status.md](../done/14_display_backend_status.md)
+> 详细状态: [done/SUMMARY.md)
 
 ### 已实现
 - [x] `WindowManager` 窗口注册/查询/关闭/置顶 (弱引用模式)
