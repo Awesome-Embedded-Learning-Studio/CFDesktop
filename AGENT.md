@@ -142,6 +142,11 @@ pre-commit hook and in-editor via clangd.
 | Three-layer dependency | Architecture rules above | pre-commit (blocks `base→ui/desktop`, `ui→desktop`) |
 | Naming | [`.clang-tidy`](.clang-tidy) | clangd / manual (config-only; **not** in pre-commit/CI) |
 
+**Doxygen — two tiers** (deliberate):
+
+- **Enforced floor**: [`scripts/doxygen/lint.py`](scripts/doxygen/lint.py) (runs in pre-commit) — `@file` header, `@brief`, `@param` direction, `@return`, `@throws`, `@since`, `@ingroup`, enum/struct docs, function blocks, ≤100-char lines. The codebase currently passes this.
+- **Aspirational target**: [`document/DOXYGEN_REQUEST.md`](document/DOXYGEN_REQUEST.md) adds stricter items (class `@code` example, `@author`/`@date`) that lint does **not** check. New code should aim for these; they won't block commits.
+
 **Hook setup**: `git config core.hooksPath scripts/release/hooks` is set
 **automatically** at configure time by `cmake/install_hooks.cmake` — no manual
 install needed after `clone`. Hooks live in [`scripts/release/hooks/`](scripts/release/hooks/)
