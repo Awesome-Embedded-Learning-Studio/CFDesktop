@@ -4,6 +4,8 @@
 #
 # 用法: .\scripts\release\hooks\install_hooks.ps1
 #
+# 推荐：直接 cmake configure 即自动设置 core.hooksPath，无需本脚本。
+# 本脚本为 fallback（复制钩子到 .git/hooks/），仅用于不跑 cmake 的场景。
 # 此脚本将钩子安装到 .git/hooks/ 目录
 # =============================================================================
 
@@ -155,10 +157,10 @@ Log-Info "安装 Git Hooks..."
 Write-Host ""
 
 # 安装 pre-commit
-Install-Hook "pre-commit.sample" "pre-commit"
+Install-Hook "pre-commit" "pre-commit"
 
 # 安装 pre-push
-Install-Hook "pre-push.sample" "pre-push"
+Install-Hook "pre-push" "pre-push"
 
 # =============================================================================
 # 完成

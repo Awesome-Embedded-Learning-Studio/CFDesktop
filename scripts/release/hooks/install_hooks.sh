@@ -111,9 +111,9 @@ backup_existing_hooks() {
 # 安装单个钩子
 # =============================================================================
 install_hook() {
-    local sample_name="$1"
+    local source_name="$1"
     local hook_name="$2"
-    local source_hook="$HOOKS_SOURCE_DIR/$sample_name"
+    local source_hook="$HOOKS_SOURCE_DIR/$source_name"
     local target_hook="$HOOKS_TARGET_DIR/$hook_name"
 
     # 备份现有钩子
