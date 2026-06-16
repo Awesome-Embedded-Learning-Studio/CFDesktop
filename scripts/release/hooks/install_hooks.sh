@@ -5,6 +5,8 @@
 #
 # 用法: bash scripts/release/hooks/install_hooks.sh
 #
+# 推荐：直接 `cmake configure` 即自动设置 core.hooksPath，无需本脚本。
+# 本脚本为 fallback（复制钩子到 .git/hooks/），仅用于不跑 cmake 的场景。
 # 此脚本将钩子安装到 .git/hooks/ 目录
 # =============================================================================
 
@@ -109,9 +111,9 @@ backup_existing_hooks() {
 # 安装单个钩子
 # =============================================================================
 install_hook() {
-    local sample_name="$1"
+    local source_name="$1"
     local hook_name="$2"
-    local source_hook="$HOOKS_SOURCE_DIR/$sample_name"
+    local source_hook="$HOOKS_SOURCE_DIR/$source_name"
     local target_hook="$HOOKS_TARGET_DIR/$hook_name"
 
     # 备份现有钩子
@@ -131,17 +133,17 @@ log_info "安装 Git Hooks..."
 echo ""
 
 # 安装 pre-commit
-if [[ -f "$HOOKS_SOURCE_DIR/pre-commit.sample" ]]; then
-    install_hook "pre-commit.sample" "pre-commit"
+if [[ -f "$HOOKS_SOURCE_DIR/pre-commit" ]]; then
+    install_hook "pre-commit" "pre-commit"
 else
-    log_warning "pre-commit.sample 不存在，跳过"
+    log_warning "pre-commit 不存在，跳过"
 fi
 
 # 安装 pre-push
-if [[ -f "$HOOKS_SOURCE_DIR/pre-push.sample" ]]; then
-    install_hook "pre-push.sample" "pre-push"
+if [[ -f "$HOOKS_SOURCE_DIR/pre-push" ]]; then
+    install_hook "pre-push" "pre-push"
 else
-    log_warning "pre-push.sample 不存在，跳过"
+    log_warning "pre-push 不存在，跳过"
 fi
 
 # =============================================================================

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/cfdesktop/statusbar">
+        <file alias="signal.png">icons/signal.png</file>
+        <file alias="battery.png">icons/battery.png</file>
+        <file alias="wifi.png">icons/wifi.png</file>
+        <file alias="volume.png">icons/volume.png</file>
+    </qresource>
+</RCC>

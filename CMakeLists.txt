@@ -23,6 +23,9 @@ project(CFDesktop
 # ============================================================
 include(cmake/check_pre_configure.cmake)
 
+# Configure git hooks (core.hooksPath) so pre-commit/pre-push work after configure
+include(cmake/install_hooks.cmake)
+
 # ============================================================
 # Generate Meta Information Headers
 # ============================================================

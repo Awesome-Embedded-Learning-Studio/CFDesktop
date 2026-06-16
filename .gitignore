@@ -1,14 +1,15 @@
 # ignores
 .cache
 .ccache/
-.claude
-CLAUDE.md
+
+# AI agent — personal/private config (NOT shared). Shared AI assets
+# (AGENT.md / CLAUDE.md / AGENTS.md and .claude/commands/) ARE tracked.
+.claude/settings.local.json
 MEMORY.md
+BLUEPRINT.md
 
 # aqtinstall log
 aqtinstall.log
-# privates
-BLUEPRINT.md
 
 # native builds
 out/

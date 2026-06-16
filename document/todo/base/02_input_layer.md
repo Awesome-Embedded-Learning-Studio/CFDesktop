@@ -209,8 +209,8 @@ description: "预计周期: 1~2 周，依赖阶段: Phase 0, Phase 1, Phase 2"
 ## 六、相关文档
 
 - 设计文档: [../../design_stage/03_phase3_input_layer.md](../../design_stage/03_phase3_input_layer.md)
-- 依赖: [工程骨架状态](../done/00_project_skeleton_status.md), [硬件探针状态](../done/01_hardware_probe_status.md)
-- Base库已完成: [done/02_base_library_status.md](../done/02_base_library_status.md)
+- 依赖: [工程骨架状态](../done/SUMMARY.md), [硬件探针状态](../done/SUMMARY.md)
+- Base库已完成: [done/SUMMARY.md)
 
 ---
 

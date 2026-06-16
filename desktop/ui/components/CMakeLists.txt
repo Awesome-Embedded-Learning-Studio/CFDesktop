@@ -31,5 +31,6 @@ PUBLIC
 PRIVATE
     cfdesktop_shell_layer_impl
     cfdesktop_wallpaper
+    cfdesktop_statusbar
     Qt6::Core Qt6::Gui Qt6::Widgets
 )

@@ -19,6 +19,7 @@ PanelManager::RegisterFeedback PanelManager::registerPanel(WeakPtr<IPanel> panel
         return RegisterFeedback::DuplicatePanel;
     }
 
+    panels.push_back(panel);
     return RegisterFeedback::OK;
 }
 
