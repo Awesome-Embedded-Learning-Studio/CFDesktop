@@ -179,10 +179,11 @@ template <typename T, size_t Capacity> class MpscQueue {
      * @ingroup base_lockfree
      */
     bool tryPop(T& out) noexcept {
-        Cell* cell = &buffer_[readPos_ & (Capacity - 1)];
+        const size_type rp = readPos_.load(std::memory_order_relaxed);
+        Cell* cell = &buffer_[rp & (Capacity - 1)];
 
         size_type seq = cell->sequence.load(std::memory_order_acquire);
-        if (seq != readPos_ + 1) {
+        if (seq != rp + 1) {
             return false; // Empty
         }
 
@@ -190,10 +191,13 @@ template <typename T, size_t Capacity> class MpscQueue {
         cell->ptr()->~T(); // Destroy the object in the cell
 
         // Publish slot availability for next round
-        // Set to readPos + Capacity so producer at pos = readPos + Capacity can use it
-        cell->sequence.store(readPos_ + Capacity, std::memory_order_release);
+        // Set to rp + Capacity so producer at pos = rp + Capacity can use it
+        cell->sequence.store(rp + Capacity, std::memory_order_release);
 
-        ++readPos_;
+        // Advance the consumer cursor with release ordering so that producer threads
+        // reading the approximate size()/empty() observe a consistent value instead of
+        // racing with this write.
+        readPos_.store(rp + 1, std::memory_order_release);
         return true;
     }
 
@@ -263,19 +267,20 @@ template <typename T, size_t Capacity> class MpscQueue {
         size_type popped = 0;
 
         for (; popped < max_count; ++popped) {
-            Cell* cell = &buffer_[readPos_ & (Capacity - 1)];
+            const size_type rp = readPos_.load(std::memory_order_relaxed);
+            Cell* cell = &buffer_[rp & (Capacity - 1)];
 
             size_type seq = cell->sequence.load(std::memory_order_acquire);
-            if (seq != readPos_ + 1) {
+            if (seq != rp + 1) {
                 break; // No more available
             }
 
             out[popped] = std::move(*cell->ptr());
             cell->ptr()->~T();
 
-            cell->sequence.store(readPos_ + Capacity, std::memory_order_release);
+            cell->sequence.store(rp + Capacity, std::memory_order_release);
 
-            ++readPos_;
+            readPos_.store(rp + 1, std::memory_order_release);
         }
 
         return popped;
@@ -294,7 +299,10 @@ template <typename T, size_t Capacity> class MpscQueue {
      *          This is an approximate check, not a thread-safe guarantee.
      * @ingroup base_lockfree
      */
-    bool empty() const noexcept { return readPos_ >= writePos_.load(std::memory_order_acquire); }
+    bool empty() const noexcept {
+        return readPos_.load(std::memory_order_acquire) >=
+               writePos_.load(std::memory_order_acquire);
+    }
 
     /**
      * @brief Gets the approximate current size.
@@ -307,10 +315,11 @@ template <typename T, size_t Capacity> class MpscQueue {
      */
     size_type size() const noexcept {
         size_type writePos = writePos_.load(std::memory_order_acquire);
-        if (writePos < readPos_) {
+        size_type rp = readPos_.load(std::memory_order_acquire);
+        if (writePos < rp) {
             return 0;
         }
-        size_type size = writePos - readPos_;
+        size_type size = writePos - rp;
         return size > Capacity ? Capacity : size;
     }
 
@@ -349,10 +358,11 @@ template <typename T, size_t Capacity> class MpscQueue {
 
     std::array<Cell, Capacity> buffer_;  ///< Ring buffer storage
     std::atomic<size_type> writePos_{0}; ///< Current write position (multi-producer)
-    size_type readPos_{0};               ///< Current read position (single-consumer)
+    std::atomic<size_type> readPos_{0};  ///< Current read position (single-consumer)
 
     // Padding to prevent false sharing between producer and consumer
-    char padding_[64 - sizeof(std::atomic<size_type>) - sizeof(size_type) - sizeof(buffer_) % 64];
+    char padding_[64 - sizeof(std::atomic<size_type>) - sizeof(std::atomic<size_type>) -
+                  sizeof(buffer_) % 64];
 };
 
 } // namespace lockfree

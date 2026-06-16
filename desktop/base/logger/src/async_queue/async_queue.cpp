@@ -19,9 +19,16 @@ void AsyncPostQueue::start() {
 void AsyncPostQueue::stop() {
     if (running_.exchange(false)) {
         cv_.notify_all();
-        flush_completed_.store(flush_token_.load(std::memory_order_acquire),
-                               std::memory_order_release);
-        flush_completed_cv_.notify_all();
+        // Publish the final completed token and wake blocked flush_sync() callers under
+        // flush_completed_mu_ for the same lost-wakeup reason as the worker loop. The wait
+        // predicate also returns once running_ is false, but only if the caller is actually
+        // woken, so the notify must not race past an about-to-sleep caller.
+        {
+            std::lock_guard<std::mutex> lock(flush_completed_mu_);
+            flush_completed_.store(flush_token_.load(std::memory_order_acquire),
+                                   std::memory_order_release);
+            flush_completed_cv_.notify_all();
+        }
         if (worker_thread_.joinable()) {
             worker_thread_.join();
         }
@@ -136,11 +143,19 @@ void AsyncPostQueue::worker_loop() {
                     sink->flush();
                 }
             }
-            // Update completed token to current flush_token_
-            // This unblocks all flush_sync() calls with tokens <= this value
+            // Update the completed token to the current flush_token_, unblocking every
+            // flush_sync() caller whose token is <= this value. flush_completed_mu_ MUST be
+            // held across the store and the notify: flush_sync() blocks on
+            // flush_completed_cv_ with no timeout, so a notify that races past a caller
+            // which has already evaluated its predicate (and is about to enter the futex)
+            // is lost forever and hangs that caller. Holding the lock serialises this
+            // update against the caller's predicate check, closing the lost-wakeup window.
             uint64_t current_token = flush_token_.load(std::memory_order_acquire);
-            flush_completed_.store(current_token, std::memory_order_release);
-            flush_completed_cv_.notify_all();
+            {
+                std::lock_guard<std::mutex> lock(flush_completed_mu_);
+                flush_completed_.store(current_token, std::memory_order_release);
+                flush_completed_cv_.notify_all();
+            }
         }
 
         std::unique_lock<std::mutex> lock(wakeMu_);
