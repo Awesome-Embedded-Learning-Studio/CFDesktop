@@ -48,9 +48,9 @@ description: CFDesktop 项目进度的唯一事实来源与全局导航。
 ## 下一步路线（最小闭环先行）
 
 1. **MS2 状态栏**（顶部时间 + 系统图标）— ✅ 功能落地（`StatusBar` 实现 + 注册 PanelManager + 主题跟随 + MD3 美化；offscreen 启动通过，待真机视觉确认）
-2. **MS3 任务栏**（底部居中图标条 + hover 动画）— ⬜ 待开始
-3. **MS4 应用启动器**（应用网格 + QProcess 启动）— ⬜ 待开始
-4. **MS5 窗口管理**（窗口装饰 + 任务栏联动）— ⬜ 待开始
+2. **MS3 任务栏**（底部居中图标条 + hover 动画）— 🚧 进行中（最小切片跑通：`CenteredTaskbar` 注册 Bottom 面板 + `TaskbarIcon` 居中图标/hover 放大/自绘 ripple/运行指示器，构建通过；点击反馈先打 log，待接 MS4 真启动）
+3. **MS4 应用启动器**（应用网格 + QProcess 启动）— 🚧 进行中（最小启动闭环跑通：`AppLaunchService` 用 `QProcess::startDetached` 启动 taskbar 图标对应应用，点 Files/Browser 可真打开；开始菜单弹窗网格待做）
+4. **MS5 窗口管理**（窗口装饰 + 任务栏联动）— 🚧 进行中（追踪+联动切片跑通：`WindowManager` 追踪外部窗口 + `IWindow::pid()` + Taskbar 运行指示器联动；靠 PID 匹配，直接启动(xterm)可靠、间接启动(xdg-open)受限；窗口装饰/操作因 WSL X11 客户端架构不可行，暂跳过）
 
 闭环达成后按需推进：HWTier 策略引擎、CrashHandler、IPC、EGLFS 嵌入式后端、输入抽象层、P2/P3 控件。
 

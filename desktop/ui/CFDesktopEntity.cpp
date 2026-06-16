@@ -8,11 +8,15 @@
 #include "components/DisplayServerBackendFactory.h"
 #include "components/IDisplayServerBackend.h"
 #include "components/PanelManager.h"
+#include "components/WindowManager.h"
+#include "components/launcher/app_launch_service.h"
 #include "components/statusbar/status_bar.h"
+#include "components/taskbar/centered_taskbar.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include "platform/display_backend_helper.h"
 #include "platform/shell_layer_helper.h"
 #include "qt_format.h"
+#include <QHash>
 #include <memory>
 
 namespace cf::desktop {
@@ -105,7 +109,74 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     auto* status_bar = new cf::desktop::desktop_component::StatusBar(desktop_entity_);
     panel_mgr->registerPanel(status_bar->GetWeak());
     status_bar->show();
+
+    // ── Window manager: track external windows and link them to the taskbar ──
+    // app_pid maps a launched app_id to its process id so window tracking can
+    // match external windows back to a taskbar entry.
+    auto app_pid = std::make_shared<QHash<QString, qint64>>();
+    auto* window_mgr = new cf::desktop::WindowManager(desktop_entity_);
+    if (display_backend_) {
+        auto window_backend = display_backend_->windowBackend();
+        if (window_backend) {
+            window_mgr->setBackend(window_backend);
+        }
+    }
+
+    // ── Taskbar: bottom-edge panel (centered app icons) ──
+    // apps is captured by the click handler to resolve app_id -> exec_command.
+    const QList<cf::desktop::desktop_component::AppEntry> apps =
+        cf::desktop::desktop_component::defaultApps();
+    auto* taskbar = new cf::desktop::desktop_component::CenteredTaskbar(desktop_entity_);
+    taskbar->setApps(apps);
+    panel_mgr->registerPanel(taskbar->GetWeak());
+    QObject::connect(taskbar, &cf::desktop::desktop_component::CenteredTaskbar::appClicked, this,
+                     [apps, app_pid](const QString& app_id) {
+                         QString exec;
+                         for (const auto& app : apps) {
+                             if (app.app_id == app_id) {
+                                 exec = app.exec_command;
+                                 break;
+                             }
+                         }
+                         if (exec.isEmpty()) {
+                             cf::log::warningftag("CFDesktopEntity", "No exec for app_id '{}'",
+                                                  app_id.toStdString());
+                             return;
+                         }
+                         const auto launched =
+                             cf::desktop::desktop_component::AppLaunchService::launch(exec);
+                         if (launched.has_value()) {
+                             (*app_pid)[app_id] = *launched;
+                         }
+                     });
+    taskbar->show();
     panel_mgr->relayout();
+
+    // ── WM ↔ Taskbar: light a running indicator when a window appears/gone ──
+    QObject::connect(window_mgr, &cf::desktop::WindowManager::windowAppeared, this,
+                     [app_pid, taskbar](qint64 pid) {
+                         if (pid == 0) {
+                             return;
+                         }
+                         for (auto it = app_pid->begin(); it != app_pid->end(); ++it) {
+                             if (it.value() == pid) {
+                                 taskbar->updateRunningState(it.key(), true);
+                                 return;
+                             }
+                         }
+                     });
+    QObject::connect(window_mgr, &cf::desktop::WindowManager::windowDisappeared, this,
+                     [app_pid, taskbar](qint64 pid) {
+                         if (pid == 0) {
+                             return;
+                         }
+                         for (auto it = app_pid->begin(); it != app_pid->end(); ++it) {
+                             if (it.value() == pid) {
+                                 taskbar->updateRunningState(it.key(), false);
+                                 return;
+                             }
+                         }
+                     });
 
     // Show the desktop full-screen
     desktop_entity_->showFullScreen();

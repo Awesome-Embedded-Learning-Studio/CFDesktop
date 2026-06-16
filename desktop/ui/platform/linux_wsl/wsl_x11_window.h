@@ -97,6 +97,12 @@ class WSLX11Window : public IWindow {
      */
     void raise() override;
 
+    /**
+     * @brief  Returns the owning process id read from _NET_WM_PID.
+     * @return The process id, or 0 when unavailable.
+     */
+    qint64 pid() const override;
+
     // ── X11-specific ──────────────────────────────────────
 
     /**
@@ -114,6 +120,11 @@ class WSLX11Window : public IWindow {
     xcb_window_t window_;
     /// Cached atoms for property queries.
     XcbAtoms atoms_;
+    /// Owning process id, read once from _NET_WM_PID at construction.
+    qint64 pid_{0};
+
+    /// @brief Queries _NET_WM_PID once; returns 0 when unavailable.
+    qint64 readPid() const;
 };
 
 } // namespace cf::desktop::backend::wsl

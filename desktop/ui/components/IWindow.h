@@ -74,6 +74,13 @@ class IWindow : public QObject {
     virtual void raise() = 0;
 
     /**
+     * @brief  Returns the owning process id of this window.
+     *
+     * @return The process id, or 0 when the backend cannot determine it.
+     */
+    virtual qint64 pid() const { return 0; }
+
+    /**
      * @brief  Creates a weak pointer to this window.
      *
      * @return A WeakPtr that references this IWindow instance.

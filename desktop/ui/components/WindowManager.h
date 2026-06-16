@@ -16,6 +16,7 @@
 #pragma once
 #include "IWindow.h"
 #include "base/weak_ptr/weak_ptr.h"
+#include "window_info.h"
 
 #include <QHash>
 #include <QObject>
@@ -88,10 +89,30 @@ class WindowManager : public QObject {
      */
     bool raise_a_window(WeakPtr<IWindow> window);
 
+  signals:
+    /**
+     * @brief  Emitted when a tracked window appears.
+     *
+     * @param[in] pid  Owning process id (0 if unknown).
+     */
+    void windowAppeared(qint64 pid);
+
+    /**
+     * @brief  Emitted when a tracked window disappears.
+     *
+     * @param[in] pid  Owning process id captured at appearance.
+     */
+    void windowDisappeared(qint64 pid);
+
   private:
+    /// @brief Records a newly appeared window and watches its destruction.
+    void onWindowCame(WeakPtr<IWindow> window);
+
     /// Weak reference to the window backend. Ownership: external.
     WeakPtr<IWindowBackend> window_backend_{nullptr};
     /// Tracked windows keyed by window ID (weak references only). Ownership: backend.
     std::unordered_map<win_id_t, WeakPtr<IWindow>, QStringHash> windows_;
+    /// Observed WindowInfo keyed by window ID.
+    std::unordered_map<win_id_t, WindowInfo, QStringHash> window_infos_;
 };
 } // namespace cf::desktop
