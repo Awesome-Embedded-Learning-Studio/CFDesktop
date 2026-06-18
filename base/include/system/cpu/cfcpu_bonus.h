@@ -14,9 +14,9 @@
  */
 #pragma once
 
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
+#include "aex/span/span.h"
 #include "base/export.h"
-#include "base/span/span.h"
 #include <cstdint>
 #include <optional>
 #include <string_view>
@@ -44,10 +44,10 @@ enum class CPUBonusInfoViewError {
  */
 struct CPUBonusInfoView {
     /// CPU feature flags (e.g., "neon", "aes", "avx2").
-    cf::span<const std::string_view> features;
+    aex::span<const std::string_view> features;
 
     /// Cache sizes in kilobytes. Order: L1, L2, L3 (if available).
-    cf::span<const uint32_t> cache_size;
+    aex::span<const uint32_t> cache_size;
 
     /// Indicates whether CPU uses big.LITTLE or DynamIQ architecture.
     bool has_big_little = false;
@@ -75,7 +75,7 @@ struct CPUBonusInfoView {
  * @param[in] force_refresh If true, forces re-querying CPU information.
  *                          Default is false.
  *
- * @return     `expected<CPUBonusInfoView, CPUBonusInfoViewError>`
+ * @return     `aex::expected<CPUBonusInfoView, CPUBonusInfoViewError>`
  *             containing extended CPU information on success, or an
  *             error type on failure.
  *
@@ -92,7 +92,7 @@ struct CPUBonusInfoView {
  * @since      0.1
  * @ingroup    system_cpu
  */
-CF_BASE_EXPORT expected<CPUBonusInfoView, CPUBonusInfoViewError>
+CF_BASE_EXPORT aex::expected<CPUBonusInfoView, CPUBonusInfoViewError>
 getCPUBonusInfo(bool force_refresh = false);
 
 } // namespace cf

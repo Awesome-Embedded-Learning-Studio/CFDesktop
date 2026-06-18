@@ -183,14 +183,14 @@ Result fromJson(const QByteArray& json, bool isDark) {
     QJsonDocument doc = QJsonDocument::fromJson(json, &parseError);
 
     if (parseError.error != QJsonParseError::NoError) {
-        return ::cf::unexpected(
+        return ::aex::unexpected(
             MaterialSchemeError{MaterialSchemeError::Kind::InvalidJson,
                                 "Failed to parse JSON: " + parseError.errorString().toStdString()});
     }
 
     if (!doc.isObject()) {
-        return ::cf::unexpected(MaterialSchemeError{MaterialSchemeError::Kind::InvalidJson,
-                                                    "Root element must be an object"});
+        return ::aex::unexpected(MaterialSchemeError{MaterialSchemeError::Kind::InvalidJson,
+                                                     "Root element must be an object"});
     }
 
     QJsonObject root = doc.object();
@@ -245,7 +245,7 @@ Result fromJson(const QByteArray& json, bool isDark) {
         if (colors.contains(qKey)) {
             QString colorStr = colors[qKey].toString();
             if (!colorStr.startsWith('#')) {
-                return ::cf::unexpected(MaterialSchemeError{
+                return ::aex::unexpected(MaterialSchemeError{
                     MaterialSchemeError::Kind::InvalidColorFormat,
                     "Invalid color format for " + key + ": " + colorStr.toStdString()});
             }

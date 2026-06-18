@@ -5,14 +5,14 @@ namespace cf::desktop {
 
 WindowManager::WindowManager(QObject* parent) : QObject(parent) {}
 
-void WindowManager::setBackend(WeakPtr<IWindowBackend> backend) {
+void WindowManager::setBackend(aex::WeakPtr<IWindowBackend> backend) {
     window_backend_ = std::move(backend);
     if (auto* backend_raw = window_backend_.Get()) {
         connect(backend_raw, &IWindowBackend::window_came, this, &WindowManager::onWindowCame);
     }
 }
 
-WeakPtr<IWindow> WindowManager::create_window(const win_id_t& win_id) {
+aex::WeakPtr<IWindow> WindowManager::create_window(const win_id_t& win_id) {
     if (windows_.find(win_id) != windows_.end())
         return nullptr;
 
@@ -27,7 +27,7 @@ WeakPtr<IWindow> WindowManager::create_window(const win_id_t& win_id) {
     return window;
 }
 
-WeakPtr<IWindow> WindowManager::find_window(const win_id_t& win_id) const {
+aex::WeakPtr<IWindow> WindowManager::find_window(const win_id_t& win_id) const {
     auto it = windows_.find(win_id);
     if (it == windows_.end())
         return nullptr;
@@ -38,21 +38,21 @@ WeakPtr<IWindow> WindowManager::find_window(const win_id_t& win_id) const {
     return it->second;
 }
 
-bool WindowManager::request_close_window(WeakPtr<IWindow> window) {
+bool WindowManager::request_close_window(aex::WeakPtr<IWindow> window) {
     if (!window)
         return false;
     window->requestClose();
     return true;
 }
 
-bool WindowManager::raise_a_window(WeakPtr<IWindow> window) {
+bool WindowManager::raise_a_window(aex::WeakPtr<IWindow> window) {
     if (!window)
         return false;
     window->raise();
     return true;
 }
 
-void WindowManager::onWindowCame(WeakPtr<IWindow> window) {
+void WindowManager::onWindowCame(aex::WeakPtr<IWindow> window) {
     if (!window) {
         return;
     }

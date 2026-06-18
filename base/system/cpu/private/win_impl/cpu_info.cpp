@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2026
  *
  */
-#include "base/scope_guard/scope_guard.hpp"
+#include "aex/scope_guard/scope_guard.hpp"
 #include "base/windows/co_helper.hpp"
 #include "system/cpu/cfcpu.h"
 #include "system/cpu/private/cpu_host.h"
@@ -22,7 +22,7 @@ namespace {
 using namespace cf;
 
 // Helper function to query a single WMI property
-cf::expected<std::string, CPUInfoErrorType>
+aex::expected<std::string, CPUInfoErrorType>
 queryWMIProperty(IWbemServices* pSvc, const std::wstring& className, const std::wstring& property) {
     IEnumWbemClassObject* pEnumerator = nullptr;
 
@@ -35,11 +35,11 @@ queryWMIProperty(IWbemServices* pSvc, const std::wstring& className, const std::
                                    &pEnumerator);
 
     if (FAILED(hres)) {
-        return cf::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
+        return aex::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
     }
 
     // Ensure enumerator is released
-    cf::ScopeGuard enumeratorGuard([&pEnumerator]() {
+    aex::ScopeGuard enumeratorGuard([&pEnumerator]() {
         if (pEnumerator) {
             pEnumerator->Release();
         }
@@ -50,10 +50,10 @@ queryWMIProperty(IWbemServices* pSvc, const std::wstring& className, const std::
 
     hres = pEnumerator->Next(static_cast<LONG>(WBEM_INFINITE), 1, &pclsObj, &uReturn);
     if (uReturn == 0 || FAILED(hres)) {
-        return cf::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
+        return aex::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
     }
 
-    cf::ScopeGuard classObjGuard([&pclsObj]() {
+    aex::ScopeGuard classObjGuard([&pclsObj]() {
         if (pclsObj) {
             pclsObj->Release();
         }
@@ -64,7 +64,7 @@ queryWMIProperty(IWbemServices* pSvc, const std::wstring& className, const std::
 
     hres = pclsObj->Get(property.c_str(), 0, &vtProp, 0, 0);
 
-    cf::ScopeGuard variantGuard([&vtProp]() { VariantClear(&vtProp); });
+    aex::ScopeGuard variantGuard([&vtProp]() { VariantClear(&vtProp); });
 
     if (SUCCEEDED(hres)) {
         // Handle different variant types
@@ -87,7 +87,7 @@ queryWMIProperty(IWbemServices* pSvc, const std::wstring& className, const std::
         return result;
     }
 
-    return cf::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
+    return aex::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
 }
 
 // Convert Architecture value to string
@@ -116,8 +116,8 @@ std::string architectureToString(UINT16 archValue) {
 
 } // namespace
 
-cf::expected<void, CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostInfo) {
-    using CpuInfoQueryExpected = cf::expected<void, cf::CPUInfoErrorType>;
+aex::expected<void, CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostInfo) {
+    using CpuInfoQueryExpected = aex::expected<void, cf::CPUInfoErrorType>;
 
     return cf::COMHelper<void, CPUInfoErrorType>::RunComInterfacesMTA(
         [&hostInfo]() -> CpuInfoQueryExpected {
@@ -127,10 +127,10 @@ cf::expected<void, CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostI
                                             IID_IWbemLocator, reinterpret_cast<LPVOID*>(&pLoc));
 
             if (FAILED(hres)) {
-                return cf::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
+                return aex::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
             }
 
-            cf::ScopeGuard locGuard([&pLoc]() {
+            aex::ScopeGuard locGuard([&pLoc]() {
                 if (pLoc) {
                     pLoc->Release();
                 }
@@ -142,10 +142,10 @@ cf::expected<void, CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostI
                 pLoc->ConnectServer(_bstr_t(L"ROOT\\CIMV2"), nullptr, nullptr, 0, 0, 0, 0, &pSvc);
 
             if (FAILED(hres)) {
-                return cf::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
+                return aex::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
             }
 
-            cf::ScopeGuard svcGuard([&pSvc]() {
+            aex::ScopeGuard svcGuard([&pSvc]() {
                 if (pSvc) {
                     pSvc->Release();
                 }
@@ -157,7 +157,7 @@ cf::expected<void, CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostI
                                      EOAC_NONE);
 
             if (FAILED(hres)) {
-                return cf::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
+                return aex::unexpected(CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
             }
 
             // Query CPU information

@@ -14,11 +14,11 @@
  */
 
 #include "progressbar.h"
+#include "aex/weak_ptr/weak_ptr.h"
 #include "application_support/application.h"
 #include "base/device_pixel.h"
 #include "base/easing.h"
 #include "base/geometry_helper.h"
-#include "base/include/base/weak_ptr/weak_ptr.h"
 #include "components/material/cfmaterial_animation_factory.h"
 #include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
@@ -227,7 +227,7 @@ QRectF ProgressBar::trackRect() const {
 
 void ProgressBar::startIndeterminateAnimation() {
     // Get animation factory locally for custom indeterminate animation
-    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+    auto factory = aex::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
         application_support::Application::animationFactory());
 
     if (!factory || m_indeterminateAnimating) {

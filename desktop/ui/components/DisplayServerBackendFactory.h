@@ -10,20 +10,20 @@
 
 #pragma once
 #include "IDisplayServerBackend.h"
-#include "base/factory/registered_factory.hpp"
+#include "aex/factory/registered_factory.hpp"
 
 namespace cf::desktop {
 
 /**
  * @brief Factory for creating platform-specific display server backends.
  *
- * Inherits from StaticRegisteredFactory<IDisplayServerBackend>, which
+ * Inherits from aex::StaticRegisteredFactory<IDisplayServerBackend>, which
  * delegates creation to a std::function registered at startup by the
  * platform-specific module.
  *
  * Usage:
  *   auto backend = DisplayServerBackendFactory::instance().make_unique();
  */
-class DisplayServerBackendFactory : public StaticRegisteredFactory<IDisplayServerBackend> {};
+class DisplayServerBackendFactory : public aex::StaticRegisteredFactory<IDisplayServerBackend> {};
 
 } // namespace cf::desktop

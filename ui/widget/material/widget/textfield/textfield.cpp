@@ -14,10 +14,10 @@
  */
 
 #include "textfield.h"
+#include "aex/weak_ptr/weak_ptr.h"
 #include "application_support/application.h"
 #include "base/device_pixel.h"
 #include "base/geometry_helper.h"
-#include "base/include/base/weak_ptr/weak_ptr.h"
 #include "cfmaterial_animation_factory.h"
 #include "components/material/cfmaterial_property_animation.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
@@ -1054,7 +1054,7 @@ void TextField::animateFloatingTo(bool floating) {
     }
 
     // Get animation factory locally for custom property animations
-    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+    auto factory = aex::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
         application_support::Application::animationFactory());
 
     if (!factory) {

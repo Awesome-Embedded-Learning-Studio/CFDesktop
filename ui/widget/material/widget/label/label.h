@@ -14,8 +14,8 @@
  */
 #pragma once
 
+#include "aex/weak_ptr/weak_ptr.h"
 #include "base/color.h"
-#include "base/include/base/weak_ptr/weak_ptr.h"
 #include "export.h"
 
 #include <QLabel>
@@ -315,8 +315,8 @@ class CF_UI_EXPORT Label : public QLabel {
     TypographyStyle typographyStyle_;
     LabelColorVariant colorVariant_;
     bool autoHiding_;
-    mutable CFColor cachedColor_;      ///< Cached color to avoid repeated theme queries
-    mutable bool colorCacheValid_;     ///< Whether the cached color is valid
+    mutable CFColor cachedColor_;  ///< Cached color to avoid repeated theme queries
+    mutable bool colorCacheValid_; ///< Whether the cached color is valid
 };
 
 } // namespace cf::ui::widget::material

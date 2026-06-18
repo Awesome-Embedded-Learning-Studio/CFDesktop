@@ -44,11 +44,11 @@ using namespace cf::ui::math;
 /**
  * @brief Constructor - initializes elevation controller.
  *
- * @param factory WeakPtr to animation factory for elevation transitions.
+ * @param factory aex::WeakPtr to animation factory for elevation transitions.
  * @param parent QObject parent for memory management.
  */
 MdElevationController::MdElevationController(
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory, QObject* parent)
+    aex::WeakPtr<components::material::CFMaterialAnimationFactory> factory, QObject* parent)
     : QObject(parent), m_currentLevel(0.0f), m_targetLevel(0), m_animator(factory) {}
 
 /**

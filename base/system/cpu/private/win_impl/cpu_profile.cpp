@@ -52,7 +52,7 @@ float getCpuUsage() {
 
 } // namespace
 
-cf::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError> query_cpu_profile_info() {
+aex::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError> query_cpu_profile_info() {
     cf::CPUProfileInfo profile_info{};
 
     // logical cnt

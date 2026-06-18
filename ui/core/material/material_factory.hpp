@@ -14,8 +14,8 @@
 #include <QByteArray>
 
 #include "../../export.h"
+#include "aex/expected/expected.hpp"
 #include "base/color.h"
-#include "base/expected/expected.hpp"
 #include "cfmaterial_fonttype.h"
 #include "cfmaterial_motion.h"
 #include "cfmaterial_radius_scale.h"
@@ -76,7 +76,7 @@ struct MaterialSchemeError {
  *
  * @since  0.1
  */
-using Result = cf::expected<MaterialColorScheme, MaterialSchemeError>;
+using Result = aex::expected<MaterialColorScheme, MaterialSchemeError>;
 
 // =============================================================================
 // Factory Functions

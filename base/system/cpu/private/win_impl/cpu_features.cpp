@@ -34,7 +34,7 @@ void addFeatureIfSupported(bool condition, const char* name, std::vector<std::st
  * @brief Internal Windows Query for CPU features
  *
  * @param feats Output parameter to store detected CPU feature names
- * @return cf::expected<void, cf::CPUBonusInfoViewError>
+ * @return aex::expected<void, cf::CPUBonusInfoViewError>
  */
 void query_cpu_features(std::vector<std::string>& feats) {
     int cpuInfo[4] = {};

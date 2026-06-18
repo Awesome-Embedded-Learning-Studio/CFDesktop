@@ -33,10 +33,10 @@ using namespace cf::ui::components;
 /**
  * @brief Constructor - initializes state machine with animation factory.
  *
- * @param factory WeakPtr to animation factory for creating transitions.
+ * @param factory aex::WeakPtr to animation factory for creating transitions.
  * @param parent QObject parent for memory management.
  */
-StateMachine::StateMachine(cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
+StateMachine::StateMachine(aex::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
                            QObject* parent)
     : QObject(parent), m_state(State::StateNormal), m_opacity(0.0f) {
     m_animator = factory;

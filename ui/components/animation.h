@@ -15,7 +15,7 @@
  */
 #pragma once
 
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr.h"
 #include "export.h"
 #include <QObject>
 #include <QTimer>
@@ -127,9 +127,9 @@ class CF_UI_EXPORT ICFAbstractAnimation : public QObject {
      * @brief  Gets a weak pointer to this animation.
      *
      * @details Each concrete animation class must implement this using
-     *          its WeakPtrFactory.
+     *          its aex::WeakPtrFactory.
      *
-     * @return WeakPtr to this animation.
+     * @return aex::WeakPtr to this animation.
      *
      * @throws     None
      * @note       None
@@ -137,7 +137,7 @@ class CF_UI_EXPORT ICFAbstractAnimation : public QObject {
      * @since      0.1
      * @ingroup    ui_components
      */
-    virtual cf::WeakPtr<ICFAbstractAnimation> GetWeakPtr() = 0;
+    virtual aex::WeakPtr<ICFAbstractAnimation> GetWeakPtr() = 0;
 
     /**
      * @brief  Gets the enabled state of the animation.

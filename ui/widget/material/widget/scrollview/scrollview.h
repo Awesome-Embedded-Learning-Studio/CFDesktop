@@ -14,8 +14,8 @@
  */
 #pragma once
 
+#include "aex/weak_ptr/weak_ptr.h"
 #include "base/color.h"
-#include "base/include/base/weak_ptr/weak_ptr.h"
 #include "cfmaterial_animation_factory.h"
 #include "export.h"
 #include <QElapsedTimer>
@@ -387,7 +387,7 @@ class CF_UI_EXPORT ScrollView : public QScrollArea {
     void stopFadeTimer();
 
     // Behavior components
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animationFactory;
+    aex::WeakPtr<components::material::CFMaterialAnimationFactory> m_animationFactory;
 
     // Scrollbar state
     bool m_scrollbarFadeEnabled = true;

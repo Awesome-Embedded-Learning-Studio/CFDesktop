@@ -10,12 +10,12 @@
  */
 #pragma once
 
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
 #include "system/cpu/cfcpu_profile.h"
 
 /**
  * @brief Internal Windows Query for CPU profile information
  *
- * @return cf::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError>
+ * @return aex::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError>
  */
-cf::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError> query_cpu_profile_info();
+aex::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError> query_cpu_profile_info();

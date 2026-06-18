@@ -102,7 +102,7 @@ void CheckBox::updateAnimationProgress(float progress, bool checked) {
 void CheckBox::startCheckMarkAnimation(float target) {
     float fromValue = m_checkAnimationProgress;
 
-    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+    auto factory = aex::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
         application_support::Application::animationFactory());
 
     if (!factory) {

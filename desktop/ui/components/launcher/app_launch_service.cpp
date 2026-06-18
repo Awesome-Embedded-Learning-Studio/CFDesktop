@@ -27,17 +27,17 @@ namespace {
 constexpr const char* kTag = "AppLaunchService";
 }
 
-cf::expected<qint64, AppLaunchError> AppLaunchService::launch(const QString& exec_command) {
+aex::expected<qint64, AppLaunchError> AppLaunchService::launch(const QString& exec_command) {
     if (exec_command.trimmed().isEmpty()) {
         cf::log::warningftag(kTag, "launch skipped: empty exec_command");
-        return cf::unexpected(AppLaunchError::Empty);
+        return aex::unexpected(AppLaunchError::Empty);
     }
 
     const QStringList parts = QProcess::splitCommand(exec_command);
     if (parts.isEmpty()) {
         cf::log::warningftag(kTag, "launch skipped: unparsable command '{}'",
                              exec_command.toStdString());
-        return cf::unexpected(AppLaunchError::Unparsable);
+        return aex::unexpected(AppLaunchError::Unparsable);
     }
 
     const QString program = parts.first();
@@ -50,7 +50,7 @@ cf::expected<qint64, AppLaunchError> AppLaunchService::launch(const QString& exe
     }
 
     cf::log::errorftag(kTag, "failed to launch '{}'", exec_command.toStdString());
-    return cf::unexpected(AppLaunchError::Failed);
+    return aex::unexpected(AppLaunchError::Failed);
 }
 
 } // namespace cf::desktop::desktop_component

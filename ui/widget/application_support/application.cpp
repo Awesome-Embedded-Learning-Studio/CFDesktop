@@ -44,7 +44,7 @@ core::ThemeManager* Application::themeManager() {
     return &core::ThemeManager::instance();
 }
 
-cf::WeakPtr<components::ICFAnimationManagerFactory> Application::animationFactory() {
+aex::WeakPtr<components::ICFAnimationManagerFactory> Application::animationFactory() {
     if (auto* app = instance()) {
         return app->animationFactory_->GetWeakPtr();
     }
@@ -73,7 +73,7 @@ const core::ICFTheme& Application::currentTheme() const {
     return tm.theme(name);
 }
 
-cf::WeakPtr<components::ICFAbstractAnimation>
+aex::WeakPtr<components::ICFAbstractAnimation>
 Application::animation(const std::string& animationToken) {
     if (animationFactory_) {
         return animationFactory_->getAnimation(animationToken.c_str());

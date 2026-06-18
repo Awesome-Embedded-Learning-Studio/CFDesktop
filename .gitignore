@@ -22,7 +22,11 @@ document/api/
 .vscode
 
 # third_party dependencies (downloaded during configuration)
+# FetchContent-downloaded deps stay ignored; tracked submodules are re-included
+# so their gitlink + .gitmodules are committed.
 third_party/*/
+!third_party/aex/
+!third_party/QuarkWidgets/
 !third_party/.gitkeep
 
 __pycache__/

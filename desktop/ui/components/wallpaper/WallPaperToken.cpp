@@ -1,5 +1,5 @@
 #include "WallPaperToken.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include <QStringList>
 #include <QUuid>
 
@@ -7,7 +7,7 @@ namespace cf::desktop::wallpaper {
 
 // ============================================================
 // WallPaperToken::Private
-// WeakPtrFactory placed LAST (destroyed first, invalidates
+// aex::WeakPtrFactory placed LAST (destroyed first, invalidates
 // weak refs before other members).
 // ============================================================
 struct WallPaperToken::Private {
@@ -19,7 +19,7 @@ struct WallPaperToken::Private {
     QString description;
     SourceType source_type;
 
-    WeakPtrFactory<WallPaperToken> weak_ptr_factory;
+    aex::WeakPtrFactory<WallPaperToken> weak_ptr_factory;
 
     Private(const QString& path, SourceType type, const QString& name, const QString& auth,
             const QString& desc, WallPaperToken* owner)
@@ -62,7 +62,7 @@ bool operator==(const WallPaperToken& lh, const WallPaperToken& rh) {
     return lh.d->id == rh.d->id;
 }
 
-WeakPtr<WallPaperToken> WallPaperToken::getWeakPtr() const {
+aex::WeakPtr<WallPaperToken> WallPaperToken::getWeakPtr() const {
     return d->weak_ptr_factory.GetWeakPtr();
 }
 

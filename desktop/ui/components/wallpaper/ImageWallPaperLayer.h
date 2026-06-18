@@ -172,7 +172,7 @@ class ImageWallPaperLayer : public WallPaperLayer {
      * @param[in] token  Weak reference to the wallpaper token.
      * @return True if the image was loaded successfully.
      */
-    bool loadImageFromToken(const WeakPtr<WallPaperToken>& token);
+    bool loadImageFromToken(const aex::WeakPtr<WallPaperToken>& token);
 
     struct Private;
     std::unique_ptr<Private> d;

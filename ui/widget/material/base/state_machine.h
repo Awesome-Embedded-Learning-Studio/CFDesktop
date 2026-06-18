@@ -12,7 +12,7 @@
  * @ingroup ui_widget_material_base
  */
 #pragma once
-#include "base/include/base/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr.h"
 #include "components/material/cfmaterial_animation_factory.h"
 #include "export.h"
 #include <QObject>
@@ -52,7 +52,7 @@ class CF_UI_EXPORT StateMachine : public QObject {
     /**
      * @brief  Constructor with animation factory.
      *
-     * @param[in]     factory WeakPtr to the animation factory.
+     * @param[in]     factory aex::WeakPtr to the animation factory.
      * @param[in]     parent QObject parent.
      *
      * @throws        None
@@ -61,7 +61,7 @@ class CF_UI_EXPORT StateMachine : public QObject {
      * @since         N/A
      * @ingroup       ui_widget_material_base
      */
-    explicit StateMachine(cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
+    explicit StateMachine(aex::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
                           QObject* parent);
 
     /**
@@ -319,9 +319,9 @@ class CF_UI_EXPORT StateMachine : public QObject {
 
     States m_state = State::StateNormal;
     float m_opacity = 0.0f;
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
+    aex::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
 
     /// Reference to the currently running opacity animation
-    cf::WeakPtr<components::ICFAbstractAnimation> m_currentAnimation;
+    aex::WeakPtr<components::ICFAbstractAnimation> m_currentAnimation;
 };
 } // namespace cf::ui::widget::material::base

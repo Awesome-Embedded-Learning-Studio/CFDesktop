@@ -16,8 +16,8 @@
 #pragma once
 
 #include "../IShellLayer.h"
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include <QWidget>
 #include <memory>
 namespace cf::desktop {
@@ -64,9 +64,9 @@ class WidgetShellLayer : public QWidget, public IShellLayer {
     /**
      * @brief  Returns a weak pointer to this shell layer.
      *
-     * @return A WeakPtr referencing this instance.
+     * @return A aex::WeakPtr referencing this instance.
      */
-    WeakPtr<WidgetShellLayer> GetWeak() const { return weak_factory_.GetWeakPtr(); }
+    aex::WeakPtr<WidgetShellLayer> GetWeak() const { return weak_factory_.GetWeakPtr(); }
 
     // -- IShellLayer ----------------------------------------------------------
     /**
@@ -101,7 +101,7 @@ class WidgetShellLayer : public QWidget, public IShellLayer {
     std::unique_ptr<IShellLayerStrategy> strategy_;
 
     /// Weak pointer factory (must be last member).
-    mutable cf::WeakPtrFactory<WidgetShellLayer> weak_factory_{this};
+    mutable aex::WeakPtrFactory<WidgetShellLayer> weak_factory_{this};
 };
 
 } // namespace cf::desktop

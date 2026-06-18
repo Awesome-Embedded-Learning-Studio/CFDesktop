@@ -14,7 +14,7 @@
  */
 
 #pragma once
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr.h"
 #include <QColor>
 #include <QImage>
 #include <QRect>
@@ -42,7 +42,7 @@ class IShellLayerStrategy {
      * @param[in]  layer  Weak reference to the shell layer.
      * @param[in]  wm     Weak reference to the window manager.
      */
-    virtual void activate(WeakPtr<IShellLayer> layer, WeakPtr<WindowManager> wm) = 0;
+    virtual void activate(aex::WeakPtr<IShellLayer> layer, aex::WeakPtr<WindowManager> wm) = 0;
 
     /**
      * @brief  Deactivates the strategy and releases resources.

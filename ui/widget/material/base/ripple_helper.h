@@ -51,7 +51,7 @@ class CF_UI_EXPORT RippleHelper : public QObject {
     /**
      * @brief  Constructor with animation factory.
      *
-     * @param[in]     factory WeakPtr to the animation factory.
+     * @param[in]     factory aex::WeakPtr to the animation factory.
      * @param[in]     parent QObject parent.
      *
      * @throws        None
@@ -60,7 +60,7 @@ class CF_UI_EXPORT RippleHelper : public QObject {
      * @since         N/A
      * @ingroup       ui_widget_material_base
      */
-    explicit RippleHelper(cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
+    explicit RippleHelper(aex::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
                           QObject* parent);
 
     /**
@@ -177,7 +177,7 @@ class CF_UI_EXPORT RippleHelper : public QObject {
     QList<MdRipple> m_ripples;
     Mode m_mode = Mode::Bounded;
     cf::ui::base::CFColor m_color;
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
+    aex::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
 
     float maxRadius(const QRectF& rect, const QPointF& center) const;
 };

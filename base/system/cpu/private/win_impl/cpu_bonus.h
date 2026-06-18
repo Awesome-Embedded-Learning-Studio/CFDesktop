@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../cpu_host.h"
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
 #include "system/cpu/cfcpu_bonus.h"
 
-cf::expected<void, cf::CPUBonusInfoViewError> query_cpu_bonus_info(cf::CPUBonusInfoHost& bonus);
+aex::expected<void, cf::CPUBonusInfoViewError> query_cpu_bonus_info(cf::CPUBonusInfoHost& bonus);

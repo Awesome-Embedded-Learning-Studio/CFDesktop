@@ -14,7 +14,7 @@
 
 #pragma once
 #include "IDesktopPropertyStrategy.h"
-#include "base/singleton/simple_singleton.hpp"
+#include "aex/singleton/simple_singleton.hpp"
 #include <memory>
 
 namespace cf::desktop::platform_strategy::wsl {
@@ -28,7 +28,7 @@ class DisplaySizePolicyMaker;
  * Creates and manages the lifecycle of desktop property strategy instances
  * specifically for WSL environments.
  *
- * @note   Inherits singleton semantics from SimpleSingleton base.
+ * @note   Inherits singleton semantics from aex::SimpleSingleton base.
  *
  * @ingroup platform_wsl
  *
@@ -37,7 +37,7 @@ class DisplaySizePolicyMaker;
  * auto* strategy = factory.create(StrategyType::WSL);
  * @endcode
  */
-class WSLDeskProStrategyFactory : public SimpleSingleton<WSLDeskProStrategyFactory> {
+class WSLDeskProStrategyFactory : public aex::SimpleSingleton<WSLDeskProStrategyFactory> {
   public:
     /**
      * @brief  Constructs a new WSLDeskProStrategyFactory instance.

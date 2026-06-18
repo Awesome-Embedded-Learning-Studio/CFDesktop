@@ -8,6 +8,9 @@ set_target_properties(cfbase_hardware_tier PROPERTIES
 
 target_compile_definitions(cfbase_hardware_tier PRIVATE CFBASE_EXPORTS)
 
+# Foundation utils (aex) + base/include platform headers
+target_link_libraries(cfbase_hardware_tier PRIVATE cfbase_headers)
+
 target_include_directories(cfbase_hardware_tier
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>

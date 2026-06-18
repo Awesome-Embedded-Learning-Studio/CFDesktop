@@ -51,18 +51,18 @@ CFMaterialAnimationFactory::~CFMaterialAnimationFactory() {
 // Public Methods
 // =============================================================================
 
-cf::WeakPtr<ICFAbstractAnimation>
+aex::WeakPtr<ICFAbstractAnimation>
 CFMaterialAnimationFactory::getAnimation(const char* animationToken) {
 
     // Check global enabled state
     if (!globalEnabled_) {
-        return cf::WeakPtr<ICFAbstractAnimation>();
+        return aex::WeakPtr<ICFAbstractAnimation>();
     }
 
     // Check if animation already exists
     auto it = animations_.find(animationToken);
     if (it != animations_.end()) {
-        // Return existing WeakPtr from the animation
+        // Return existing aex::WeakPtr from the animation
         return it->second->GetWeakPtr();
     }
 
@@ -71,7 +71,7 @@ CFMaterialAnimationFactory::getAnimation(const char* animationToken) {
 
     // Check if token was found
     if (descriptor.animationType == nullptr) {
-        return cf::WeakPtr<ICFAbstractAnimation>();
+        return aex::WeakPtr<ICFAbstractAnimation>();
     }
 
     // Apply strategy
@@ -79,7 +79,7 @@ CFMaterialAnimationFactory::getAnimation(const char* animationToken) {
 
     // Check if animation should be enabled
     if (!shouldEnableAnimation(nullptr)) {
-        return cf::WeakPtr<ICFAbstractAnimation>();
+        return aex::WeakPtr<ICFAbstractAnimation>();
     }
 
     // Create animation based on type
@@ -94,7 +94,7 @@ CFMaterialAnimationFactory::getAnimation(const char* animationToken) {
         animation = createScaleAnimation(descriptor, nullptr);
     }
 
-    // Store and return WeakPtr
+    // Store and return aex::WeakPtr
     if (animation) {
         const char* tokenKey = descriptor.motionToken;
         ICFAbstractAnimation* rawPtr = animation.get();
@@ -103,16 +103,16 @@ CFMaterialAnimationFactory::getAnimation(const char* animationToken) {
         return rawPtr->GetWeakPtr();
     }
 
-    return cf::WeakPtr<ICFAbstractAnimation>();
+    return aex::WeakPtr<ICFAbstractAnimation>();
 }
 
-cf::WeakPtr<ICFAbstractAnimation>
+aex::WeakPtr<ICFAbstractAnimation>
 CFMaterialAnimationFactory::createAnimation(const AnimationDescriptor& descriptor,
                                             QWidget* targetWidget, QObject* owner) {
 
     // Check global enabled state
     if (!globalEnabled_) {
-        return cf::WeakPtr<ICFAbstractAnimation>();
+        return aex::WeakPtr<ICFAbstractAnimation>();
     }
 
     // Apply strategy
@@ -120,7 +120,7 @@ CFMaterialAnimationFactory::createAnimation(const AnimationDescriptor& descripto
 
     // Check if animation should be enabled
     if (!shouldEnableAnimation(targetWidget)) {
-        return cf::WeakPtr<ICFAbstractAnimation>();
+        return aex::WeakPtr<ICFAbstractAnimation>();
     }
 
     // Generate a unique key for this animation
@@ -149,7 +149,7 @@ CFMaterialAnimationFactory::createAnimation(const AnimationDescriptor& descripto
         animation = createScaleAnimation(adjustedDescriptor, targetWidget);
     }
 
-    // Store and return WeakPtr
+    // Store and return aex::WeakPtr
     if (animation) {
         ICFAbstractAnimation* rawPtr = animation.get();
         animations_[key] = std::move(animation);
@@ -167,7 +167,7 @@ CFMaterialAnimationFactory::createAnimation(const AnimationDescriptor& descripto
         return rawPtr->GetWeakPtr();
     }
 
-    return cf::WeakPtr<ICFAbstractAnimation>();
+    return aex::WeakPtr<ICFAbstractAnimation>();
 }
 
 void CFMaterialAnimationFactory::setStrategy(std::unique_ptr<AnimationStrategy> strategy) {
@@ -315,18 +315,18 @@ bool CFMaterialAnimationFactory::shouldEnableAnimation(QWidget* widget) const {
     return globalEnabled_;
 }
 
-cf::WeakPtr<ICFAbstractAnimation> CFMaterialAnimationFactory::createPropertyAnimation(
+aex::WeakPtr<ICFAbstractAnimation> CFMaterialAnimationFactory::createPropertyAnimation(
     float* value, float from, float to, int durationMs, cf::ui::base::Easing::Type easing,
     QWidget* targetWidget, QObject* owner) {
 
     // Check global enabled state
     if (!globalEnabled_) {
-        return cf::WeakPtr<ICFAbstractAnimation>();
+        return aex::WeakPtr<ICFAbstractAnimation>();
     }
 
     // Check if animation should be enabled
     if (!shouldEnableAnimation(targetWidget)) {
-        return cf::WeakPtr<ICFAbstractAnimation>();
+        return aex::WeakPtr<ICFAbstractAnimation>();
     }
 
     // Generate a unique key for this animation
@@ -352,7 +352,7 @@ cf::WeakPtr<ICFAbstractAnimation> CFMaterialAnimationFactory::createPropertyAnim
         anim->setTargetWidget(targetWidget);
     }
 
-    // Store and return WeakPtr
+    // Store and return aex::WeakPtr
     if (anim) {
         ICFAbstractAnimation* rawPtr = anim.get();
         animations_[key] = std::move(anim);
@@ -370,7 +370,7 @@ cf::WeakPtr<ICFAbstractAnimation> CFMaterialAnimationFactory::createPropertyAnim
         return rawPtr->GetWeakPtr();
     }
 
-    return cf::WeakPtr<ICFAbstractAnimation>();
+    return aex::WeakPtr<ICFAbstractAnimation>();
 }
 
 } // namespace cf::ui::components::material

@@ -13,6 +13,6 @@ target_link_libraries(
     cfdesktop_launcher
 PRIVATE
     Qt6::Core   # QProcess, QStringList
-    cfbase      # cf::expected
+    cfbase      # aex::expected (propagated via cfbase -> aex::aex)
     cflogger    # Diagnostic logging for launch success/failure
 )

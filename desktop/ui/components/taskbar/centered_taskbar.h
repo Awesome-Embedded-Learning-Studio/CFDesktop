@@ -16,9 +16,9 @@
 
 #pragma once
 
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include "app_entry.h"
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
 #include "components/IPanel.h"
 
 #include <QColor>
@@ -151,7 +151,7 @@ class CenteredTaskbar final : public QWidget, public cf::desktop::IPanel {
     /**
      * @brief  Returns a weak reference to this taskbar.
      *
-     * @return WeakPtr valid for this instance's lifetime.
+     * @return aex::WeakPtr valid for this instance's lifetime.
      *
      * @throws None
      * @note   None
@@ -159,7 +159,7 @@ class CenteredTaskbar final : public QWidget, public cf::desktop::IPanel {
      * @since  0.19
      * @ingroup components
      */
-    WeakPtr<CenteredTaskbar> GetWeak() const { return weak_factory_.GetWeakPtr(); }
+    aex::WeakPtr<CenteredTaskbar> GetWeak() const { return weak_factory_.GetWeakPtr(); }
 
   signals:
     /**
@@ -207,7 +207,7 @@ class CenteredTaskbar final : public QWidget, public cf::desktop::IPanel {
     QColor divider_color_;    ///< Top hairline divider color.
 
     /// Weak pointer factory (must be the last member).
-    mutable cf::WeakPtrFactory<CenteredTaskbar> weak_factory_{this};
+    mutable aex::WeakPtrFactory<CenteredTaskbar> weak_factory_{this};
 };
 
 } // namespace cf::desktop::desktop_component

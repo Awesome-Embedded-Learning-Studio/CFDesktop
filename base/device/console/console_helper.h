@@ -1,6 +1,6 @@
 #pragma once
+#include "aex/policy_chain/policy_chain.hpp"
 #include "base/export.h"
-#include "base/policy_chain/policy_chain.hpp"
 #include "console_defines.h"
 #include <any>
 #include <memory>
@@ -8,7 +8,7 @@
 
 namespace cf::base::device::console {
 
-using cf::PolicyChain;
+using aex::PolicyChain;
 
 /**
  * @file    console_helper.h

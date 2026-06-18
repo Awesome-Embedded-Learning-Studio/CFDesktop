@@ -370,7 +370,7 @@ void RadioButton::startInnerCircleAnimation(bool checked) {
     float targetScale = checked ? INNER_CIRCLE_SCALE_CHECKED : INNER_CIRCLE_SCALE_UNCHECKED;
     float fromScale = m_innerCircleScale;
 
-    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+    auto factory = aex::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
         Application::animationFactory());
 
     if (!factory) {

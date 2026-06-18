@@ -14,7 +14,7 @@
 #pragma once
 #include "../export.h"
 #include "CFDesktop.h"
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr.h"
 #include <memory>
 
 namespace cf::desktop {
@@ -71,10 +71,10 @@ class CF_DESKTOP_EXPORT CFDesktopProxy {
      * @since      0.1
      * @ingroup    desktop_ui
      */
-    CFDesktopProxy(WeakPtr<CFDesktop> desktop);
+    CFDesktopProxy(aex::WeakPtr<CFDesktop> desktop);
 
     /// @brief Weak reference to the desktop instance. Ownership: observer.
-    WeakPtr<CFDesktop> desktop_;
+    aex::WeakPtr<CFDesktop> desktop_;
 };
 
 } // namespace cf::desktop

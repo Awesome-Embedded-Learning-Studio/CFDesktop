@@ -17,11 +17,11 @@
  * - Token-based animation retrieval (e.g., "md.animation.fadeIn")
  * - Automatic mapping to MotionSpec for timing and easing
  * - Strategy pattern for widget-specific behavior
- * - WeakPtr ownership model (factory owns, users hold weak references)
+ * - aex::WeakPtr ownership model (factory owns, users hold weak references)
  * - Global enable/disable for performance and accessibility
  *
  * The factory maintains exclusive ownership of all created animations
- * via unique_ptr, while users receive WeakPtr references. This ensures
+ * via unique_ptr, while users receive aex::WeakPtr references. This ensures
  * proper lifecycle management and prevents dangling pointers.
  *
  * @ingroup ui_components_material
@@ -29,10 +29,10 @@
 #pragma once
 
 #include "../animation.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include "animation_factory_manager.h"
 #include "base/easing.h"
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
 #include "cfmaterial_animation_strategy.h"
 #include "core/theme.h"
 #include "export.h"
@@ -53,7 +53,7 @@ class CFMaterialScaleAnimation;
  *
  * @details Creates and manages animations following Material Design 3
  *          motion specifications. The factory maintains exclusive ownership
- *          of created animations (via unique_ptr) and provides WeakPtr
+ *          of created animations (via unique_ptr) and provides aex::WeakPtr
  *          access to users.
  *
  *          Animation lifecycle:
@@ -62,7 +62,7 @@ class CFMaterialScaleAnimation;
  *          3. Strategy adjusts descriptor (if set)
  *          4. Factory creates animation instance
  *          5. Factory stores animation (owns it)
- *          6. Factory returns WeakPtr to user
+ *          6. Factory returns aex::WeakPtr to user
  *
  *          Token resolution:
  *          - "md.animation.fadeIn" → Fade animation, shortEnter timing
@@ -70,9 +70,9 @@ class CFMaterialScaleAnimation;
  *          - "md.animation.scaleUp" → Scale animation, shortEnter timing
  *
  * @note    Thread-safe for concurrent reads.
- * @warning Animations are owned by the factory; WeakPtr may become
+ * @warning Animations are owned by the factory; aex::WeakPtr may become
  *          invalid if the factory is destroyed.
- * @throws  None (all errors return invalid WeakPtr)
+ * @throws  None (all errors return invalid aex::WeakPtr)
  * @since   0.1
  * @ingroup ui_components_material
  *
@@ -134,7 +134,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
     /**
      * @brief  Destructor.
      *
-     * @details All owned animations are destroyed. Any WeakPtr
+     * @details All owned animations are destroyed. Any aex::WeakPtr
      *          returned by this factory becomes invalid.
      *
      * @since 0.1
@@ -147,7 +147,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
     CFMaterialAnimationFactory(CFMaterialAnimationFactory&&) = delete;
     CFMaterialAnimationFactory& operator=(CFMaterialAnimationFactory&&) = delete;
 
-    cf::WeakPtr<ICFAnimationManagerFactory> GetWeakPtr() override {
+    aex::WeakPtr<ICFAnimationManagerFactory> GetWeakPtr() override {
         return weak_factory_.GetWeakPtr();
     }
 
@@ -196,12 +196,12 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      *          - "md.animation.scaleUp" → Scale animation, shortEnter timing
      *
      *          If an animation with the given token already exists,
-     *          the existing animation's WeakPtr is returned.
+     *          the existing animation's aex::WeakPtr is returned.
      *          Otherwise, a new animation is created and stored.
      *
      * @param  animationToken Token name (e.g., "md.animation.fadeIn").
      *
-     * @return WeakPtr to the animation, or invalid WeakPtr if:
+     * @return aex::WeakPtr to the animation, or invalid aex::WeakPtr if:
      *         - Token is not found in mapping
      *         - Animation type is not supported
      *         - Global enabled is false
@@ -209,7 +209,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      *
      * @throws     None
      * @note       If the animation doesn't exist, a new animation is created.
-     * @warning    The returned WeakPtr may become invalid if the factory
+     * @warning    The returned aex::WeakPtr may become invalid if the factory
      *             is destroyed. Always check validity before use.
      * @since      0.1
      * @ingroup    ui_components_material
@@ -222,7 +222,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      * }
      * @endcode
      */
-    cf::WeakPtr<ICFAbstractAnimation> getAnimation(const char* animationToken) override;
+    aex::WeakPtr<ICFAbstractAnimation> getAnimation(const char* animationToken) override;
 
     /**
      * @brief  Create an animation from a descriptor.
@@ -239,7 +239,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      *                         The animation applies to this widget.
      * @param[in]  owner Optional owner QObject for memory management.
      *
-     * @return WeakPtr to the created animation, or invalid WeakPtr if:
+     * @return aex::WeakPtr to the created animation, or invalid aex::WeakPtr if:
      *         - Animation type is not supported
      *         - Global enabled is false
      *         - Strategy disables animation
@@ -256,9 +256,9 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      * if (anim) anim->start();
      * @endcode
      */
-    cf::WeakPtr<ICFAbstractAnimation> createAnimation(const AnimationDescriptor& descriptor,
-                                                      QWidget* targetWidget = nullptr,
-                                                      QObject* owner = nullptr);
+    aex::WeakPtr<ICFAbstractAnimation> createAnimation(const AnimationDescriptor& descriptor,
+                                                       QWidget* targetWidget = nullptr,
+                                                       QObject* owner = nullptr);
 
     /**
      * @brief  Create a property animation for a float value.
@@ -278,7 +278,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      * @param[in]     easing Easing type for the animation.
      * @param[in]     targetWidget Optional target widget for repaint notifications.
      *
-     * @return WeakPtr to the created animation, or invalid WeakPtr if:
+     * @return aex::WeakPtr to the created animation, or invalid aex::WeakPtr if:
      *         - Global enabled is false
      *         - Strategy disables animation
      *
@@ -296,7 +296,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      * if (anim) anim->start();
      * @endcode
      */
-    cf::WeakPtr<ICFAbstractAnimation> createPropertyAnimation(
+    aex::WeakPtr<ICFAbstractAnimation> createPropertyAnimation(
         float* value, float from, float to, int durationMs,
         cf::ui::base::Easing::Type easing = cf::ui::base::Easing::Type::EmphasizedDecelerate,
         QWidget* targetWidget = nullptr, QObject* owner = nullptr);
@@ -339,8 +339,8 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
     /**
      * @brief  Set the global enabled state for all animations.
      *
-     * @details When disabled, getAnimation() returns invalid WeakPtr
-     *          and createAnimation() returns invalid WeakPtr.
+     * @details When disabled, getAnimation() returns invalid aex::WeakPtr
+     *          and createAnimation() returns invalid aex::WeakPtr.
      *
      *          This is useful for:
      *          - Performance optimization during heavy processing
@@ -542,7 +542,7 @@ class CF_UI_EXPORT CFMaterialAnimationFactory : public ICFAnimationManagerFactor
      */
     bool shouldEnableAnimation(QWidget* widget) const;
 
-    cf::WeakPtrFactory<CFMaterialAnimationFactory> weak_factory_{this};
+    aex::WeakPtrFactory<CFMaterialAnimationFactory> weak_factory_{this};
 };
 
 } // namespace cf::ui::components::material

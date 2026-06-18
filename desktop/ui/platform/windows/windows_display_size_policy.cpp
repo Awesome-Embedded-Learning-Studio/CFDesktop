@@ -1,6 +1,6 @@
 #include "windows_display_size_policy.h"
 #include "IDesktopDisplaySizeStrategy.h"
-#include "base/macro/system_judge.h"
+#include "aex/macro/system_judge.h"
 #include "cflog.h"
 #include <QSizePolicy>
 #include <QWidget>

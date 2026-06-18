@@ -77,10 +77,10 @@ bool WSLDisplayServerBackend::initialize(int argc, char** argv) {
 
     // Forward external-window signals.
     connect(window_backend_.get(), &IWindowBackend::window_came, this,
-            [this](WeakPtr<IWindow> win) { emit externalWindowAppeared(win); });
+            [this](aex::WeakPtr<IWindow> win) { emit externalWindowAppeared(win); });
 
     connect(window_backend_.get(), &IWindowBackend::window_gone, this,
-            [this](WeakPtr<IWindow> win) { emit externalWindowDisappeared(win); });
+            [this](aex::WeakPtr<IWindow> win) { emit externalWindowDisappeared(win); });
 
     // Monitor screen geometry changes.
     auto* guiApp = static_cast<QGuiApplication*>(QGuiApplication::instance());
@@ -130,7 +130,7 @@ int WSLDisplayServerBackend::runEventLoop() {
     return QApplication::exec();
 }
 
-WeakPtr<IWindowBackend> WSLDisplayServerBackend::windowBackend() {
+aex::WeakPtr<IWindowBackend> WSLDisplayServerBackend::windowBackend() {
     if (!window_backend_) {
         return {};
     }

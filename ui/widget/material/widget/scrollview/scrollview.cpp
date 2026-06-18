@@ -105,7 +105,7 @@ class ScrollbarOverlay : public QWidget {
 ScrollView::ScrollView(QWidget* parent) : QScrollArea(parent) {
     // Get animation factory from Application
     m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
+        aex::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
 
     // Use AsNeeded as default policy for custom scrollbars
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);

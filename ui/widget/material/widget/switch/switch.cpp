@@ -332,7 +332,7 @@ QRectF Switch::textRect() const {
 // ============================================================================
 
 void Switch::startThumbPositionAnimation(float target) {
-    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+    auto factory = aex::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
         application_support::Application::animationFactory());
 
     if (!factory) {

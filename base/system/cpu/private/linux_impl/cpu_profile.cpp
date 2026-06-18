@@ -82,7 +82,7 @@ float getCpuUsage() noexcept {
 
 } // namespace
 
-cf::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError> query_cpu_profile_info() {
+aex::expected<cf::CPUProfileInfo, cf::CPUProfileInfoError> query_cpu_profile_info() {
     cf::CPUProfileInfo profile_info{};
 
     // Get logical and physical core counts from /proc/cpuinfo

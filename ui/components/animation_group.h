@@ -15,8 +15,8 @@
  */
 #pragma once
 
+#include "aex/weak_ptr/weak_ptr.h"
 #include "animation.h"
-#include "base/weak_ptr/weak_ptr.h"
 #include "export.h"
 #include <QObject>
 #include <unordered_set>
@@ -48,7 +48,7 @@ class CF_UI_EXPORT ICFAnimationGroup : public ICFAbstractAnimation {
     /**
      * @brief  Adds an animation to the group.
      *
-     * @param[in] animation WeakPtr to the animation to add.
+     * @param[in] animation aex::WeakPtr to the animation to add.
      *
      * @throws        None
      * @note          None
@@ -56,12 +56,14 @@ class CF_UI_EXPORT ICFAnimationGroup : public ICFAbstractAnimation {
      * @since         0.1
      * @ingroup       ui_components
      */
-    void addAnimation(cf::WeakPtr<ICFAbstractAnimation> animation) { animations.insert(animation); }
+    void addAnimation(aex::WeakPtr<ICFAbstractAnimation> animation) {
+        animations.insert(animation);
+    }
 
     /**
      * @brief  Removes an animation from the group.
      *
-     * @param[in] animation WeakPtr to the animation to remove.
+     * @param[in] animation aex::WeakPtr to the animation to remove.
      *
      * @throws        None
      * @note          None
@@ -69,12 +71,12 @@ class CF_UI_EXPORT ICFAnimationGroup : public ICFAbstractAnimation {
      * @since         0.1
      * @ingroup       ui_components
      */
-    void removeAnimation(cf::WeakPtr<ICFAbstractAnimation> animation) {
+    void removeAnimation(aex::WeakPtr<ICFAbstractAnimation> animation) {
         animations.erase(animation);
     }
 
   private:
-    std::unordered_set<cf::WeakPtr<ICFAbstractAnimation>> animations;
+    std::unordered_set<aex::WeakPtr<ICFAbstractAnimation>> animations;
 };
 
 } // namespace cf::ui::components

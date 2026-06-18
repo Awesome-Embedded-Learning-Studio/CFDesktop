@@ -3,6 +3,6 @@
 
 namespace cf::desktop {
 
-CFDesktopProxy::CFDesktopProxy(WeakPtr<CFDesktop> desktop) : desktop_(desktop) {}
+CFDesktopProxy::CFDesktopProxy(aex::WeakPtr<CFDesktop> desktop) : desktop_(desktop) {}
 
 } // namespace cf::desktop

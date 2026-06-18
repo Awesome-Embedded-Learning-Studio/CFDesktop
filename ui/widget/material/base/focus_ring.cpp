@@ -30,11 +30,11 @@ using namespace cf::ui::base;
 /**
  * @brief Constructor - initializes focus indicator.
  *
- * @param factory WeakPtr to animation factory for fade animation.
+ * @param factory aex::WeakPtr to animation factory for fade animation.
  * @param parent QObject parent for memory management.
  */
 MdFocusIndicator::MdFocusIndicator(
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory, QObject* parent)
+    aex::WeakPtr<components::material::CFMaterialAnimationFactory> factory, QObject* parent)
     : QObject(parent), m_progress(0.0f), m_animator(factory) {}
 
 // ============================================================================

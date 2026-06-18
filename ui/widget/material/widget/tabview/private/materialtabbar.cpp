@@ -257,7 +257,7 @@ void MaterialTabBar::animateIndicatorTo(int index) {
     m_lastIndex = index;
 
     auto factory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
+        aex::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
     if (!factory || !factory->isAllEnabled()) {
         m_indicatorPosition = static_cast<float>(tabRect(index).left());
         update();

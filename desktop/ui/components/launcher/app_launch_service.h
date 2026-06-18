@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
 
 #include <QString>
 
@@ -63,7 +63,7 @@ class AppLaunchService {
      * @since  0.19
      * @ingroup components
      */
-    static cf::expected<qint64, AppLaunchError> launch(const QString& exec_command);
+    static aex::expected<qint64, AppLaunchError> launch(const QString& exec_command);
 };
 
 } // namespace cf::desktop::desktop_component

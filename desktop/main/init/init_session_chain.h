@@ -9,8 +9,8 @@
  *
  */
 #pragma once
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include "boot_stage_info.h"
 #include "init_stage.h"
 #include <QObject>
@@ -36,9 +36,9 @@ class InitSessionChain : public QObject {
     ~InitSessionChain();
 
     /**
-     * @brief Gets the global Chain's WeakPtr reference (singleton pattern)
+     * @brief Gets the global Chain's aex::WeakPtr reference (singleton pattern)
      */
-    static cf::WeakPtr<InitSessionChain> GetChainRef();
+    static aex::WeakPtr<InitSessionChain> GetChainRef();
 
     /**
      * @brief Adds an initialization stage to the end of the chain
@@ -70,11 +70,11 @@ class InitSessionChain : public QObject {
     void reset();
 
     /**
-     * @brief Finds a Stage by name and returns its WeakPtr
+     * @brief Finds a Stage by name and returns its aex::WeakPtr
      * @param[in] stage_name Stage name
-     * @return Valid WeakPtr<IInitStage> if found, invalid WeakPtr otherwise
+     * @return Valid aex::WeakPtr<IInitStage> if found, invalid aex::WeakPtr otherwise
      */
-    cf::WeakPtr<IInitStage> find_stage(std::string_view stage_name) const;
+    aex::WeakPtr<IInitStage> find_stage(std::string_view stage_name) const;
 
     /**
      * @brief Gets the number of stages in the chain
@@ -155,7 +155,7 @@ class InitSessionChain : public QObject {
     bool has_run{false};
     bool is_valid{true}; // Whether the dependency graph is valid (no circular dependencies)
 
-    cf::WeakPtrFactory<InitSessionChain> weak_ptr_factory_;
+    aex::WeakPtrFactory<InitSessionChain> weak_ptr_factory_;
 };
 
 } // namespace cf::desktop::init_session

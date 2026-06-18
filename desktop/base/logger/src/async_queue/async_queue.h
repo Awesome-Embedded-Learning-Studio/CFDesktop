@@ -13,7 +13,7 @@
  */
 #pragma once
 
-#include "base/lockfree/mpsc_queue.hpp"
+#include "aex/lockfree/mpsc_queue.hpp"
 #include "cflog/cflog_level.hpp"
 #include "cflog/cflog_record.h"
 #include "cflog/cflog_sink.h"
@@ -242,7 +242,7 @@ class AsyncPostQueue {
     std::mutex errorMu_;               ///< Mutex for error queue access.
 
     // Normal queue (lockfree MPSC, bounded, drop when full)
-    cf::lockfree::MpscQueue<LogRecord, kMaxNormalQueueSize> normalQueue_; ///< Normal queue.
+    aex::lockfree::MpscQueue<LogRecord, kMaxNormalQueueSize> normalQueue_; ///< Normal queue.
     std::atomic<size_t> normalQueueOverflow_{0}; ///< Count of dropped normal messages.
 
     // Notification

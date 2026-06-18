@@ -35,7 +35,7 @@ class CF_UI_EXPORT MdFocusIndicator : public QObject {
     /**
      * @brief  Constructor with animation factory.
      *
-     * @param[in]     factory WeakPtr to the animation factory.
+     * @param[in]     factory aex::WeakPtr to the animation factory.
      * @param[in]     parent QObject parent.
      *
      * @throws        None
@@ -44,8 +44,9 @@ class CF_UI_EXPORT MdFocusIndicator : public QObject {
      * @since         N/A
      * @ingroup       ui_widget_material_base
      */
-    explicit MdFocusIndicator(cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
-                              QObject* parent = nullptr);
+    explicit MdFocusIndicator(
+        aex::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
+        QObject* parent = nullptr);
 
     /**
      * @brief  Handles focus in event.
@@ -87,6 +88,6 @@ class CF_UI_EXPORT MdFocusIndicator : public QObject {
 
   private:
     float m_progress = 0.0f;
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
+    aex::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
 };
 } // namespace cf::ui::widget::material::base

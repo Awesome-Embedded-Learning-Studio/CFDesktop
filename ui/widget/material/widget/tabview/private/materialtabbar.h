@@ -20,7 +20,7 @@
 
 #include "base/device_pixel.h"
 
-#include "base/include/base/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr.h"
 #include "material/widget/button/button.h"
 #include "widget/material/base/material_widget_base.h"
 
@@ -383,7 +383,7 @@ class MaterialTabBar : public QTabBar {
 
     QSet<int> m_closeableTabs; // Set of closeable tab indices
 
-    cf::WeakPtr<components::ICFAbstractAnimation> m_indicatorAnimation;
+    aex::WeakPtr<components::ICFAbstractAnimation> m_indicatorAnimation;
     base::MaterialWidgetBase m_material;
 };
 

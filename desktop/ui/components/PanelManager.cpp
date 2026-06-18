@@ -8,7 +8,7 @@ namespace cf::desktop {
 PanelManager::PanelManager(QWidget* host, QObject* parent) : QObject{parent}, host_(host) {}
 PanelManager::~PanelManager() = default;
 
-PanelManager::RegisterFeedback PanelManager::registerPanel(WeakPtr<IPanel> panel) {
+PanelManager::RegisterFeedback PanelManager::registerPanel(aex::WeakPtr<IPanel> panel) {
     if (!panel) {
         return RegisterFeedback::InvalidPanel;
     }
@@ -23,7 +23,7 @@ PanelManager::RegisterFeedback PanelManager::registerPanel(WeakPtr<IPanel> panel
     return RegisterFeedback::OK;
 }
 
-PanelManager::UnRegisterFeedback PanelManager::unregisterPanel(WeakPtr<IPanel> panel) {
+PanelManager::UnRegisterFeedback PanelManager::unregisterPanel(aex::WeakPtr<IPanel> panel) {
     if (!panel) {
         return UnRegisterFeedback::UnknownPanel;
     }
@@ -50,7 +50,7 @@ void PanelManager::relayout() {
     QRect available = host_->rect();
 
     // ── Collect panels by edge (skip invalid / zero-size) ──
-    std::vector<WeakPtr<IPanel>> tops, bottoms, lefts, rights;
+    std::vector<aex::WeakPtr<IPanel>> tops, bottoms, lefts, rights;
     for (const auto& p : panels) {
         if (!p || !p->widget() || p->preferredSize() <= 0)
             continue;
@@ -71,7 +71,7 @@ void PanelManager::relayout() {
     }
 
     // Higher priority → placed first (outermost on that edge)
-    auto byPriority = [](const WeakPtr<IPanel>& a, const WeakPtr<IPanel>& b) {
+    auto byPriority = [](const aex::WeakPtr<IPanel>& a, const aex::WeakPtr<IPanel>& b) {
         return a->priority() > b->priority();
     };
     std::sort(tops.begin(), tops.end(), byPriority);

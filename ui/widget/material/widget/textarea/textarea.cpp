@@ -817,7 +817,7 @@ void TextArea::animateFloatingTo(bool floating) {
         return;
     }
 
-    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+    auto factory = aex::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
         application_support::Application::animationFactory());
 
     if (!factory) {

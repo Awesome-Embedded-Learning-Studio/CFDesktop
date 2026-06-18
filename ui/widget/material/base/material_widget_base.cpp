@@ -12,7 +12,7 @@
 namespace cf::ui::widget::material::base {
 
 MaterialWidgetBase::MaterialWidgetBase(QWidget* owner, const Config& config) : m_owner(owner) {
-    auto factory = cf::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
+    auto factory = aex::WeakPtr<components::material::CFMaterialAnimationFactory>::DynamicCast(
         application_support::Application::animationFactory());
 
     m_stateMachine = new StateMachine(factory, owner);

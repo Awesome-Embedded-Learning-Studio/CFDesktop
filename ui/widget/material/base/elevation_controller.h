@@ -41,7 +41,7 @@ class CF_UI_EXPORT MdElevationController : public QObject {
     /**
      * @brief  Constructor with animation factory.
      *
-     * @param[in]     factory WeakPtr to the animation factory.
+     * @param[in]     factory aex::WeakPtr to the animation factory.
      * @param[in]     parent QObject parent.
      *
      * @throws        None
@@ -51,7 +51,7 @@ class CF_UI_EXPORT MdElevationController : public QObject {
      * @ingroup       ui_widget_material_base
      */
     explicit MdElevationController(
-        cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
+        aex::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
         QObject* parent = nullptr);
 
     /**
@@ -234,11 +234,11 @@ class CF_UI_EXPORT MdElevationController : public QObject {
     int m_targetLevel = 0;
     float m_lightSourceAngle = 15.0f;
     bool m_isPressed = false;
-    float m_currentPressOffset = 0.0f;  ///< Animated press offset value
-    cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
+    float m_currentPressOffset = 0.0f; ///< Animated press offset value
+    aex::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
 
     /// Reference to the currently running press offset animation
-    cf::WeakPtr<components::ICFAbstractAnimation> m_pressOffsetAnimation;
+    aex::WeakPtr<components::ICFAbstractAnimation> m_pressOffsetAnimation;
 
     /**
      * @brief  Cancels the currently running press offset animation.

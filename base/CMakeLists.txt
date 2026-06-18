@@ -2,12 +2,16 @@
 cmake_minimum_required(VERSION 3.16)
 
 # ============================================================
-# Header-only library for base/include (utilities, hash, expected, etc.)
+# Header-only exposure for base/include (system probes + platform helpers).
+# Foundation utilities (expected, scope_guard, weak_ptr, macro, ...) were
+# extracted to the aex submodule; retained headers (e.g. windows/co_helper.hpp)
+# include them, so aex::aex is propagated here.
 # ============================================================
 add_library(cfbase_headers INTERFACE)
 target_include_directories(cfbase_headers INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+target_link_libraries(cfbase_headers INTERFACE aex::aex)
 add_library(CFDesktop::base_headers ALIAS cfbase_headers)
 
 # Include subdirectory CMakeLists (static libraries)
@@ -60,6 +64,7 @@ target_include_directories(cfbase PUBLIC
 # Link dependencies
 target_link_libraries(cfbase PUBLIC
     Qt6::Core
+    aex::aex
 )
 
 # Platform-specific link libraries

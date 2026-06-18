@@ -1,6 +1,6 @@
 #pragma once
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include <QObject>
 #include <QString>
 #include <string_view>
@@ -152,7 +152,7 @@ class IInitStage {
      * @since          N/A
      * @ingroup        desktop_init
      */
-    virtual std::vector<WeakPtr<IInitStage>> request_before_actions_init() const;
+    virtual std::vector<aex::WeakPtr<IInitStage>> request_before_actions_init() const;
 
     /**
      * @brief  Executes the initialization logic for this stage.
@@ -167,18 +167,18 @@ class IInitStage {
 
     /**
      * @brief  Gets a weak pointer to this stage.
-     * @return         WeakPtr<IInitStage> pointing to this stage, or invalid if unsupported.
+     * @return         aex::WeakPtr<IInitStage> pointing to this stage, or invalid if unsupported.
      * @throws         None
-     * @note           Default returns an invalid WeakPtr. Concrete stages with a
-     *                 WeakPtrFactory should override this method.
+     * @note           Default returns an invalid aex::WeakPtr. Concrete stages with a
+     *                 aex::WeakPtrFactory should override this method.
      * @warning        None
      * @since          N/A
      * @ingroup        desktop_init
      */
-    virtual WeakPtr<IInitStage> get_weak_ptr() const { return nullptr; }
+    virtual aex::WeakPtr<IInitStage> get_weak_ptr() const { return nullptr; }
 
   private:
-    WeakPtrFactory<IInitStage> weak_ptr_factory;
+    aex::WeakPtrFactory<IInitStage> weak_ptr_factory;
 };
 
 } // namespace cf::desktop::init_session

@@ -1,13 +1,13 @@
 #include "cpu_bonus.h"
 #include "cpu_features.h"
 #include "cpu_host.h"
-#include <windows.h>
 #include <cstdint>
+#include <windows.h>
 
 // MinGW may not have EfficiencyClass in PROCESSOR_RELATIONSHIP (Windows 10 1903+)
 #ifndef PROCESSOR_RELATIONSHIP_EFFICIENCY_CLASS
 // Offset of EfficiencyClass in PROCESSOR_RELATIONSHIP structure
-#define PROCESSOR_RELATIONSHIP_EFFICIENCY_CLASS 20
+#    define PROCESSOR_RELATIONSHIP_EFFICIENCY_CLASS 20
 #endif
 
 namespace {
@@ -16,7 +16,8 @@ namespace {
 inline BYTE GetProcessorEfficiencyClass(const PROCESSOR_RELATIONSHIP* proc) {
     // Access EfficiencyClass by offset since MinGW may not have the field
     // The EfficiencyClass is at offset 20 (after GroupCount and GroupMask array)
-    return *reinterpret_cast<const BYTE*>(reinterpret_cast<const uint8_t*>(proc) + PROCESSOR_RELATIONSHIP_EFFICIENCY_CLASS);
+    return *reinterpret_cast<const BYTE*>(reinterpret_cast<const uint8_t*>(proc) +
+                                          PROCESSOR_RELATIONSHIP_EFFICIENCY_CLASS);
 }
 
 void filledCache(cf::CPUBonusInfoHost& host) {
@@ -75,7 +76,7 @@ void getCPUEffecientClass(cf::CPUBonusInfoHost& host) {
 
 } // namespace
 
-cf::expected<void, cf::CPUBonusInfoViewError> query_cpu_bonus_info(cf::CPUBonusInfoHost& bonus) {
+aex::expected<void, cf::CPUBonusInfoViewError> query_cpu_bonus_info(cf::CPUBonusInfoHost& bonus) {
     query_cpu_features(bonus.features);
     filledCache(bonus);
     bonus.temperature = {}; // Not accessible in Windows

@@ -128,7 +128,7 @@ void clearDeviceConfigOverride() {
     invalidateCache();
 }
 
-expected<HardwareTierAssessment, HardwareTierError> assessHardware(bool force_refresh) {
+aex::expected<HardwareTierAssessment, HardwareTierError> assessHardware(bool force_refresh) {
     if (force_refresh) {
         invalidateCache();
     }
@@ -162,13 +162,13 @@ expected<HardwareTierAssessment, HardwareTierError> assessHardware(bool force_re
 
     // ── Stage 1: Collect ──
     if (!reg.collector) {
-        return cf::unexpected(HardwareTierError::CollectionFailed);
+        return aex::unexpected(HardwareTierError::CollectionFailed);
     }
     HardwareData data = reg.collector->collect();
 
     // ── Stage 2: Score ──
     if (!reg.cpu_scorer || !reg.gpu_scorer || !reg.memory_scorer || !reg.display_scorer) {
-        return cf::unexpected(HardwareTierError::ScoringFailed);
+        return aex::unexpected(HardwareTierError::ScoringFailed);
     }
 
     result.cpu.value = reg.cpu_scorer->score(data);
@@ -178,7 +178,7 @@ expected<HardwareTierAssessment, HardwareTierError> assessHardware(bool force_re
 
     // ── Stage 3: Assess ──
     if (!reg.assessor) {
-        return cf::unexpected(HardwareTierError::AssessmentFailed);
+        return aex::unexpected(HardwareTierError::AssessmentFailed);
     }
     result.tier = reg.assessor->assess(result.cpu.value, result.gpu.value, result.memory.value,
                                        result.display.value);
@@ -196,10 +196,10 @@ expected<HardwareTierAssessment, HardwareTierError> assessHardware(bool force_re
     return result;
 }
 
-expected<HardwareTierCapabilities, HardwareTierError> getHardwareTierCapabilities() {
+aex::expected<HardwareTierCapabilities, HardwareTierError> getHardwareTierCapabilities() {
     std::lock_guard lock(g_cache_mutex);
     if (!g_cached.valid) {
-        return cf::unexpected(HardwareTierError::PolicyFailed);
+        return aex::unexpected(HardwareTierError::PolicyFailed);
     }
     return g_cached.capabilities;
 }

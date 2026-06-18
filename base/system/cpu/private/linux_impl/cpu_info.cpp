@@ -16,10 +16,10 @@
 #include <sys/utsname.h>
 #include <unistd.h>
 
-cf::expected<void, cf::CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostInfo) {
+aex::expected<void, cf::CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostInfo) {
     std::ifstream cpuinfo("/proc/cpuinfo");
     if (!cpuinfo.is_open()) {
-        return cf::unexpected(cf::CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
+        return aex::unexpected(cf::CPUInfoErrorType::CPU_QUERY_GENERAL_FAILED);
     }
 
     std::string line;

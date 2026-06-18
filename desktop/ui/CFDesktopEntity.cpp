@@ -3,7 +3,7 @@
 #include "CFDesktopWindowProxy.h"
 #include "IDesktopDisplaySizeStrategy.h"
 #include "IDesktopPropertyStrategy.h"
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr.h"
 #include "cflog.h"
 #include "components/DisplayServerBackendFactory.h"
 #include "components/IDisplayServerBackend.h"
@@ -71,14 +71,15 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
             auto wb = display_backend_->windowBackend();
             if (wb) {
                 auto* raw = wb.Get();
-                QObject::connect(raw, &IWindowBackend::window_came, this, [](WeakPtr<IWindow> win) {
-                    if (win) {
-                        cf::log::traceftag("CFDesktopEntity", "External window detected: {}",
-                                           win->title().toStdString());
-                    }
-                });
+                QObject::connect(
+                    raw, &IWindowBackend::window_came, this, [](aex::WeakPtr<IWindow> win) {
+                        if (win) {
+                            cf::log::traceftag("CFDesktopEntity", "External window detected: {}",
+                                               win->title().toStdString());
+                        }
+                    });
                 QObject::connect(raw, &IWindowBackend::window_gone, this,
-                                 [](WeakPtr<IWindow> /*win*/) {
+                                 [](aex::WeakPtr<IWindow> /*win*/) {
                                      cf::log::traceftag("CFDesktopEntity", "External window gone");
                                  });
             }
@@ -185,7 +186,7 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     return RunsSetupResult::OK;
 }
 
-WeakPtr<CFDesktop> CFDesktopEntity::desktop_widget() const {
+aex::WeakPtr<CFDesktop> CFDesktopEntity::desktop_widget() const {
     return desktop_entity_->GetWeak();
 }
 

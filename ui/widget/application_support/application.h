@@ -33,9 +33,9 @@ namespace cf::ui::widget::application_support {
  *          CFMaterialAnimationFactory. Replaces standard QApplication in main().
  *
  * @note    Thread-safe for concurrent reads.
- * @warning The animation factory is owned by Application; WeakPtr may become
+ * @warning The animation factory is owned by Application; aex::WeakPtr may become
  *          invalid if the application is destroyed.
- * @throws  None (all errors return invalid WeakPtr or throw from ThemeManager)
+ * @throws  None (all errors return invalid aex::WeakPtr or throw from ThemeManager)
  * @since   0.1
  * @ingroup ui_widget_application_support
  *
@@ -125,12 +125,12 @@ class CF_UI_EXPORT Application : public QApplication {
     /**
      * @brief  Get the animation factory.
      *
-     * @return WeakPtr to the animation factory, or invalid WeakPtr if
+     * @return aex::WeakPtr to the animation factory, or invalid aex::WeakPtr if
      *          Application instance doesn't exist.
      *
      * @since 0.1
      */
-    static cf::WeakPtr<components::ICFAnimationManagerFactory> animationFactory();
+    static aex::WeakPtr<components::ICFAnimationManagerFactory> animationFactory();
 
     // ========================================================================
     // Theme Access (Token-based)
@@ -190,13 +190,13 @@ class CF_UI_EXPORT Application : public QApplication {
      *
      * @param[in]     animationToken Animation identifier (e.g., "md.animation.fadeIn").
      *
-     * @return        WeakPtr to the animation, or invalid WeakPtr if:
+     * @return        aex::WeakPtr to the animation, or invalid aex::WeakPtr if:
      *                - Token is not found in mapping
      *                - Animation type is not supported
      *                - Animations are globally disabled
      *
      * @throws        None
-     * @note          The returned WeakPtr may become invalid if the factory
+     * @note          The returned aex::WeakPtr may become invalid if the factory
      *                is destroyed or the theme changes.
      * @warning       Always check validity before use.
      * @since         0.1
@@ -210,12 +210,12 @@ class CF_UI_EXPORT Application : public QApplication {
      * }
      * @endcode
      */
-    cf::WeakPtr<components::ICFAbstractAnimation> animation(const std::string& animationToken);
+    aex::WeakPtr<components::ICFAbstractAnimation> animation(const std::string& animationToken);
 
     /**
      * @brief  Set global animation enabled state.
      *
-     * @details When disabled, animation() returns invalid WeakPtr.
+     * @details When disabled, animation() returns invalid aex::WeakPtr.
      *          Existing animations continue to run; only new creations are affected.
      *
      * @param[in]     enabled true to enable animations, false to disable.

@@ -28,10 +28,10 @@ using namespace cf::ui::components;
 /**
  * @brief Constructor - initializes ripple controller.
  *
- * @param factory WeakPtr to animation factory for ripple animations.
+ * @param factory aex::WeakPtr to animation factory for ripple animations.
  * @param parent QObject parent for memory management.
  */
-RippleHelper::RippleHelper(cf::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
+RippleHelper::RippleHelper(aex::WeakPtr<components::material::CFMaterialAnimationFactory> factory,
                            QObject* parent)
     : QObject(parent), m_mode(Mode::Bounded), m_color(Qt::black), m_animator(factory) {}
 
@@ -193,7 +193,7 @@ void RippleHelper::onCancel() {
 namespace {
 // Material Design 3 ripple fixed opacity (12% as per MD3 specs)
 constexpr float RIPPLE_FIXED_OPACITY = 0.12f;
-}
+} // namespace
 
 void RippleHelper::paint(QPainter* painter, const QPainterPath& clipPath) {
     if (m_ripples.isEmpty() || !painter) {

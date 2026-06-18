@@ -14,7 +14,7 @@
  * @version 1.0
  */
 
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include "init_session_chain.h"
 #include "init_stage.h"
 #include <gtest/gtest.h>
@@ -42,7 +42,7 @@ namespace test {
  * Features:
  * - Configurable name, return status, message, and error detail
  * - Tracks execution count
- * - Supports dependency management via WeakPtr
+ * - Supports dependency management via aex::WeakPtr
  */
 class MockInitStage : public IInitStage {
   public:
@@ -59,7 +59,7 @@ class MockInitStage : public IInitStage {
         return StageResult{status_code_, message_, error_detail_};
     }
 
-    std::vector<WeakPtr<IInitStage>> request_before_actions_init() const override {
+    std::vector<aex::WeakPtr<IInitStage>> request_before_actions_init() const override {
         return dependencies_;
     }
 
@@ -71,7 +71,7 @@ class MockInitStage : public IInitStage {
         error_detail_ = detail;
     }
 
-    void add_dependency(WeakPtr<IInitStage> dep) { dependencies_.push_back(std::move(dep)); }
+    void add_dependency(aex::WeakPtr<IInitStage> dep) { dependencies_.push_back(std::move(dep)); }
 
     void clear_dependencies() { dependencies_.clear(); }
 
@@ -84,7 +84,7 @@ class MockInitStage : public IInitStage {
     IInitStage::StatusCode status_code_;
     QString message_;
     QString error_detail_;
-    std::vector<WeakPtr<IInitStage>> dependencies_;
+    std::vector<aex::WeakPtr<IInitStage>> dependencies_;
     int execution_count{0};
 };
 
@@ -125,10 +125,10 @@ class InitSessionChainTest : public ::testing::Test {
     // For tests that need dependency setup, store stages with their factories
     struct StageWithFactory {
         std::unique_ptr<MockInitStage> stage;
-        std::unique_ptr<cf::WeakPtrFactory<MockInitStage>> factory;
+        std::unique_ptr<aex::WeakPtrFactory<MockInitStage>> factory;
 
-        cf::WeakPtr<IInitStage> GetWeakPtr() const {
-            return factory ? factory->GetWeakPtr() : cf::WeakPtr<IInitStage>();
+        aex::WeakPtr<IInitStage> GetWeakPtr() const {
+            return factory ? factory->GetWeakPtr() : aex::WeakPtr<IInitStage>();
         }
     };
 
@@ -137,7 +137,7 @@ class InitSessionChainTest : public ::testing::Test {
     CreateStageWithFactory(std::string_view name,
                            IInitStage::StatusCode code = IInitStage::StatusCode::OK) {
         auto stage = std::make_unique<MockInitStage>(name, code);
-        auto factory = std::make_unique<cf::WeakPtrFactory<MockInitStage>>(stage.get());
+        auto factory = std::make_unique<aex::WeakPtrFactory<MockInitStage>>(stage.get());
         return StageWithFactory{std::move(stage), std::move(factory)};
     }
 
@@ -660,7 +660,7 @@ TEST(StageResultTest, BoolOperator_ReturnsTrueOnlyForOk) {
 }
 
 // =============================================================================
-// Test Suite 7: Singleton Access
+// Test Suite 7: aex::Singleton Access
 // =============================================================================
 
 TEST_F(InitSessionChainTest, GetChainRef_InitiallyReturnsNull) {

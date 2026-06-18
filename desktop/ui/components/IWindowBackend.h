@@ -16,8 +16,8 @@
 #pragma once
 #include "../render/backend_capabilities.h"
 #include "IWindow.h"
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include <QObject>
 
 namespace cf::desktop {
@@ -38,17 +38,17 @@ class IWindowBackend : public QObject {
 
     virtual ~IWindowBackend() = default;
 
-    virtual WeakPtr<IWindow> createWindow(const QString& appId) = 0;
+    virtual aex::WeakPtr<IWindow> createWindow(const QString& appId) = 0;
 
     /**
      * @brief  Destroys the given window and releases resources.
      *
      * @param[in]  window  Weak reference to the window to destroy.
      */
-    virtual void destroyWindow(WeakPtr<IWindow> window) = 0;
+    virtual void destroyWindow(aex::WeakPtr<IWindow> window) = 0;
 
     /// Referenced windows held by the backend.
-    virtual QList<WeakPtr<IWindow>> windows() const = 0;
+    virtual QList<aex::WeakPtr<IWindow>> windows() const = 0;
 
     /**
      * @brief  Queries the capabilities of this window backend.
@@ -65,10 +65,10 @@ class IWindowBackend : public QObject {
     /**
      * @brief  Returns a weak reference to this backend.
      *
-     * @return A WeakPtr referencing this IWindowBackend instance.
+     * @return A aex::WeakPtr referencing this IWindowBackend instance.
      * @since  0.11
      */
-    WeakPtr<IWindowBackend> make_weak() const { return weak_ptr_factory_.GetWeakPtr(); }
+    aex::WeakPtr<IWindowBackend> make_weak() const { return weak_ptr_factory_.GetWeakPtr(); }
 
   signals:
     /**
@@ -76,16 +76,17 @@ class IWindowBackend : public QObject {
      *
      * @param[in]  ref  Weak reference to the newly created window.
      */
-    void window_came(WeakPtr<IWindow> ref);
+    void window_came(aex::WeakPtr<IWindow> ref);
 
     /**
      * @brief  Emitted when a window is destroyed and about to be released.
      *
      * @param[in]  ref  Weak reference to the destroyed window.
      */
-    void window_gone(WeakPtr<IWindow> ref);
+    void window_gone(aex::WeakPtr<IWindow> ref);
 
   private:
-    mutable WeakPtrFactory<IWindowBackend> weak_ptr_factory_{const_cast<IWindowBackend*>(this)};
+    mutable aex::WeakPtrFactory<IWindowBackend> weak_ptr_factory_{
+        const_cast<IWindowBackend*>(this)};
 };
 } // namespace cf::desktop

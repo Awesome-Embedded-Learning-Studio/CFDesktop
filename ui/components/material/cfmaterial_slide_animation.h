@@ -19,8 +19,8 @@
  */
 #pragma once
 
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include "components/timing_animation.h"
 #include "core/motion_spec.h"
 #include "export.h"
@@ -68,7 +68,7 @@ enum class SlideDirection {
  * // Create a slide-up animation
  * auto& motionSpec = theme.motion_spec();
  * auto slideAnim = std::make_unique<CFMaterialSlideAnimation>(
- *     cf::WeakPtr<cf::ui::core::IMotionSpec>(&motionSpec),
+ *     aex::WeakPtr<cf::ui::core::IMotionSpec>(&motionSpec),
  *     SlideDirection::Up,
  *     this);
  * slideAnim->setDistance(100.0f);  // Slide 100 pixels
@@ -273,11 +273,11 @@ class CF_UI_EXPORT CFMaterialSlideAnimation : public ICFTimingAnimation {
     /**
      * @brief  Get a weak pointer to this animation.
      *
-     * @return WeakPtr that can be used to safely access this animation.
+     * @return aex::WeakPtr that can be used to safely access this animation.
      *
      * @since 0.1
      */
-    cf::WeakPtr<ICFAbstractAnimation> GetWeakPtr() override { return weak_factory_.GetWeakPtr(); }
+    aex::WeakPtr<ICFAbstractAnimation> GetWeakPtr() override { return weak_factory_.GetWeakPtr(); }
 
   private:
     /// Current offset value in pixels
@@ -335,9 +335,9 @@ class CF_UI_EXPORT CFMaterialSlideAnimation : public ICFTimingAnimation {
      */
     float calculateEasedProgress(float linearProgress) const;
 
-    /// WeakPtrFactory for creating weak pointers to this animation
+    /// aex::WeakPtrFactory for creating weak pointers to this animation
     /// Must be the last member to ensure it's destroyed first
-    cf::WeakPtrFactory<ICFAbstractAnimation> weak_factory_{this};
+    aex::WeakPtrFactory<ICFAbstractAnimation> weak_factory_{this};
 };
 
 } // namespace cf::ui::components::material

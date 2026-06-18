@@ -13,7 +13,7 @@
  */
 
 #pragma once
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
 #include "base/export.h"
 #include <cstdint>
 #include <string>
@@ -129,6 +129,6 @@ struct GpuDisplayInfo {
  * @since  N/A
  * @ingroup none
  */
-cf::expected<GpuDisplayInfo, GpuDisplayInfoError> CF_BASE_EXPORT getGpuDisplayInfo() noexcept;
+aex::expected<GpuDisplayInfo, GpuDisplayInfoError> CF_BASE_EXPORT getGpuDisplayInfo() noexcept;
 
 } // namespace cf

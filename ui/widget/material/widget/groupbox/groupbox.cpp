@@ -45,7 +45,7 @@ using namespace cf::ui::widget::application_support;
 GroupBox::GroupBox(QWidget* parent) : QGroupBox(parent), m_cornerRadius(-1.0f), m_hasBorder(true) {
     // Get animation factory from Application
     m_animationFactory =
-        cf::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
+        aex::WeakPtr<CFMaterialAnimationFactory>::DynamicCast(Application::animationFactory());
 
     // Initialize behavior components
     m_elevation = new MdElevationController(m_animationFactory, this);

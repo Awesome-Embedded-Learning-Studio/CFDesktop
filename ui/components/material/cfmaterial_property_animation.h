@@ -21,9 +21,9 @@
  */
 #pragma once
 
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include "base/easing.h"
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
 #include "components/timing_animation.h"
 #include "core/motion_spec.h"
 #include "export.h"
@@ -159,7 +159,7 @@ class CF_UI_EXPORT CFMaterialPropertyAnimation : public ICFAbstractAnimation {
      * @since      0.1
      * @ingroup    ui_components_material
      */
-    cf::WeakPtr<ICFAbstractAnimation> GetWeakPtr() override { return weak_factory_.GetWeakPtr(); }
+    aex::WeakPtr<ICFAbstractAnimation> GetWeakPtr() override { return weak_factory_.GetWeakPtr(); }
 
     // =========================================================================
     // Property-Specific Methods
@@ -249,9 +249,9 @@ class CF_UI_EXPORT CFMaterialPropertyAnimation : public ICFAbstractAnimation {
      */
     int calculateInterval() const { return static_cast<int>(1000.0f / m_targetFps); }
 
-    /// WeakPtrFactory for creating weak pointers to this animation
+    /// aex::WeakPtrFactory for creating weak pointers to this animation
     /// Must be the last member to ensure it's destroyed first
-    cf::WeakPtrFactory<ICFAbstractAnimation> weak_factory_{this};
+    aex::WeakPtrFactory<ICFAbstractAnimation> weak_factory_{this};
 };
 
 } // namespace cf::ui::components::material

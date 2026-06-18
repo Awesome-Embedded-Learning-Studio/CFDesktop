@@ -1,6 +1,6 @@
 /**
  * @file    ui/core/theme_manager.h
- * @brief   Singleton manager for CF UI theme registration and application.
+ * @brief   aex::Singleton manager for CF UI theme registration and application.
  *
  * ThemeManager manages theme factory registration, theme creation, and
  * application of themes to widgets. Emits signals when the theme changes.
@@ -26,14 +26,14 @@
 namespace cf::ui::core {
 
 /**
- * @brief  Singleton manager for CF UI theme registration and application.
+ * @brief  aex::Singleton manager for CF UI theme registration and application.
  *
  * ThemeManager manages theme factory registration, theme creation, and
  * application of themes to widgets. Emits signals when the theme changes.
  *
  * @ingroup none
  *
- * @note   Singleton instance accessed via instance().
+ * @note   aex::Singleton instance accessed via instance().
  *
  * @warning None
  *

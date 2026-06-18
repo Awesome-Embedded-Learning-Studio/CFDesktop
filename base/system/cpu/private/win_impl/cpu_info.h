@@ -11,13 +11,13 @@
 #pragma once
 
 #include "../cpu_host.h"
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
 #include "system/cpu/cfcpu.h"
 
 /**
  * @brief Internal Windows Query for basic CPU information
  *
  * @param hostInfo Output parameter containing model, manufacturer, and architecture
- * @return cf::expected<void, cf::CPUInfoErrorType>
+ * @return aex::expected<void, cf::CPUInfoErrorType>
  */
-cf::expected<void, cf::CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostInfo);
+aex::expected<void, cf::CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostInfo);

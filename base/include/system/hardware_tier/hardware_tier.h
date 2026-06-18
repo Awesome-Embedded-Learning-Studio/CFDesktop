@@ -14,7 +14,7 @@
  */
 #pragma once
 
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
 #include "base/export.h"
 #include "system/hardware_tier/hardware_tier_data.h"
 
@@ -137,7 +137,7 @@ CF_BASE_EXPORT void clearDeviceConfigOverride();
  * @since   0.19
  * @ingroup system_hardware_tier
  */
-CF_BASE_EXPORT expected<HardwareTierAssessment, HardwareTierError>
+CF_BASE_EXPORT aex::expected<HardwareTierAssessment, HardwareTierError>
 assessHardware(bool force_refresh = false);
 
 /**
@@ -151,6 +151,7 @@ assessHardware(bool force_refresh = false);
  * @since   0.19
  * @ingroup system_hardware_tier
  */
-CF_BASE_EXPORT expected<HardwareTierCapabilities, HardwareTierError> getHardwareTierCapabilities();
+CF_BASE_EXPORT aex::expected<HardwareTierCapabilities, HardwareTierError>
+getHardwareTierCapabilities();
 
 } // namespace cf

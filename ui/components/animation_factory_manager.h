@@ -13,14 +13,14 @@
  * and supports both string-based and typed animation registration.
  *
  * The manager maintains ownership of created animations and provides
- * WeakPtr access to users for safe, non-owning references.
+ * aex::WeakPtr access to users for safe, non-owning references.
  *
  * @ingroup ui_components
  */
 #pragma once
 
+#include "aex/weak_ptr/weak_ptr.h"
 #include "animation.h"
-#include "base/weak_ptr/weak_ptr.h"
 #include <QObject>
 #include <functional>
 
@@ -45,14 +45,14 @@ using AnimationCreator = std::function<ICFAbstractAnimation*(QObject*)>;
  *          - Token-based animation lookup (e.g., "md.animation.fadeIn")
  *          - Type-safe animation registration
  *          - Global and per-animation enable/disable
- *          - WeakPtr ownership model for safe access
+ *          - aex::WeakPtr ownership model for safe access
  *
- *          Animations are owned by the manager and accessed via WeakPtr.
+ *          Animations are owned by the manager and accessed via aex::WeakPtr.
  *          This ensures proper lifecycle management and prevents dangling
  *           pointers when the manager is destroyed.
  *
  * @note    Implementations should be thread-safe for concurrent reads.
- * @warning Destroying the manager invalidates all WeakPtr references.
+ * @warning Destroying the manager invalidates all aex::WeakPtr references.
  * @since   0.1
  * @ingroup ui_components
  *
@@ -108,7 +108,7 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
     };
     Q_ENUM(RegisteredResult)
 
-    virtual cf::WeakPtr<ICFAnimationManagerFactory> GetWeakPtr() = 0;
+    virtual aex::WeakPtr<ICFAnimationManagerFactory> GetWeakPtr() = 0;
     // =========================================================================
     // Animation Registration
     // =========================================================================
@@ -180,10 +180,10 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      *
      * @param[in] name Animation name or token.
      *
-     * @return        WeakPtr to the animation, or invalid WeakPtr if not found.
+     * @return        aex::WeakPtr to the animation, or invalid aex::WeakPtr if not found.
      *
      * @throws        None
-     * @note          The returned WeakPtr may become invalid if the manager
+     * @note          The returned aex::WeakPtr may become invalid if the manager
      *                is destroyed. Always check validity before use.
      * @warning       The manager owns the animation; do not delete it manually.
      * @since         0.1
@@ -196,7 +196,7 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      * }
      * @endcode
      */
-    virtual cf::WeakPtr<ICFAbstractAnimation> getAnimation(const char* name) = 0;
+    virtual aex::WeakPtr<ICFAbstractAnimation> getAnimation(const char* name) = 0;
     // =========================================================================
     // Global Settings
     // =========================================================================
@@ -225,7 +225,7 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
      * @brief  Set enabled state for a specific animation.
      *
      * @details Controls whether a specific animation is allowed to run.
-     *          When disabled, getAnimation() returns invalid WeakPtr.
+     *          When disabled, getAnimation() returns invalid aex::WeakPtr.
      *
      * @param[in] which Animation name.
      * @param[in] enabled true to enable, false to disable.
@@ -260,7 +260,7 @@ class CF_UI_EXPORT ICFAnimationManagerFactory : public QObject {
     /**
      * @brief  Set enabled state for all animations.
      *
-     * @details When disabled, getAnimation() returns invalid WeakPtr
+     * @details When disabled, getAnimation() returns invalid aex::WeakPtr
      *          for all animations. Existing running animations continue
      *          until completion.
      *

@@ -13,8 +13,8 @@
  */
 
 #pragma once
-#include "base/factory/smartptr_plain_factory.hpp"
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/factory/smartptr_plain_factory.hpp"
+#include "aex/weak_ptr/weak_ptr.h"
 #include <QString>
 #include <memory>
 #include <vector>
@@ -136,7 +136,7 @@ class WallPaperToken {
      * @ingroup        wallpaper
      */
     SourceType sourceType() const;
-    WeakPtr<WallPaperToken> getWeakPtr() const;
+    aex::WeakPtr<WallPaperToken> getWeakPtr() const;
 
     friend bool operator==(const WallPaperToken& lh, const WallPaperToken& rh);
 

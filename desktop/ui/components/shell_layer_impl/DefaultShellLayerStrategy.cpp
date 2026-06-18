@@ -10,7 +10,8 @@ DefaultShellLayerStrategy::DefaultShellLayerStrategy() {
 
 DefaultShellLayerStrategy::~DefaultShellLayerStrategy() = default;
 
-void DefaultShellLayerStrategy::activate(WeakPtr<IShellLayer> layer, WeakPtr<WindowManager> wm) {
+void DefaultShellLayerStrategy::activate(aex::WeakPtr<IShellLayer> layer,
+                                         aex::WeakPtr<WindowManager> wm) {
     log::trace("DefaultShellStrategy activated");
     layer_ = layer;
     window_manager_ = wm;

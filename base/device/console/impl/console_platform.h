@@ -1,6 +1,6 @@
 #pragma once
 #include "../console_defines.h"
-#include "base/policy_chain/policy_chain.hpp"
+#include "aex/policy_chain/policy_chain.hpp"
 #include <memory>
 
 namespace cf::base::device::console {
@@ -19,7 +19,7 @@ static constexpr console::console_size_t INVALID_ONE{-1, -1};
  * @ingroup device
  */
 
-using cf::PolicyChain;
+using aex::PolicyChain;
 
 /**
  * @brief  Creates the platform-specific console size policy chain.

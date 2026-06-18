@@ -25,7 +25,7 @@ void WidgetShellLayer::setStrategy(std::unique_ptr<IShellLayerStrategy> strategy
     strategy_ = std::move(strategy);
     if (strategy_) {
         // Activate with our weak ref; WindowManager not available at this layer
-        strategy_->activate(GetWeak(), WeakPtr<WindowManager>{});
+        strategy_->activate(GetWeak(), aex::WeakPtr<WindowManager>{});
     }
 }
 

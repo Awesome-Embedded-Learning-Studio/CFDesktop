@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr.h"
 #include <QList>
 #include <QObject>
 #include <QPaintDevice>
@@ -62,7 +62,7 @@ class PanelManager : public QObject {
      *
      * @return Registration feedback indicating success or failure.
      */
-    virtual RegisterFeedback registerPanel(WeakPtr<IPanel> panel);
+    virtual RegisterFeedback registerPanel(aex::WeakPtr<IPanel> panel);
 
     /**
      * @brief  Unregisters a panel from the layout engine.
@@ -71,7 +71,7 @@ class PanelManager : public QObject {
      *
      * @return Unregistration feedback indicating success or failure.
      */
-    virtual UnRegisterFeedback unregisterPanel(WeakPtr<IPanel> panel);
+    virtual UnRegisterFeedback unregisterPanel(aex::WeakPtr<IPanel> panel);
 
     /**
      * @brief  Returns the available geometry for the shell layer.
@@ -100,7 +100,7 @@ class PanelManager : public QObject {
     /// Host widget for panel positioning. Ownership: external.
     QWidget* host_{nullptr};
     /// Registered panels (weak references). Ownership: external.
-    std::vector<WeakPtr<IPanel>> panels;
+    std::vector<aex::WeakPtr<IPanel>> panels;
 
   private:
     /// Cached available geometry after layout computation.

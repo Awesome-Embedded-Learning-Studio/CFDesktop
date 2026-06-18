@@ -35,8 +35,8 @@ else()
     set(QT_TEST_AVAILABLE FALSE)
 endif()
 
-# Add base unit tests subdirectory
-add_subdirectory(base)
+# NOTE: base foundation unit tests now live in the aex submodule
+# (third_party/aex/test) and run from aex's own standalone build.
 
 # Add config manager tests subdirectory
 add_subdirectory(config_manager)
