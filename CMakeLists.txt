@@ -58,11 +58,12 @@ add_subdirectory(base)
 # Log base module end
 log_module_end("base")
 
-# Log base module start
-log_module_start("ui")
-add_subdirectory(ui)
-# Log base module end
-log_module_end("ui")
+# NOTE: ui/ was extracted to the QuarkWidgets submodule (Phase 2). It is consumed
+# below via setup_third_party() before desktop, which links QuarkWidgets::quarkwidgets.
+setup_third_party(
+    NAME           QuarkWidgets
+    GIT_REPOSITORY https://github.com/Awesome-Embedded-Learning-Studio/QuarkWidgets.git
+    GIT_TAG        v0.1.0)
 
 log_module_start("desktop")
 add_subdirectory(desktop)

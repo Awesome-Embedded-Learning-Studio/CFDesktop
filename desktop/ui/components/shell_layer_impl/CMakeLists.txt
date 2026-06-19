@@ -17,7 +17,7 @@ target_link_libraries(
     Qt6::Widgets
     cflogger
     cfbase
-    cf_ui_base
+    QuarkWidgets::quarkwidgets
     cfdesktop_wallpaper
     cfpath
     cfconfig

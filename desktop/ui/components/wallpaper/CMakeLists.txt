@@ -14,5 +14,5 @@ target_link_libraries(cfdesktop_wallpaper PRIVATE
     Qt6::Gui
     cflogger
     cfbase
-    cf_ui_base
+    QuarkWidgets::quarkwidgets
 )

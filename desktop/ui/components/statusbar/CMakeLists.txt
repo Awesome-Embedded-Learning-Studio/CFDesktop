@@ -13,7 +13,7 @@ target_include_directories(cfdesktop_statusbar PUBLIC
 target_link_libraries(
     cfdesktop_statusbar
 PUBLIC
-    cfui           # ThemeManager, color/typography tokens, ICFTheme
+    QuarkWidgets::quarkwidgets           # ThemeManager, color/typography tokens, ICFTheme
 PRIVATE
     Qt6::Widgets
     cfbase         # WeakPtr / WeakPtrFactory

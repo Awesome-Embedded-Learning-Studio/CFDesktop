@@ -76,14 +76,14 @@ target_link_libraries(CFDesktop_shared PUBLIC
 )
 
 # Link shared library dependencies (NOT in whole-archive).
-# cfui is PUBLIC so the thin EXE can include the QApplication subclass
+# QuarkWidgets::quarkwidgets is PUBLIC so the thin EXE can include the QApplication subclass
 # (MaterialApplication) it instantiates in main.cpp.
 target_link_libraries(CFDesktop_shared
 PRIVATE
     cfbase
     cflogger
 PUBLIC
-    cfui
+    QuarkWidgets::quarkwidgets
 )
 
 # Platform-specific link libraries (from base)

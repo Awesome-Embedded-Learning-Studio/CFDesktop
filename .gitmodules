@@ -1,3 +1,6 @@
 [submodule "third_party/aex"]
 	path = third_party/aex
 	url = https://github.com/Awesome-Embedded-Learning-Studio/aex.git
+[submodule "third_party/QuarkWidgets"]
+	path = third_party/QuarkWidgets
+	url = https://github.com/Awesome-Embedded-Learning-Studio/QuarkWidgets.git

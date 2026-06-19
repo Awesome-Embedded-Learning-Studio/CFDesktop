@@ -31,7 +31,7 @@
 
 namespace cf::desktop::desktop_component {
 
-using namespace cf::ui::core::token::literals;
+using namespace qw::core::token::literals;
 
 namespace {
 constexpr int kCellSize = 56;          ///< Tile widget edge length (px).
@@ -155,7 +155,7 @@ void TaskbarIcon::mouseReleaseEvent(QMouseEvent* event) {
 // -- Internal --------------------------------------------------------------
 void TaskbarIcon::applyTheme() {
     try {
-        auto& tm = cf::ui::core::ThemeManager::instance();
+        auto& tm = qw::core::ThemeManager::instance();
         const auto& theme = tm.theme(tm.currentThemeName());
         auto& cs = theme.color_scheme();
         tile_color_ = cs.queryColor(SURFACE_VARIANT);
@@ -213,8 +213,8 @@ void TaskbarIcon::setupAnimations() {
     });
 
     // Follow live theme switches (ThemeManager is the canonical source).
-    connect(&cf::ui::core::ThemeManager::instance(), &cf::ui::core::ThemeManager::themeChanged,
-            this, [this](const cf::ui::core::ICFTheme&) { applyTheme(); });
+    connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
+            [this](const qw::core::ICFTheme&) { applyTheme(); });
 }
 
 } // namespace cf::desktop::desktop_component

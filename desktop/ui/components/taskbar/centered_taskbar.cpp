@@ -30,7 +30,7 @@
 namespace cf::desktop::desktop_component {
 
 using cf::desktop::PanelPosition;
-using namespace cf::ui::core::token::literals;
+using namespace qw::core::token::literals;
 
 namespace {
 constexpr int kTaskbarHeight = 64;    ///< Bar thickness (px).
@@ -56,13 +56,13 @@ void CenteredTaskbar::setupUi() {
     layout_->setSpacing(kIconSpacing);
 
     // React to theme switches (ThemeManager is the canonical source).
-    connect(&cf::ui::core::ThemeManager::instance(), &cf::ui::core::ThemeManager::themeChanged,
-            this, [this](const cf::ui::core::ICFTheme&) { applyTheme(); });
+    connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
+            [this](const qw::core::ICFTheme&) { applyTheme(); });
 }
 
 void CenteredTaskbar::applyTheme() {
     try {
-        auto& tm = cf::ui::core::ThemeManager::instance();
+        auto& tm = qw::core::ThemeManager::instance();
         const auto& theme = tm.theme(tm.currentThemeName());
         auto& cs = theme.color_scheme();
         background_color_ = cs.queryColor(SURFACE);

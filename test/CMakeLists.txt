@@ -47,8 +47,7 @@ add_subdirectory(logger)
 # Add System Test
 add_subdirectory(system)
 
-# Add ui tests
-add_subdirectory(ui)
+# NOTE: ui tests now live in the QuarkWidgets submodule (third_party/QuarkWidgets/test).
 
 # Add desktop tests
 add_subdirectory(desktop)

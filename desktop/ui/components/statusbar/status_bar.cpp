@@ -46,9 +46,9 @@ static void registerStatusbarIconsResource() {
 namespace cf::desktop::desktop_component {
 
 using cf::desktop::PanelPosition;
-using cf::ui::base::CFColor;
-using cf::ui::base::device::CanvasUnitHelper;
-using namespace cf::ui::core::token::literals;
+using qw::base::CFColor;
+using qw::base::device::CanvasUnitHelper;
+using namespace qw::core::token::literals;
 
 namespace {
 // Fallback palette used when no theme is available (mirrors MD3 light).
@@ -91,13 +91,13 @@ void StatusBar::setupUi() {
     timer_->start(1000);
 
     // React to theme switches (ThemeManager is the canonical source).
-    connect(&cf::ui::core::ThemeManager::instance(), &cf::ui::core::ThemeManager::themeChanged,
-            this, [this](const cf::ui::core::ICFTheme&) { applyTheme(); });
+    connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
+            [this](const qw::core::ICFTheme&) { applyTheme(); });
 }
 
 void StatusBar::applyTheme() {
     try {
-        auto& tm = cf::ui::core::ThemeManager::instance();
+        auto& tm = qw::core::ThemeManager::instance();
         const auto& theme = tm.theme(tm.currentThemeName());
         auto& cs = theme.color_scheme();
         background_color_ = cs.queryColor(SURFACE);

@@ -78,7 +78,7 @@ PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Widgets
-    cf_ui_base            # For qt_format.h (std::formatter<QString>)
+    QuarkWidgets::quarkwidgets            # For qt_format.h (std::formatter<QString>)
 )
 
 if(UNIX AND NOT APPLE)
