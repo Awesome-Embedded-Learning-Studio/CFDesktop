@@ -29,6 +29,7 @@ class QHBoxLayout;
 
 namespace cf::desktop::desktop_component {
 
+class StartButton;
 class TaskbarIcon;
 
 /**
@@ -200,8 +201,10 @@ class CenteredTaskbar final : public QWidget, public cf::desktop::IPanel {
     /// @brief Resolves theme colors, then repaints.
     void applyTheme();
 
-    QHBoxLayout* layout_{nullptr}; ///< Centered tile row. Ownership: this widget.
-    QList<TaskbarIcon*> icons_;    ///< Current tiles. Ownership: Qt parented.
+    QHBoxLayout* layout_{nullptr};       ///< Outer row: start button + centered icons.
+    QHBoxLayout* icon_layout_{nullptr};  ///< Dynamic icon row. Ownership: this widget.
+    StartButton* start_button_{nullptr}; ///< Launcher trigger. Ownership: this widget.
+    QList<TaskbarIcon*> icons_;          ///< Current tiles. Ownership: Qt parented.
 
     QColor background_color_; ///< Surface fill for the bar.
     QColor divider_color_;    ///< Top hairline divider color.

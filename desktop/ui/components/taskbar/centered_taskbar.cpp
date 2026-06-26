@@ -16,6 +16,7 @@
 
 #include "centered_taskbar.h"
 
+#include "start_button.h"
 #include "taskbar_icon.h"
 
 #include "core/theme_manager.h"
@@ -37,6 +38,7 @@ constexpr int kTaskbarHeight = 64;    ///< Bar thickness (px).
 constexpr int kSideMargin = 12;       ///< Horizontal padding (px).
 constexpr int kTopBottomMargin = 4;   ///< Vertical padding (px).
 constexpr int kIconSpacing = 8;       ///< Gap between tiles (px).
+constexpr int kStartButtonGap = 16;   ///< Gap after the start button (px).
 constexpr qreal kSurfaceAlpha = 0.92; ///< Surface fill opacity.
 } // namespace
 
@@ -54,6 +56,20 @@ void CenteredTaskbar::setupUi() {
     layout_ = new QHBoxLayout(this);
     layout_->setContentsMargins(kSideMargin, kTopBottomMargin, kSideMargin, kTopBottomMargin);
     layout_->setSpacing(kIconSpacing);
+
+    // Leading start affordance: requests the application launcher popup.
+    start_button_ = new StartButton(this);
+    connect(start_button_, &StartButton::clicked, this, &CenteredTaskbar::launcherRequested);
+    layout_->addWidget(start_button_);
+    layout_->addSpacing(kStartButtonGap);
+
+    // The centered icon row lives in its own sub-layout so setApps() can rebuild
+    // it without disturbing the start button or the centering stretchers.
+    icon_layout_ = new QHBoxLayout();
+    icon_layout_->setSpacing(kIconSpacing);
+    layout_->addStretch();
+    layout_->addLayout(icon_layout_);
+    layout_->addStretch();
 
     // React to theme switches (ThemeManager is the canonical source).
     connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
@@ -94,9 +110,9 @@ QWidget* CenteredTaskbar::widget() const {
 
 // -- Taskbar API -----------------------------------------------------------
 void CenteredTaskbar::setApps(const QList<AppEntry>& apps) {
-    // Clear existing items and their widgets.
-    while (layout_->count() != 0) {
-        QLayoutItem* item = layout_->takeAt(0);
+    // Clear only the dynamic icon row (preserve the start button + stretchers).
+    while (icon_layout_->count() != 0) {
+        QLayoutItem* item = icon_layout_->takeAt(0);
         if (item->widget() != nullptr) {
             item->widget()->deleteLater();
         }
@@ -104,15 +120,12 @@ void CenteredTaskbar::setApps(const QList<AppEntry>& apps) {
     }
     icons_.clear();
 
-    // Center the tile row between two stretchers.
-    layout_->addStretch();
     for (const auto& app : apps) {
         auto* icon = new TaskbarIcon(app, this);
         connect(icon, &TaskbarIcon::clicked, this, &CenteredTaskbar::appClicked);
-        layout_->addWidget(icon);
+        icon_layout_->addWidget(icon);
         icons_.append(icon);
     }
-    layout_->addStretch();
 }
 
 void CenteredTaskbar::updateRunningState(const QString& app_id, bool running) {
