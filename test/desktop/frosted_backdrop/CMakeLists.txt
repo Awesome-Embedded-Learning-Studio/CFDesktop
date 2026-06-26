@@ -23,7 +23,44 @@ set_target_properties(frosted_backdrop_test PROPERTIES
 add_test(NAME frosted_backdrop_test COMMAND frosted_backdrop_test)
 set_tests_properties(frosted_backdrop_test PROPERTIES
     LABELS "desktop;unit;components"
+    TIMEOUT 60
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/bin"
 )
 
 log_info("frosted_backdrop_tests" "  - frosted_backdrop_test")
+
+if(WIN32)
+    qt_add_windows_deploy(frosted_backdrop_test AUTO_DEPLOY INSTALL_DEPLOY)
+
+    set(_CF_QT_OFFSCREEN_PLUGIN_DIR
+        "$<TARGET_FILE_DIR:frosted_backdrop_test>/plugins/platforms")
+
+    if(TARGET Qt6::QOffscreenIntegrationPlugin)
+        add_custom_command(TARGET frosted_backdrop_test POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory
+                "${_CF_QT_OFFSCREEN_PLUGIN_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "$<TARGET_FILE:Qt6::QOffscreenIntegrationPlugin>"
+                "${_CF_QT_OFFSCREEN_PLUGIN_DIR}"
+            COMMENT "Copying Qt offscreen platform plugin for frosted_backdrop_test"
+            VERBATIM
+        )
+    else()
+        get_filename_component(_CF_QT_PLATFORMS_DIR
+            "${Qt6Gui_DIR}/../../../plugins/platforms" ABSOLUTE)
+        add_custom_command(TARGET frosted_backdrop_test POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory
+                "${_CF_QT_OFFSCREEN_PLUGIN_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${_CF_QT_PLATFORMS_DIR}/qoffscreen.dll"
+                "${_CF_QT_OFFSCREEN_PLUGIN_DIR}"
+            COMMENT "Copying Qt offscreen platform plugin for frosted_backdrop_test"
+            VERBATIM
+        )
+    endif()
+
+    set_tests_properties(frosted_backdrop_test PROPERTIES
+        ENVIRONMENT
+            "QT_QPA_PLATFORM=offscreen;QT_QPA_PLATFORM_PLUGIN_PATH=${CMAKE_BINARY_DIR}/test/bin/plugins/platforms"
+    )
+endif()

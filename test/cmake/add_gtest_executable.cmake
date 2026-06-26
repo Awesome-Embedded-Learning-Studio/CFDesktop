@@ -88,6 +88,7 @@ function(add_gtest_executable)
         # Set working directory to build output dir so DLLs can be found
         WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     )
+    set_tests_properties(${ARG_TEST_NAME} PROPERTIES TIMEOUT 60)
 
     # Windows: ensure Qt platform plugins (e.g. offscreen) are discoverable
     if(WIN32 AND TARGET Qt6::Gui)

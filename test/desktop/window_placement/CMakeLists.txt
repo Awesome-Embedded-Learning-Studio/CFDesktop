@@ -23,6 +23,7 @@ set_target_properties(window_placement_test PROPERTIES
 add_test(NAME window_placement_test COMMAND window_placement_test)
 set_tests_properties(window_placement_test PROPERTIES
     LABELS "desktop;unit;components"
+    TIMEOUT 60
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/bin"
 )
 

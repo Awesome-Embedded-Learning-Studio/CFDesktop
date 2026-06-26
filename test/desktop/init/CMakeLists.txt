@@ -39,6 +39,7 @@ endif()
 add_test(NAME init_session_chain_test COMMAND init_session_chain_test)
 set_tests_properties(init_session_chain_test PROPERTIES
     LABELS "desktop;init;functional"
+    TIMEOUT 60
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/bin"
 )
 
