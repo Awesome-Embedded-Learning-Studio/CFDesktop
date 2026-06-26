@@ -26,8 +26,6 @@
 #include <QString>
 #include <QWidget>
 
-#include <memory>
-
 #ifdef QT_TEST_AVAILABLE
 #    include <QSignalSpy>
 #    include <QtTest/QTest>
@@ -47,14 +45,13 @@ class AppLauncherTest : public ::testing::Test {
             static int argc = 1;
             static char arg0[] = "app_launcher_test";
             static char* argv[] = {arg0, nullptr};
-            s_app = std::make_unique<QApplication>(argc, argv);
+            // Intentionally leaked: destroying QApplication at process exit
+            // segfaults under the offscreen platform once popup windows were
+            // shown, so let the OS reclaim it instead.
+            new QApplication(argc, argv);
         }
     }
-
-    static std::unique_ptr<QApplication> s_app;
 };
-
-std::unique_ptr<QApplication> AppLauncherTest::s_app;
 } // namespace
 
 /// @brief setApps() builds one tile per AppEntry.
@@ -77,6 +74,7 @@ TEST_F(AppLauncherTest, StartsHidden) {
 TEST_F(AppLauncherTest, EscapeHidesPopup) {
     AppLauncher launcher;
     launcher.setApps(defaultApps());
+    launcher.setWindowFlags(Qt::Window); // Avoid Qt::Popup windowing in headless tests.
     launcher.popup(QRect(0, 0, 1920, 1080));
     EXPECT_TRUE(launcher.isShowing());
     QTest::keyClick(&launcher, Qt::Key_Escape);
@@ -88,6 +86,7 @@ TEST_F(AppLauncherTest, TileClickEmitsAppLaunched) {
     AppLauncher launcher;
     const auto apps = defaultApps();
     launcher.setApps(apps);
+    launcher.setWindowFlags(Qt::Window); // Avoid Qt::Popup windowing in headless tests.
     launcher.popup(QRect(0, 0, 1920, 1080));
 
     const QList<LauncherTile*> tiles = launcher.findChildren<LauncherTile*>();
