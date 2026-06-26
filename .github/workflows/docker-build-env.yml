@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
     paths:
       - .github/workflows/docker-build-env.yml
       - scripts/docker/Dockerfile.build
