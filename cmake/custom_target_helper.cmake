@@ -52,6 +52,21 @@ function(qt_add_windows_deploy target_name)
 
     message(STATUS "Deploy script for '${target_name}': ${_deploy_script}")
 
+    set(_locked_deploy_script
+        "${CMAKE_BINARY_DIR}/.qt/locked_deploy_${target_name}_$<CONFIG>.cmake")
+    file(GENERATE
+        OUTPUT "${_locked_deploy_script}"
+        CONTENT
+"file(LOCK \"${CMAKE_BINARY_DIR}/.qt/windeployqt.lock\" GUARD PROCESS TIMEOUT 300)
+set(QT_DEPLOY_PREFIX \"$<TARGET_FILE_DIR:${target_name}>\")
+set(QT_DEPLOY_BIN_DIR \".\")
+set(QT_DEPLOY_LIB_DIR \".\")
+set(QT_DEPLOY_PLUGINS_DIR \"plugins\")
+set(QT_DEPLOY_QML_DIR \"qml\")
+include(\"${_deploy_script}\")
+"
+    )
+
     add_custom_target(deploy_${target_name}
         COMMAND ${CMAKE_COMMAND}
             --install "${CMAKE_BINARY_DIR}"
@@ -64,12 +79,7 @@ function(qt_add_windows_deploy target_name)
     if(QT_DEPLOY_AUTO_DEPLOY)
         add_custom_command(TARGET ${target_name} POST_BUILD
             COMMAND ${CMAKE_COMMAND}
-                -DQT_DEPLOY_PREFIX=$<TARGET_FILE_DIR:${target_name}>
-                -DQT_DEPLOY_BIN_DIR=.
-                -DQT_DEPLOY_LIB_DIR=.
-                -DQT_DEPLOY_PLUGINS_DIR=plugins
-                -DQT_DEPLOY_QML_DIR=qml
-                -P "${_deploy_script}"
+                -P "${_locked_deploy_script}"
             COMMENT "Auto-deploying Qt dependencies for '${target_name}'..."
             VERBATIM
         )
