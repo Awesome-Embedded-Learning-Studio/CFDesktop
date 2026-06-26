@@ -26,7 +26,7 @@
 
 #include "IWindow.h"
 #include "IWindowBackend.h"
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr.h"
 
 #include <QList>
 #include <QObject>
@@ -147,7 +147,7 @@ class IDisplayServerBackend : public QObject {
      * @return Weak pointer to the IWindowBackend, or null if not
      *         yet initialized.
      */
-    virtual WeakPtr<IWindowBackend> windowBackend() = 0;
+    virtual aex::WeakPtr<IWindowBackend> windowBackend() = 0;
 
     /**
      * @brief  Returns the list of output rectangles (screens).
@@ -173,7 +173,7 @@ class IDisplayServerBackend : public QObject {
      *
      * @param[in]  window  Weak reference to the new window.
      */
-    void externalWindowAppeared(WeakPtr<IWindow> window);
+    void externalWindowAppeared(aex::WeakPtr<IWindow> window);
 
     /**
      * @brief  Emitted when an external application window disappears.
@@ -182,7 +182,7 @@ class IDisplayServerBackend : public QObject {
      *
      * @param[in]  window  Weak reference to the disappearing window.
      */
-    void externalWindowDisappeared(WeakPtr<IWindow> window);
+    void externalWindowDisappeared(aex::WeakPtr<IWindow> window);
 };
 
 } // namespace cf::desktop

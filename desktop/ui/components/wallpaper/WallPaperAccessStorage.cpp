@@ -4,7 +4,7 @@
 
 namespace cf::desktop::wallpaper {
 
-WeakPtr<WallPaperToken> WallPaperAccessStorage::toNext(bool move_cursor) {
+aex::WeakPtr<WallPaperToken> WallPaperAccessStorage::toNext(bool move_cursor) {
     try {
         if (move_cursor)
             wallpaper_images.next();
@@ -15,7 +15,7 @@ WeakPtr<WallPaperToken> WallPaperAccessStorage::toNext(bool move_cursor) {
     }
 }
 
-WeakPtr<WallPaperToken> WallPaperAccessStorage::toPrev(bool move_cursor) {
+aex::WeakPtr<WallPaperToken> WallPaperAccessStorage::toPrev(bool move_cursor) {
     try {
         if (move_cursor)
             wallpaper_images.prev();
@@ -26,7 +26,7 @@ WeakPtr<WallPaperToken> WallPaperAccessStorage::toPrev(bool move_cursor) {
     }
 }
 
-WeakPtr<WallPaperToken> WallPaperAccessStorage::to(const wallpaper_token_id_t& token) {
+aex::WeakPtr<WallPaperToken> WallPaperAccessStorage::to(const wallpaper_token_id_t& token) {
     auto it = std::find_if(wallpaper_images.begin(), wallpaper_images.end(),
                            [&token](const auto& ptr) { return ptr->id() == token; });
     if (it == wallpaper_images.end())
@@ -35,13 +35,13 @@ WeakPtr<WallPaperToken> WallPaperAccessStorage::to(const wallpaper_token_id_t& t
     return (*it)->getWeakPtr();
 }
 
-WeakPtr<WallPaperToken> WallPaperAccessStorage::at(const wallpaper_token_id_t& token) {
+aex::WeakPtr<WallPaperToken> WallPaperAccessStorage::at(const wallpaper_token_id_t& token) {
     auto it = std::find_if(wallpaper_images.begin(), wallpaper_images.end(),
                            [&token](const auto& ptr) { return ptr->id() == token; });
-    return it != wallpaper_images.end() ? (*it)->getWeakPtr() : WeakPtr<WallPaperToken>{};
+    return it != wallpaper_images.end() ? (*it)->getWeakPtr() : aex::WeakPtr<WallPaperToken>{};
 }
 
-WeakPtr<WallPaperToken> WallPaperAccessStorage::current() const {
+aex::WeakPtr<WallPaperToken> WallPaperAccessStorage::current() const {
     if (wallpaper_images.empty()) {
         return {};
     }

@@ -15,8 +15,8 @@
 
 #pragma once
 #include "WindowDefine.h"
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include <QObject>
 
 namespace cf::desktop {
@@ -74,11 +74,18 @@ class IWindow : public QObject {
     virtual void raise() = 0;
 
     /**
+     * @brief  Returns the owning process id of this window.
+     *
+     * @return The process id, or 0 when the backend cannot determine it.
+     */
+    virtual qint64 pid() const { return 0; }
+
+    /**
      * @brief  Creates a weak pointer to this window.
      *
-     * @return A WeakPtr that references this IWindow instance.
+     * @return A aex::WeakPtr that references this IWindow instance.
      */
-    WeakPtr<IWindow> make_weak() const { return weak_ptr_factory_.GetWeakPtr(); }
+    aex::WeakPtr<IWindow> make_weak() const { return weak_ptr_factory_.GetWeakPtr(); }
 
   signals:
 
@@ -105,6 +112,6 @@ class IWindow : public QObject {
 
   private:
     /// Factory for creating weak pointers. Ownership: this instance.
-    WeakPtrFactory<IWindow> weak_ptr_factory_;
+    aex::WeakPtrFactory<IWindow> weak_ptr_factory_;
 };
 } // namespace cf::desktop

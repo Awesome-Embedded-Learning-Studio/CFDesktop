@@ -6,7 +6,8 @@
 
 namespace cf::desktop::init_session {
 
-std::vector<WeakPtr<IInitStage>> DesktopBackboneSetupStage::request_before_actions_init() const {
+std::vector<aex::WeakPtr<IInitStage>>
+DesktopBackboneSetupStage::request_before_actions_init() const {
     const auto chain_ref = InitSessionChain::GetChainRef();
     if (!chain_ref) {
         return {};

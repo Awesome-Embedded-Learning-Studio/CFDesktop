@@ -15,8 +15,8 @@
 #pragma once
 #include "../../../export.h"
 #include "IDesktopPropertyStrategy.h"
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 #include <QFlags>
 
 class QWidget;
@@ -83,7 +83,7 @@ class CF_DESKTOP_EXPORT IDesktopDisplaySizeStrategy : public IDesktopPropertyStr
      * @since   0.1
      * @ingroup none
      */
-    WeakPtr<IDesktopDisplaySizeStrategy> GetOne() { return weak_factory_ptr_.GetWeakPtr(); }
+    aex::WeakPtr<IDesktopDisplaySizeStrategy> GetOne() { return weak_factory_ptr_.GetWeakPtr(); }
 
     /**
      * @brief  Applies the strategy behavior to the specified widget.
@@ -123,7 +123,7 @@ class CF_DESKTOP_EXPORT IDesktopDisplaySizeStrategy : public IDesktopPropertyStr
      *
      * Ownership: owner. Manages the weak reference lifecycle.
      */
-    WeakPtrFactory<IDesktopDisplaySizeStrategy> weak_factory_ptr_;
+    aex::WeakPtrFactory<IDesktopDisplaySizeStrategy> weak_factory_ptr_;
 };
 
 } // namespace cf::desktop::platform_strategy

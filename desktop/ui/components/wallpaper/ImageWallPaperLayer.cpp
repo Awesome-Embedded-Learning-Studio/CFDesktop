@@ -96,7 +96,7 @@ void ImageWallPaperLayer::setBackgroundColor(const QColor& color) {
     d->background_color = color;
 }
 
-bool ImageWallPaperLayer::loadImageFromToken(const WeakPtr<WallPaperToken>& token) {
+bool ImageWallPaperLayer::loadImageFromToken(const aex::WeakPtr<WallPaperToken>& token) {
     if (!token) {
         return false;
     }

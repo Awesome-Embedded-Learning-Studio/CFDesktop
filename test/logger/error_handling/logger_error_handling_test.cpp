@@ -11,7 +11,7 @@
 
 #include "../mock/mock_sink.h"
 #include "../test_config.h"
-#include "base/singleton/simple_singleton.hpp"
+#include "aex/singleton/simple_singleton.hpp"
 #include "cflog.h"
 #include "cflog/cflog.hpp"
 #include "cflog/cflog_level.hpp"

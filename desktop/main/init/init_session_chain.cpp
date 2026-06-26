@@ -41,12 +41,12 @@ IInitStage::StageResult IInitStage::StageResult::critical_failed(const QString& 
 // IInitStage 默认实现
 // ============================================================================
 
-std::vector<WeakPtr<IInitStage>> IInitStage::request_before_actions_init() const {
+std::vector<aex::WeakPtr<IInitStage>> IInitStage::request_before_actions_init() const {
     return {}; // 默认无依赖
 }
 
 namespace {
-cf::WeakPtr<InitSessionChain> g_chain_ref;
+aex::WeakPtr<InitSessionChain> g_chain_ref;
 } // namespace
 
 InitSessionChain::InitSessionChain(QObject* parent) : QObject(parent), weak_ptr_factory_(this) {}
@@ -58,7 +58,7 @@ InitSessionChain::~InitSessionChain() {
     g_chain_ref.Reset();
 }
 
-cf::WeakPtr<InitSessionChain> InitSessionChain::GetChainRef() {
+aex::WeakPtr<InitSessionChain> InitSessionChain::GetChainRef() {
     return g_chain_ref;
 }
 
@@ -83,7 +83,7 @@ void InitSessionChain::reset() {
     last_debug_string.clear();
 }
 
-cf::WeakPtr<IInitStage> InitSessionChain::find_stage(std::string_view stage_name) const {
+aex::WeakPtr<IInitStage> InitSessionChain::find_stage(std::string_view stage_name) const {
     for (const auto& stage : stages) {
         if (stage->name() == stage_name) {
             return stage->get_weak_ptr();

@@ -24,7 +24,7 @@ class DesktopBackboneSetupStage : public IInitStage {
      * @return Compile-time constant stage name.
      */
     std::string_view name() const noexcept override { return DESKTOP_BACKBONE_SETUP; }
-    std::vector<WeakPtr<IInitStage>> request_before_actions_init() const override;
+    std::vector<aex::WeakPtr<IInitStage>> request_before_actions_init() const override;
 
     /**
      * @brief Executes the backbone setup initialization logic.

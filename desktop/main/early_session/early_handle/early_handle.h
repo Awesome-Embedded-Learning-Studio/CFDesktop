@@ -12,14 +12,14 @@
  * @ingroup early_session
  */
 #pragma once
-#include "base/singleton/simple_singleton.hpp"
+#include "aex/singleton/simple_singleton.hpp"
 #include "settings/early_settings.h"
 #include <memory>
 class QWidget;
 
 namespace cf::desktop::early_stage {
 /**
- * @brief Singleton handle for managing early desktop settings.
+ * @brief aex::Singleton handle for managing early desktop settings.
  *
  * Provides centralized access to early configuration settings throughout the
  * desktop initialization process.
@@ -33,7 +33,7 @@ namespace cf::desktop::early_stage {
  * const auto& settings = handle.early_settings();
  * @endcode
  */
-class EarlyHandle : public SimpleSingleton<EarlyHandle> {
+class EarlyHandle : public aex::SimpleSingleton<EarlyHandle> {
   public:
     EarlyHandle() = default;
     /**

@@ -17,8 +17,8 @@ struct WallpaperShellLayerStrategy::Private {
     std::unique_ptr<wallpaper::WallPaperLayer> wallpaper_layer;
     QImage cached_scaled_image;
     QRect current_geometry;
-    WeakPtr<IShellLayer> layer;
-    WeakPtr<WindowManager> window_manager;
+    aex::WeakPtr<IShellLayer> layer;
+    aex::WeakPtr<WindowManager> window_manager;
 };
 
 // ============================================================
@@ -37,7 +37,8 @@ WallpaperShellLayerStrategy::WallpaperShellLayerStrategy(
 
 WallpaperShellLayerStrategy::~WallpaperShellLayerStrategy() = default;
 
-void WallpaperShellLayerStrategy::activate(WeakPtr<IShellLayer> layer, WeakPtr<WindowManager> wm) {
+void WallpaperShellLayerStrategy::activate(aex::WeakPtr<IShellLayer> layer,
+                                           aex::WeakPtr<WindowManager> wm) {
     log::traceftag("WallpaperShellLayerStrategy", "Activated");
     d->layer = layer;
     d->window_manager = wm;

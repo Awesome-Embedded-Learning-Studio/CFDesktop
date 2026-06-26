@@ -15,7 +15,7 @@
 #pragma once
 #include "../../../export.h"
 #include "IDesktopPropertyStrategy.h"
-#include "base/singleton/simple_singleton.hpp"
+#include "aex/singleton/simple_singleton.hpp"
 #include <memory>
 
 namespace cf::desktop::platform_strategy::windows {
@@ -29,7 +29,7 @@ class WindowsDisplaySizePolicy;
  * Creates and manages the lifecycle of desktop property strategy instances
  * specifically for Windows environments.
  *
- * @note   Inherits singleton semantics from SimpleSingleton base.
+ * @note   Inherits singleton semantics from aex::SimpleSingleton base.
  *
  * @ingroup platform_windows
  *
@@ -39,7 +39,7 @@ class WindowsDisplaySizePolicy;
  * @endcode
  */
 class CF_DESKTOP_EXPORT WindowsDeskProStrategyFactory
-    : public SimpleSingleton<WindowsDeskProStrategyFactory> {
+    : public aex::SimpleSingleton<WindowsDeskProStrategyFactory> {
   public:
     /**
      * @brief  Constructs a new WindowsDeskProStrategyFactory instance.

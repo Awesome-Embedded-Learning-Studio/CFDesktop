@@ -23,7 +23,9 @@ namespace cf::desktop::backend::wsl {
 
 WSLX11Window::WSLX11Window(xcb_connection_t* conn, xcb_window_t root, xcb_window_t win,
                            const XcbAtoms& atoms, QObject* parent)
-    : IWindow(parent), conn_(conn), root_(root), window_(win), atoms_(atoms) {}
+    : IWindow(parent), conn_(conn), root_(root), window_(win), atoms_(atoms) {
+    pid_ = readPid();
+}
 
 WSLX11Window::~WSLX11Window() = default;
 
@@ -172,6 +174,25 @@ void WSLX11Window::raise() {
     const uint32_t values[] = {XCB_STACK_MODE_ABOVE};
     xcb_configure_window(conn_, window_, XCB_CONFIG_WINDOW_STACK_MODE, values);
     xcb_flush(conn_);
+}
+
+qint64 WSLX11Window::pid() const {
+    return pid_;
+}
+
+qint64 WSLX11Window::readPid() const {
+    if (!conn_ || window_ == XCB_WINDOW_NONE || atoms_.net_wm_pid == XCB_ATOM_NONE) {
+        return 0;
+    }
+    xcb_get_property_cookie_t cookie =
+        xcb_get_property(conn_, 0, window_, atoms_.net_wm_pid, XCB_ATOM_CARDINAL, 0, 1);
+    xcb_get_property_reply_t* reply = xcb_get_property_reply(conn_, cookie, nullptr);
+    qint64 pid = 0;
+    if (reply && reply->type != XCB_ATOM_NONE && xcb_get_property_value_length(reply) >= 4) {
+        pid = static_cast<qint64>(*static_cast<uint32_t*>(xcb_get_property_value(reply)));
+    }
+    free(reply);
+    return pid;
 }
 
 } // namespace cf::desktop::backend::wsl

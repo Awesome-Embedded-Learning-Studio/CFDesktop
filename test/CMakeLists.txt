@@ -35,8 +35,8 @@ else()
     set(QT_TEST_AVAILABLE FALSE)
 endif()
 
-# Add base unit tests subdirectory
-add_subdirectory(base)
+# NOTE: base foundation unit tests now live in the aex submodule
+# (third_party/aex/test) and run from aex's own standalone build.
 
 # Add config manager tests subdirectory
 add_subdirectory(config_manager)
@@ -47,8 +47,7 @@ add_subdirectory(logger)
 # Add System Test
 add_subdirectory(system)
 
-# Add ui tests
-add_subdirectory(ui)
+# NOTE: ui tests now live in the QuarkWidgets submodule (third_party/QuarkWidgets/test).
 
 # Add desktop tests
 add_subdirectory(desktop)

@@ -14,8 +14,8 @@
 
 #pragma once
 #include "WallPaperToken.h"
-#include "base/indexed_vector/indexed_vector.hpp"
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/indexed_vector/indexed_vector.hpp"
+#include "aex/weak_ptr/weak_ptr.h"
 #include <QImage>
 #include <QObject>
 #include <memory>
@@ -24,7 +24,7 @@ namespace cf::desktop::wallpaper {
 /**
  * @brief  Indexed storage for wallpaper tokens with cursor navigation.
  *
- * Wraps an indexed_vector of unique WallPaperToken instances and provides
+ * Wraps an aex::indexed_vector of unique WallPaperToken instances and provides
  * sequential/random access with overflow signaling via Qt signals.
  *
  * @note   None.
@@ -44,19 +44,19 @@ class WallPaperAccessStorage : public QObject {
     /**
      * @brief move the index to the next one
      *
-     * @return WeakPtr<WallPaperToken>
+     * @return aex::WeakPtr<WallPaperToken>
      */
-    WeakPtr<WallPaperToken> toNext(bool move_cursor = false);
-    WeakPtr<WallPaperToken> toPrev(bool move_cursor = false);
-    WeakPtr<WallPaperToken> to(const wallpaper_token_id_t& token);
-    WeakPtr<WallPaperToken> at(const wallpaper_token_id_t& token);
+    aex::WeakPtr<WallPaperToken> toNext(bool move_cursor = false);
+    aex::WeakPtr<WallPaperToken> toPrev(bool move_cursor = false);
+    aex::WeakPtr<WallPaperToken> to(const wallpaper_token_id_t& token);
+    aex::WeakPtr<WallPaperToken> at(const wallpaper_token_id_t& token);
 
     /**
      * @brief Returns the token at the current cursor position.
      *
-     * @return WeakPtr to current token, or null if storage is empty.
+     * @return aex::WeakPtr to current token, or null if storage is empty.
      */
-    WeakPtr<WallPaperToken> current() const;
+    aex::WeakPtr<WallPaperToken> current() const;
 
     /**
      * @brief  Appends a wallpaper token to the storage.
@@ -155,6 +155,6 @@ class WallPaperAccessStorage : public QObject {
     void indexed_overflow(const OverFlowType t);
 
   private:
-    cf::indexed_vector<std::unique_ptr<WallPaperToken>> wallpaper_images;
+    aex::indexed_vector<std::unique_ptr<WallPaperToken>> wallpaper_images;
 };
 } // namespace cf::desktop::wallpaper

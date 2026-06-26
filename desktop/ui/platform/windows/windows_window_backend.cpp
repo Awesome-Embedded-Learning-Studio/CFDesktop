@@ -142,7 +142,7 @@ void WindowsWindowBackend::stopTracking() {
 //  IWindowBackend interface
 // ──────────────────────────────────────────────────────────
 
-WeakPtr<IWindow> WindowsWindowBackend::createWindow(const QString& appId) {
+aex::WeakPtr<IWindow> WindowsWindowBackend::createWindow(const QString& appId) {
     // For the pseudo-desktop, internal window creation is not yet
     // implemented.  External windows are discovered via hooks.
     Q_UNUSED(appId);
@@ -150,7 +150,7 @@ WeakPtr<IWindow> WindowsWindowBackend::createWindow(const QString& appId) {
     return {};
 }
 
-void WindowsWindowBackend::destroyWindow(WeakPtr<IWindow> window) {
+void WindowsWindowBackend::destroyWindow(aex::WeakPtr<IWindow> window) {
     // For external windows, "destroy" means stop tracking —
     // we don't actually close the window.
     if (!window) {
@@ -163,8 +163,8 @@ void WindowsWindowBackend::destroyWindow(WeakPtr<IWindow> window) {
     unregisterWindow(ww->nativeHandle());
 }
 
-QList<WeakPtr<IWindow>> WindowsWindowBackend::windows() const {
-    QList<WeakPtr<IWindow>> result;
+QList<aex::WeakPtr<IWindow>> WindowsWindowBackend::windows() const {
+    QList<aex::WeakPtr<IWindow>> result;
     result.reserve(static_cast<int>(tracked_windows_.size()));
     for (const auto& [hwnd, win] : tracked_windows_) {
         result.append(win->make_weak());

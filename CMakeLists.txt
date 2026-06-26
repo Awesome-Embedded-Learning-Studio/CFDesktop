@@ -42,17 +42,28 @@ cf_generate_desktop_settings()
 # Apply desktop root overlay (needs CFDESKTOP_DEFAULT_ROOT from above)
 cf_apply_desktop_root_overlay()
 
+# ============================================================
+# Third-party: aex (foundation utils, header-only). MUST precede base —
+# the slimmed cfbase links aex::aex for expected/scope_guard/macro.
+# ============================================================
+include(cmake/third_party_helper.cmake)
+setup_third_party(
+    NAME           aex
+    GIT_REPOSITORY https://github.com/Awesome-Embedded-Learning-Studio/aex.git
+    GIT_TAG        v0.1.0)
+
 # Log base module start
 log_module_start("base")
 add_subdirectory(base)
 # Log base module end
 log_module_end("base")
 
-# Log base module start
-log_module_start("ui")
-add_subdirectory(ui)
-# Log base module end
-log_module_end("ui")
+# NOTE: ui/ was extracted to the QuarkWidgets submodule (Phase 2). It is consumed
+# below via setup_third_party() before desktop, which links QuarkWidgets::quarkwidgets.
+setup_third_party(
+    NAME           QuarkWidgets
+    GIT_REPOSITORY https://github.com/Awesome-Embedded-Learning-Studio/QuarkWidgets.git
+    GIT_TAG        v0.1.0)
 
 log_module_start("desktop")
 add_subdirectory(desktop)

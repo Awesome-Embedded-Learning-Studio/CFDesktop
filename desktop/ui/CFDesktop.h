@@ -11,8 +11,8 @@
 #pragma once
 #include "../export.h"
 #include "CFDesktopProxy.h"
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 
 #include <QWidget>
 namespace cf::desktop {
@@ -70,8 +70,18 @@ class CF_DESKTOP_EXPORT CFDesktop final : public QWidget {
      */
     bool component_available(const DesktopComponent d = DesktopComponent::Common) const noexcept;
 
-    // Make Weak Reference
-    WeakPtr<CFDesktop> GetWeak() const { return weak_ptr_factory_.GetWeakPtr(); }
+    /**
+     * @brief   Obtains a weak reference to this desktop instance.
+     *
+     * @return         WeakPtr pointing to this CFDesktop; invalidated on destruction.
+     *
+     * @throws         None
+     * @note           None
+     * @warning        None
+     * @since          0.1
+     * @ingroup        desktop_ui
+     */
+    aex::WeakPtr<CFDesktop> GetWeak() const { return weak_ptr_factory_.GetWeakPtr(); }
 
   private:
     /* Managed by Resources */
@@ -94,6 +104,6 @@ class CF_DESKTOP_EXPORT CFDesktop final : public QWidget {
     void resizeEvent(QResizeEvent* event) override;
 
   private:
-    cf::WeakPtrFactory<CFDesktop> weak_ptr_factory_;
+    aex::WeakPtrFactory<CFDesktop> weak_ptr_factory_;
 };
 } // namespace cf::desktop

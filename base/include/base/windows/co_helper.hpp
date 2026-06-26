@@ -12,8 +12,8 @@
  * @ingroup base_windows
  */
 #pragma once
-#include "../expected/expected.hpp"
-#include "../scope_guard/scope_guard.hpp"
+#include "aex/expected/expected.hpp"
+#include "aex/scope_guard/scope_guard.hpp"
 
 #include "common.h"
 #include <functional>
@@ -36,7 +36,7 @@ namespace cf {
 template <typename ResourceBack, typename ErrorCode> class COMHelper {
   public:
     /// Type alias for COM operation function.
-    using ContextFunction = std::function<cf::expected<ResourceBack, ErrorCode>()>;
+    using ContextFunction = std::function<aex::expected<ResourceBack, ErrorCode>()>;
 
     /**
      * @brief  Executes a COM operation with single-threaded initialization.
@@ -55,22 +55,22 @@ template <typename ResourceBack, typename ErrorCode> class COMHelper {
      *
      * @ingroup base_windows
      */
-    static cf::expected<ResourceBack, ErrorCode>
+    static aex::expected<ResourceBack, ErrorCode>
     RunComInterfacesOnce(ContextFunction f, DWORD coinitFlag = COINIT_APARTMENTTHREADED) {
         HRESULT hr = ::CoInitializeEx(nullptr, coinitFlag);
         if (FAILED(hr)) {
-            return cf::unexpected<ErrorCode>(static_cast<ErrorCode>(hr));
+            return aex::unexpected<ErrorCode>(static_cast<ErrorCode>(hr));
         }
-        cf::ScopeGuard guard([]() { ::CoUninitialize(); });
+        aex::ScopeGuard guard([]() { ::CoUninitialize(); });
 
         hr = CoInitializeSecurity(nullptr, -1, nullptr, nullptr, RPC_C_AUTHN_LEVEL_DEFAULT,
                                   RPC_C_IMP_LEVEL_IMPERSONATE, nullptr, EOAC_NONE, nullptr);
 
         if (FAILED(hr)) {
-            return cf::unexpected<ErrorCode>(static_cast<ErrorCode>(hr));
+            return aex::unexpected<ErrorCode>(static_cast<ErrorCode>(hr));
         }
 
-        cf::expected<ResourceBack, ErrorCode> result = f();
+        aex::expected<ResourceBack, ErrorCode> result = f();
         return result;
     }
 
@@ -88,7 +88,7 @@ template <typename ResourceBack, typename ErrorCode> class COMHelper {
      *
      * @ingroup base_windows
      */
-    static cf::expected<ResourceBack, ErrorCode> RunComInterfacesMTA(ContextFunction f) {
+    static aex::expected<ResourceBack, ErrorCode> RunComInterfacesMTA(ContextFunction f) {
         return RunComInterfacesOnce(std::move(f), COINIT_MULTITHREADED);
     }
 };

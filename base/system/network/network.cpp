@@ -249,7 +249,7 @@ static NetworkStatus buildNetworkStatus() {
     return s;
 }
 
-cf::expected<NetworkInfo, NetworkQueryError> getNetworkInfo() noexcept {
+aex::expected<NetworkInfo, NetworkQueryError> getNetworkInfo() noexcept {
     NetworkInfo result;
 
     try {

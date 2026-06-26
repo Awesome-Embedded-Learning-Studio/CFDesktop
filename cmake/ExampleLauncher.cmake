@@ -141,7 +141,7 @@ endfunction()
 #
 # 用法:
 #   cf_add_example_with_launcher(my_example "ui" main.cpp widget.cpp)
-#   target_link_libraries(my_example PRIVATE cfui Qt6::Widgets)
+#   target_link_libraries(my_example PRIVATE QuarkWidgets::quarkwidgets Qt6::Widgets)
 #
 macro(cf_add_example_with_launcher TARGET_NAME CATEGORY)
     # 创建可执行文件

@@ -13,7 +13,7 @@
  * @ingroup init_session
  */
 #pragma once
-#include "base/singleton/simple_singleton.hpp"
+#include "aex/singleton/simple_singleton.hpp"
 #include <QString>
 #include <memory>
 
@@ -41,7 +41,7 @@ namespace cf::desktop::init_session {
  * QWidget* widget = initInfo.unlockBootWidget();
  * @endcode
  */
-class InitInfoHandle : public SimpleSingleton<InitInfoHandle> {
+class InitInfoHandle : public aex::SimpleSingleton<InitInfoHandle> {
   public:
     ~InitInfoHandle();
     /**

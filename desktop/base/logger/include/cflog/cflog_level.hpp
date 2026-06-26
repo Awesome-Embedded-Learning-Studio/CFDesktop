@@ -12,7 +12,7 @@
  * @ingroup cflog
  */
 #pragma once
-#include "base/macro/build_type.h"
+#include "aex/macro/build_type.h"
 #include <string_view>
 
 namespace cf::log {

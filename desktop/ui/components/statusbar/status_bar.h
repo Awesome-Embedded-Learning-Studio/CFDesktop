@@ -16,8 +16,8 @@
 #pragma once
 
 #include "IStatusBar.h"
-#include "base/weak_ptr/weak_ptr.h"
-#include "base/weak_ptr/weak_ptr_factory.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr_factory.h"
 
 #include <QColor>
 #include <QFont>
@@ -199,7 +199,7 @@ class StatusBar final : public QWidget, public IStatusBar {
     /**
      * @brief  Returns a weak reference to this status bar.
      *
-     * @return WeakPtr valid for this instance's lifetime.
+     * @return aex::WeakPtr valid for this instance's lifetime.
      *
      * @throws None
      * @note   None
@@ -207,7 +207,7 @@ class StatusBar final : public QWidget, public IStatusBar {
      * @since  0.19
      * @ingroup components
      */
-    WeakPtr<StatusBar> GetWeak() const { return weak_factory_.GetWeakPtr(); }
+    aex::WeakPtr<StatusBar> GetWeak() const { return weak_factory_.GetWeakPtr(); }
 
   protected:
     /**
@@ -272,7 +272,7 @@ class StatusBar final : public QWidget, public IStatusBar {
     QPixmap icon_masks_[4];
 
     /// Weak pointer factory (must be the last member).
-    mutable cf::WeakPtrFactory<StatusBar> weak_factory_{this};
+    mutable aex::WeakPtrFactory<StatusBar> weak_factory_{this};
 };
 
 } // namespace cf::desktop::desktop_component

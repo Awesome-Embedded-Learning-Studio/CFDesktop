@@ -6,6 +6,8 @@ log_info("Dekstop UI" "Start UI Components Configurations")
 add_subdirectory(wallpaper)
 add_subdirectory(shell_layer_impl)
 add_subdirectory(statusbar)
+add_subdirectory(taskbar)
+add_subdirectory(launcher)
 
 # Create interface library for convenience
 add_library(cf_desktop_components STATIC)
@@ -32,5 +34,7 @@ PRIVATE
     cfdesktop_shell_layer_impl
     cfdesktop_wallpaper
     cfdesktop_statusbar
+    cfdesktop_taskbar
+    cfdesktop_launcher
     Qt6::Core Qt6::Gui Qt6::Widgets
 )

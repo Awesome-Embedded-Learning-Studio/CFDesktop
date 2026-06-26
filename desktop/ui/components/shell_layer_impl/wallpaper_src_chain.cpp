@@ -1,5 +1,5 @@
 #include "wallpaper_src_chain.h"
-#include "base/policy_chain/policy_chain.hpp"
+#include "aex/policy_chain/policy_chain.hpp"
 #include "cfconfig.hpp"
 #include "cflog.h"
 #include "cfpath/desktop_main_path_resolvers.h"
@@ -7,8 +7,8 @@
 #include <QFileInfo>
 
 namespace cf::desktop::wallpaper {
-PolicyChain<QString> WallpaperImages() {
-    return policy_chain_builder<QString>()
+aex::PolicyChain<QString> WallpaperImages() {
+    return aex::policy_chain_builder<QString>()
         .then([]() -> std::optional<QString> {
             // Policy 1: Load from ConfigStore wallpaper domain
             log::trace("Scanning from the config file to load wallpaper");

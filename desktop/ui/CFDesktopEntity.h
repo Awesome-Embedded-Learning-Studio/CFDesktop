@@ -16,8 +16,8 @@
 #pragma once
 
 #include "../export.h"
-#include "base/factory/registered_factory.hpp"
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/factory/registered_factory.hpp"
+#include "aex/weak_ptr/weak_ptr.h"
 #include <QObject>
 #include <memory>
 
@@ -101,14 +101,14 @@ class CF_DESKTOP_EXPORT CFDesktopEntity : public QObject {
     /**
      * @brief  Gets a weak pointer to the desktop widget.
      *
-     * @return             WeakPtr referencing the desktop widget; may be empty.
+     * @return             aex::WeakPtr referencing the desktop widget; may be empty.
      * @throws             None
      * @note               Returns observer reference; caller does not own the widget.
      * @warning            None
      * @since              N/A
      * @ingroup            none
      */
-    WeakPtr<CFDesktop> desktop_widget() const;
+    aex::WeakPtr<CFDesktop> desktop_widget() const;
 
     /**
      * @brief  Destroys the CFDesktopEntity instance.
@@ -159,7 +159,7 @@ class CF_DESKTOP_EXPORT CFDesktopEntity : public QObject {
     std::unique_ptr<platform_strategy::PlatformFactory> platform_factory_;
 
     /// @brief Display server backend. Ownership: owner.
-    cf::RegisteredFactory<IDisplayServerBackend>::unique_ptr_type display_backend_;
+    aex::RegisteredFactory<IDisplayServerBackend>::unique_ptr_type display_backend_;
 
   private:
     /// @brief Global singleton instance of CFDesktopEntity. Ownership: owner.

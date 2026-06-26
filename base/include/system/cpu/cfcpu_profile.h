@@ -12,7 +12,7 @@
  * @ingroup system_cpu
  */
 #pragma once
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
 #include "base/export.h"
 #include <cstdint>
 
@@ -52,7 +52,7 @@ struct CPUProfileInfo {
  * function performs a real-time query each time it is called and
  * does not cache results.
  *
- * @return     `expected<CPUProfileInfo, CPUProfileInfoError>` containing
+ * @return     `aex::expected<CPUProfileInfo, CPUProfileInfoError>` containing
  *             CPU performance data on success, or an error type on
  *             failure.
  *
@@ -67,6 +67,6 @@ struct CPUProfileInfo {
  * @since      0.1
  * @ingroup    system_cpu
  */
-CF_BASE_EXPORT expected<CPUProfileInfo, CPUProfileInfoError> getCPUProfileInfo();
+CF_BASE_EXPORT aex::expected<CPUProfileInfo, CPUProfileInfoError> getCPUProfileInfo();
 
 } // namespace cf

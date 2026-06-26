@@ -121,13 +121,13 @@ void WSLX11WindowBackend::stopTracking() {
 //  IWindowBackend interface
 // ──────────────────────────────────────────────────────────
 
-WeakPtr<IWindow> WSLX11WindowBackend::createWindow(const QString& appId) {
+aex::WeakPtr<IWindow> WSLX11WindowBackend::createWindow(const QString& appId) {
     Q_UNUSED(appId);
     cf::log::warningftag("WSLWindowBackend", "createWindow() not supported in X11 tracking mode");
     return {};
 }
 
-void WSLX11WindowBackend::destroyWindow(WeakPtr<IWindow> window) {
+void WSLX11WindowBackend::destroyWindow(aex::WeakPtr<IWindow> window) {
     if (!window) {
         return;
     }
@@ -138,8 +138,8 @@ void WSLX11WindowBackend::destroyWindow(WeakPtr<IWindow> window) {
     unregisterWindow(ww->nativeHandle());
 }
 
-QList<WeakPtr<IWindow>> WSLX11WindowBackend::windows() const {
-    QList<WeakPtr<IWindow>> result;
+QList<aex::WeakPtr<IWindow>> WSLX11WindowBackend::windows() const {
+    QList<aex::WeakPtr<IWindow>> result;
     result.reserve(static_cast<int>(tracked_windows_.size()));
     for (const auto& [win, ptr] : tracked_windows_) {
         result.append(ptr->make_weak());

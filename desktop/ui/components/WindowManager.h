@@ -15,7 +15,8 @@
 
 #pragma once
 #include "IWindow.h"
-#include "base/weak_ptr/weak_ptr.h"
+#include "aex/weak_ptr/weak_ptr.h"
+#include "window_info.h"
 
 #include <QHash>
 #include <QObject>
@@ -46,7 +47,7 @@ class WindowManager : public QObject {
      *
      * @param[in]  backend  Weak reference to the window backend.
      */
-    void setBackend(WeakPtr<IWindowBackend> backend);
+    void setBackend(aex::WeakPtr<IWindowBackend> backend);
 
     /**
      * @brief  Creates and registers a new window with the given ID.
@@ -57,18 +58,18 @@ class WindowManager : public QObject {
      *
      * @param[in]  win_id  Unique identifier for the new window.
      *
-     * @return WeakPtr to the created window, or nullptr if duplicate.
+     * @return aex::WeakPtr to the created window, or nullptr if duplicate.
      */
-    WeakPtr<IWindow> create_window(const win_id_t& win_id);
+    aex::WeakPtr<IWindow> create_window(const win_id_t& win_id);
 
     /**
      * @brief  Finds a tracked window by its unique ID.
      *
      * @param[in]  win_id  The window identifier to look up.
      *
-     * @return WeakPtr to the window, or nullptr if not found / expired.
+     * @return aex::WeakPtr to the window, or nullptr if not found / expired.
      */
-    WeakPtr<IWindow> find_window(const win_id_t& win_id) const;
+    aex::WeakPtr<IWindow> find_window(const win_id_t& win_id) const;
 
     /**
      * @brief  Requests a graceful close for the given window.
@@ -77,7 +78,7 @@ class WindowManager : public QObject {
      *
      * @return True if the close request was dispatched, false otherwise.
      */
-    bool request_close_window(WeakPtr<IWindow> window);
+    bool request_close_window(aex::WeakPtr<IWindow> window);
 
     /**
      * @brief  Raises the given window to the top of the stacking order.
@@ -86,12 +87,32 @@ class WindowManager : public QObject {
      *
      * @return True if the raise request was dispatched, false otherwise.
      */
-    bool raise_a_window(WeakPtr<IWindow> window);
+    bool raise_a_window(aex::WeakPtr<IWindow> window);
+
+  signals:
+    /**
+     * @brief  Emitted when a tracked window appears.
+     *
+     * @param[in] pid  Owning process id (0 if unknown).
+     */
+    void windowAppeared(qint64 pid);
+
+    /**
+     * @brief  Emitted when a tracked window disappears.
+     *
+     * @param[in] pid  Owning process id captured at appearance.
+     */
+    void windowDisappeared(qint64 pid);
 
   private:
+    /// @brief Records a newly appeared window and watches its destruction.
+    void onWindowCame(aex::WeakPtr<IWindow> window);
+
     /// Weak reference to the window backend. Ownership: external.
-    WeakPtr<IWindowBackend> window_backend_{nullptr};
+    aex::WeakPtr<IWindowBackend> window_backend_{nullptr};
     /// Tracked windows keyed by window ID (weak references only). Ownership: backend.
-    std::unordered_map<win_id_t, WeakPtr<IWindow>, QStringHash> windows_;
+    std::unordered_map<win_id_t, aex::WeakPtr<IWindow>, QStringHash> windows_;
+    /// Observed WindowInfo keyed by window ID.
+    std::unordered_map<win_id_t, WindowInfo, QStringHash> window_infos_;
 };
 } // namespace cf::desktop

@@ -13,7 +13,7 @@
  */
 
 #pragma once
-#include "base/macro/system_judge.h"
+#include "aex/macro/system_judge.h"
 
 #ifdef CFDESKTOP_OS_LINUX
 
@@ -59,15 +59,15 @@ class WSLX11WindowBackend : public IWindowBackend {
 
     // ── IWindowBackend interface ──────────────────────────
 
-    WeakPtr<IWindow> createWindow(const QString& appId) override;
+    aex::WeakPtr<IWindow> createWindow(const QString& appId) override;
 
     /**
      * @brief  Destroys a previously tracked window.
      * @param[in] window  Weak reference to the window to destroy.
      */
-    void destroyWindow(WeakPtr<IWindow> window) override;
+    void destroyWindow(aex::WeakPtr<IWindow> window) override;
 
-    QList<WeakPtr<IWindow>> windows() const override;
+    QList<aex::WeakPtr<IWindow>> windows() const override;
 
     /**
      * @brief  Returns the rendering capabilities of this backend.

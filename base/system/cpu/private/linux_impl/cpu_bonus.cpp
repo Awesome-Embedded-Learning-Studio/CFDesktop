@@ -195,7 +195,7 @@ std::optional<uint16_t> readCpuTemperature() noexcept {
 
 } // namespace
 
-cf::expected<void, cf::CPUBonusInfoViewError> query_cpu_bonus_info(cf::CPUBonusInfoHost& bonus) {
+aex::expected<void, cf::CPUBonusInfoViewError> query_cpu_bonus_info(cf::CPUBonusInfoHost& bonus) {
     // Get CPU features
     query_cpu_features(bonus.features);
 

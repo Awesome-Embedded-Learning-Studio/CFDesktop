@@ -1,7 +1,6 @@
 log_info("Example" "Managing Example Components")
 
 add_subdirectory(base)
-add_subdirectory(ui)
-add_subdirectory(gui)
+# NOTE: ui + gui examples now live in the QuarkWidgets submodule.
 add_subdirectory(desktop)
 

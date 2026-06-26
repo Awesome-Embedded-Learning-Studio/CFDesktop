@@ -58,7 +58,9 @@ class EarlyTransferStage : public IInitStage {
      * @since  N/A
      * @ingroup none
      */
-    std::vector<WeakPtr<IInitStage>> request_before_actions_init() const override { return {}; }
+    std::vector<aex::WeakPtr<IInitStage>> request_before_actions_init() const override {
+        return {};
+    }
 
     /**
      * @brief  Executes the early transfer stage session.

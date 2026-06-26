@@ -23,6 +23,8 @@ description: "状态: 🚧 部分完成 (~50%)，预计周期: 4~5 周"
 
 ### HWTier 分级系统
 
+> **状态订正（2026-06-26）**：HWTier **检测 + 评分 + 档位覆写已完成**（Phase 1，见 `base/system/hardware_tier/` 的 `IHardwareCollector/Scorer/Assessor/Policy`，以及 [`current.md`](../../status/current.md)）。下列 Day 1-2 任务实际已完成；**CapabilityPolicy 策略引擎**（Day 5，档位→动效/渲染/内存降级并接入 Shell）在 demo / 可见桌面路线**延后**（开发期按 High Tier），待 embedded/production pivot 再做。本节「必做」语义针对 embedded 上线，不阻塞当前 demo 路线。
+
 #### Day 1-2: HWTier 分级系统
 - [ ] 定义 HWTier 枚举
   - [ ] `enum class Tier { Low, Mid, High, Unknown }`

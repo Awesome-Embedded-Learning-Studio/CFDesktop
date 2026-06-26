@@ -1,6 +1,6 @@
 #include "system/gpu/gpu.h"
-#include "base/macro/system_judge.h"
-#include "include/base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
+#include "aex/macro/system_judge.h"
 
 // Platform-specific includes
 #ifdef CFDESKTOP_OS_WINDOWS
@@ -155,7 +155,7 @@ EnvironmentScore GPUEnvProber::calcScore(const GPUInfo& g, const DisplayInfo& d)
     return s;
 }
 
-cf::expected<GpuDisplayInfo, GpuDisplayInfoError> getGpuDisplayInfo() noexcept {
+aex::expected<GpuDisplayInfo, GpuDisplayInfoError> getGpuDisplayInfo() noexcept {
     GpuDisplayInfo info;
     info.gpu = GPUEnvProber::probeGPU();
     info.display = GPUEnvProber::probeDisplay();

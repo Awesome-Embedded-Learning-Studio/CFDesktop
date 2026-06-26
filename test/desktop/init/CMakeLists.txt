@@ -57,7 +57,7 @@ if(WIN32)
             $<TARGET_FILE:cfbase>
             $<TARGET_FILE_DIR:init_session_chain_test>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_FILE:cfui>
+            $<TARGET_FILE:quarkwidgets>
             $<TARGET_FILE_DIR:init_session_chain_test>
         COMMENT "Copying shared libraries to test output directory"
     )

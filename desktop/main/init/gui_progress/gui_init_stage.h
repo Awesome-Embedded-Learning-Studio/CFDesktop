@@ -62,7 +62,9 @@ class GuiLogoBootStage : public IInitStage {
      * @since      N/A
      * @ingroup    desktop_init
      */
-    std::vector<WeakPtr<IInitStage>> request_before_actions_init() const override { return {}; }
+    std::vector<aex::WeakPtr<IInitStage>> request_before_actions_init() const override {
+        return {};
+    }
 
     /**
      * @brief  Executes the GUI boot progress initialization.

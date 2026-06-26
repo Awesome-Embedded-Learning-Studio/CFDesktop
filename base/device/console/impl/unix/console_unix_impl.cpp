@@ -1,4 +1,4 @@
-#include "base/macro/system_judge.h"
+#include "aex/macro/system_judge.h"
 
 #ifndef CFDESKTOP_OS_LINUX
 #    error "Unexpected Includes As This File is using for Linux/Unix Implementations"
@@ -13,7 +13,7 @@
 #    include <unistd.h>
 namespace cf::base::device::impl::Unix {
 console::console_size_t console_size() {
-    struct winsize console_window_size {};
+    struct winsize console_window_size{};
     const auto result = ioctl(STDOUT_FILENO, TIOCGWINSZ, &console_window_size);
     if (result == 0) {
         return {console_window_size.ws_col, console_window_size.ws_row};

@@ -66,7 +66,7 @@ class WallpaperShellLayerStrategy : public IShellLayerStrategy {
      * @since            0.15
      * @ingroup          components
      */
-    void activate(WeakPtr<IShellLayer> layer, WeakPtr<WindowManager> wm) override;
+    void activate(aex::WeakPtr<IShellLayer> layer, aex::WeakPtr<WindowManager> wm) override;
 
     /**
      * @brief  Deactivates the strategy and releases resources.

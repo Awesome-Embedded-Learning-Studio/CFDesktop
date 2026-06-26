@@ -12,7 +12,7 @@
  * @ingroup none
  */
 #pragma once
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
 #include "base/export.h"
 #include <array>
 #include <cstdint>
@@ -377,7 +377,7 @@ enum class NetworkQueryError { OK };
  * @since N/A
  * @ingroup none
  */
-cf::expected<NetworkInfo, NetworkQueryError> CF_BASE_EXPORT getNetworkInfo() noexcept;
+aex::expected<NetworkInfo, NetworkQueryError> CF_BASE_EXPORT getNetworkInfo() noexcept;
 
 /**
  * @brief  Returns the human-readable name for an interface type.

@@ -67,6 +67,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Normalize Docker image name
         run: echo "GHCR_IMAGE=$(echo '${{ env.GHCR_IMAGE }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
@@ -167,6 +169,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Normalize Docker image name
         run: echo "GHCR_IMAGE=$(echo '${{ env.GHCR_IMAGE }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
@@ -273,6 +277,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Setup MSVC developer environment
         uses: ilammy/msvc-dev-cmd@v1

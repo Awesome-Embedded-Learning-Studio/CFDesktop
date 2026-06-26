@@ -39,7 +39,7 @@ class DefaultShellLayerStrategy : public IShellLayerStrategy {
      * @param[in] layer  Weak reference to the shell layer.
      * @param[in] wm     Weak reference to the window manager.
      */
-    void activate(WeakPtr<IShellLayer> layer, WeakPtr<WindowManager> wm) override;
+    void activate(aex::WeakPtr<IShellLayer> layer, aex::WeakPtr<WindowManager> wm) override;
 
     /**
      * @brief  Deactivates the strategy and releases held references.
@@ -55,7 +55,7 @@ class DefaultShellLayerStrategy : public IShellLayerStrategy {
     void onGeometryChanged(const QRect& available) override;
 
   private:
-    WeakPtr<IShellLayer> layer_;
-    WeakPtr<WindowManager> window_manager_;
+    aex::WeakPtr<IShellLayer> layer_;
+    aex::WeakPtr<WindowManager> window_manager_;
 };
 } // namespace cf::desktop

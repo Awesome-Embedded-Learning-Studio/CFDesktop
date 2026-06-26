@@ -4,6 +4,8 @@ set_target_properties(cfbase_memory PROPERTIES
 )
 # Define export macro since this will be linked into cfbase shared library
 target_compile_definitions(cfbase_memory PRIVATE CFBASE_EXPORTS)
+# Foundation utils (aex) + base/include platform headers
+target_link_libraries(cfbase_memory PRIVATE cfbase_headers)
 target_include_directories(cfbase_memory
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>

@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "base/singleton/simple_singleton.hpp"
+#include "aex/singleton/simple_singleton.hpp"
 #include "cfconfig/cfconfig_domain_handle.h"
 #include "cfconfig/cfconfig_result.h"
 #include "cfconfig/cfconfig_watcher.h"
@@ -35,7 +35,7 @@ class IConfigStorePathProvider; // Path provider forward declaration
  * change monitoring, and persistence capabilities.
  *
  * @note Thread-safe: All API calls can be used in multi-threaded environments
- * @note Singleton pattern: Use ConfigStore::instance() to access
+ * @note aex::Singleton pattern: Use ConfigStore::instance() to access
  * @note Auto-initialization: Loads from paths on first access
  *
  * @code
@@ -56,7 +56,7 @@ class IConfigStorePathProvider; // Path provider forward declaration
  * ConfigStore::instance().sync(SyncMethod::Async);
  * @endcode
  */
-class ConfigStore : public SimpleSingleton<ConfigStore> {
+class ConfigStore : public aex::SimpleSingleton<ConfigStore> {
   public:
     ConfigStore();
     ~ConfigStore();

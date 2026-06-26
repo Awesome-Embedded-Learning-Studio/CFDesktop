@@ -12,7 +12,7 @@
  * @ingroup system_cpu
  */
 #pragma once
-#include "base/expected/expected.hpp"
+#include "aex/expected/expected.hpp"
 #include "base/export.h"
 #include <string_view>
 
@@ -53,7 +53,7 @@ struct CPUInfoView {
  * @param[in] force_refresh If true, forces re-querying CPU information.
  *                          Default is false.
  *
- * @return     `expected<CPUInfoView, CPUInfoErrorType>` containing CPU
+ * @return     `aex::expected<CPUInfoView, CPUInfoErrorType>` containing CPU
  *             information on success, or an error type on failure.
  *
  * @throws     None (error reporting via expected type).
@@ -68,6 +68,6 @@ struct CPUInfoView {
  * @since      0.1
  * @ingroup    system_cpu
  */
-CF_BASE_EXPORT expected<CPUInfoView, CPUInfoErrorType> getCPUInfo(bool force_refresh = false);
+CF_BASE_EXPORT aex::expected<CPUInfoView, CPUInfoErrorType> getCPUInfo(bool force_refresh = false);
 
 } // namespace cf

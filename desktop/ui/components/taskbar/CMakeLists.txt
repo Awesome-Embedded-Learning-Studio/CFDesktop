@@ -1,0 +1,20 @@
+# Taskbar implementation (QWidget-based bottom-edge panel).
+add_library(cfdesktop_taskbar STATIC
+    centered_taskbar.cpp
+    taskbar_icon.cpp
+)
+
+target_include_directories(cfdesktop_taskbar PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
+)
+
+target_link_libraries(
+    cfdesktop_taskbar
+PUBLIC
+    QuarkWidgets::quarkwidgets           # ThemeManager, color/typography tokens, ICFTheme
+PRIVATE
+    Qt6::Widgets
+    cfbase         # WeakPtr / WeakPtrFactory
+)

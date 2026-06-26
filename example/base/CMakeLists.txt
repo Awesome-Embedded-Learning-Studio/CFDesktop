@@ -1,5 +1,4 @@
-log_info("Example Base" "Start From Common Examples")
-add_subdirectory(common)
+# NOTE: the policy_chain common example now lives in the aex submodule.
 
 log_info("Example Base" "Start From System Configurations")
 add_subdirectory(system)

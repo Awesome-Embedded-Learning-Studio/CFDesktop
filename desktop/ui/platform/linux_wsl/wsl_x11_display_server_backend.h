@@ -9,7 +9,7 @@
  */
 
 #pragma once
-#include "base/macro/system_judge.h"
+#include "aex/macro/system_judge.h"
 
 #ifdef CFDESKTOP_OS_LINUX
 
@@ -67,7 +67,7 @@ class WSLDisplayServerBackend : public IDisplayServerBackend {
      * @return Exit code from the event loop.
      */
     int runEventLoop() override;
-    WeakPtr<IWindowBackend> windowBackend() override;
+    aex::WeakPtr<IWindowBackend> windowBackend() override;
     QList<QRect> outputs() const override;
 
   private:

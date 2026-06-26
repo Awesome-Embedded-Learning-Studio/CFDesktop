@@ -13,7 +13,7 @@
  */
 
 #pragma once
-#include "base/singleton/singleton.hpp"
+#include "aex/singleton/singleton.hpp"
 #include <QString>
 #include <cstdint>
 
@@ -26,12 +26,12 @@ namespace cf::desktop::path {
  *
  * @ingroup desktop_base
  */
-class DesktopMainPathProvider : public cf::Singleton<DesktopMainPathProvider> {
+class DesktopMainPathProvider : public aex::Singleton<DesktopMainPathProvider> {
   public:
     /**
-     * @brief Allows Singleton base to access private constructor.
+     * @brief Allows aex::Singleton base to access private constructor.
      */
-    friend class cf::Singleton<DesktopMainPathProvider>;
+    friend class aex::Singleton<DesktopMainPathProvider>;
     /// @brief Single source of truth for all path types.
     /// Add new entries here — enum, string table, and count are derived automatically.
 #define CF_PATH_TYPES \

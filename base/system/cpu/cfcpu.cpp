@@ -14,8 +14,8 @@
  */
 
 #include "system/cpu/cfcpu.h"
-#include "base/helpers/once_init.hpp"
-#include "base/macro/system_judge.h"
+#include "aex/helpers/once_init.hpp"
+#include "aex/macro/system_judge.h"
 #include "private/cpu_host.h"
 
 #ifdef CFDESKTOP_OS_WINDOWS
@@ -25,7 +25,7 @@
 #endif
 
 namespace {
-class CPUHostInfoIniter : public cf::CallOnceInit<cf::CPUInfoHost> {
+class CPUHostInfoIniter : public aex::CallOnceInit<cf::CPUInfoHost> {
   public:
     cf::CPUInfoErrorType error() const { return error_code; }
 
@@ -50,14 +50,14 @@ static CPUHostInfoIniter cpu_initer;
 } // namespace
 
 namespace cf {
-expected<CPUInfoView, CPUInfoErrorType> getCPUInfo(bool force_refresh) {
+aex::expected<CPUInfoView, CPUInfoErrorType> getCPUInfo(bool force_refresh) {
     if (force_refresh) {
         cpu_initer.force_reinit();
     }
 
     auto& result = cpu_initer.get_resources();
     if (cpu_initer.error() != cf::CPUInfoErrorType::CPU_QUERY_NOERROR) {
-        return cf::unexpected(cpu_initer.error());
+        return aex::unexpected(cpu_initer.error());
     }
 
     // Convert CPUInfoHost to CPUInfoView
