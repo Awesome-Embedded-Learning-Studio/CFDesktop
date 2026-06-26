@@ -10,6 +10,7 @@
 #include "components/PanelManager.h"
 #include "components/WindowManager.h"
 #include "components/launcher/app_launch_service.h"
+#include "components/launcher/app_launcher.h"
 #include "components/statusbar/status_bar.h"
 #include "components/taskbar/centered_taskbar.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
@@ -17,6 +18,7 @@
 #include "platform/shell_layer_helper.h"
 #include "qt_format.h"
 #include <QHash>
+#include <functional>
 #include <memory>
 
 namespace cf::desktop {
@@ -130,26 +132,38 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     auto* taskbar = new cf::desktop::desktop_component::CenteredTaskbar(desktop_entity_);
     taskbar->setApps(apps);
     panel_mgr->registerPanel(taskbar->GetWeak());
+    // Shared launch path: resolve app_id -> exec, launch, capture PID. Used by
+    // both the taskbar tile click and the launcher popup so the running-state
+    // indicator lights for either entry point.
+    std::function<void(const QString&)> launch_app = [apps, app_pid](const QString& app_id) {
+        QString exec;
+        for (const auto& app : apps) {
+            if (app.app_id == app_id) {
+                exec = app.exec_command;
+                break;
+            }
+        }
+        if (exec.isEmpty()) {
+            cf::log::warningftag("CFDesktopEntity", "No exec for app_id '{}'",
+                                 app_id.toStdString());
+            return;
+        }
+        const auto launched = cf::desktop::desktop_component::AppLaunchService::launch(exec);
+        if (launched.has_value()) {
+            (*app_pid)[app_id] = *launched;
+        }
+    };
     QObject::connect(taskbar, &cf::desktop::desktop_component::CenteredTaskbar::appClicked, this,
-                     [apps, app_pid](const QString& app_id) {
-                         QString exec;
-                         for (const auto& app : apps) {
-                             if (app.app_id == app_id) {
-                                 exec = app.exec_command;
-                                 break;
-                             }
-                         }
-                         if (exec.isEmpty()) {
-                             cf::log::warningftag("CFDesktopEntity", "No exec for app_id '{}'",
-                                                  app_id.toStdString());
-                             return;
-                         }
-                         const auto launched =
-                             cf::desktop::desktop_component::AppLaunchService::launch(exec);
-                         if (launched.has_value()) {
-                             (*app_pid)[app_id] = *launched;
-                         }
-                     });
+                     launch_app);
+
+    // ── App launcher popup (Start-menu), opened from the taskbar start button ──
+    auto* app_launcher = new cf::desktop::desktop_component::AppLauncher(desktop_entity_);
+    app_launcher->setApps(apps);
+    QObject::connect(app_launcher, &cf::desktop::desktop_component::AppLauncher::appLaunched, this,
+                     launch_app);
+    QObject::connect(
+        taskbar, &cf::desktop::desktop_component::CenteredTaskbar::launcherRequested, this,
+        [app_launcher, panel_mgr]() { app_launcher->popup(panel_mgr->availableGeometry()); });
     taskbar->show();
     panel_mgr->relayout();
 

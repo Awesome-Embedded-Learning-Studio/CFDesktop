@@ -1,6 +1,7 @@
 # Taskbar implementation (QWidget-based bottom-edge panel).
 add_library(cfdesktop_taskbar STATIC
     centered_taskbar.cpp
+    start_button.cpp
     taskbar_icon.cpp
 )
 
