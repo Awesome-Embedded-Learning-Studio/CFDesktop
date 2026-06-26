@@ -38,6 +38,7 @@ set_tests_properties(app_launcher_test PROPERTIES
     LABELS "desktop;launcher;functional"
     ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/test/bin"
+    TIMEOUT 60
 )
 
 log_info("desktop_launcher_tests" "  - app_launcher_test")
