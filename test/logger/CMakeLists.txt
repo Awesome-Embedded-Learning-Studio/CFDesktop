@@ -41,6 +41,7 @@ add_gtest_executable(
     LOG_MODULE     logger_tests
     INCLUDE_DIRS   ${MOCK_INCLUDE_DIR}
 )
+set_tests_properties(logger_error_handling_test PROPERTIES TIMEOUT 180)
 
 # =============================================================================
 # CFLogger unit tests - logger_formatter_test
