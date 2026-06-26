@@ -5,12 +5,14 @@ on:
     branches:
       - main
       - release/*
-      - develop
     types:
       - opened
       - synchronize
       - reopened
       - labeled
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -32,31 +34,14 @@ jobs:
       - name: Determine CI scope
         id: check
         run: |
-          BASE="${{ github.base_ref }}"
-          LABELS="${{ join(github.event.pull_request.labels.*.name, ',') }}"
-
+          # Trunk-based: full matrix (GCC + Clang + MSVC) on every PR / push to main.
           echo "should_run=true" >> "$GITHUB_OUTPUT"
-
-          # Clang: build-clang label or main/release (always full)
-          if echo "$LABELS" | grep -qw "build-clang" || [[ "$BASE" != "develop" ]]; then
-            echo "run_clang=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "run_clang=false" >> "$GITHUB_OUTPUT"
-          fi
-
-          # MSVC: build-msvc label or main/release (always full)
-          if echo "$LABELS" | grep -qw "build-msvc" || [[ "$BASE" != "develop" ]]; then
-            echo "run_msvc=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "run_msvc=false" >> "$GITHUB_OUTPUT"
-          fi
+          echo "run_clang=true" >> "$GITHUB_OUTPUT"
+          echo "run_msvc=true" >> "$GITHUB_OUTPUT"
 
           echo "--- CI Scope ---"
-          echo "Base branch: $BASE"
-          echo "Labels: $LABELS"
-          echo "GCC:    always"
-          echo "Clang:  $(echo "$LABELS" | grep -qE 'build-(clang|all-platform)' && echo 'yes' || { [[ "$BASE" != "develop" ]] && echo 'yes' || echo 'no'; })"
-          echo "MSVC:   $(echo "$LABELS" | grep -qE 'build-(msvc|all-platform)' && echo 'yes' || { [[ "$BASE" != "develop" ]] && echo 'yes' || echo 'no'; })"
+          echo "Event: ${{ github.event_name }}  ref: ${{ github.ref_name }}"
+          echo "Matrix: GCC + Clang + MSVC (full)"
 
   linux-gcc:
     name: Linux GCC
