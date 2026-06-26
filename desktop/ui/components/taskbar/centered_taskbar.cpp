@@ -32,6 +32,17 @@
 #include <QResizeEvent>
 #include <QTimer>
 
+// Q_INIT_RESOURCE must run at global scope: the rcc-generated registration
+// function lives in the global namespace, but the macro's extern declaration is
+// emitted in the surrounding scope, so calling it from inside
+// cf::desktop::desktop_component would look up a namespaced symbol that does
+// not exist and fail to link. Without this the taskbar_icons.qrc object is
+// dropped from the static archive at link time and ":/cfdesktop/taskbar/*.png"
+// lookups silently return null (icons render blank).
+static void registerTaskbarIconsResource() {
+    Q_INIT_RESOURCE(taskbar_icons);
+}
+
 namespace cf::desktop::desktop_component {
 
 using cf::desktop::PanelPosition;
@@ -48,6 +59,7 @@ constexpr qreal kFrostTintAlpha = 0.60; ///< Frosted-glass tint opacity (wallpap
 } // namespace
 
 CenteredTaskbar::CenteredTaskbar(QWidget* parent) : QWidget(parent) {
+    registerTaskbarIconsResource();
     setAttribute(Qt::WA_OpaquePaintEvent);
     setAutoFillBackground(false);
     setFixedHeight(kTaskbarHeight);

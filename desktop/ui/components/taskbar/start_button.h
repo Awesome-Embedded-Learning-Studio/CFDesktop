@@ -4,8 +4,8 @@
  *
  * StartButton is the leading taskbar tile that emits clicked() to open the
  * AppLauncher popup. It reuses the TaskbarIcon visual language (rounded tile,
- * hover zoom, press ripple) but draws a fixed app-grid glyph instead of an
- * application initial, and carries no running indicator.
+ * hover zoom, press ripple) but draws a tinted start icon, and carries no
+ * running indicator.
  *
  * @author  Charliechen114514 (chengh1922@mails.jlu.edu.cn)
  * @date    2026-06-26
@@ -32,7 +32,7 @@ namespace cf::desktop::desktop_component {
 /**
  * @brief  Leading taskbar tile that opens the application launcher.
  *
- * Paints a rounded tile with a fixed app-grid glyph, zooms on hover, plays a
+ * Paints a rounded tile with a tinted start icon, zooms on hover, plays a
  * press ripple, and emits clicked() on a left-button release inside the tile.
  * All colors follow the active Material theme.
  *

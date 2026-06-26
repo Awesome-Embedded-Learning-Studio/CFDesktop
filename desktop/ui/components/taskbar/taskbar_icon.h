@@ -3,7 +3,7 @@
  * @brief   Single application icon widget for the centered taskbar.
  *
  * TaskbarIcon renders one launchable application as a rounded-square tile
- * bearing the app's initial. It zooms in on hover, plays a self-drawn press
+ * bearing a tinted app icon. It zooms in on hover, plays a self-drawn press
  * ripple, and shows a running-state indicator dot. It emits clicked(app_id)
  * on a left-button release inside the tile.
  *
@@ -19,7 +19,6 @@
 #include "app_entry.h"
 
 #include <QColor>
-#include <QFont>
 #include <QPixmap>
 #include <QPointF>
 #include <QString>
@@ -218,10 +217,9 @@ class TaskbarIcon final : public QWidget {
     bool rippling_{false};       ///< Whether a ripple is animating.
 
     QColor tile_color_;       ///< Tile fill (surface variant).
-    QColor foreground_color_; ///< Initial text color (on surface).
+    QColor foreground_color_; ///< Icon tint color (on surface).
     QColor indicator_color_;  ///< Running dot color (on surface variant).
-    QFont label_font_;        ///< Font used for the initial letter.
-    QPixmap icon_mask_;       ///< Tinted icon pixmap; null -> draw the initial letter.
+    QPixmap icon_mask_;       ///< Tinted icon pixmap; null -> blank tile (no fallback).
 
     QVariantAnimation* hover_anim_{nullptr};  ///< Zoom-in/out animation.
     QVariantAnimation* ripple_anim_{nullptr}; ///< Ripple expansion animation.

@@ -29,7 +29,7 @@ namespace cf::desktop::desktop_component {
 struct AppEntry {
     QString app_id;         ///< Stable unique identifier (e.g. "terminal").
     QString display_name;   ///< Human-readable label (initial is drawn on the tile).
-    QString icon_path;      ///< Optional icon resource path (empty -> use initial).
+    QString icon_path;      ///< Icon resource path; empty leaves the tile blank (no fallback).
     QString exec_command;   ///< Launch command consumed later by QProcess.
     bool is_running{false}; ///< Whether the app currently has a live window.
 };

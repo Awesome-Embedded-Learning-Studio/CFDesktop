@@ -2,8 +2,8 @@
  * @file start_button.cpp
  * @brief Start affordance widget implementation.
  *
- * Renders the leading taskbar tile as a rounded-square bearing a fixed app-grid
- * glyph (a 2x2 block of rounded squares). The tile zooms on hover
+ * Renders the leading taskbar tile as a rounded-square bearing a tinted start
+ * icon. The tile zooms on hover
  * (QVariantAnimation), plays a self-drawn press ripple, and emits clicked() on
  * release. All rendering is QPainter-native, mirroring TaskbarIcon so it builds
  * everywhere.
@@ -44,11 +44,6 @@ constexpr int kHoverDurationMs = 150;  ///< Hover zoom duration (ms).
 constexpr int kRippleDurationMs = 350; ///< Ripple expansion duration (ms).
 constexpr int kRippleAlpha = 90;       ///< Peak ripple overlay alpha.
 constexpr int kHoverOverlayAlpha = 24; ///< Hover state-layer alpha.
-
-// App-grid glyph geometry: a 2x2 block of small rounded squares.
-constexpr qreal kGlyphCell = 9.0;   ///< Edge of one glyph square (px).
-constexpr qreal kGlyphGap = 4.0;    ///< Gap between glyph squares (px).
-constexpr qreal kGlyphRadius = 2.0; ///< Corner radius of a glyph square (px).
 } // namespace
 
 StartButton::StartButton(QWidget* parent) : QWidget(parent) {
@@ -99,24 +94,13 @@ void StartButton::paintEvent(QPaintEvent* /*event*/) {
         p.drawEllipse(ripple_center_, radius, radius);
     }
 
-    // Start glyph: the tinted icon mask when the asset loaded, else a 2x2 grid.
+    // Start glyph: the tinted icon mask. A missing mask leaves the tile blank
+    // (no silent 2x2-grid fallback) so a broken resource stays obvious.
     if (!icon_mask_.isNull()) {
         const qreal glyph = edge * 0.6;
         const QRectF glyph_rect(c.x() - glyph / 2.0, c.y() - glyph / 2.0, glyph, glyph);
         p.setRenderHint(QPainter::SmoothPixmapTransform, true);
         p.drawPixmap(glyph_rect, icon_mask_, QRectF(0, 0, icon_mask_.width(), icon_mask_.height()));
-    } else {
-        const qreal block = 2.0 * kGlyphCell + kGlyphGap;
-        const QPointF origin(c.x() - block / 2.0, c.y() - block / 2.0);
-        p.setBrush(foreground_color_);
-        for (int row = 0; row < 2; ++row) {
-            for (int col = 0; col < 2; ++col) {
-                const QRectF sq(origin.x() + col * (kGlyphCell + kGlyphGap),
-                                origin.y() + row * (kGlyphCell + kGlyphGap), kGlyphCell,
-                                kGlyphCell);
-                p.drawRoundedRect(sq, kGlyphRadius, kGlyphRadius);
-            }
-        }
     }
 }
 
