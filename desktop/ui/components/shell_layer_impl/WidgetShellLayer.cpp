@@ -33,6 +33,10 @@ QRect WidgetShellLayer::geometry() const {
     return QWidget::geometry();
 }
 
+QImage WidgetShellLayer::currentBackgroundImage() const {
+    return strategy_ ? strategy_->currentBackgroundImage() : QImage{};
+}
+
 void WidgetShellLayer::onAvailableGeometryChanged(const QRect& rect) {
     log::traceftag("WidgetShellLayer", "Available geometry changed: QRect({}, {}, {}, {})",
                    rect.x(), rect.y(), rect.width(), rect.height());

@@ -4,8 +4,8 @@
  *
  * StartButton is the leading taskbar tile that emits clicked() to open the
  * AppLauncher popup. It reuses the TaskbarIcon visual language (rounded tile,
- * hover zoom, press ripple) but draws a fixed app-grid glyph instead of an
- * application initial, and carries no running indicator.
+ * hover zoom, press ripple) but draws a tinted start icon, and carries no
+ * running indicator.
  *
  * @author  Charliechen114514 (chengh1922@mails.jlu.edu.cn)
  * @date    2026-06-26
@@ -17,6 +17,7 @@
 #pragma once
 
 #include <QColor>
+#include <QPixmap>
 #include <QPointF>
 #include <QWidget>
 
@@ -31,7 +32,7 @@ namespace cf::desktop::desktop_component {
 /**
  * @brief  Leading taskbar tile that opens the application launcher.
  *
- * Paints a rounded tile with a fixed app-grid glyph, zooms on hover, plays a
+ * Paints a rounded tile with a tinted start icon, zooms on hover, plays a
  * press ripple, and emits clicked() on a left-button release inside the tile.
  * All colors follow the active Material theme.
  *
@@ -155,6 +156,8 @@ class StartButton final : public QWidget {
   private:
     /// @brief Resolves theme colors, then repaints.
     void applyTheme();
+    /// @brief Rebuilds the tinted start-icon mask from the foreground color.
+    void refreshIcon();
     /// @brief Animates the hover scale toward the resting or hovered value.
     void startHover(bool entering);
     /// @brief Starts an expanding ripple from a center point.
@@ -169,6 +172,7 @@ class StartButton final : public QWidget {
 
     QColor tile_color_;       ///< Tile fill (surface variant).
     QColor foreground_color_; ///< Glyph / overlay color (on surface).
+    QPixmap icon_mask_;       ///< Tinted start glyph; null -> draw the 2x2 grid.
 
     QVariantAnimation* hover_anim_{nullptr};  ///< Zoom-in/out animation.
     QVariantAnimation* ripple_anim_{nullptr}; ///< Ripple expansion animation.

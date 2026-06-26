@@ -103,6 +103,35 @@ class CF_DESKTOP_EXPORT CFDesktop final : public QWidget {
   protected:
     void resizeEvent(QResizeEvent* event) override;
 
+    /**
+     * @brief  Forwards desktop position changes to interested shell systems.
+     *
+     * Widget move events are not otherwise observed; window placement (and any
+     * screen-coordinate-relative shell logic) needs to re-evaluate when the
+     * desktop widget is dragged, so this emits geometryChanged().
+     *
+     * @param[in] event  The move event descriptor.
+     *
+     * @throws None
+     * @since  0.20
+     * @ingroup desktop_ui
+     */
+    void moveEvent(QMoveEvent* event) override;
+
+  signals:
+    /**
+     * @brief  Emitted when the desktop widget moves (position changes).
+     *
+     * Resize is already covered by PanelManager::availableGeometryChanged
+     * (relayout); this signal covers the pure-position case so screen-coordinate
+     * dependents (e.g. window placement) can re-evaluate when the desktop is
+     * dragged without changing size.
+     *
+     * @since 0.20
+     * @ingroup desktop_ui
+     */
+    void geometryChanged();
+
   private:
     aex::WeakPtrFactory<CFDesktop> weak_ptr_factory_;
 };

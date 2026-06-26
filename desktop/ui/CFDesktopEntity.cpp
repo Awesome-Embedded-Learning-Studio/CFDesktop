@@ -4,6 +4,7 @@
 #include "IDesktopDisplaySizeStrategy.h"
 #include "IDesktopPropertyStrategy.h"
 #include "aex/weak_ptr/weak_ptr.h"
+#include "cfconfig.hpp"
 #include "cflog.h"
 #include "components/DisplayServerBackendFactory.h"
 #include "components/IDisplayServerBackend.h"
@@ -13,6 +14,7 @@
 #include "components/launcher/app_launcher.h"
 #include "components/statusbar/status_bar.h"
 #include "components/taskbar/centered_taskbar.h"
+#include "components/window_placement/window_placement_policy.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include "platform/display_backend_helper.h"
 #include "platform/shell_layer_helper.h"
@@ -104,12 +106,64 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     res.shell_layer_ = shell;
     desktop_entity_->register_desktop_resources(res);
 
-    // Connect PanelManager geometry changes to ShellLayer
+    // Connect PanelManager geometry changes to ShellLayer. The wallpaper shell
+    // spans the FULL host geometry (not the panel-reduced central rect) so it
+    // renders continuously behind the top/bottom bars; each bar composites a
+    // frosted copy of the strip directly behind it. The launcher popup still
+    // uses PanelManager::availableGeometry() (the central-rect getter), which is
+    // independent and unaffected.
     QObject::connect(panel_mgr, &PanelManager::availableGeometryChanged, desktop_entity_,
-                     [shell](const QRect& r) { shell->onAvailableGeometryChanged(r); });
+                     [shell, this](const QRect&) {
+                         shell->onAvailableGeometryChanged(desktop_entity_->rect());
+                     });
+
+    // Re-constrain every tracked external window into the current screen-space
+    // work area. The work area is PanelManager's local central rect translated
+    // to screen coordinates (window->geometry() is root-relative), so it stays
+    // correct when the desktop is MOVED, not only resized. Shared by the two
+    // triggers below: availableGeometryChanged (desktop resized / panels
+    // relaid out) and geometryChanged (desktop moved without resizing) — the
+    // back-propagation that was missing for the drag/move case.
+    auto reconstrain_windows = [panel_mgr, this]() {
+        if (!display_backend_) {
+            return;
+        }
+        auto backend = display_backend_->windowBackend();
+        if (!backend) {
+            return;
+        }
+        namespace cfg = cf::config;
+        const bool enabled = cfg::ConfigStore::instance()
+                                 .domain("window_management")
+                                 .query<bool>(cfg::KeyView{.group = "window_management",
+                                                           .key = "constrain_to_workarea"},
+                                              true);
+        const QRect work = panel_mgr->availableGeometry().translated(desktop_entity_->pos());
+        const cf::desktop::placement::WindowPlacementPolicy policy;
+        int moved = 0;
+        for (const auto& wptr : backend->windows()) {
+            auto* w = wptr.Get();
+            if (w == nullptr) {
+                continue;
+            }
+            const QRect before = w->geometry();
+            policy.constrain(*w, work, enabled);
+            if (w->geometry() != before) {
+                ++moved;
+            }
+        }
+        if (moved > 0) {
+            cf::log::infoftag("WindowPlacement",
+                              "re-constrained {} window(s) into screen work area {}", moved, work);
+        }
+    };
+    QObject::connect(panel_mgr, &PanelManager::availableGeometryChanged, this,
+                     [reconstrain_windows](const QRect&) { reconstrain_windows(); });
+    QObject::connect(desktop_entity_, &CFDesktop::geometryChanged, this, reconstrain_windows);
 
     // ── Status bar: top-edge panel (clock + system icons) ──
     auto* status_bar = new cf::desktop::desktop_component::StatusBar(desktop_entity_);
+    status_bar->setBackdropSource(shell);
     panel_mgr->registerPanel(status_bar->GetWeak());
     status_bar->show();
 
@@ -125,12 +179,52 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
         }
     }
 
+    // ── Window placement: constrain launched windows into the work area ──
+    // On each external window appearance, clamp it inside the central work area
+    // (between the status bar and the taskbar) so it neither overlaps a bar nor
+    // flies off-screen, mirroring a real desktop WM. The policy is stateless, so
+    // a temporary is fine here. Runtime toggle via config domain
+    // "window_management" / key "constrain_to_workarea" (default on), read per
+    // appearance so flipping the config needs no restart.
+    if (display_backend_) {
+        if (auto window_backend = display_backend_->windowBackend()) {
+            QObject::connect(
+                window_backend.Get(), &cf::desktop::IWindowBackend::window_came, this,
+                [panel_mgr, this](aex::WeakPtr<cf::desktop::IWindow> win) {
+                    if (!win) {
+                        cf::log::warningftag("WindowPlacement", "window_came with null window");
+                        return;
+                    }
+                    auto* w = win.Get();
+                    namespace cfg = cf::config;
+                    const bool enabled =
+                        cfg::ConfigStore::instance()
+                            .domain("window_management")
+                            .query<bool>(cfg::KeyView{.group = "window_management",
+                                                      .key = "constrain_to_workarea"},
+                                         true);
+                    const QRect work =
+                        panel_mgr->availableGeometry().translated(desktop_entity_->pos());
+                    const QRect cur = w->geometry();
+                    const auto target =
+                        cf::desktop::placement::WindowPlacementPolicy{}.computeConstrain(cur, work,
+                                                                                         enabled);
+                    if (target.has_value()) {
+                        w->set_geometry(*target);
+                        cf::log::infoftag("WindowPlacement", "constrained '{}' {} -> {}",
+                                          w->title().toStdString(), cur, *target);
+                    }
+                });
+        }
+    }
+
     // ── Taskbar: bottom-edge panel (centered app icons) ──
     // apps is captured by the click handler to resolve app_id -> exec_command.
     const QList<cf::desktop::desktop_component::AppEntry> apps =
         cf::desktop::desktop_component::defaultApps();
     auto* taskbar = new cf::desktop::desktop_component::CenteredTaskbar(desktop_entity_);
     taskbar->setApps(apps);
+    taskbar->setBackdropSource(shell);
     panel_mgr->registerPanel(taskbar->GetWeak());
     // Shared launch path: resolve app_id -> exec, launch, capture PID. Used by
     // both the taskbar tile click and the launcher popup so the running-state

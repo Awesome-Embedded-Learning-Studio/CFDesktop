@@ -13,6 +13,7 @@
 #include "cflog.h"
 #include "components/PanelManager.h"
 
+#include <QMoveEvent>
 #include <QResizeEvent>
 
 namespace cf::desktop {
@@ -37,6 +38,14 @@ void CFDesktop::resizeEvent(QResizeEvent* event) {
         log::trace("CFDesktop Resized, Panel Manager handle the layouts, calling relayout...");
         panel_manager_->relayout();
     }
+}
+
+void CFDesktop::moveEvent(QMoveEvent* event) {
+    QWidget::moveEvent(event);
+    // A pure position change (drag) does not alter the local panel layout, so
+    // relayout/availableGeometryChanged will not fire — emit geometryChanged so
+    // screen-coordinate dependents (window placement) re-evaluate.
+    emit geometryChanged();
 }
 
 bool CFDesktop::component_available(const DesktopComponent d) const noexcept {

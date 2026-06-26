@@ -3,6 +3,7 @@ add_library(cfdesktop_taskbar STATIC
     centered_taskbar.cpp
     start_button.cpp
     taskbar_icon.cpp
+    taskbar_icons.qrc
 )
 
 target_include_directories(cfdesktop_taskbar PUBLIC
@@ -18,4 +19,6 @@ PUBLIC
 PRIVATE
     Qt6::Widgets
     cfbase         # WeakPtr / WeakPtrFactory
+    cflogger       # Diagnostic logging for null-backdrop fallback
+    cfdesktop_frosted_backdrop  # Frosted-glass backdrop renderer
 )

@@ -16,9 +16,10 @@
 
 #include "taskbar_icon.h"
 
+#include "icon_mask.h"
+
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "core/token/typography/cfmaterial_typography_token_literals.h"
 
 #include <QEasingCurve>
 #include <QEnterEvent>
@@ -40,7 +41,6 @@ constexpr qreal kHoverScale = 1.2;     ///< Scale factor when hovered.
 constexpr qreal kIconRadius = 10.0;    ///< Tile corner radius (px).
 constexpr qreal kDotRadius = 2.5;      ///< Running-indicator dot radius (px).
 constexpr qreal kDotOffset = 6.0;      ///< Dot offset below the tile (px).
-constexpr int kLabelPixelSize = 18;    ///< Initial letter font size (px).
 constexpr int kHoverDurationMs = 150;  ///< Hover zoom duration (ms).
 constexpr int kRippleDurationMs = 350; ///< Ripple expansion duration (ms).
 constexpr int kRippleAlpha = 90;       ///< Peak ripple overlay alpha.
@@ -54,12 +54,15 @@ TaskbarIcon::TaskbarIcon(AppEntry entry, QWidget* parent)
     setAutoFillBackground(false);
     setupAnimations();
     applyTheme();
+    setToolTip(entry_.display_name);
 }
 
 TaskbarIcon::~TaskbarIcon() = default;
 
 void TaskbarIcon::setEntry(const AppEntry& entry) {
     entry_ = entry;
+    setToolTip(entry_.display_name);
+    refreshIcon();
     update();
 }
 
@@ -107,13 +110,14 @@ void TaskbarIcon::paintEvent(QPaintEvent* /*event*/) {
         p.drawEllipse(ripple_center_, radius, radius);
     }
 
-    // Initial letter.
-    p.setPen(foreground_color_);
-    p.setFont(label_font_);
-    const QString letter = entry_.display_name.isEmpty()
-                               ? QStringLiteral("?")
-                               : QString(entry_.display_name.at(0)).toUpper();
-    p.drawText(tile, Qt::AlignCenter, letter);
+    // App glyph: the tinted icon mask. A missing mask leaves the tile blank
+    // (no silent letter fallback) so a broken resource stays obvious.
+    if (!icon_mask_.isNull()) {
+        const qreal glyph = edge * 0.6;
+        const QRectF glyph_rect(c.x() - glyph / 2.0, c.y() - glyph / 2.0, glyph, glyph);
+        p.setRenderHint(QPainter::SmoothPixmapTransform, true);
+        p.drawPixmap(glyph_rect, icon_mask_, QRectF(0, 0, icon_mask_.width(), icon_mask_.height()));
+    }
 
     // Running indicator dot near the tile bottom.
     if (running_) {
@@ -161,17 +165,18 @@ void TaskbarIcon::applyTheme() {
         tile_color_ = cs.queryColor(SURFACE_VARIANT);
         foreground_color_ = cs.queryColor(ON_SURFACE);
         indicator_color_ = cs.queryColor(ON_SURFACE_VARIANT);
-        label_font_ = theme.font_type().queryTargetFont(TYPOGRAPHY_TITLE_MEDIUM);
-        label_font_.setPixelSize(kLabelPixelSize);
     } catch (...) {
         // Fallback palette when no theme is registered yet.
         tile_color_ = QColor(0xE7, 0xE0, 0xEC);
         foreground_color_ = QColor(0x1C, 0x1B, 0x1F);
         indicator_color_ = QColor(0x49, 0x45, 0x4E);
-        label_font_ = font();
-        label_font_.setPixelSize(kLabelPixelSize);
     }
+    refreshIcon();
     update();
+}
+
+void TaskbarIcon::refreshIcon() {
+    icon_mask_ = tintedIconMask(entry_.icon_path, foreground_color_);
 }
 
 void TaskbarIcon::startHover(bool entering) {

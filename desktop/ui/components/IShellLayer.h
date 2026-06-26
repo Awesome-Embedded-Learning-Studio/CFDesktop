@@ -19,6 +19,7 @@
 #pragma once
 
 #include "IShellLayerStrategy.h"
+#include <QImage>
 #include <QRect>
 #include <memory>
 
@@ -70,6 +71,17 @@ class IShellLayer {
      * @param[in]  available  The new available geometry rectangle.
      */
     virtual void onAvailableGeometryChanged(const QRect& available) = 0;
+
+    /**
+     * @brief  Returns the current background image, if any.
+     *
+     * The default returns a null QImage. Implementations backed by a wallpaper
+     * strategy delegate to it. Shell panels use this to composite a frosted
+     * copy of the backdrop (e.g. the status bar and taskbar acrylic surfaces).
+     *
+     * @return Current background image, or a null QImage when none is available.
+     */
+    virtual QImage currentBackgroundImage() const { return {}; }
 };
 
 } // namespace cf::desktop

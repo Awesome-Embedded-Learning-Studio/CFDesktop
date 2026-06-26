@@ -29,7 +29,7 @@ namespace cf::desktop::desktop_component {
 struct AppEntry {
     QString app_id;         ///< Stable unique identifier (e.g. "terminal").
     QString display_name;   ///< Human-readable label (initial is drawn on the tile).
-    QString icon_path;      ///< Optional icon resource path (empty -> use initial).
+    QString icon_path;      ///< Icon resource path; empty leaves the tile blank (no fallback).
     QString exec_command;   ///< Launch command consumed later by QProcess.
     bool is_running{false}; ///< Whether the app currently has a live window.
 };
@@ -49,13 +49,15 @@ struct AppEntry {
  */
 inline QList<AppEntry> defaultApps() {
     return {
-        {QStringLiteral("files"), QStringLiteral("Files"), QString{}, QStringLiteral("xdg-open ."),
+        {QStringLiteral("files"), QStringLiteral("Files"),
+         QStringLiteral(":/cfdesktop/taskbar/files.png"), QStringLiteral("xdg-open ."), false},
+        {QStringLiteral("terminal"), QStringLiteral("Terminal"),
+         QStringLiteral(":/cfdesktop/taskbar/terminal.png"), QStringLiteral("xterm"), false},
+        {QStringLiteral("settings"), QStringLiteral("Settings"),
+         QStringLiteral(":/cfdesktop/taskbar/settings.png"), QStringLiteral("cfdesktop-settings"),
          false},
-        {QStringLiteral("terminal"), QStringLiteral("Terminal"), QString{}, QStringLiteral("xterm"),
-         false},
-        {QStringLiteral("settings"), QStringLiteral("Settings"), QString{},
-         QStringLiteral("cfdesktop-settings"), false},
-        {QStringLiteral("browser"), QStringLiteral("Browser"), QString{},
+        {QStringLiteral("browser"), QStringLiteral("Browser"),
+         QStringLiteral(":/cfdesktop/taskbar/browser.png"),
          QStringLiteral("xdg-open https://example.com"), false},
     };
 }

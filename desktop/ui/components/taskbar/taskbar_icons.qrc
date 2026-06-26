@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/cfdesktop/taskbar">
+        <file alias="files.png">icons/files.png</file>
+        <file alias="terminal.png">icons/terminal.png</file>
+        <file alias="settings.png">icons/settings.png</file>
+        <file alias="browser.png">icons/browser.png</file>
+        <file alias="start.png">icons/start.png</file>
+    </qresource>
+</RCC>

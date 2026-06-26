@@ -19,14 +19,29 @@
 #include "start_button.h"
 #include "taskbar_icon.h"
 
+#include "cflog.h"
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 
+#include <QGuiApplication>
 #include <QHBoxLayout>
 #include <QLayoutItem>
 #include <QLinearGradient>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QResizeEvent>
+#include <QTimer>
+
+// Q_INIT_RESOURCE must run at global scope: the rcc-generated registration
+// function lives in the global namespace, but the macro's extern declaration is
+// emitted in the surrounding scope, so calling it from inside
+// cf::desktop::desktop_component would look up a namespaced symbol that does
+// not exist and fail to link. Without this the taskbar_icons.qrc object is
+// dropped from the static archive at link time and ":/cfdesktop/taskbar/*.png"
+// lookups silently return null (icons render blank).
+static void registerTaskbarIconsResource() {
+    Q_INIT_RESOURCE(taskbar_icons);
+}
 
 namespace cf::desktop::desktop_component {
 
@@ -34,15 +49,17 @@ using cf::desktop::PanelPosition;
 using namespace qw::core::token::literals;
 
 namespace {
-constexpr int kTaskbarHeight = 64;    ///< Bar thickness (px).
-constexpr int kSideMargin = 12;       ///< Horizontal padding (px).
-constexpr int kTopBottomMargin = 4;   ///< Vertical padding (px).
-constexpr int kIconSpacing = 8;       ///< Gap between tiles (px).
-constexpr int kStartButtonGap = 16;   ///< Gap after the start button (px).
-constexpr qreal kSurfaceAlpha = 0.92; ///< Surface fill opacity.
+constexpr int kTaskbarHeight = 64;      ///< Bar thickness (px).
+constexpr int kSideMargin = 12;         ///< Horizontal padding (px).
+constexpr int kTopBottomMargin = 4;     ///< Vertical padding (px).
+constexpr int kIconSpacing = 8;         ///< Gap between tiles (px).
+constexpr int kStartButtonGap = 16;     ///< Gap after the start button (px).
+constexpr qreal kSurfaceAlpha = 0.92;   ///< Flat-fallback surface opacity (null backdrop).
+constexpr qreal kFrostTintAlpha = 0.60; ///< Frosted-glass tint opacity (wallpaper bleed).
 } // namespace
 
 CenteredTaskbar::CenteredTaskbar(QWidget* parent) : QWidget(parent) {
+    registerTaskbarIconsResource();
     setAttribute(Qt::WA_OpaquePaintEvent);
     setAutoFillBackground(false);
     setFixedHeight(kTaskbarHeight);
@@ -71,6 +88,23 @@ void CenteredTaskbar::setupUi() {
     layout_->addLayout(icon_layout_);
     layout_->addStretch();
 
+    // Coalesce rapid resizes (e.g. a window drag) into a single frosted-backdrop
+    // reblur instead of rebuilding on every intermediate geometry.
+    reblur_debounce_ = new QTimer(this);
+    reblur_debounce_->setSingleShot(true);
+    reblur_debounce_->setInterval(80);
+    connect(reblur_debounce_, &QTimer::timeout, this, [this]() {
+        frosted_.invalidate();
+        update();
+    });
+
+    // A screen change (different monitor / device-pixel-ratio) invalidates the
+    // backdrop cache; devicePixelRatioF() is also part of the cache key.
+    connect(qApp, &QGuiApplication::primaryScreenChanged, this, [this]() {
+        frosted_.invalidate();
+        update();
+    });
+
     // React to theme switches (ThemeManager is the canonical source).
     connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
             [this](const qw::core::ICFTheme&) { applyTheme(); });
@@ -88,6 +122,10 @@ void CenteredTaskbar::applyTheme() {
         background_color_ = QColor(0xF7, 0xF5, 0xF3);
         divider_color_ = QColor(0xCA, 0xC4, 0xD0);
     }
+    frosted_params_.tint = background_color_;
+    frosted_params_.tint_alpha = kFrostTintAlpha;
+    frosted_params_.top_highlight = false;
+    frosted_.invalidate();
     update();
 }
 
@@ -136,15 +174,52 @@ void CenteredTaskbar::updateRunningState(const QString& app_id, bool running) {
     }
 }
 
+// -- Backdrop --------------------------------------------------------------
+void CenteredTaskbar::setBackdropSource(cf::desktop::IShellLayer* source) {
+    backdrop_source_ = source;
+    frosted_.invalidate();
+    update();
+}
+
+void CenteredTaskbar::resizeEvent(QResizeEvent* event) {
+    QWidget::resizeEvent(event);
+    // Debounce: collapse a burst of resizes (e.g. a window drag) into one
+    // frosted-backdrop reblur rather than rebuilding on every intermediate size.
+    if (reblur_debounce_ != nullptr) {
+        reblur_debounce_->start();
+    }
+}
+
 // -- Painting --------------------------------------------------------------
 void CenteredTaskbar::paintEvent(QPaintEvent* /*event*/) {
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing, true);
 
-    // Translucent surface.
-    QColor bg = background_color_;
-    bg.setAlphaF(kSurfaceAlpha);
-    p.fillRect(rect(), bg);
+    // Frosted-glass backdrop: blurred wallpaper strip + surface tint + acrylic
+    // grain. tint_alpha (~0.6) is deliberately lower than the old flat 0.92 so
+    // the blur reads through; a fully opaque tint would hide the effect.
+    const QImage backdrop =
+        backdrop_source_ != nullptr ? backdrop_source_->currentBackgroundImage() : QImage{};
+    const QRect strip = geometry();
+    if (!backdrop.isNull() && !strip.isEmpty()) {
+        p.drawPixmap(0, 0, frosted_.render(backdrop, strip, devicePixelRatioF(), frosted_params_));
+        backdrop_null_warned_ = false;
+    } else {
+        // Flat fallback (e.g. before the wallpaper loads). Fail loud, once.
+        QColor bg = background_color_;
+        bg.setAlphaF(kSurfaceAlpha);
+        p.fillRect(rect(), bg);
+        if (!backdrop_null_warned_) {
+            backdrop_null_warned_ = true;
+            cf::log::warningftag("CenteredTaskbar", "backdrop image null; using flat fallback");
+        }
+    }
+
+    // Soft top elevation shadow: the bar reads as floating above the shell.
+    QLinearGradient shadow(0, 0, 0, height() * 0.5);
+    shadow.setColorAt(0.0, QColor(0, 0, 0, 38));
+    shadow.setColorAt(1.0, QColor(0, 0, 0, 0));
+    p.fillRect(QRectF(0, 0, width(), height() * 0.5), shadow);
 
     // Horizontally-faded top hairline, mirroring the status bar seam.
     QColor lineMid = divider_color_;
