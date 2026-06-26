@@ -20,6 +20,7 @@
 
 #include <QColor>
 #include <QFont>
+#include <QPixmap>
 #include <QPointF>
 #include <QString>
 #include <QWidget>
@@ -200,6 +201,8 @@ class TaskbarIcon final : public QWidget {
   private:
     /// @brief Resolves theme colors and typography, then repaints.
     void applyTheme();
+    /// @brief Rebuilds the tinted icon mask from the entry path and foreground.
+    void refreshIcon();
     /// @brief Animates the hover scale toward the resting or hovered value.
     void startHover(bool entering);
     /// @brief Starts an expanding ripple from a center point.
@@ -218,6 +221,7 @@ class TaskbarIcon final : public QWidget {
     QColor foreground_color_; ///< Initial text color (on surface).
     QColor indicator_color_;  ///< Running dot color (on surface variant).
     QFont label_font_;        ///< Font used for the initial letter.
+    QPixmap icon_mask_;       ///< Tinted icon pixmap; null -> draw the initial letter.
 
     QVariantAnimation* hover_anim_{nullptr};  ///< Zoom-in/out animation.
     QVariantAnimation* ripple_anim_{nullptr}; ///< Ripple expansion animation.

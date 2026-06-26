@@ -17,6 +17,8 @@
 
 #include "start_button.h"
 
+#include "icon_mask.h"
+
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 
@@ -55,6 +57,7 @@ StartButton::StartButton(QWidget* parent) : QWidget(parent) {
     setAutoFillBackground(false);
     setupAnimations();
     applyTheme();
+    setToolTip(QStringLiteral("Start"));
 }
 
 StartButton::~StartButton() = default;
@@ -96,15 +99,23 @@ void StartButton::paintEvent(QPaintEvent* /*event*/) {
         p.drawEllipse(ripple_center_, radius, radius);
     }
 
-    // App-grid glyph: 2x2 of small rounded squares, centered on the tile.
-    const qreal block = 2.0 * kGlyphCell + kGlyphGap;
-    const QPointF origin(c.x() - block / 2.0, c.y() - block / 2.0);
-    p.setBrush(foreground_color_);
-    for (int row = 0; row < 2; ++row) {
-        for (int col = 0; col < 2; ++col) {
-            const QRectF sq(origin.x() + col * (kGlyphCell + kGlyphGap),
-                            origin.y() + row * (kGlyphCell + kGlyphGap), kGlyphCell, kGlyphCell);
-            p.drawRoundedRect(sq, kGlyphRadius, kGlyphRadius);
+    // Start glyph: the tinted icon mask when the asset loaded, else a 2x2 grid.
+    if (!icon_mask_.isNull()) {
+        const qreal glyph = edge * 0.6;
+        const QRectF glyph_rect(c.x() - glyph / 2.0, c.y() - glyph / 2.0, glyph, glyph);
+        p.setRenderHint(QPainter::SmoothPixmapTransform, true);
+        p.drawPixmap(glyph_rect, icon_mask_, QRectF(0, 0, icon_mask_.width(), icon_mask_.height()));
+    } else {
+        const qreal block = 2.0 * kGlyphCell + kGlyphGap;
+        const QPointF origin(c.x() - block / 2.0, c.y() - block / 2.0);
+        p.setBrush(foreground_color_);
+        for (int row = 0; row < 2; ++row) {
+            for (int col = 0; col < 2; ++col) {
+                const QRectF sq(origin.x() + col * (kGlyphCell + kGlyphGap),
+                                origin.y() + row * (kGlyphCell + kGlyphGap), kGlyphCell,
+                                kGlyphCell);
+                p.drawRoundedRect(sq, kGlyphRadius, kGlyphRadius);
+            }
         }
     }
 }
@@ -150,7 +161,12 @@ void StartButton::applyTheme() {
         tile_color_ = QColor(0xE7, 0xE0, 0xEC);
         foreground_color_ = QColor(0x1C, 0x1B, 0x1F);
     }
+    refreshIcon();
     update();
+}
+
+void StartButton::refreshIcon() {
+    icon_mask_ = tintedIconMask(QStringLiteral(":/cfdesktop/taskbar/start.png"), foreground_color_);
 }
 
 void StartButton::startHover(bool entering) {

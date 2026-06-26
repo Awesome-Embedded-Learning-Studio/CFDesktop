@@ -16,6 +16,8 @@
 
 #include "taskbar_icon.h"
 
+#include "icon_mask.h"
+
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 #include "core/token/typography/cfmaterial_typography_token_literals.h"
@@ -54,12 +56,15 @@ TaskbarIcon::TaskbarIcon(AppEntry entry, QWidget* parent)
     setAutoFillBackground(false);
     setupAnimations();
     applyTheme();
+    setToolTip(entry_.display_name);
 }
 
 TaskbarIcon::~TaskbarIcon() = default;
 
 void TaskbarIcon::setEntry(const AppEntry& entry) {
     entry_ = entry;
+    setToolTip(entry_.display_name);
+    refreshIcon();
     update();
 }
 
@@ -107,13 +112,20 @@ void TaskbarIcon::paintEvent(QPaintEvent* /*event*/) {
         p.drawEllipse(ripple_center_, radius, radius);
     }
 
-    // Initial letter.
-    p.setPen(foreground_color_);
-    p.setFont(label_font_);
-    const QString letter = entry_.display_name.isEmpty()
-                               ? QStringLiteral("?")
-                               : QString(entry_.display_name.at(0)).toUpper();
-    p.drawText(tile, Qt::AlignCenter, letter);
+    // App glyph: the tinted icon mask when an asset exists, else the initial.
+    if (!icon_mask_.isNull()) {
+        const qreal glyph = edge * 0.6;
+        const QRectF glyph_rect(c.x() - glyph / 2.0, c.y() - glyph / 2.0, glyph, glyph);
+        p.setRenderHint(QPainter::SmoothPixmapTransform, true);
+        p.drawPixmap(glyph_rect, icon_mask_, QRectF(0, 0, icon_mask_.width(), icon_mask_.height()));
+    } else {
+        p.setPen(foreground_color_);
+        p.setFont(label_font_);
+        const QString letter = entry_.display_name.isEmpty()
+                                   ? QStringLiteral("?")
+                                   : QString(entry_.display_name.at(0)).toUpper();
+        p.drawText(tile, Qt::AlignCenter, letter);
+    }
 
     // Running indicator dot near the tile bottom.
     if (running_) {
@@ -171,7 +183,12 @@ void TaskbarIcon::applyTheme() {
         label_font_ = font();
         label_font_.setPixelSize(kLabelPixelSize);
     }
+    refreshIcon();
     update();
+}
+
+void TaskbarIcon::refreshIcon() {
+    icon_mask_ = tintedIconMask(entry_.icon_path, foreground_color_);
 }
 
 void TaskbarIcon::startHover(bool entering) {

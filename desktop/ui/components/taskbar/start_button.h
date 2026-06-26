@@ -17,6 +17,7 @@
 #pragma once
 
 #include <QColor>
+#include <QPixmap>
 #include <QPointF>
 #include <QWidget>
 
@@ -155,6 +156,8 @@ class StartButton final : public QWidget {
   private:
     /// @brief Resolves theme colors, then repaints.
     void applyTheme();
+    /// @brief Rebuilds the tinted start-icon mask from the foreground color.
+    void refreshIcon();
     /// @brief Animates the hover scale toward the resting or hovered value.
     void startHover(bool entering);
     /// @brief Starts an expanding ripple from a center point.
@@ -169,6 +172,7 @@ class StartButton final : public QWidget {
 
     QColor tile_color_;       ///< Tile fill (surface variant).
     QColor foreground_color_; ///< Glyph / overlay color (on surface).
+    QPixmap icon_mask_;       ///< Tinted start glyph; null -> draw the 2x2 grid.
 
     QVariantAnimation* hover_anim_{nullptr};  ///< Zoom-in/out animation.
     QVariantAnimation* ripple_anim_{nullptr}; ///< Ripple expansion animation.

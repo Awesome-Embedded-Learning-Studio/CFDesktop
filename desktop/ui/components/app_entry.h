@@ -49,13 +49,15 @@ struct AppEntry {
  */
 inline QList<AppEntry> defaultApps() {
     return {
-        {QStringLiteral("files"), QStringLiteral("Files"), QString{}, QStringLiteral("xdg-open ."),
+        {QStringLiteral("files"), QStringLiteral("Files"),
+         QStringLiteral(":/cfdesktop/taskbar/files.png"), QStringLiteral("xdg-open ."), false},
+        {QStringLiteral("terminal"), QStringLiteral("Terminal"),
+         QStringLiteral(":/cfdesktop/taskbar/terminal.png"), QStringLiteral("xterm"), false},
+        {QStringLiteral("settings"), QStringLiteral("Settings"),
+         QStringLiteral(":/cfdesktop/taskbar/settings.png"), QStringLiteral("cfdesktop-settings"),
          false},
-        {QStringLiteral("terminal"), QStringLiteral("Terminal"), QString{}, QStringLiteral("xterm"),
-         false},
-        {QStringLiteral("settings"), QStringLiteral("Settings"), QString{},
-         QStringLiteral("cfdesktop-settings"), false},
-        {QStringLiteral("browser"), QStringLiteral("Browser"), QString{},
+        {QStringLiteral("browser"), QStringLiteral("Browser"),
+         QStringLiteral(":/cfdesktop/taskbar/browser.png"),
          QStringLiteral("xdg-open https://example.com"), false},
     };
 }
