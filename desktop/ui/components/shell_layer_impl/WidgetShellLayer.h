@@ -60,6 +60,16 @@ class WidgetShellLayer : public QWidget, public IShellLayer {
      */
     QRect geometry() const override;
 
+    /**
+     * @brief  Returns the active strategy's background image, if any.
+     *
+     * Delegates to the installed strategy's currentBackgroundImage() so shell
+     * panels can composite a frosted copy of the wallpaper backdrop.
+     *
+     * @return Wallpaper image from the strategy, or null when no strategy.
+     */
+    QImage currentBackgroundImage() const override;
+
     // -- Weak reference -------------------------------------------------------
     /**
      * @brief  Returns a weak pointer to this shell layer.

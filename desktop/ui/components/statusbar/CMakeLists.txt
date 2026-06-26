@@ -18,4 +18,5 @@ PRIVATE
     Qt6::Widgets
     cfbase         # WeakPtr / WeakPtrFactory
     cflogger       # Diagnostic logging for icon-mask loading
+    cfdesktop_frosted_backdrop  # Frosted-glass backdrop renderer
 )

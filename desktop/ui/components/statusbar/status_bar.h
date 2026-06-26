@@ -18,6 +18,8 @@
 #include "IStatusBar.h"
 #include "aex/weak_ptr/weak_ptr.h"
 #include "aex/weak_ptr/weak_ptr_factory.h"
+#include "components/IShellLayer.h"
+#include "components/frosted_backdrop/frosted_backdrop.h"
 
 #include <QColor>
 #include <QFont>
@@ -209,6 +211,17 @@ class StatusBar final : public QWidget, public IStatusBar {
      */
     aex::WeakPtr<StatusBar> GetWeak() const { return weak_factory_.GetWeakPtr(); }
 
+    /**
+     * @brief  Sets the backdrop source for the frosted-glass surface.
+     *
+     * @param[in] source  Shell layer supplying the wallpaper image (non-owning).
+     *
+     * @throws None
+     * @note   @p source must outlive this status bar.
+     * @since  0.20
+     */
+    void setBackdropSource(cf::desktop::IShellLayer* source);
+
   protected:
     /**
      * @brief  Paints the background, clock, and icon glyphs.
@@ -222,6 +235,16 @@ class StatusBar final : public QWidget, public IStatusBar {
      * @ingroup components
      */
     void paintEvent(QPaintEvent* event) override;
+
+    /**
+     * @brief  Coalesces geometry changes into a debounced backdrop reblur.
+     *
+     * @param[in] event  The resize event descriptor.
+     *
+     * @throws None
+     * @since  0.20
+     */
+    void resizeEvent(QResizeEvent* event) override;
 
   private slots:
     /// @brief Refreshes the clock text each second.
@@ -270,6 +293,17 @@ class StatusBar final : public QWidget, public IStatusBar {
     /// Cached monochrome icon masks (index = StatusIcon). Null entries fall
     /// back to vector drawing in paintEvent.
     QPixmap icon_masks_[4];
+
+    /// Shell layer backing the frosted surface (non-owning; may be null).
+    cf::desktop::IShellLayer* backdrop_source_{nullptr};
+    /// Frosted-glass renderer with its own cache (one instance per bar).
+    cf::desktop::FrostedBackdrop frosted_;
+    /// Resolved frosted parameters; the tint tracks the active theme surface.
+    cf::desktop::FrostedParams frosted_params_{};
+    /// Coalesces rapid resizes into a single backdrop reblur. Ownership: this.
+    QTimer* reblur_debounce_{nullptr};
+    /// Guards the null-backdrop warning so it fires once per transition.
+    bool backdrop_null_warned_{false};
 
     /// Weak pointer factory (must be the last member).
     mutable aex::WeakPtrFactory<StatusBar> weak_factory_{this};

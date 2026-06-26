@@ -3,3 +3,9 @@ log_info("test_desktop" "Configuring desktop module tests:")
 
 # Add init tests subdirectory
 add_subdirectory(init)
+
+# Add frosted backdrop tests subdirectory
+add_subdirectory(frosted_backdrop)
+
+# Add window placement tests subdirectory
+add_subdirectory(window_placement)
