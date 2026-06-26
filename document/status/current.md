@@ -10,7 +10,7 @@ description: CFDesktop 项目进度的唯一事实来源与全局导航。
 
 # CFDesktop 当前项目状态
 
-> **校准日期**：2026-06-15　|　**版本**：0.19.0
+> **校准日期**：2026-06-26　|　**版本**：0.19.0
 > **本文件是项目进度的唯一事实来源（single source of truth）。** 其他位置一律指向此处，勿另行手抄。
 
 ## 项目导航（各信息去哪看）
@@ -48,11 +48,13 @@ description: CFDesktop 项目进度的唯一事实来源与全局导航。
 ## 下一步路线（最小闭环先行）
 
 1. **MS2 状态栏**（顶部时间 + 系统图标）— ✅ 功能落地（`StatusBar` 实现 + 注册 PanelManager + 主题跟随 + MD3 美化；offscreen 启动通过，待真机视觉确认）
-2. **MS3 任务栏**（底部居中图标条 + hover 动画）— 🚧 进行中（最小切片跑通：`CenteredTaskbar` 注册 Bottom 面板 + `TaskbarIcon` 居中图标/hover 放大/自绘 ripple/运行指示器，构建通过；点击反馈先打 log，待接 MS4 真启动）
+2. **MS3 任务栏**（底部居中图标条 + hover 动画）— ✅ 最小切片完成（`CenteredTaskbar` 注册 Bottom 面板 + `TaskbarIcon` 居中图标/hover 放大/自绘 ripple/运行指示器；`appClicked` 已接 `AppLaunchService::launch` 真启动并记 PID，运行指示器经 `WindowManager` 窗口追踪联动——见 `desktop/ui/CFDesktopEntity.cpp:133-180`）
 3. **MS4 应用启动器**（应用网格 + QProcess 启动）— 🚧 进行中（最小启动闭环跑通：`AppLaunchService` 用 `QProcess::startDetached` 启动 taskbar 图标对应应用，点 Files/Browser 可真打开；开始菜单弹窗网格待做）
-4. **MS5 窗口管理**（窗口装饰 + 任务栏联动）— 🚧 进行中（追踪+联动切片跑通：`WindowManager` 追踪外部窗口 + `IWindow::pid()` + Taskbar 运行指示器联动；靠 PID 匹配，直接启动(xterm)可靠、间接启动(xdg-open)受限；窗口装饰/操作因 WSL X11 客户端架构不可行，暂跳过）
+4. **MS5 窗口管理**（窗口装饰 + 任务栏联动）— 🚧 进行中（追踪+联动切片跑通：`WindowManager` 追踪外部窗口 + `IWindow::pid()` + Taskbar 运行指示器联动；靠 PID 匹配，直接启动(xterm)可靠、间接启动(xdg-open)受限；**窗口装饰已定策→overlay 渲染**〔策略 A：CFDesktop 自绘 overlay 层呈现标题栏+控制按钮作纯视觉指示，因 WSL X11 客户端模式下外部窗口由 XWayland 管理无法直接装饰；X11 WM〔B〕/ Wayland Compositor〔C〕延后到 EGLFS/Wayland 后端，详见 [milestone_05](../todo/desktop/milestone_05_window_management.md):157-160〕）
 
-闭环达成后按需推进：HWTier 策略引擎、CrashHandler、IPC、EGLFS 嵌入式后端、输入抽象层、P2/P3 控件。
+闭环达成后按需推进：CrashHandler、IPC、EGLFS 嵌入式后端、输入抽象层、P2/P3 控件。
+
+> **HWTier 优先级决策（2026-06-26）**：检测 + 评分 + 策略覆写**已完成**（Phase 1，`base/system/hardware_tier/`：`IHardwareCollector / Scorer / Assessor / Policy` 全套就绪）。故 [`summary.md`](../todo/desktop/summary.md) 与 [`06_infrastructure.md`](../todo/desktop/06_infrastructure.md) 里「HWTier 0% 🔴、上线前必做」的表述**已过时**——那针对的是 embedded/production 上线。当前 demo / 可见桌面路线：**CapabilityPolicy 策略引擎**（把档位转成动效/渲染/内存降级策略并接入 Shell）**延后**，开发期一律按 High Tier；待 embedded pivot 再接。
 
 ## 最近里程碑（git 可证）
 
