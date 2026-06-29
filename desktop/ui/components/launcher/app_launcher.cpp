@@ -49,12 +49,24 @@ constexpr int kMaxHeight = 540;      ///< Maximum popup height (px).
 } // namespace
 
 AppLauncher::AppLauncher(QWidget* parent) : QWidget(parent) {
-    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint);
+    // Frameless CHILD widget -- deliberately NOT Qt::Popup. On windowless
+    // targets (linuxfb, no compositor / window manager) a Qt::Popup is a
+    // separate top-level window: show() activates it briefly, then the platform
+    // deactivates it (~0.5s later) and Qt::Popup auto-closes on deactivation, so
+    // the start menu flashed and vanished. As a child of the desktop it renders
+    // inside the single desktop window -- no activation fight, no auto-close.
+    // Dismissal is via the start-button toggle, ESC, and tile clicks.
+    setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_OpaquePaintEvent, false);
     setAutoFillBackground(false);
     setupUi();
     applyTheme();
+    // Stay hidden until popup() is called. As a child of the desktop (not a
+    // top-level Qt::Popup), Qt would otherwise auto-show this widget when the
+    // desktop becomes visible -- rendering the tiles at the default (0,0)
+    // geometry on boot, before the user ever clicks Start.
+    hide();
 
     // Follow live theme switches (ThemeManager is the canonical source).
     connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
@@ -82,11 +94,13 @@ void AppLauncher::popup(const QRect& available) {
     const int x = avail.center().x() - w / 2;
     const int y = avail.bottom() - h; // Bottom-aligned: sits just above the taskbar.
 
-    setFixedSize(w, h);
-    move(x, y);
+    // Apply geometry atomically and force the grid to lay tiles out within it.
+    setGeometry(x, y, w, h);
+    if (grid_ != nullptr) {
+        grid_->activate();
+    }
     show();
     raise();
-    activateWindow();
 }
 
 void AppLauncher::hideLauncher() {

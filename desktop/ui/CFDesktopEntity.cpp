@@ -257,7 +257,17 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                      launch_app);
     QObject::connect(
         taskbar, &cf::desktop::desktop_component::CenteredTaskbar::launcherRequested, this,
-        [app_launcher, panel_mgr]() { app_launcher->popup(panel_mgr->availableGeometry()); });
+        [app_launcher, panel_mgr]() {
+            // Toggle: clicking Start while the launcher is open dismisses it,
+            // otherwise pop it up. The start button used to only ever call
+            // popup(), so a second click was a no-op while the menu was already
+            // visible.
+            if (app_launcher->isShowing()) {
+                app_launcher->hideLauncher();
+            } else {
+                app_launcher->popup(panel_mgr->availableGeometry());
+            }
+        });
     taskbar->show();
     panel_mgr->relayout();
 
