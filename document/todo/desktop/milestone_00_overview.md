@@ -47,11 +47,11 @@ MS1: 桌面骨架 (壁纸+布局) ✅ 已完成
 
 以下对「可见可用」不构成阻塞：
 
-- ❌ Phase 3 输入抽象层 — Qt 原生事件已够用，手势可后加
+- ⚠️ Phase 3 输入抽象层 — 可见桌面路线不阻塞（Qt 原生事件够用）；但 **tslib 校准 + 虚拟键盘是 6ULL 真机触摸/中文输入的刚需**，闭环后须做（见 [02_input_layer.md](../base/02_input_layer.md)）
 - ❌ Phase 4 多平台模拟器 — 开发环境不需要
-- ❌ Phase 7 Render Backend 具体实现 — Qt QPainter 已够用
-- ❌ HWTier 硬件分级系统 — 先按 High Tier 开发
-- ❌ CrashHandler / IPC — 不影响视觉
+- ⚠️ Render Backend 具体实现 — 可见桌面用 Qt QPainter 已够用；但 **6ULL 嵌入式落地硬阻塞**，EGLFS/LinuxFB 后端必须先做（见 [07_render_backend.md](07_render_backend.md)）
+- ✅ HWTier 检测/评分/档位覆写**已完成**（仅 CapabilityPolicy 策略引擎延后，demo 路线按 High Tier）
+- ❌ CrashHandler / IPC — 不影响可见桌面；但 **IPC 是后续通知/媒体/设置/崩溃的共同硬阻塞**（见 [06_infrastructure.md](06_infrastructure.md)）
 - ❌ Wayland Compositor 后端 — WSL X11 已可开发调试
 - ❌ P2/P3 高级控件 — 用不到
 

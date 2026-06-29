@@ -8,13 +8,15 @@ description: "状态: 🚧 部分完成 (接口已实现，具体后端待开发
 > **状态**: 🚧 部分完成 (接口已实现，具体后端待开发)
 > **预计周期**: 2 周
 > **依赖阶段**: Phase 6
-> **已完成归档**: [done/SUMMARY.md)
+> **已完成归档**: [done/SUMMARY.md](../done/SUMMARY.md)
 
 ## 已完成模块
 
-> RenderBackend 抽象接口、BackendCapabilities、RenderBackendFactory 已实现。
-> 显示后端架构 (IDisplayServerBackend)、Windows 后端、WSL X11 后端已完成。
-> 详细状态请参考: [done/SUMMARY.md)
+> RenderBackend 抽象接口、BackendCapabilities 接口已完成；**`RenderBackendFactory` 仅有 `.h` 声明、`create()`/`createByName()` 无 `.cpp` 实现（空壳，调用即 link error）**。
+> 显示后端架构 (IDisplayServerBackend)、Windows 后端、WSL X11 后端已完成（`outputs()` 只读枚举已实现；`outputChanged()` 信号已声明但两后端从未 emit）。
+> 详细状态请参考: [done/SUMMARY.md](../done/SUMMARY.md)
+>
+> 🔴 **6ULL 嵌入式落地硬阻塞（2026-06-29 核对）**：五个具体后端（EGLFS / LinuxFB / Windows / Wayland / X11）**零 `.cpp` 实现**；i.MX6ULL 只能走 EGLFS/LinuxFB，**必须先做**。
 
 ---
 
@@ -26,7 +28,7 @@ description: "状态: 🚧 部分完成 (接口已实现，具体后端待开发
 ### 具体交付物
 - [x] `RenderBackend` 抽象接口 (接口已实现)
 - [x] `BackendCapabilities` 能力标志 (已实现)
-- [x] `RenderBackendFactory` 工厂 (已实现)
+- [ ] `RenderBackendFactory` 工厂 (⚠️ 仅 `.h` 声明，`create()`/`createByName()` 无 `.cpp` 实现，空壳)
 - [ ] `EGLFSBackend` 实现
 - [ ] `WindowsBackend` 实现
 - [ ] 屏幕尺寸模拟器（Windows 开发调试用）
@@ -155,23 +157,23 @@ description: "状态: 🚧 部分完成 (接口已实现，具体后端待开发
 ## 四、文件清单（待实现）
 
 ### 头文件
-- [ ] `ui/desktop/render/render_backend.h`
-- [ ] `ui/desktop/render/render_backend_factory.h`
-- [ ] `ui/desktop/render/backend_capabilities.h`
-- [ ] `ui/desktop/render/eglfs_backend.h`
-- [ ] `ui/desktop/render/windows_backend.h`
-- [ ] `ui/desktop/render/wayland_backend.h` （可选）
-- [ ] `ui/desktop/render/x11_backend.h` （可选）
-- [ ] `ui/desktop/render/screen_simulator.h`
+- [ ] `desktop/ui/render/render_backend.h`
+- [ ] `desktop/ui/render/render_backend_factory.h`
+- [ ] `desktop/ui/render/backend_capabilities.h`
+- [ ] `desktop/ui/render/eglfs_backend.h`
+- [ ] `desktop/ui/render/windows_backend.h`
+- [ ] `desktop/ui/render/wayland_backend.h` （可选）
+- [ ] `desktop/ui/render/x11_backend.h` （可选）
+- [ ] `desktop/ui/render/screen_simulator.h`
 
 ### 源文件
-- [ ] `src/desktop/render/render_backend.cpp`
-- [ ] `src/desktop/render/render_backend_factory.cpp`
-- [ ] `src/desktop/render/eglfs_backend.cpp`
-- [ ] `src/desktop/render/windows_backend.cpp`
-- [ ] `src/desktop/render/wayland_backend.cpp` （可选）
-- [ ] `src/desktop/render/x11_backend.cpp` （可选）
-- [ ] `src/desktop/render/screen_simulator.cpp`
+- [ ] `desktop/ui/render/render_backend.cpp`
+- [ ] `desktop/ui/render/render_backend_factory.cpp`
+- [ ] `desktop/ui/render/eglfs_backend.cpp`
+- [ ] `desktop/ui/render/windows_backend.cpp`
+- [ ] `desktop/ui/render/wayland_backend.cpp` （可选）
+- [ ] `desktop/ui/render/x11_backend.cpp` （可选）
+- [ ] `desktop/ui/render/screen_simulator.cpp`
 
 ### 配置文件
 - [ ] `{desktop_root}/config/display.conf` （Linux）

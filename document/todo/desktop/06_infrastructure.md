@@ -7,7 +7,7 @@ description: "状态: 🚧 部分完成 (~50%)，预计周期: 4~5 周"
 
 > **状态**: 🚧 部分完成 (~50%)
 > **预计周期**: 4~5 周
-> **依赖阶段**: Phase 1, Phase 2, Phase 3
+> **依赖阶段**: Phase 1, Phase 2（Phase 3 输入层**非硬依赖**——IPC/CrashHandler 不依赖输入抽象；输入层可见桌面闭环后按需推进，见 [current.md](../../status/current.md)）
 > **已完成归档**: [done/SUMMARY.md)
 
 ---
@@ -178,6 +178,18 @@ description: "状态: 🚧 部分完成 (~50%)，预计周期: 4~5 周"
   - [ ] 多客户端并发测试
   - [ ] 服务发现测试
 
+### 引导启动序列（补漏：原 Phase 6 未覆盖，2026-06-29）
+
+> DAG Init Chain（开机有序装配）已落地，但**面向用户的"首次启动引导/向导"序列**未规划——从内核接管屏幕到 shell 就绪这段（early frame buffer 显示 / splash / 启动进度 / 品牌 OEM 标识 / **启动失败的诊断回退**到 recovery shell / 与 init 握手）。嵌入式开机体验高度依赖它。
+
+- [ ] 早期帧缓冲显示（图形栈就绪前的最小画面）
+- [ ] 启动进度 UI（复用 `desktop/ui/widget/init_session/` 的 `boot_progress_widget` / `simple_boot_widget`）
+- [ ] 品牌 / OEM 标识展示
+- [ ] 启动失败诊断回退（无图形时进 recovery / 文本提示）
+- [ ] 与 systemd / init 握手（嵌入式 init 不一定是 systemd）
+
+> 参照资产：CCIMXDesktop `app_wrapper` + `splash_window` + `pagesetuper` 的引导链范式。
+
 ---
 
 ## 三、验收标准
@@ -185,7 +197,7 @@ description: "状态: 🚧 部分完成 (~50%)，预计周期: 4~5 周"
 ### 功能验收
 - [ ] GPU 检测在 Linux/Windows 均可正常工作
 - [ ] HWTier 在目标板卡上正确判定档位
-- [ ] ConfigStore 三层存储和变更监听正常
+- [ ] ConfigStore 四层存储和变更监听正常
 - [ ] Logger 多 Sink 并发安全，日志轮转正常
 - [ ] CrashHandler 可捕获所有常见崩溃信号
 - [ ] CrashReporter 弹窗友好展示崩溃信息
@@ -211,62 +223,54 @@ description: "状态: 🚧 部分完成 (~50%)，预计周期: 4~5 周"
 ## 四、文件清单（待实现）
 
 ### 头文件
-- [ ] `ui/desktop/infrastructure/gpu_detector.h`
-- [ ] `ui/desktop/infrastructure/hw_tier.h`
-- [ ] `ui/desktop/infrastructure/capability_policy.h`
-- [ ] `ui/desktop/infrastructure/config_store.h`
-- [ ] `ui/desktop/infrastructure/config_watcher.h`
-- [ ] `ui/desktop/infrastructure/logger.h`
-- [ ] `ui/desktop/infrastructure/log_message.h`
-- [ ] `ui/desktop/infrastructure/log_sink.h`
-- [ ] `ui/desktop/infrastructure/console_sink.h`
-- [ ] `ui/desktop/infrastructure/file_sink.h`
-- [ ] `ui/desktop/infrastructure/crash_handler.h`
-- [ ] `ui/desktop/infrastructure/crash_report.h`
-- [ ] `ui/desktop/infrastructure/crash_reporter.h`
-- [ ] `ui/desktop/infrastructure/watchdog.h`
-- [ ] `ui/desktop/infrastructure/ipc_message.h`
-- [ ] `ui/desktop/infrastructure/ipc_client.h`
-- [ ] `ui/desktop/infrastructure/ipc_server.h`
-- [ ] `ui/desktop/infrastructure/service_locator.h`
+> 📌 **路径核对（2026-06-29）**：base 级基础设施落 `desktop/base/infrastructure/`（与 [CRASH_HANDLE_STEP.md](CRASH_HANDLE_STEP.md) 一致，符合三层架构，**不在 `ui/`**）。
+
+**已完成（移出待实现清单，标实际位置）**：
+- [x] `base/system/gpu/` — GPU 检测器（已完成）
+- [x] `base/system/hardware_tier/` — HWTier 检测/评分/Assessor/Policy（已完成；仅 CapabilityPolicy 策略引擎延后，见下）
+- [x] `desktop/base/config_manager/` — ConfigStore 4 层 + 变更监听（已完成）
+- [x] `desktop/base/logger/` — Logger + log_message/log_sink/console_sink/file_sink（已完成）
+
+**待实现（落 `desktop/base/infrastructure/`）**：
+- [ ] `desktop/base/infrastructure/capability_policy.h`（CapabilityPolicy 策略引擎，demo 路线延后）
+- [ ] `desktop/base/infrastructure/crash_handler.h`
+- [ ] `desktop/base/infrastructure/crash_report.h`
+- [ ] `desktop/base/infrastructure/crash_reporter.h`
+- [ ] `desktop/base/infrastructure/watchdog.h`
+- [ ] `desktop/base/infrastructure/ipc_message.h`
+- [ ] `desktop/base/infrastructure/ipc_client.h`
+- [ ] `desktop/base/infrastructure/ipc_server.h`
+- [ ] `desktop/base/infrastructure/service_locator.h`
 
 ### 源文件
-- [ ] `src/desktop/infrastructure/gpu_detector.cpp`
-- [ ] `src/desktop/infrastructure/hw_tier.cpp`
-- [ ] `src/desktop/infrastructure/capability_policy.cpp`
-- [ ] `src/desktop/infrastructure/config_store.cpp`
-- [ ] `src/desktop/infrastructure/config_watcher.cpp`
-- [ ] `src/desktop/infrastructure/logger.cpp`
-- [ ] `src/desktop/infrastructure/console_sink.cpp`
-- [ ] `src/desktop/infrastructure/file_sink.cpp`
-- [ ] `src/desktop/infrastructure/crash_handler.cpp`
-- [ ] `src/desktop/infrastructure/crash_report.cpp`
-- [ ] `src/desktop/infrastructure/crash_reporter.cpp`
-- [ ] `src/desktop/infrastructure/watchdog.cpp`
-- [ ] `src/desktop/infrastructure/ipc_client.cpp`
-- [ ] `src/desktop/infrastructure/ipc_server.cpp`
-- [ ] `src/desktop/infrastructure/service_locator.cpp`
+- [x] GPU/HWTier/ConfigStore/Logger 源文件已完成（见上述实际目录）
+- [ ] `desktop/base/infrastructure/capability_policy.cpp`（延后）
+- [ ] `desktop/base/infrastructure/crash_handler.cpp`
+- [ ] `desktop/base/infrastructure/crash_report.cpp`
+- [ ] `desktop/base/infrastructure/crash_reporter.cpp`
+- [ ] `desktop/base/infrastructure/watchdog.cpp`
+- [ ] `desktop/base/infrastructure/ipc_client.cpp`
+- [ ] `desktop/base/infrastructure/ipc_server.cpp`
+- [ ] `desktop/base/infrastructure/service_locator.cpp`
 
 ### 平台特定实现
-- [ ] `src/desktop/infrastructure/platform/gpu_detector_linux.cpp`
-- [ ] `src/desktop/infrastructure/platform/gpu_detector_windows.cpp`
-- [ ] `src/desktop/infrastructure/platform/crash_handler_linux.cpp`
-- [ ] `src/desktop/infrastructure/platform/crash_handler_windows.cpp`
-- [ ] `src/desktop/infrastructure/platform/stack_trace_linux.cpp`
-- [ ] `src/desktop/infrastructure/platform/stack_trace_windows.cpp`
+- [x] GPU/HWTier/Logger 的平台实现已完成
+- [ ] `desktop/base/infrastructure/platform/crash_handler_linux.cpp`
+- [ ] `desktop/base/infrastructure/platform/crash_handler_windows.cpp`
+- [ ] `desktop/base/infrastructure/platform/stack_trace_linux.cpp`
+- [ ] `desktop/base/infrastructure/platform/stack_trace_windows.cpp`
 
 ### 独立程序
 - [ ] `src/tools/crash_reporter/main.cpp` （崩溃报告弹窗程序）
 
 ### 测试文件
-- [ ] `tests/unit/desktop/infrastructure/test_gpu_detector.cpp`
-- [ ] `tests/unit/desktop/infrastructure/test_hw_tier.cpp`
+- [x] `test_gpu_detector` / `test_hw_tier` / `test_config_store` / `test_logger` — 已完成（见 [done/SUMMARY.md](../done/SUMMARY.md)）
 - [ ] `tests/unit/desktop/infrastructure/test_capability_policy.cpp`
-- [ ] `tests/unit/desktop/infrastructure/test_config_store.cpp`
-- [ ] `tests/unit/desktop/infrastructure/test_logger.cpp`
 - [ ] `tests/unit/desktop/infrastructure/test_crash_handler.cpp`
 - [ ] `tests/unit/desktop/infrastructure/test_crash_report.cpp`
 - [ ] `tests/unit/desktop/infrastructure/test_watchdog.cpp`
+- [ ] `tests/unit/desktop/infrastructure/test_ipc.cpp`
+- [ ] `tests/unit/desktop/infrastructure/test_service_locator.cpp`
 - [ ] `tests/unit/desktop/infrastructure/test_ipc.cpp`
 - [ ] `tests/integration/desktop/infrastructure/test_crash_recovery.cpp`
 

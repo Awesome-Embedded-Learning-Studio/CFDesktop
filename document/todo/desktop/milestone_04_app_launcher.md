@@ -5,7 +5,7 @@ description: "预计周期: 5-7 天，前置依赖: Milestone 3: 任务栏"
 
 # Milestone 4: 应用启动器
 
-> **状态**: ⬜ 待开始
+> **状态**: 🚧 闭环跑通·网格待做（`app_launcher` / `launcher_tile` / `app_launch_service` 已落地，点 Files/Browser 可真打开外部进程；开始菜单弹窗网格 + 搜索框待做）
 > **预计周期**: 5-7 天
 > **前置依赖**: [Milestone 3: 任务栏](milestone_03_taskbar.md)
 > **目标**: 点击任务栏"开始"按钮或桌面区域，弹出一个应用网格，可启动外部程序
@@ -106,17 +106,19 @@ description: "预计周期: 5-7 天，前置依赖: Milestone 3: 任务栏"
 - [ ] 为每个 AppEntry 创建 LauncherGridItem
 - [ ] 点击 item → emit `appLaunched(app_id, exec_command)`
 
-#### Step 5: 搜索框 (可选，建议加入)
+#### Step 5: 搜索框（明确待办，非可选）
+> 注：上一版标"可选"导致代码为零（三层落差）。6ULL 上只做 App 名匹配，不做全文索引。
 - [ ] 在顶部添加搜索 `QLineEdit`
   - Material TextField 样式
   - 实时过滤应用列表
   - Placeholder: "搜索应用..."
+- [ ] 应用索引源：扫描 `~/.local/share/applications` + `/usr/share/applications` 的 `.desktop` 文件，解析 display_name/Icon/Exec
 - [ ] 过滤逻辑：
   - 按 display_name 模糊匹配
   - 隐藏不匹配的 grid item
 
-#### Step 6: 外部进程启动
-- [ ] 创建 `AppLaunchService` 类 (或在 AppLauncher 中直接处理)
+#### Step 6: 外部进程启动（`AppLaunchService` 已落地）
+- [x] `AppLaunchService` 类已存在（`desktop/ui/components/launcher/app_launch_service.h/.cpp`），走 `QProcess::startDetached` 真启动并记 PID
   ```cpp
   class AppLaunchService {
   public:
@@ -195,12 +197,11 @@ description: "预计周期: 5-7 天，前置依赖: Milestone 3: 任务栏"
 ### 需要新建的文件
 | 文件 | 内容 |
 |------|------|
-| `desktop/ui/components/launcher/app_launcher.h` | 启动器声明 |
-| `desktop/ui/components/launcher/app_launcher.cpp` | 启动器实现 |
-| `desktop/ui/components/launcher/launcher_grid_item.h` | 网格图标项 (可选) |
-| `desktop/ui/components/launcher/launcher_grid_item.cpp` | 网格图标实现 (可选) |
-| `desktop/ui/components/launcher/app_launch_service.h` | 进程启动服务 (可选) |
-| `desktop/ui/components/launcher/app_launch_service.cpp` | 进程启动实现 (可选) |
+| ~~`desktop/ui/components/launcher/app_launcher.h`~~ | ⚠️ **已落地** |
+| ~~`desktop/ui/components/launcher/app_launcher.cpp`~~ | ⚠️ **已落地** |
+| `desktop/ui/components/launcher/launcher_tile.h/.cpp` | 网格图标项（已落地，原计划名 launcher_grid_item） |
+| ~~`desktop/ui/components/launcher/app_launch_service.h`~~ | ⚠️ **已落地**（QProcess::startDetached 真启动 + 记 PID） |
+| ~~`desktop/ui/components/launcher/app_launch_service.cpp`~~ | ⚠️ **已落地** |
 
 ### 需要修改的文件
 | 文件 | 修改内容 |
@@ -227,9 +228,9 @@ description: "预计周期: 5-7 天，前置依赖: Milestone 3: 任务栏"
 - [ ] 入场有滑入+淡入动画，退场有滑出+淡出动画
 - [ ] 点击应用条目能启动外部进程 (如 xterm)
 - [ ] 点击启动器外部或 ESC 可关闭
-- [ ] 搜索框实时过滤应用列表 (如实现)
+- [ ] 搜索框实时过滤应用列表（扫描 .desktop，按 display_name 模糊匹配）
 - [ ] Light/Dark 主题切换时启动器正确变色
 
 ---
 
-*最后更新: 2026-03-31*
+*最后更新: 2026-06-29（核对代码现状：app_launcher/launcher_tile/app_launch_service 已落地；搜索框从"可选"升级为明确待办）*

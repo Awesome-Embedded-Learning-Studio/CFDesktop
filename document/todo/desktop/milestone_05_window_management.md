@@ -35,13 +35,14 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 3: 任务栏 (任
 | `Windows Backend` | `desktop/ui/platform/windows/` | ✅ Win32 窗口追踪 |
 | Material Button | `ui/widget/material/widget/button/` | ✅ 窗口控制按钮 |
 | CenteredTaskbar | MS3 中实现 | ✅ `updateRunningState()` |
+| `WindowPlacementPolicy` | `desktop/ui/components/window_placement/window_placement_policy.h/.cpp` | ✅ 已落地（2026-06-26，与策略 A 同日）：外部窗口出现在工作区外时居中移回、过大按比例缩小；WSL 实测可挪外部窗口（纯数学策略，零开销） |
 
 ### 关键缺口
 
-1. **没有 WindowInfo 数据结构** — 只有 IWindow 的基础属性
-2. **没有 WindowState 状态机** — 窗口没有 Normal/Minimized/Maximized 概念
+1. **WindowInfo 字段不全** — `window_info.h` 骨架已存在（2026-06-16，含 window_id/title/pid/geometry/state），但缺 `icon_hint` / `z_index` / `is_always_on_top` / `created_at` 字段
+2. **WindowState 转换逻辑未实现** — 枚举已定义 6 值，但源码注释 "Only Normal and Closed are exercised"；状态机转换规则与 `windowStateChanged` 信号未实现
 3. **没有窗口装饰** — 没有自定义标题栏
-4. **没有布局策略** — 窗口没有布局管理
+4. **没有布局策略** — 窗口没有布局管理（注：`WindowPlacementPolicy` 已落地做"塞回工作区"约束，但非完整布局策略）
 5. **Taskbar 未与 WindowManager 联动** — 运行状态未同步
 
 ---
@@ -50,8 +51,9 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 3: 任务栏 (任
 
 ### Day 1-2: 窗口数据模型
 
-#### Step 1: 定义 WindowInfo
-- [ ] 创建文件 `desktop/ui/components/window_manager/window_info.h`
+#### Step 1: 补全 WindowInfo（骨架已存在）
+- [x] 文件 `desktop/ui/components/window_manager/window_info.h` **已存在**（2026-06-16），`WindowState` 枚举与 `WindowInfo{window_id,title,pid,geometry,state}` 已落
+- [ ] 补全缺失字段：`icon_hint` / `z_index` / `is_always_on_top` / `created_at`
   ```cpp
   enum class WindowState {
       Normal,
@@ -226,7 +228,7 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 3: 任务栏 (任
 ### 需要新建的文件
 | 文件 | 内容 |
 |------|------|
-| `desktop/ui/components/window_manager/window_info.h` | 窗口数据模型 |
+| ~~`desktop/ui/components/window_manager/window_info.h`~~ | ⚠️ **已存在**（2026-06-16 骨架），仅需补 `icon_hint/z_index/is_always_on_top/created_at` 字段，不再新建 |
 | `desktop/ui/components/window_manager/window_decoration.h` | 窗口装饰声明 |
 | `desktop/ui/components/window_manager/window_decoration.cpp` | 窗口装饰实现 |
 | `desktop/ui/components/window_manager/floating_policy.h` | 浮动布局策略 |
@@ -266,4 +268,4 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 3: 任务栏 (任
 
 ---
 
-*最后更新: 2026-03-31*
+*最后更新: 2026-06-29（核对代码现状：`window_info.h` 骨架已存在待补字段、`WindowPlacementPolicy` 已落地补录）*

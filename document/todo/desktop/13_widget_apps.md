@@ -9,6 +9,14 @@ description: "预计周期: 4~5 周，依赖阶段: Phase 9, Phase 12"
 > **预计周期**: 4~5 周
 > **依赖阶段**: Phase 9, Phase 12
 > **目标交付物**: Widget 系统、壁纸管理、文件管理器 App、媒体控制服务
+>
+> 📌 **现实核对与补漏（2026-06-29）**：
+> - **壁纸引擎已落地**（`desktop/ui/components/wallpaper/`：`ImageWallPaperLayer`/`WallPaperAccessStorage`/`WallPaperToken`/`WallpaperShellLayerStrategy`），本 Phase 壁纸部分只需补轮播/生成式/资源，引擎不必重做。
+> - **Widget 框架尺度调和**：本 Phase（Phase J）画的是**全量愿景**（沙箱/进程隔离/API）；近期落地以 [milestone_06](milestone_06_widget_control_center.md) **最小版**（ClockWidget + ControlCenter）为准。沙箱依赖 IPC(0%)+CrashHandler；低 RAM 退化同进程崩溃隔离。
+> - **FileManagerApp 现实**：① 依赖 P2 控件（ToolBar/ContextMenu/TreeView 等，当前 0%）；② 本仓 `desktop/base/file_operations/file_op.h` **只是路径拼接微工具**（copy/move/rename/delete/trash 全无），**不能当文件管理器底座**，需新建；③ 建议参照 CCIMX `FileRamber`（QtConcurrent 异步刷新）移植。
+> - **数据源前置**：WeatherWidget 依赖 `aels-network`；ResourceMonitorWidget 依赖 `base/system` 探针（已 90%）；均见 [aels_cross_repo_deps.md](aels_cross_repo_deps.md)。
+> - **路径已订正**：bare `ui/desktop/...` / `src/desktop/...` 统一为实际 `desktop/ui/...` 根。
+> - **补漏（原 Phase 未列）**：系统监控 App、串口工具 App（均为 extern，见文末新增小节）。
 
 ## 一、阶段目标
 
@@ -311,6 +319,25 @@ description: "预计周期: 4~5 周，依赖阶段: Phase 9, Phase 12"
 - [ ] 使用示例
 - [ ] 代码审查
 
+### Week 5+（补漏）: extern 桌面应用
+
+> 以下为补漏项，原 Phase 13 未列。均为**独立 extern 应用**（非 shell 内核），可参照 CCIMXDesktop extern_app 模式移植。
+
+#### 系统监控 App（SystemMonitor，extern）
+- [ ] 进程表（ProcessBrowser：读 `/proc`）
+- [ ] CPU/内存/温度曲线（读 `/proc`、`/sys/class/thermal/`，采样节流 1-2Hz 避免拖死单核）
+- [ ] 关于页（硬件信息 / HWTier 展示）
+- [ ] 日志查看（读 CFDesktop file_sink 落盘日志；6ULL 无 systemd-journal）
+
+> 数据源：`base/system` 探针（已 90%）+ `/proc` + `/sys`；可移植 CCIMX `SystemState`。
+
+#### 串口工具 App（SerialTool，extern）
+- [ ] 串口枚举/打开/配置（波特率/数据位/停止位/校验）
+- [ ] 收发数据面板 + 十六进制视图
+- [ ] 走 termios `/dev/ttymxc`（NXP UART 已移植）
+
+> **职责边界**：`ISerialPort` **接口**归 core（`base/` 硬件统一接口，见硬件集成域）；**工具本体**归本 extern App。注意 CCIMX `CCommunicator` 实为 TCP 端口通信，**非串口**，不可直接复用。
+
 ---
 
 ## 三、验收标准
@@ -336,39 +363,39 @@ description: "预计周期: 4~5 周，依赖阶段: Phase 9, Phase 12"
 ## 四、文件清单（待实现）
 
 ### 头文件
-- [ ] `ui/desktop/widget/widget_framework.h`
-- [ ] `ui/desktop/widget/widget_base.h`
-- [ ] `ui/desktop/widget/widget_container.h`
-- [ ] `ui/desktop/widget/widget_api.h`
-- [ ] `ui/desktop/widget/widget_config.h`
-- [ ] `ui/desktop/widget/builtin/clock_widget.h`
-- [ ] `ui/desktop/widget/builtin/calendar_widget.h`
-- [ ] `ui/desktop/widget/builtin/weather_widget.h`
-- [ ] `ui/desktop/widget/builtin/resource_monitor_widget.h`
-- [ ] `ui/desktop/widget/wallpaper_manager.h`
-- [ ] `ui/desktop/app/file_manager_app.h`
-- [ ] `ui/desktop/app/file_picker_dialog.h`
-- [ ] `ui/desktop/app/file_tree_view.h`
-- [ ] `ui/desktop/app/file_list_view.h`
-- [ ] `ui/desktop/service/media_service.h`
-- [ ] `ui/desktop/service/media_session.h`
+- [ ] `desktop/ui/widget/widget_framework.h`
+- [ ] `desktop/ui/widget/widget_base.h`
+- [ ] `desktop/ui/widget/widget_container.h`
+- [ ] `desktop/ui/widget/widget_api.h`
+- [ ] `desktop/ui/widget/widget_config.h`
+- [ ] `desktop/ui/widget/builtin/clock_widget.h`
+- [ ] `desktop/ui/widget/builtin/calendar_widget.h`
+- [ ] `desktop/ui/widget/builtin/weather_widget.h`
+- [ ] `desktop/ui/widget/builtin/resource_monitor_widget.h`
+- [ ] `desktop/ui/widget/wallpaper_manager.h`
+- [ ] `desktop/ui/app/file_manager_app.h`
+- [ ] `desktop/ui/app/file_picker_dialog.h`
+- [ ] `desktop/ui/app/file_tree_view.h`
+- [ ] `desktop/ui/app/file_list_view.h`
+- [ ] `desktop/ui/components/media/media_service.h`
+- [ ] `desktop/ui/components/media/media_session.h`
 
 ### 源文件
-- [ ] `src/desktop/widget/widget_framework.cpp`
-- [ ] `src/desktop/widget/widget_base.cpp`
-- [ ] `src/desktop/widget/widget_container.cpp`
-- [ ] `src/desktop/widget/widget_api.cpp`
-- [ ] `src/desktop/widget/builtin/clock_widget.cpp`
-- [ ] `src/desktop/widget/builtin/calendar_widget.cpp`
-- [ ] `src/desktop/widget/builtin/weather_widget.cpp`
-- [ ] `src/desktop/widget/builtin/resource_monitor_widget.cpp`
-- [ ] `src/desktop/widget/wallpaper_manager.cpp`
-- [ ] `src/desktop/app/file_manager_app.cpp`
-- [ ] `src/desktop/app/file_picker_dialog.cpp`
-- [ ] `src/desktop/app/file_tree_view.cpp`
-- [ ] `src/desktop/app/file_list_view.cpp`
-- [ ] `src/desktop/service/media_service.cpp`
-- [ ] `src/desktop/service/media_session.cpp`
+- [ ] `desktop/ui/widget/widget_framework.cpp`
+- [ ] `desktop/ui/widget/widget_base.cpp`
+- [ ] `desktop/ui/widget/widget_container.cpp`
+- [ ] `desktop/ui/widget/widget_api.cpp`
+- [ ] `desktop/ui/widget/builtin/clock_widget.cpp`
+- [ ] `desktop/ui/widget/builtin/calendar_widget.cpp`
+- [ ] `desktop/ui/widget/builtin/weather_widget.cpp`
+- [ ] `desktop/ui/widget/builtin/resource_monitor_widget.cpp`
+- [ ] `desktop/ui/widget/wallpaper_manager.cpp`
+- [ ] `desktop/ui/app/file_manager_app.cpp`
+- [ ] `desktop/ui/app/file_picker_dialog.cpp`
+- [ ] `desktop/ui/app/file_tree_view.cpp`
+- [ ] `desktop/ui/app/file_list_view.cpp`
+- [ ] `desktop/ui/components/media/media_service.cpp`
+- [ ] `desktop/ui/components/media/media_session.cpp`
 
 ### 测试文件
 - [ ] `tests/unit/desktop/widget/test_widget_framework.cpp`

@@ -127,6 +127,10 @@ description: "预计周期: 1~2 周，依赖阶段: Phase 0, Phase 1, Phase 2"
   - [ ] `/dev/input/eventX` 读取
   - [ ] 事件解析
   - [ ] 设备识别
+- [ ] 实现 tslib 电阻触摸校准（⚠️ **i.MX6ULL 真机触摸硬前提**）
+  - [ ] Qt tslib 插件集成（`QT_QPA_EGLFS_TSLIB=1` / `QT_QPA_FB_TSLIB=1`）
+  - [ ] 校准数据加载（`/etc/pointercal`）
+  - [ ] 校准流程（ts_calibrate）
 - [ ] 实现 GPIOButton
   - [ ] sysfs 接口
   - [ ] 边沿检测
@@ -148,6 +152,26 @@ description: "预计周期: 1~2 周，依赖阶段: Phase 0, Phase 1, Phase 2"
 - [ ] 性能测试
   - [ ] 事件延迟测试
   - [ ] CPU 占用测试
+
+---
+
+## 补漏项（2026-06-29 核对）
+
+> 以下原 Phase 3 未覆盖，但对完整桌面（尤其 i.MX6ULL 真机）是刚需。
+
+### 全局快捷键 / 系统热键（可先于 IPC 做）
+- [ ] InputManager 事件过滤器链做全局 KeyEvent 路由（WSL X11 / EGLFS 下 Qt 原生 `grabKeyboard` 不够用）
+- [ ] Super/Meta 唤起启动器、Alt-Tab 任务切换、通知中心开关、主题切换、音量/亮度媒体键、Print 截图
+- [ ] 与 [10_shell_navigation.md](../desktop/10_shell_navigation.md) 的唤起入口对接
+
+### 虚拟键盘（OSK）+ 输入法（IME）
+- [ ] 触摸设备软键盘面板（maliit 或自研最小面板，**不挂重量级 IME 守护进程**）
+- [ ] CJK 拼音等输入法引擎对接（见 [aels-i18n](../desktop/aels_cross_repo_deps.md)）
+- [ ] 输入候选面板（动画克制，6ULL 软件渲染友好）
+
+### 剪贴板与拖放（Clipboard & DnD）
+- [ ] `QClipboard` 复制粘贴（文本 / 图片 / MIME）
+- [ ] 拖放：文件拖进应用打开、文本→笔记（overlay 渲染 + 外部 X 窗口下 DnD 协议桥接是真难点）
 
 ---
 
@@ -214,4 +238,4 @@ description: "预计周期: 1~2 周，依赖阶段: Phase 0, Phase 1, Phase 2"
 
 ---
 
-*最后更新: 2026-03-05*
+*最后更新: 2026-06-29（补 tslib 校准 / 全局快捷键 / 虚拟键盘+IME / 剪贴板DnD 补漏项）*
