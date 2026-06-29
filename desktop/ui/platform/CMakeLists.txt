@@ -19,8 +19,17 @@ set(PLATFORM_HEADERS
     shell_layer_helper.h
 )
 
-# Add platform-specific subdirectories
-if(UNIX AND NOT APPLE)
+# Add platform-specific subdirectories.
+# CFDESKTOP_EMBEDDED selects the DirectRender backend (Qt linuxfb / EGLFS) for
+# targets without a windowing system (e.g. i.MX6ULL). It is mutually exclusive
+# with the linux_wsl X11 backend and the Windows backend.
+option(CFDESKTOP_EMBEDDED "Build the embedded DirectRender platform backend (linuxfb/EGLFS, no X11/compositor)" OFF)
+
+if(CFDESKTOP_EMBEDDED)
+    # Embedded DirectRender platform -- no X11, no compositor.
+    file(GLOB embedded_sources "${CMAKE_CURRENT_SOURCE_DIR}/embedded/*.cpp")
+    list(APPEND PLATFORM_SOURCES ${embedded_sources})
+elseif(UNIX AND NOT APPLE)
     # Linux/WSL platform
     if(IS_WSL OR EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/linux_wsl")
         file(GLOB linux_wsl_sources "${CMAKE_CURRENT_SOURCE_DIR}/linux_wsl/*.cpp")
@@ -54,7 +63,11 @@ target_include_directories(cf_desktop_ui_platform PUBLIC
 )
 
 # Add platform-specific subdirectory includes
-if(UNIX AND NOT APPLE)
+if(CFDESKTOP_EMBEDDED)
+    target_include_directories(cf_desktop_ui_platform PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/embedded>
+    )
+elseif(UNIX AND NOT APPLE)
     if(IS_WSL OR EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/linux_wsl")
         target_include_directories(cf_desktop_ui_platform PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/linux_wsl>
@@ -81,7 +94,9 @@ PRIVATE
     QuarkWidgets::quarkwidgets            # For qt_format.h (std::formatter<QString>)
 )
 
-if(UNIX AND NOT APPLE)
+if(CFDESKTOP_EMBEDDED)
+    log_info("UI Backend" "Using Embedded DirectRender Backend (linuxfb/EGLFS).")
+elseif(UNIX AND NOT APPLE)
     if(XCB_FOUND)
         log_info("UI Backend" "Using XCB Backend as the Desktop UI Render Backend.")
         target_link_libraries(cf_desktop_ui_platform PRIVATE PkgConfig::XCB)
