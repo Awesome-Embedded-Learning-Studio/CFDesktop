@@ -5,7 +5,7 @@ description: "预计周期: 5-7 天，前置依赖: Milestone 2: 状态栏"
 
 # Milestone 3: 任务栏/导航栏
 
-> **状态**: ⬜ 待开始
+> **状态**: ✅ 最小切片完成（`centered_taskbar` / `start_button` / `taskbar_icon` 已落地：Bottom 面板注册 + 居中图标 + hover 放大 + 自绘 ripple + 运行指示器；`appClicked` 已接 `AppLaunchService::launch` 真启动）
 > **预计周期**: 5-7 天
 > **前置依赖**: [Milestone 2: 状态栏](milestone_02_status_bar.md)
 > **目标**: 屏幕底部出现任务栏 (Windows 11 风格居中图标)，支持 hover 动画和点击反馈

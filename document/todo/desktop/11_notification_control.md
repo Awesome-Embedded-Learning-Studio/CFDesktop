@@ -9,6 +9,11 @@ description: "预计周期: 2~3 周，依赖阶段: Phase 6, Phase 10"
 > **预计周期**: 2~3 周
 > **依赖阶段**: Phase 6, Phase 10
 > **目标交付物**: NotificationService 通知服务、ControlCenter 控制中心
+>
+> ⚠️ **关键依赖与现实核对（2026-06-29）**：
+> - NotificationService 设计为**独立进程**，跨进程通信**强依赖 Phase A-A5 IPC（当前 0%，见 [06_infrastructure.md](06_infrastructure.md)）**，必须与 IPC 同批落地。
+> - 勿与本仓已有的 `desktop/base/config_manager/include/cfconfig_notify_policy.h` 混淆——后者是 ConfigStore 的**配置变更回调派发策略**（Manual/Immediate），与用户通知无关。
+> - 绝不引入 D-Bus；嵌入式走文件/socket IPC（可借鉴 CCIMXDesktop 的 toast 文件投递范式）。
 
 ---
 
@@ -184,6 +189,8 @@ description: "预计周期: 2~3 周，依赖阶段: Phase 6, Phase 10"
 
 ### Week 3: IPC 通信与集成
 
+> 🔴 强依赖 Phase A-A5 IPC（当前 0%）；IPC 未落地则本周无法开工，须与 [06_infrastructure.md](06_infrastructure.md) IPC 基础层同批推进。
+
 #### Day 1-2: IPC 通信接口
 - [ ] 实现通知 IPC 接口
   - [ ] 定义 IPC 消息类型
@@ -250,35 +257,35 @@ description: "预计周期: 2~3 周，依赖阶段: Phase 6, Phase 10"
 ## 四、文件清单（待实现）
 
 ### 头文件
-- [ ] `ui/desktop/service/notification_service.h`
-- [ ] `ui/desktop/service/notification_api.h`
-- [ ] `ui/desktop/service/notification_types.h`
-- [ ] `ui/desktop/shell/notification_banner.h`
-- [ ] `ui/desktop/shell/notification_center.h`
-- [ ] `ui/desktop/shell/control_center.h`
-- [ ] `ui/desktop/shell/control_slider.h`
-- [ ] `ui/desktop/shell/control_tile.h`
-- [ ] `ui/desktop/shell/media_control_card.h`
+- [ ] `desktop/ui/components/notification/notification_service.h`
+- [ ] `desktop/ui/components/notification/notification_api.h`
+- [ ] `desktop/ui/components/notification/notification_types.h`
+- [ ] `desktop/ui/components/notification/notification_banner.h`
+- [ ] `desktop/ui/components/notification/notification_center.h`
+- [ ] `desktop/ui/widget/control_center/control_center.h`
+- [ ] `desktop/ui/widget/control_center/control_slider.h`
+- [ ] `desktop/ui/widget/control_center/control_tile.h`
+- [ ] `desktop/ui/widget/control_center/media_control_card.h`
 
 ### 源文件
-- [ ] `src/desktop/service/notification_service.cpp`
-- [ ] `src/desktop/service/notification_api.cpp`
-- [ ] `src/desktop/shell/notification_banner.cpp`
-- [ ] `src/desktop/shell/notification_center.cpp`
-- [ ] `src/desktop/shell/control_center.cpp`
-- [ ] `src/desktop/shell/control_slider.cpp`
-- [ ] `src/desktop/shell/control_tile.cpp`
-- [ ] `src/desktop/shell/media_control_card.cpp`
+- [ ] `desktop/ui/components/notification/notification_service.cpp`
+- [ ] `desktop/ui/components/notification/notification_api.cpp`
+- [ ] `desktop/ui/components/notification/notification_banner.cpp`
+- [ ] `desktop/ui/components/notification/notification_center.cpp`
+- [ ] `desktop/ui/widget/control_center/control_center.cpp`
+- [ ] `desktop/ui/widget/control_center/control_slider.cpp`
+- [ ] `desktop/ui/widget/control_center/control_tile.cpp`
+- [ ] `desktop/ui/widget/control_center/media_control_card.cpp`
 
-### IPC 定义
-- [ ] `src/desktop/service/ipc_notification_messages.h`
-- [ ] `src/desktop/service/ipc_control_messages.h`
+### IPC 定义（归属基础设施层，见 [06_infrastructure.md](06_infrastructure.md)）
+- [ ] `desktop/base/infrastructure/ipc_notification_messages.h`
+- [ ] `desktop/base/infrastructure/ipc_control_messages.h`
 
 ### 测试文件
-- [ ] `tests/unit/desktop/service/test_notification_service.cpp`
-- [ ] `tests/unit/desktop/shell/test_notification_banner.cpp`
-- [ ] `tests/unit/desktop/shell/test_notification_center.cpp`
-- [ ] `tests/unit/desktop/shell/test_control_center.cpp`
+- [ ] `tests/unit/desktop/notification/test_notification_service.cpp`
+- [ ] `tests/unit/desktop/notification/test_notification_banner.cpp`
+- [ ] `tests/unit/desktop/notification/test_notification_center.cpp`
+- [ ] `tests/unit/desktop/control_center/test_control_center.cpp`
 - [ ] `tests/integration/desktop/test_notification_ipc.cpp`
 
 ---

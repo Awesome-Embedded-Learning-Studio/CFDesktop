@@ -9,6 +9,18 @@ description: "预计周期: 4~5 周，依赖阶段: Phase 6, Phase 10, Phase 11"
 > **预计周期**: 4~5 周
 > **依赖阶段**: Phase 6, Phase 10, Phase 11
 > **目标交付物**: ThemeStyleManager、iOS/Windows 主题包、系统设置 App、锁屏模块
+>
+> 📌 **现实核对与补漏（2026-06-29）**：
+> - **壁纸引擎已落地**（本仓 `desktop/ui/components/wallpaper/`：`ImageWallPaperLayer` / `WallPaperAccessStorage` / `WallPaperToken` / `WallpaperShellLayerStrategy` + `wallpaper_src_chain`，多图集切换已跑通）。本 Phase 只需**产出壁纸/主题资源**并接线，引擎不必重做。
+> - **frosted_backdrop 已是 Mica/Acrylic 雏形**（`desktop/ui/components/frosted_backdrop/`），需接线 HWTier 分档（Low Tier 降级纯色/关闭模糊）。
+> - **路径已订正**：bare `ui/...`（Material 控件 / ThemeManager）迁移至 QuarkWidgets 子模块；本仓自有落 `desktop/ui/...`。
+> - **本 Phase 补充立项（原计划未覆盖）**：
+>   - **i18n 国际化 + CJK 字体子集化** → 独立 AELS 仓 `aels-i18n`（见 [aels_cross_repo_deps.md](aels_cross_repo_deps.md)）；桌面侧只做设置入口接线。CJK 字体必须子集化省闪存。
+>   - **icon-theme 图标主题包**（可切换图标包 + 加载机制，依赖 .desktop 扫描）。
+>   - **ISecretStore 加密键值原语** → 锁屏凭证 / 未来密钥环 / 账户密码共用，别在锁屏重造（归 utils/aex 或独立小库）。
+>   - **多屏显示配置面板（写侧）**：分辨率 / DPI / 排列 / 主屏，归设置 App display 页（只读枚举已在 `IDisplayServerBackend::outputs()`，缺写侧）。
+>   - **会话电源动作**：注销 / 重启 / 关机 + 会话保存恢复。i.MX6ULL 走 `reboot(2)`/`poweroff(2)` syscall + sync，**不依赖 systemd**。
+>   - **a11y reduce-motion**：与 HWTier Low Tier 关动效同源开关，显式立项。
 
 ---
 
@@ -251,6 +263,7 @@ description: "预计周期: 4~5 周，依赖阶段: Phase 6, Phase 10, Phase 11"
 - [ ] 辅助功能
   - [ ] 字体大小缩放
   - [ ] 高对比度（预留）
+  - [ ] 减弱动效 reduce-motion（与 HWTier Low Tier 关动效同源开关）
 - [ ] 系统设置
   - [ ] 关于本机
   - [ ] 硬件信息（HWTier 展示）
@@ -296,6 +309,17 @@ description: "预计周期: 4~5 周，依赖阶段: Phase 6, Phase 10, Phase 11"
   - [ ] 播放/暂停控制
 - [ ] 编写集成测试
 
+#### Day 6: 会话与电源动作（补漏：原 Phase 12 未覆盖）
+- [ ] 注销 / 重启 / 关机 / 休眠
+  - [ ] Windows: `ExitWindowsEx`
+  - [ ] Linux/嵌入式: `reboot(2)` / `poweroff(2)` syscall + `sync`（**不依赖 systemd**）
+- [ ] 会话保存与恢复
+  - [ ] 序列化：打开的应用 / 窗口几何 / panel 状态 → ConfigStore
+  - [ ] 下次启动 `init_chain` 恢复（内存吃紧时仅恢复应用列表）
+- [ ] 优雅退出协调（PanelManager / WindowManager / 各服务 flush 落盘）
+
+> 注：电源动作**执行**下沉 `aels-power-thermal`（见 [aels_cross_repo_deps.md](aels_cross_repo_deps.md)）；会话序列化归本仓 ConfigStore。
+
 ---
 
 ## 三、验收标准
@@ -321,27 +345,27 @@ description: "预计周期: 4~5 周，依赖阶段: Phase 6, Phase 10, Phase 11"
 ## 四、文件清单（待实现）
 
 ### 头文件
-- [ ] `ui/desktop/theme/theme_style_manager.h`
-- [ ] `ui/desktop/theme/theme_pack.h`
-- [ ] `ui/desktop/theme/theme_colors.h`
-- [ ] `ui/desktop/theme/theme_typography.h`
-- [ ] `ui/desktop/theme/theme_shapes.h`
-- [ ] `ui/desktop/theme/theme_spacing.h`
-- [ ] `ui/desktop/theme/ios_theme_pack.h`
-- [ ] `ui/desktop/theme/windows_theme_pack.h`
-- [ ] `ui/desktop/app/settings_app.h`
-- [ ] `ui/desktop/app/setting_item.h`
-- [ ] `ui/desktop/app/setting_group.h`
-- [ ] `ui/desktop/shell/lock_screen.h`
+- [ ] `desktop/ui/theme/theme_style_manager.h`
+- [ ] `desktop/ui/theme/theme_pack.h`
+- [ ] `desktop/ui/theme/theme_colors.h`
+- [ ] `desktop/ui/theme/theme_typography.h`
+- [ ] `desktop/ui/theme/theme_shapes.h`
+- [ ] `desktop/ui/theme/theme_spacing.h`
+- [ ] `desktop/ui/theme/ios_theme_pack.h`
+- [ ] `desktop/ui/theme/windows_theme_pack.h`
+- [ ] `desktop/ui/app/settings_app.h`
+- [ ] `desktop/ui/app/setting_item.h`
+- [ ] `desktop/ui/app/setting_group.h`
+- [ ] `desktop/ui/components/lockscreen/lock_screen.h`
 
 ### 源文件
-- [ ] `src/desktop/theme/theme_style_manager.cpp`
-- [ ] `src/desktop/theme/theme_pack.cpp`
-- [ ] `src/desktop/theme/ios_theme_pack.cpp`
-- [ ] `src/desktop/theme/windows_theme_pack.cpp`
-- [ ] `src/desktop/app/settings_app.cpp`
-- [ ] `src/desktop/app/setting_item.cpp`
-- [ ] `src/desktop/shell/lock_screen.cpp`
+- [ ] `desktop/ui/theme/theme_style_manager.cpp`
+- [ ] `desktop/ui/theme/theme_pack.cpp`
+- [ ] `desktop/ui/theme/ios_theme_pack.cpp`
+- [ ] `desktop/ui/theme/windows_theme_pack.cpp`
+- [ ] `desktop/ui/app/settings_app.cpp`
+- [ ] `desktop/ui/app/setting_item.cpp`
+- [ ] `desktop/ui/components/lockscreen/lock_screen.cpp`
 
 ### 资源文件
 - [ ] `assets/themes/ios/theme.json`

@@ -10,6 +10,8 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 2: 状态栏 (下
 > **前置依赖**: [Milestone 2: 状态栏](milestone_02_status_bar.md) (下拉触发点)
 > **可与 MS3/MS4/MS5 并行**
 > **目标**: 桌面上有时钟小组件，从状态栏下拉打开简易控制中心 (亮度/音量/主题切换)
+>
+> 📌 **路径核对（2026-06-29）**：本文档中所有 bare `ui/...` 路径（ThemeManager / Material 控件 / 动画工厂 / 阴影系统）均已随 Phase 2 抽离迁移至 **QuarkWidgets 子模块** `third_party/QuarkWidgets/ui/...`（CMake 目标 `QuarkWidgets::quarkwidgets`）。`desktop/ui/...` 仍为本仓自有。
 
 ---
 
@@ -28,12 +30,12 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 2: 状态栏 (下
 | 组件 | 文件 | 状态 |
 |------|------|------|
 | `ShellLayer` | MS1 中实现 | ✅ 桌面内容容器 |
-| `ThemeManager` | `ui/core/theme_manager.h` | ✅ 主题切换功能已有 |
-| `ICFTheme` | `ui/core/i_cf_theme.h` | ✅ colorScheme / typography / motionSpec |
-| Material Slider | `ui/widget/material/widget/slider/` | ✅ 亮度/音量滑块 |
-| Material Switch | `ui/widget/material/widget/switch_/` | ✅ 开关控件 |
-| Material Button | `ui/widget/material/widget/button/` | ✅ 按钮控件 |
-| Animation Engine | `ui/components/animation/` | ✅ 动画 |
+| `ThemeManager` | `third_party/QuarkWidgets/ui/core/theme_manager.h` | ✅ 主题切换功能已有 |
+| `ICFTheme` | `third_party/QuarkWidgets/ui/core/i_cf_theme.h` | ✅ colorScheme / typography / motionSpec |
+| Material Slider | `third_party/QuarkWidgets/ui/widget/material/widget/slider/` | ✅ 亮度/音量滑块 |
+| Material Switch | `third_party/QuarkWidgets/ui/widget/material/widget/switch_/` | ✅ 开关控件 |
+| Material Button | `third_party/QuarkWidgets/ui/widget/material/widget/button/` | ✅ 按钮控件 |
+| Animation Engine | `third_party/QuarkWidgets/ui/components/` | ✅ 动画 |
 | StatusBar | MS2 中实现 | ✅ 触发控制中心 |
 
 ### 关键缺口
@@ -128,8 +130,8 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 2: 状态栏 (下
   - 日期文字: `theme->colorScheme().onSurfaceVariant()`
 
 **可复用**:
-- `ui/widget/material/base/md_elevation_controller.h` — 阴影
-- `ui/core/theme_manager.h` — 主题
+- `third_party/QuarkWidgets/ui/widget/material/base/elevation_controller.h` — 阴影
+- `third_party/QuarkWidgets/ui/core/theme_manager.h` — 主题
 - SimpleBootWidget 的 QPainter 绘制模式
 
 ### Day 5-7: 控制中心面板
@@ -177,14 +179,14 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 2: 状态栏 (下
 - [ ] 圆角卡片 + 阴影 (同 AppLauncher 风格)
 
 #### Step 7: 实现亮度/音量滑块
-- [ ] 使用 `ui/widget/material/widget/slider/` 的 Material Slider
+- [ ] 使用 `third_party/QuarkWidgets/ui/widget/material/widget/slider/` 的 Material Slider
   - 亮度 Slider: range 0-100, step 1
   - 音量 Slider: range 0-100, step 1
 - [ ] 值变化时 emit 对应信号
 - [ ] **注意**: 第一版只是 UI，实际调节亮度/音量需要平台适配 (可延后)
 
 #### Step 8: 实现功能开关
-- [ ] 使用 `ui/widget/material/widget/switch_/` 的 Material Switch
+- [ ] 使用 `third_party/QuarkWidgets/ui/widget/material/widget/switch_/` 的 Material Switch
   - WiFi: 默认 off (纯 UI)
   - 蓝牙: 默认 off (纯 UI)
   - DND (勿扰模式): 默认 off (纯 UI)
@@ -216,7 +218,7 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 2: 状态栏 (下
 ### Day 9-10: 集成与验证
 
 #### Step 11: StatusBar → ControlCenter 连接
-- [ ] StatusBar 点击时间区域 → emit `timeClicked()`
+- [ ] StatusBar 点击时间区域 → emit `timeClicked()`（⚠️ 该信号当前不存在，需先在 status_bar.h 新增）
 - [ ] CFDesktopEntity 中连接：
   ```cpp
   connect(status_bar, &StatusBar::timeClicked,
@@ -255,18 +257,18 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 2: 状态栏 (下
 | 文件 | 修改内容 |
 |------|----------|
 | `desktop/ui/CFDesktopEntity.cpp` | 创建 WidgetContainer、ClockWidget、ControlCenter，连接信号 |
-| `desktop/ui/components/statusbar/status_bar.h` | 确认 `timeClicked()` 信号 |
+| `desktop/ui/components/statusbar/status_bar.h` | ⚠️ 需**新增** `timeClicked()` 信号（当前代码中不存在，MS6 原文当作"确认已有"是错的） |
 | `desktop/ui/components/CMakeLists.txt` | 添加新文件 |
 
 ### 参考文件 (只读)
 | 文件 | 用途 |
 |------|------|
-| `ui/widget/material/widget/slider/` | Material Slider |
-| `ui/widget/material/widget/switch_/` | Material Switch |
-| `ui/widget/material/widget/button/` | Material Button |
-| `ui/widget/material/base/md_elevation_controller.h` | 阴影系统 |
-| `ui/core/theme_manager.h` | ThemeManager |
-| `ui/components/animation/` | 动画工厂 |
+| `third_party/QuarkWidgets/ui/widget/material/widget/slider/` | Material Slider |
+| `third_party/QuarkWidgets/ui/widget/material/widget/switch_/` | Material Switch |
+| `third_party/QuarkWidgets/ui/widget/material/widget/button/` | Material Button |
+| `third_party/QuarkWidgets/ui/widget/material/base/elevation_controller.h` | 阴影系统 |
+| `third_party/QuarkWidgets/ui/core/theme_manager.h` | ThemeManager |
+| `third_party/QuarkWidgets/ui/components/` | 动画工厂 |
 | `desktop/ui/widget/init_session/simple_boot_widget.cpp` | QPainter 绘制参考 |
 | `document/todo/desktop/11_notification_control.md` | 控制中心原始设计 |
 | `document/todo/desktop/13_widget_apps.md` | 小组件原始设计 |

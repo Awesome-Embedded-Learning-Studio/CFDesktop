@@ -23,6 +23,7 @@ description: "状态: 🚧 部分完成，依赖阶段: Phase 6, Phase 7"
 - [x] `PanelManager` 面板管理器 (边缘布局算法)
 - [x] Windows 平台窗口后端 (HWND + SetWinEventHook)
 - [x] WSL X11 窗口后端 (XCB + QSocketNotifier)
+- [x] `WindowPlacementPolicy` 外部窗口放置约束（`desktop/ui/components/window_placement/window_placement_policy.h/.cpp`，2026-06-26 落地，纯数学策略零开销）
 
 ---
 
@@ -45,8 +46,9 @@ description: "状态: 🚧 部分完成，依赖阶段: Phase 6, Phase 7"
 
 ### Week 1: 窗口模型与状态机
 
-#### Day 1-2: WindowInfo 数据结构
-- [ ] 定义 WindowInfo 结构
+#### Day 1-2: WindowInfo 数据结构（骨架已存在，待补全字段）
+- [x] `desktop/ui/components/window_manager/window_info.h` 骨架已存在（2026-06-16），含 `WindowState` 枚举 6 值
+- [ ] 定义 WindowInfo 结构（补全缺失字段）
   - [ ] `windowId`（唯一标识符）
   - [ ] `title`（窗口标题）
   - [ ] `icon`（窗口图标）
@@ -258,33 +260,33 @@ description: "状态: 🚧 部分完成，依赖阶段: Phase 6, Phase 7"
 ## 四、文件清单（待实现）
 
 ### 头文件
-- [ ] `ui/desktop/window_manager.h`
-- [ ] `ui/desktop/window_info.h`
-- [ ] `ui/desktop/window_state.h`
-- [ ] `ui/desktop/zorder_manager.h`
-- [ ] `ui/desktop/layout_policy.h`
-- [ ] `ui/desktop/policy_registry.h`
-- [ ] `ui/desktop/policy/fullscreen_policy.h`
-- [ ] `ui/desktop/policy/floating_policy.h`
-- [ ] `ui/desktop/policy/split_policy.h`
-- [ ] `ui/desktop/window_animation_manager.h`
-- [ ] `ui/desktop/app_switcher.h`
-- [ ] `ui/desktop/ios_app_switcher.h`
-- [ ] `ui/desktop/windows_task_view.h`
+- [ ] `desktop/ui/components/window_manager/window_manager.h`
+- [ ] `desktop/ui/components/window_manager/window_info.h`
+- [ ] `desktop/ui/components/window_manager/window_state.h`
+- [ ] `desktop/ui/components/window_manager/zorder_manager.h`
+- [ ] `desktop/ui/components/window_manager/layout_policy.h`
+- [ ] `desktop/ui/components/window_manager/policy_registry.h`
+- [ ] `desktop/ui/components/window_manager/policy/fullscreen_policy.h`
+- [ ] `desktop/ui/components/window_manager/policy/floating_policy.h`
+- [ ] `desktop/ui/components/window_manager/policy/split_policy.h`
+- [ ] `desktop/ui/components/window_manager/window_animation_manager.h`
+- [ ] `desktop/ui/components/window_manager/app_switcher.h`
+- [ ] `desktop/ui/components/window_manager/ios_app_switcher.h`
+- [ ] `desktop/ui/components/window_manager/windows_task_view.h`
 
 ### 源文件
-- [ ] `src/desktop/window_manager.cpp`
-- [ ] `src/desktop/window_info.cpp`
-- [ ] `src/desktop/zorder_manager.cpp`
-- [ ] `src/desktop/layout_policy.cpp`
-- [ ] `src/desktop/policy_registry.cpp`
-- [ ] `src/desktop/policy/fullscreen_policy.cpp`
-- [ ] `src/desktop/policy/floating_policy.cpp`
-- [ ] `src/desktop/policy/split_policy.cpp`
-- [ ] `src/desktop/window_animation_manager.cpp`
-- [ ] `src/desktop/app_switcher.cpp`
-- [ ] `src/desktop/ios_app_switcher.cpp`
-- [ ] `src/desktop/windows_task_view.cpp`
+- [ ] `desktop/ui/components/window_manager/window_manager.cpp`
+- [ ] `desktop/ui/components/window_manager/window_info.cpp`
+- [ ] `desktop/ui/components/window_manager/zorder_manager.cpp`
+- [ ] `desktop/ui/components/window_manager/layout_policy.cpp`
+- [ ] `desktop/ui/components/window_manager/policy_registry.cpp`
+- [ ] `desktop/ui/components/window_manager/policy/fullscreen_policy.cpp`
+- [ ] `desktop/ui/components/window_manager/policy/floating_policy.cpp`
+- [ ] `desktop/ui/components/window_manager/policy/split_policy.cpp`
+- [ ] `desktop/ui/components/window_manager/window_animation_manager.cpp`
+- [ ] `desktop/ui/components/window_manager/app_switcher.cpp`
+- [ ] `desktop/ui/components/window_manager/ios_app_switcher.cpp`
+- [ ] `desktop/ui/components/window_manager/windows_task_view.cpp`
 
 ### 测试文件
 - [ ] `tests/unit/desktop/window/test_window_manager.cpp`
@@ -307,4 +309,4 @@ description: "状态: 🚧 部分完成，依赖阶段: Phase 6, Phase 7"
 
 ---
 
-*最后更新: 2026-03-12*
+*最后更新: 2026-06-29（核对代码现状：补录 `WindowPlacementPolicy`、`window_info.h` 骨架已存在、文件清单路径订正为实际 `desktop/ui/components/window_manager/`）*

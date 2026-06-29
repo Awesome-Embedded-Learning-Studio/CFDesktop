@@ -5,10 +5,15 @@ description: "依赖阶段: Phase 6, Phase 9"
 
 # Phase 10: Shell 导航系统 TODO
 
-> **状态**: ⬜ 待开始
+> **状态**: 🚧 部分完成（状态栏 / 任务栏 / 启动器切片已落地，见 MS2/MS3/MS4；iOS 手势导航 / 系统托盘 / NavigationPolicy / 全局快捷键待做）
 > **预计周期**: 3 周
 > **依赖阶段**: Phase 6, Phase 9
 > **目标交付物**: StatusBar 状态栏、导航组件（双风格）、应用启动器
+>
+> 📌 **现实核对（2026-06-29）**：
+> - **状态栏 / 任务栏 / 启动器切片已落地**（`desktop/ui/components/{statusbar,taskbar,launcher}/`）。本 Phase 剩余：iOS 底部手势条/TabBar、系统托盘、NavigationPolicy、**全局快捷键**、启动器搜索。
+> - **路径已订正**：`desktop/ui/components/` / `desktop/ui/components/` → 实际 `desktop/ui/components/`。
+> - **补漏**：全局快捷键/系统热键（Super 唤起启动器、Alt-Tab、通知中心开关等）原 Phase 未列，见文末补漏小节（依赖 [02_input_layer.md](../base/02_input_layer.md) 的 KeyInputHandler）。
 
 ---
 
@@ -196,9 +201,10 @@ description: "依赖阶段: Phase 6, Phase 9"
   - [ ] 左侧：固定应用
   - [ ] 中间：推荐/最近使用
   - [ ] 右侧/底部：全部应用列表
-- [ ] 实现搜索框
-  - [ ] 全局搜索（应用/文件/设置）
-  - [ ] 实时过滤
+- [ ] 实现搜索框（⚠️ 6ULL 只做 App 名匹配，不做全文索引）
+  - [ ] 应用索引源：扫描 `.desktop`（`~/.local/share/applications` + `/usr/share/applications`）
+  - [ ] 全局搜索（应用/文件/设置；文件/设置搜索可后置）
+  - [ ] 实时过滤（按 display_name 模糊匹配）
 - [ ] 实现应用列表
   - [ ] 字母分组
   - [ ] 滚动支持
@@ -218,6 +224,13 @@ description: "依赖阶段: Phase 6, Phase 9"
 - [ ] 集成测试
   - [ ] 与 WindowManager 集成
   - [ ] 与 AppSwitcher 集成
+
+#### Day 6（补漏）: 全局快捷键 / 系统热键
+- [ ] Super/Meta 唤起应用启动器（iOS 网格 / Win 开始菜单）
+- [ ] Alt-Tab 任务切换（接 [09_window_manager.md](09_window_manager.md) AppSwitcher）
+- [ ] 通知中心 / 控制中心开关、主题切换热键
+- [ ] 媒体键（音量/亮度/播放）、Print 截图
+- [ ] 落点：[02_input_layer.md](../base/02_input_layer.md) 的 InputManager 事件过滤器链（可先于 IPC 做）
 
 ---
 
@@ -243,32 +256,32 @@ description: "依赖阶段: Phase 6, Phase 9"
 ## 四、文件清单（待实现）
 
 ### 头文件
-- [ ] `ui/desktop/shell/status_bar.h`
-- [ ] `ui/desktop/shell/navigation_policy.h`
-- [ ] `ui/desktop/shell/ios_navigation_policy.h`
-- [ ] `ui/desktop/shell/windows_navigation_policy.h`
-- [ ] `ui/desktop/shell/navigation_container.h`
-- [ ] `ui/desktop/shell/bottom_gesture_bar.h`
-- [ ] `ui/desktop/shell/bottom_tab_bar.h`
-- [ ] `ui/desktop/shell/centered_taskbar.h`
-- [ ] `ui/desktop/shell/system_tray.h`
-- [ ] `ui/desktop/shell/app_launcher.h`
-- [ ] `ui/desktop/shell/ios_app_launcher.h`
-- [ ] `ui/desktop/shell/windows_app_launcher.h`
+- [ ] `desktop/ui/components/status_bar.h`
+- [ ] `desktop/ui/components/navigation_policy.h`
+- [ ] `desktop/ui/components/ios_navigation_policy.h`
+- [ ] `desktop/ui/components/windows_navigation_policy.h`
+- [ ] `desktop/ui/components/navigation_container.h`
+- [ ] `desktop/ui/components/bottom_gesture_bar.h`
+- [ ] `desktop/ui/components/bottom_tab_bar.h`
+- [ ] `desktop/ui/components/centered_taskbar.h`
+- [ ] `desktop/ui/components/system_tray.h`
+- [ ] `desktop/ui/components/app_launcher.h`
+- [ ] `desktop/ui/components/ios_app_launcher.h`
+- [ ] `desktop/ui/components/windows_app_launcher.h`
 
 ### 源文件
-- [ ] `src/desktop/shell/status_bar.cpp`
-- [ ] `src/desktop/shell/navigation_policy.cpp`
-- [ ] `src/desktop/shell/ios_navigation_policy.cpp`
-- [ ] `src/desktop/shell/windows_navigation_policy.cpp`
-- [ ] `src/desktop/shell/navigation_container.cpp`
-- [ ] `src/desktop/shell/bottom_gesture_bar.cpp`
-- [ ] `src/desktop/shell/bottom_tab_bar.cpp`
-- [ ] `src/desktop/shell/centered_taskbar.cpp`
-- [ ] `src/desktop/shell/system_tray.cpp`
-- [ ] `src/desktop/shell/app_launcher.cpp`
-- [ ] `src/desktop/shell/ios_app_launcher.cpp`
-- [ ] `src/desktop/shell/windows_app_launcher.cpp`
+- [ ] `desktop/ui/components/status_bar.cpp`
+- [ ] `desktop/ui/components/navigation_policy.cpp`
+- [ ] `desktop/ui/components/ios_navigation_policy.cpp`
+- [ ] `desktop/ui/components/windows_navigation_policy.cpp`
+- [ ] `desktop/ui/components/navigation_container.cpp`
+- [ ] `desktop/ui/components/bottom_gesture_bar.cpp`
+- [ ] `desktop/ui/components/bottom_tab_bar.cpp`
+- [ ] `desktop/ui/components/centered_taskbar.cpp`
+- [ ] `desktop/ui/components/system_tray.cpp`
+- [ ] `desktop/ui/components/app_launcher.cpp`
+- [ ] `desktop/ui/components/ios_app_launcher.cpp`
+- [ ] `desktop/ui/components/windows_app_launcher.cpp`
 
 ### 测试文件
 - [ ] `tests/unit/desktop/shell/test_status_bar.cpp`
