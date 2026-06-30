@@ -3,6 +3,8 @@ add_library(cfdesktop_wallpaper STATIC
     WallPaperToken.cpp
     WallPaperAccessStorage.cpp
     ImageWallPaperLayer.cpp
+    WallPaperEngine.cpp
+    TransitionComposer.cpp
 )
 
 target_include_directories(cfdesktop_wallpaper PUBLIC
@@ -15,4 +17,5 @@ target_link_libraries(cfdesktop_wallpaper PRIVATE
     cflogger
     cfbase
     QuarkWidgets::quarkwidgets
+    cfconfig
 )

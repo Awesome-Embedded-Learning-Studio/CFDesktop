@@ -9,3 +9,6 @@ add_subdirectory(frosted_backdrop)
 
 # Add window placement tests subdirectory
 add_subdirectory(window_placement)
+
+# Add wallpaper animation tests subdirectory
+add_subdirectory(wallpaper_animation)

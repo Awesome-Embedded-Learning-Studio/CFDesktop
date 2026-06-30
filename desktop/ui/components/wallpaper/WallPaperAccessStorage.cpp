@@ -75,4 +75,13 @@ size_t WallPaperAccessStorage::size() const {
     return wallpaper_images.size();
 }
 
+std::vector<wallpaper_token_id_t> WallPaperAccessStorage::tokenIds() const {
+    std::vector<wallpaper_token_id_t> ids;
+    ids.reserve(wallpaper_images.size());
+    for (const auto& ptr : wallpaper_images) {
+        ids.push_back(ptr->id());
+    }
+    return ids;
+}
+
 } // namespace cf::desktop::wallpaper

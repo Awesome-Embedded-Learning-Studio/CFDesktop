@@ -19,6 +19,7 @@
 #include <QImage>
 #include <QObject>
 #include <memory>
+#include <vector>
 
 namespace cf::desktop::wallpaper {
 /**
@@ -137,6 +138,23 @@ class WallPaperAccessStorage : public QObject {
      * @ingroup        wallpaper
      */
     size_t size() const;
+
+    /**
+     * @brief  Returns the IDs of all stored tokens in storage order.
+     *
+     * Order matches insertion order. Used by randomized wallpaper
+     * selectors that need the full candidate set.
+     *
+     * @return         Vector of token IDs; empty if storage is empty.
+     *
+     * @throws         None.
+     *
+     * @note           None.
+     * @warning        None.
+     * @since          0.19
+     * @ingroup        wallpaper
+     */
+    std::vector<wallpaper_token_id_t> tokenIds() const;
 
     enum class OverFlowType { OverFlow, UnderFlow };
   signals:

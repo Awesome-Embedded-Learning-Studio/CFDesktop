@@ -1,4 +1,5 @@
 #include "wallpaper_setup.h"
+#include "cfconfig.hpp"
 #include "cflog.h"
 #include "cfpath/desktop_main_path_resolvers.h"
 #include "filter_target.h"
@@ -8,9 +9,53 @@
 #include "wallpaper/WallPaperToken.h"
 #include "wallpaper_src_chain.h"
 
+#include <QString>
+
 namespace cf::desktop::wallpaper {
 
 namespace {
+/// Tag for wallpaper setup log lines.
+constexpr const char* kLogTag = "WallpaperSetup";
+
+/**
+ * @brief  Reads the configured wallpaper scaling mode.
+ *
+ * @return Scaling mode; ScalingMode::Fill on unknown values (with a warning).
+ */
+ScalingMode scaling_from_config() {
+    auto wp = cf::config::ConfigStore::instance().domain("wallpaper");
+    const auto value =
+        wp.query<std::string>(cf::config::KeyView{.group = "wallpaper", .key = "scaling"}, "fill");
+    if (value == "fit") {
+        return ScalingMode::Fit;
+    }
+    if (value == "stretch") {
+        return ScalingMode::Stretch;
+    }
+    if (value == "fill") {
+        return ScalingMode::Fill;
+    }
+    log::warningftag(kLogTag, "Unknown scaling '{}', falling back to fill", value);
+    return ScalingMode::Fill;
+}
+
+/**
+ * @brief  Reads the configured wallpaper background color.
+ *
+ * @return Background color; default dark grey on invalid input (with a warning).
+ */
+QColor background_from_config() {
+    auto wp = cf::config::ConfigStore::instance().domain("wallpaper");
+    const auto value = wp.query<std::string>(
+        cf::config::KeyView{.group = "wallpaper", .key = "background_color"}, "#1c1b1f");
+    QColor color(QString::fromStdString(value));
+    if (!color.isValid()) {
+        log::warningftag(kLogTag, "Invalid background_color '{}', falling back to #1c1b1f", value);
+        return QColor(0x1c, 0x1b, 0x1f);
+    }
+    return color;
+}
+
 /**
  * @brief Wallpaper Layer Inits
  *
@@ -19,7 +64,8 @@ namespace {
 std::unique_ptr<WallPaperLayer> make_layer() {
     using namespace base::filesystem;
 
-    auto layer = std::make_unique<ImageWallPaperLayer>();
+    auto layer =
+        std::make_unique<ImageWallPaperLayer>(scaling_from_config(), background_from_config());
     const QStringList pic_filters = request_filterlist(FilterType::Pictures);
 
     // Primary source: policy chain (config source_path -> Pictures), flat scan.
