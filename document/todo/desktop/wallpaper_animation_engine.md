@@ -5,7 +5,7 @@ description: "移植 CCIMXDesktop 的 WallPaperEngine + WallPaperAnimationHandle
 
 # 壁纸动画轮播引擎——接手实施计划
 
-> **状态**: ⬜ 待开始(下一批)
+> **状态**: ✅ 已落地(2026-06-30,分支 `feat/wallpaper-animation-engine`;落地细节见末尾「实施记录」)
 > **来源**: 资源包发现(PR #13)已合入,`status/current.md` 标注「动画轮播引擎留待下一批」;本文为该批的详细实施计划,供下一位 AI 直接接手。
 > **所属 Phase**: Phase 13([13_widget_apps.md](13_widget_apps.md) 壁纸段「只需补轮播」)。
 > **预计规模**: 中等(≈2 个新文件 + 1 个扩展 + 配置 + 测试)。
@@ -190,3 +190,42 @@ private:
 | [desktop_config_init.cpp](../../../desktop/main/init/desktop_config_init/desktop_config_init.cpp) | `WALLPAPER_CONFIG_TEMPLATE` 补 key |
 | `~/CCIMXDesktop/core/wallpaper/WallPaperEngine.{h,cpp}` | 源参照(engine 语义) |
 | `~/CCIMXDesktop/ui/wallpaperanimationhandler.{h,cpp}` | 源参照(过渡语义,勿抄 QLabel) |
+
+---
+
+## 十、实施记录(2026-06-30 落地)
+
+**实际落地文件**:
+
+| 文件 | 角色 |
+|---|---|
+| `desktop/ui/components/wallpaper/TransitionComposer.{h,cpp}` | **新**:`SwitchingMode` 枚举 + 纯函数 `composeTransitionFrame`(Gradient/Movement/Fixed 逐帧合成,可单测) |
+| `desktop/ui/components/wallpaper/WallPaperEngine.{h,cpp}` | **新**:配置驱动 + QTimer 定时 + `Selector{Sequential,Random}` + 纯函数 `selectNextWallpaper` + `size()>1`/Fixed/`disable_animation` 守卫 |
+| `WallPaperAccessStorage.{h,cpp}` | 加 `tokenIds()`(Random 选择器所需) |
+| `WallpaperShellLayerStrategy.{h,cpp}` | 过渡状态机(`QVariantAnimation` 驱动逐帧合成)+ `triggerNextWallpaper()` |
+| `wallpaper_setup.cpp` | `make_layer()` 接 `scaling`/`background_color` 配置(原僵尸 key) |
+| `cmake/meta_info/desktop_settings.template.h.in` | `WALLPAPER_CONFIG_TEMPLATE` 加 6 个动画 key |
+| `test/desktop/wallpaper_animation/` | **新**:16 例(composer 7 + selector 6 + engine 3),全过 |
+
+**对接手文档的纠正**(实施时发现):
+
+1. 配置模板在 `.h.in`(`cf::desktop::early_stage::WALLPAPER_CONFIG_TEMPLATE`),**非** `desktop_config_init.cpp`——后者只是写入它。
+2. `WallPaperAccessStorage` 的 `indexed_vector` 是 private,原无枚举/按索引接口 → 必须加 `tokenIds()` 才能支持 Random。
+3. CFDesktop 原生 `showNextOne` **顺序不 wrap**(到边界返回 false),与 CCIMX 随机不同 → 用纯函数 `selectNextWallpaper` 统一两种策略,Sequential 自带 wrap,Random 排除当前。
+
+**实际决策**(与用户确认):
+
+- 选择器:**Sequential + Random 两种都做**,`switch_selector` 配置切换(默认 Sequential)。
+- 6ULL/低性能降级:**仅 `disable_animation` 配置项**,不接 HWTier。
+- 手动切换也走动画:`triggerNextWallpaper()` 复用过渡路径(为壁纸选择器 UI 预留)。
+- 顺手接 `scaling`/`background_color` 僵尸 key。
+- 缓动曲线配置化:`switch_easing`(inoutcubic/outcubic/linear)。
+
+**工程选择(偏离原文档)**:
+
+- 用 `QVariantAnimation`(`valueChanged` 驱动)而非 `QPropertyAnimation`——strategy 非 QObject,免 `Q_OBJECT`/`Q_PROPERTY`,改动最小。
+- **engine 不切图**:切图同步触发 layer 回调,必须由 strategy 先设过渡状态;故 engine 只发 `request_(mode)`,strategy 在回调里设状态 + 切图 + 启动动画,时序正确。
+- 过渡中 geometry 变化 → `resetTransition()` 中止(旧图缓存无法重缩),由 `rescaleImage()` 处理新尺寸。
+- 新图加载失败(`currentImage().isNull()`)→ abort 过渡、回退旧图 + warn(no-silent-fallback)。
+
+**验证(全绿)**:三层依赖 grep ✅ / `python3 scripts/doxygen/lint.py` ✅ / `linux_fast_develop_build.sh` ✅ / `linux_run_tests.sh` 13/13 ✅(含新增 16 例 wallpaper 测试)。手动端到端验证留待合入后在 WSLg 实机跑(Fixed/Gradient/Movement/边界/配置切换)。
