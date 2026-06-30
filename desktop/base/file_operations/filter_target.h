@@ -40,4 +40,28 @@ QStringList& request_filterlist(const FilterType what);
  * @return QStringList
  */
 QStringList filter_target(const QString& dirent_path, const QStringList& filters);
+
+/**
+ * @brief  Recursively list files matching the filters under a directory.
+ *
+ * Like filter_target(), but descends into subdirectories so that files
+ * nested in pack subdirectories (for example a wallpaper resource pack
+ * installed under wallpapers/<pack>/) are discovered. The top-level
+ * directory and every subdirectory are scanned; matching file paths are
+ * accumulated.
+ *
+ * @param[in] dirent_path  Absolute path of the root directory to scan.
+ * @param[in] filters      Name filters to match (for example image globs).
+ *
+ * @return  Absolute file paths of matching files; empty if the directory
+ *          does not exist or no file matches.
+ *
+ * @throws  None.
+ *
+ * @note    None.
+ * @warning None.
+ * @since   0.19
+ * @ingroup filesystem
+ */
+QStringList filter_target_recursive(const QString& dirent_path, const QStringList& filters);
 } // namespace cf::desktop::base::filesystem

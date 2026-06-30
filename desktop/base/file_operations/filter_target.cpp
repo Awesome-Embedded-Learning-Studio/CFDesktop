@@ -69,4 +69,27 @@ QStringList filter_target(const QString& dirent_path, const QStringList& filters
     return result;
 }
 
+QStringList filter_target_recursive(const QString& dirent_path, const QStringList& filters) {
+    QStringList result;
+    QDir dir(dirent_path);
+
+    if (!dir.exists()) {
+        return result;
+    }
+
+    // Collect matching files at this level (files only, same as filter_target).
+    const QFileInfoList files = dir.entryInfoList(filters, QDir::Files | QDir::NoDotAndDotDot);
+    for (const auto& entry : files) {
+        result.append(entry.absoluteFilePath());
+    }
+
+    // Descend into each subdirectory so nested resource packs are discovered.
+    const QFileInfoList subdirs = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (const auto& sub : subdirs) {
+        result.append(filter_target_recursive(sub.absoluteFilePath(), filters));
+    }
+
+    return result;
+}
+
 } // namespace cf::desktop::base::filesystem

@@ -21,6 +21,7 @@ description: CFDesktop 消费的 AELS 组织独立仓（含拟新建）的跨仓
 | **lightroot** | 现代化 BuildRoot（根文件系统构建） | 与 OTA/部署同层 |
 | **edgecv** | OpenCV 封装（desktop + embedded） | 相机/图像应用可选依赖 |
 | **bareline** | 嵌入式+PC CLI 交互框架 | 终端 App 的 pty 层可借鉴 |
+| **CF-Gallery** | 摄影静物壁纸静态资源包（CC BY-NC-ND 4.0，VitePress 收录站） | **非构建依赖**：运行时动态发现——资源包安装到 `<desktop_active_root>/Wallpapers/<pack>/`（默认 `~/desktop/Wallpapers/`）即被壁纸层递归扫描消费。CFDesktop 零编译期耦合（**无 submodule、无 `#ifdef`、无 CMake option**）；图片绝不进二进制，「开关」=是否安装了该资源包。 |
 
 ---
 
