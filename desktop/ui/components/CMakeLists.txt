@@ -10,6 +10,7 @@ add_subdirectory(window_placement)
 add_subdirectory(statusbar)
 add_subdirectory(taskbar)
 add_subdirectory(launcher)
+add_subdirectory(builtin_apps)
 
 # Create interface library for convenience
 add_library(cf_desktop_components STATIC)
@@ -38,6 +39,7 @@ PRIVATE
     cfdesktop_statusbar
     cfdesktop_taskbar
     cfdesktop_launcher
+    cfdesktop_builtin_apps
     cfdesktop_window_placement
     Qt6::Core Qt6::Gui Qt6::Widgets
 )

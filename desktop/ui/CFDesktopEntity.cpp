@@ -10,6 +10,7 @@
 #include "components/IDisplayServerBackend.h"
 #include "components/PanelManager.h"
 #include "components/WindowManager.h"
+#include "components/builtin_apps/about_panel.h"
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
 #include "components/statusbar/status_bar.h"
@@ -19,11 +20,48 @@
 #include "platform/display_backend_helper.h"
 #include "platform/shell_layer_helper.h"
 #include "qt_format.h"
+#include <QCoreApplication>
+#include <QFile>
 #include <QHash>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <functional>
 #include <memory>
 
 namespace cf::desktop {
+
+namespace {
+/// Loads the per-board app list from <bin>/settings/apps.json. Falls back to
+/// defaultApps() when the file is missing, unreadable, empty, or has no valid
+/// entries -- so a board only needs to drop an apps.json to customize the
+/// launcher/taskbar without a recompile.
+QList<desktop_component::AppEntry> loadAppsConfig() {
+    // Read from the desktop root (<bin>/../apps.json). Kept out of the
+    // board-written settings/ dir so it stays owner-writable on the NFS root.
+    const QString path =
+        QCoreApplication::applicationDirPath() + QStringLiteral("/../apps.json");
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        return desktop_component::defaultApps();
+    }
+    const QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    const auto arr = doc.object().value(QStringLiteral("apps")).toArray();
+    QList<desktop_component::AppEntry> apps;
+    for (const auto& value : arr) {
+        const auto o = value.toObject();
+        desktop_component::AppEntry entry;
+        entry.app_id = o.value(QStringLiteral("app_id")).toString();
+        entry.display_name = o.value(QStringLiteral("display_name")).toString();
+        entry.icon_path = o.value(QStringLiteral("icon_path")).toString();
+        entry.exec_command = o.value(QStringLiteral("exec_command")).toString();
+        if (!entry.app_id.isEmpty() && !entry.exec_command.isEmpty()) {
+            apps.append(entry);
+        }
+    }
+    return apps.isEmpty() ? desktop_component::defaultApps() : apps;
+}
+} // namespace
 
 std::unique_ptr<CFDesktopEntity> CFDesktopEntity::global_instance_;
 
@@ -220,8 +258,8 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
 
     // ── Taskbar: bottom-edge panel (centered app icons) ──
     // apps is captured by the click handler to resolve app_id -> exec_command.
-    const QList<cf::desktop::desktop_component::AppEntry> apps =
-        cf::desktop::desktop_component::defaultApps();
+    // Loaded from settings/apps.json (per-board app list) if present.
+    const QList<cf::desktop::desktop_component::AppEntry> apps = loadAppsConfig();
     auto* taskbar = new cf::desktop::desktop_component::CenteredTaskbar(desktop_entity_);
     taskbar->setApps(apps);
     taskbar->setBackdropSource(shell);
@@ -229,24 +267,43 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // Shared launch path: resolve app_id -> exec, launch, capture PID. Used by
     // both the taskbar tile click and the launcher popup so the running-state
     // indicator lights for either entry point.
-    std::function<void(const QString&)> launch_app = [apps, app_pid](const QString& app_id) {
-        QString exec;
-        for (const auto& app : apps) {
-            if (app.app_id == app_id) {
-                exec = app.exec_command;
-                break;
+    // Builtin in-process apps live as hidden child widgets of the desktop and
+    // are shown when their "builtin:*" exec_command is launched (no QProcess,
+    // so no framebuffer fight with the desktop on linuxfb).
+    auto* about_panel = new cf::desktop::desktop_component::AboutPanel(desktop_entity_);
+
+    std::function<void(const QString&)> launch_app =
+        [apps, app_pid, about_panel, panel_mgr](const QString& app_id) {
+            QString exec;
+            for (const auto& app : apps) {
+                if (app.app_id == app_id) {
+                    exec = app.exec_command;
+                    break;
+                }
             }
-        }
-        if (exec.isEmpty()) {
-            cf::log::warningftag("CFDesktopEntity", "No exec for app_id '{}'",
-                                 app_id.toStdString());
-            return;
-        }
-        const auto launched = cf::desktop::desktop_component::AppLaunchService::launch(exec);
-        if (launched.has_value()) {
-            (*app_pid)[app_id] = *launched;
-        }
-    };
+            if (exec.isEmpty()) {
+                cf::log::warningftag("CFDesktopEntity", "No exec for app_id '{}'",
+                                     app_id.toStdString());
+                return;
+            }
+            // Builtin apps render in-process. External apps are launched
+            // detached (Stage 2 will add hide-desktop + managed-QProcess for
+            // GUI apps that need the full framebuffer).
+            if (exec.startsWith(QStringLiteral("builtin:"))) {
+                const auto id = exec.mid(QStringLiteral("builtin:").size());
+                if (id == QStringLiteral("about") && about_panel != nullptr) {
+                    about_panel->popup(panel_mgr->availableGeometry());
+                } else {
+                    cf::log::warningftag("CFDesktopEntity", "Unknown builtin app '{}'",
+                                         id.toStdString());
+                }
+                return;
+            }
+            const auto launched = cf::desktop::desktop_component::AppLaunchService::launch(exec);
+            if (launched.has_value()) {
+                (*app_pid)[app_id] = *launched;
+            }
+        };
     QObject::connect(taskbar, &cf::desktop::desktop_component::CenteredTaskbar::appClicked, this,
                      launch_app);
 
