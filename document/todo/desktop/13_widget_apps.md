@@ -12,6 +12,8 @@ description: "预计周期: 4~5 周，依赖阶段: Phase 9, Phase 12"
 >
 > 📌 **现实核对与补漏（2026-06-29）**：
 > - **壁纸引擎已落地**（`desktop/ui/components/wallpaper/`：`ImageWallPaperLayer`/`WallPaperAccessStorage`/`WallPaperToken`/`WallpaperShellLayerStrategy`），本 Phase 壁纸部分只需补轮播/生成式/资源，引擎不必重做。
+>   - **资源包运行时发现已合入**(PR #13,2026-06):第三方壁纸包安装到 `<desktop_active_root>/Wallpapers/<pack>/` 即被递归发现;CF-Gallery 提供 `install-to-cfdesktop.sh`。
+>   - **轮播/动画引擎待做**:定时轮播 + Gradient 交叉淡入 / Movement 平移,后端无关重表达——**实施计划见 [wallpaper_animation_engine.md](wallpaper_animation_engine.md)**(自洽接手文档)。
 > - **Widget 框架尺度调和**：本 Phase（Phase J）画的是**全量愿景**（沙箱/进程隔离/API）；近期落地以 [milestone_06](milestone_06_widget_control_center.md) **最小版**（ClockWidget + ControlCenter）为准。沙箱依赖 IPC(0%)+CrashHandler；低 RAM 退化同进程崩溃隔离。
 > - **FileManagerApp 现实**：① 依赖 P2 控件（ToolBar/ContextMenu/TreeView 等，当前 0%）；② 本仓 `desktop/base/file_operations/file_op.h` **只是路径拼接微工具**（copy/move/rename/delete/trash 全无），**不能当文件管理器底座**，需新建；③ 建议参照 CCIMX `FileRamber`（QtConcurrent 异步刷新）移植。
 > - **数据源前置**：WeatherWidget 依赖 `aels-network`；ResourceMonitorWidget 依赖 `base/system` 探针（已 90%）；均见 [aels_cross_repo_deps.md](aels_cross_repo_deps.md)。
