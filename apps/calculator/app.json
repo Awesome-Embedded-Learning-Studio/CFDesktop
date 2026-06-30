@@ -1,0 +1,5 @@
+{
+    "app_id": "calculator",
+    "display_name": "Calculator",
+    "exec": "calculator"
+}

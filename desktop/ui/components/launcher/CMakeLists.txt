@@ -1,5 +1,6 @@
 # App launcher service (QProcess-based external application launching).
 add_library(cfdesktop_launcher STATIC
+    app_discoverer.cpp
     app_launch_service.cpp
     app_launcher.cpp
     launcher_tile.cpp

@@ -11,6 +11,7 @@
 #include "components/PanelManager.h"
 #include "components/WindowManager.h"
 #include "components/builtin_apps/about_panel.h"
+#include "components/launcher/app_discoverer.h"
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
 #include "components/statusbar/status_bar.h"
@@ -32,15 +33,19 @@
 namespace cf::desktop {
 
 namespace {
-/// Loads the per-board app list from <bin>/settings/apps.json. Falls back to
-/// defaultApps() when the file is missing, unreadable, empty, or has no valid
-/// entries -- so a board only needs to drop an apps.json to customize the
-/// launcher/taskbar without a recompile.
+/// Loads the app list with a fallback chain: auto-discovered apps
+/// (<bin>/../apps/<id>/app.json) first, then <bin>/../apps.json manual list,
+/// then defaultApps(). A board can drop app manifests or apps.json to
+/// customize the launcher/taskbar without a recompile.
 QList<desktop_component::AppEntry> loadAppsConfig() {
-    // Read from the desktop root (<bin>/../apps.json). Kept out of the
-    // board-written settings/ dir so it stays owner-writable on the NFS root.
-    const QString path =
-        QCoreApplication::applicationDirPath() + QStringLiteral("/../apps.json");
+    // Prefer auto-discovered apps (<bin>/../apps/<id>/app.json manifests).
+    auto discovered = desktop_component::AppDiscoverer::discover();
+    if (!discovered.isEmpty()) {
+        return discovered;
+    }
+    // Fallback: <bin>/../apps.json manual list. Kept out of the board-written
+    // settings/ dir so it stays owner-writable on the NFS root.
+    const QString path = QCoreApplication::applicationDirPath() + QStringLiteral("/../apps.json");
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly)) {
         return desktop_component::defaultApps();
@@ -272,38 +277,38 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // so no framebuffer fight with the desktop on linuxfb).
     auto* about_panel = new cf::desktop::desktop_component::AboutPanel(desktop_entity_);
 
-    std::function<void(const QString&)> launch_app =
-        [apps, app_pid, about_panel, panel_mgr](const QString& app_id) {
-            QString exec;
-            for (const auto& app : apps) {
-                if (app.app_id == app_id) {
-                    exec = app.exec_command;
-                    break;
-                }
+    std::function<void(const QString&)> launch_app = [apps, app_pid, about_panel,
+                                                      panel_mgr](const QString& app_id) {
+        QString exec;
+        for (const auto& app : apps) {
+            if (app.app_id == app_id) {
+                exec = app.exec_command;
+                break;
             }
-            if (exec.isEmpty()) {
-                cf::log::warningftag("CFDesktopEntity", "No exec for app_id '{}'",
-                                     app_id.toStdString());
-                return;
+        }
+        if (exec.isEmpty()) {
+            cf::log::warningftag("CFDesktopEntity", "No exec for app_id '{}'",
+                                 app_id.toStdString());
+            return;
+        }
+        // Builtin apps render in-process. External apps are launched
+        // detached (Stage 2 will add hide-desktop + managed-QProcess for
+        // GUI apps that need the full framebuffer).
+        if (exec.startsWith(QStringLiteral("builtin:"))) {
+            const auto id = exec.mid(QStringLiteral("builtin:").size());
+            if (id == QStringLiteral("about") && about_panel != nullptr) {
+                about_panel->popup(panel_mgr->availableGeometry());
+            } else {
+                cf::log::warningftag("CFDesktopEntity", "Unknown builtin app '{}'",
+                                     id.toStdString());
             }
-            // Builtin apps render in-process. External apps are launched
-            // detached (Stage 2 will add hide-desktop + managed-QProcess for
-            // GUI apps that need the full framebuffer).
-            if (exec.startsWith(QStringLiteral("builtin:"))) {
-                const auto id = exec.mid(QStringLiteral("builtin:").size());
-                if (id == QStringLiteral("about") && about_panel != nullptr) {
-                    about_panel->popup(panel_mgr->availableGeometry());
-                } else {
-                    cf::log::warningftag("CFDesktopEntity", "Unknown builtin app '{}'",
-                                         id.toStdString());
-                }
-                return;
-            }
-            const auto launched = cf::desktop::desktop_component::AppLaunchService::launch(exec);
-            if (launched.has_value()) {
-                (*app_pid)[app_id] = *launched;
-            }
-        };
+            return;
+        }
+        const auto launched = cf::desktop::desktop_component::AppLaunchService::launch(exec);
+        if (launched.has_value()) {
+            (*app_pid)[app_id] = *launched;
+        }
+    };
     QObject::connect(taskbar, &cf::desktop::desktop_component::CenteredTaskbar::appClicked, this,
                      launch_app);
 
@@ -312,19 +317,18 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     app_launcher->setApps(apps);
     QObject::connect(app_launcher, &cf::desktop::desktop_component::AppLauncher::appLaunched, this,
                      launch_app);
-    QObject::connect(
-        taskbar, &cf::desktop::desktop_component::CenteredTaskbar::launcherRequested, this,
-        [app_launcher, panel_mgr]() {
-            // Toggle: clicking Start while the launcher is open dismisses it,
-            // otherwise pop it up. The start button used to only ever call
-            // popup(), so a second click was a no-op while the menu was already
-            // visible.
-            if (app_launcher->isShowing()) {
-                app_launcher->hideLauncher();
-            } else {
-                app_launcher->popup(panel_mgr->availableGeometry());
-            }
-        });
+    QObject::connect(taskbar, &cf::desktop::desktop_component::CenteredTaskbar::launcherRequested,
+                     this, [app_launcher, panel_mgr]() {
+                         // Toggle: clicking Start while the launcher is open dismisses it,
+                         // otherwise pop it up. The start button used to only ever call
+                         // popup(), so a second click was a no-op while the menu was already
+                         // visible.
+                         if (app_launcher->isShowing()) {
+                             app_launcher->hideLauncher();
+                         } else {
+                             app_launcher->popup(panel_mgr->availableGeometry());
+                         }
+                     });
     taskbar->show();
     panel_mgr->relayout();
 
