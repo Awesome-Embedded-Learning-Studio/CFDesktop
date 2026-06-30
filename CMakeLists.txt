@@ -70,6 +70,11 @@ add_subdirectory(desktop)
 # Log base module end
 log_module_end("desktop")
 
+# Standalone desktop apps (launched via QProcess, not linked into the shell).
+log_module_start("apps")
+add_subdirectory(apps)
+log_module_end("apps")
+
 log_module_start("example")
 add_subdirectory("example")
 log_module_end("example")
