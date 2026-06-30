@@ -33,8 +33,14 @@ target_link_libraries(calculator PRIVATE
     Qt6::Widgets
 )
 
-# Place next to the CFDesktop binary so AppLaunchService's applicationDirPath()
-# resolution finds it (exec_command "calculator" -> <bin>/calculator).
+# App package is self-contained under <bin>/../apps/calculator/ (executable +
+# manifest in the same dir). AppDiscoverer scans <bin>/../apps/<id>/app.json,
+# resolves exec to the co-located absolute path, and AppLaunchService launches
+# it directly — no working-directory dependency, no PATH search needed.
+set(CALC_APP_DIR "${CMAKE_BINARY_DIR}/apps/calculator")
 set_target_properties(calculator PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY "${CALC_APP_DIR}"
 )
+
+# Deploy the manifest next to the executable (at configure time).
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/app.json" "${CALC_APP_DIR}/app.json" COPYONLY)
