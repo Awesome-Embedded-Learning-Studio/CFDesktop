@@ -22,7 +22,8 @@ namespace cf::desktop::path {
  * @brief  Provider for desktop main directory paths.
  *
  * Manages resolution of standard desktop directory paths including Home,
- * Desktop, Documents, Downloads, Music, Pictures, Videos, Apps, and Runtime.
+ * Desktop, Documents, Downloads, Music, Pictures, Wallpapers, Videos, Apps,
+ * and Runtime.
  *
  * @ingroup desktop_base
  */
@@ -41,6 +42,7 @@ class DesktopMainPathProvider : public aex::Singleton<DesktopMainPathProvider> {
     X(Downloads)      \
     X(Music)          \
     X(Pictures)       \
+    X(Wallpapers)     \
     X(Videos)         \
     X(Apps)           \
     X(Runtime)
