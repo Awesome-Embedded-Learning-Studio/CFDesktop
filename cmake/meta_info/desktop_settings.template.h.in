@@ -30,7 +30,13 @@ static constexpr const char* EARLY_SETTINGS_TEMPLATE = R"({
 static constexpr const char* WALLPAPER_CONFIG_TEMPLATE = R"({
     "source_path": "",
     "scaling": "fill",
-    "background_color": "#1c1b1f"
+    "background_color": "#1c1b1f",
+    "switch_mode": "movement",
+    "switch_selector": "sequential",
+    "switch_interval_ms": 20000,
+    "animation_duration_ms": 2000,
+    "switch_easing": "inoutcubic",
+    "disable_animation": false
 }
 )";
 } // namespace cf::desktop::early_stage

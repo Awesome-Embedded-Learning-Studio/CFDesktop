@@ -7,6 +7,12 @@
  * image scaling on geometry changes and triggers repaints when the
  * wallpaper image changes.
  *
+ * A WallPaperEngine drives timed rotation. When a switch is due the
+ * strategy runs a per-frame transition: the outgoing frame is captured,
+ * the layer advances, and a QVariantAnimation blends old and new images
+ * into cached_scaled_image via composeTransitionFrame() until the new
+ * image is fully revealed.
+ *
  * @author  Charliechen114514 (chengh1922@mails.jlu.edu.cn)
  * @date    2026-04-09
  * @version 0.1
@@ -16,6 +22,7 @@
 
 #pragma once
 #include "../IShellLayerStrategy.h"
+#include "../wallpaper/TransitionComposer.h"
 #include <QColor>
 #include <QImage>
 #include <QRect>
@@ -28,7 +35,8 @@ class WindowManager;
 
 namespace wallpaper {
 class WallPaperLayer;
-}
+class WallPaperEngine;
+} // namespace wallpaper
 
 /**
  * @brief  Shell layer strategy with wallpaper background support.
@@ -122,6 +130,22 @@ class WallpaperShellLayerStrategy : public IShellLayerStrategy {
      */
     QColor backgroundColor() const override;
 
+    /**
+     * @brief  Manually triggers a transition to the next wallpaper.
+     *
+     * Uses the engine's configured switching mode and selector. Provided
+     * as the future hook for a wallpaper chooser UI; the same path is
+     * used by automatic timed rotation.
+     *
+     * @throws           None.
+     *
+     * @note             None.
+     * @warning          None.
+     * @since            0.19
+     * @ingroup          components
+     */
+    void triggerNextWallpaper();
+
   private:
     /**
      * @brief  Re-scales the raw image to fit the current geometry.
@@ -133,9 +157,58 @@ class WallpaperShellLayerStrategy : public IShellLayerStrategy {
     /**
      * @brief  Callback invoked when the wallpaper layer's image changes.
      *
-     * Reloads the raw image, re-scales it, and requests a repaint.
+     * Reloads the raw image, re-scales it, and requests a repaint. During
+     * an active transition it instead captures the new frame and starts
+     * the per-frame animation.
      */
     void onWallpaperChanged();
+
+    /**
+     * @brief  Requests a repaint from the bound shell layer (no-op if unset).
+     */
+    void requestLayerRepaint();
+
+    /**
+     * @brief  Begins a transition to a new wallpaper.
+     *
+     * Captures the current frame as the outgoing image, arms the
+     * transition state, and advances the layer to the next wallpaper.
+     *
+     * @param[in] mode  Compositing mode for this transition.
+     */
+    void beginTransition(wallpaper::SwitchingMode mode);
+
+    /**
+     * @brief  Advances the layer to the next wallpaper per the selector.
+     *
+     * @return True if the layer switched (and thus fired onWallpaperChanged);
+     *         false if there was nothing to switch to.
+     */
+    bool advanceLayerToNext();
+
+    /**
+     * @brief  Builds and starts the per-frame transition animation.
+     */
+    void startTransitionAnim();
+
+    /**
+     * @brief  Composes and publishes one transition frame at @p progress.
+     *
+     * @param[in] progress  Transition progress in [0, 1].
+     */
+    void composeFrame(qreal progress);
+
+    /**
+     * @brief  Finalizes a transition: settles on the new frame, clears state.
+     */
+    void finishTransition();
+
+    /**
+     * @brief  Aborts any in-flight transition and clears buffers.
+     *
+     * Used by deactivate() and on geometry changes mid-transition.
+     */
+    void resetTransition();
 
     struct Private;
     std::unique_ptr<Private> d;
