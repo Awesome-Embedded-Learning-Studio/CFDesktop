@@ -17,17 +17,14 @@
 
 namespace cf::desktop::wallpaper {
 
-QImage composeTransitionFrame(const QImage& prev, const QImage& cur, qreal t, SwitchingMode mode,
-                              const QSize& target) {
-    if (target.isEmpty() || cur.isNull()) {
-        return {};
+void composeTransitionFrameInto(QImage& dst, const QImage& prev, const QImage& cur, qreal t,
+                                SwitchingMode mode) {
+    if (dst.isNull() || cur.isNull()) {
+        return;
     }
     const qreal progress = std::clamp(t, 0.0, 1.0);
 
-    QImage frame(target, QImage::Format_RGB32);
-    frame.fill(Qt::black);
-
-    QPainter painter(&frame);
+    QPainter painter(&dst);
     switch (mode) {
         case SwitchingMode::Fixed: {
             // Defensive: the engine never requests a transition in Fixed mode.
@@ -45,7 +42,7 @@ QImage composeTransitionFrame(const QImage& prev, const QImage& cur, qreal t, Sw
         }
         case SwitchingMode::Movement: {
             // Old exits left, new enters from right (matches CCIMXDesktop).
-            const double width = static_cast<double>(target.width());
+            const double width = static_cast<double>(dst.width());
             const int x_prev = static_cast<int>(std::round(std::lerp(0.0, -width, progress)));
             const int x_cur = static_cast<int>(std::round(std::lerp(width, 0.0, progress)));
             if (!prev.isNull()) {
@@ -56,6 +53,16 @@ QImage composeTransitionFrame(const QImage& prev, const QImage& cur, qreal t, Sw
             break;
         }
     }
+}
+
+QImage composeTransitionFrame(const QImage& prev, const QImage& cur, qreal t, SwitchingMode mode,
+                              const QSize& target) {
+    if (target.isEmpty() || cur.isNull()) {
+        return {};
+    }
+    QImage frame(target, QImage::Format_RGB32);
+    frame.fill(Qt::black);
+    composeTransitionFrameInto(frame, prev, cur, t, mode);
     return frame;
 }
 

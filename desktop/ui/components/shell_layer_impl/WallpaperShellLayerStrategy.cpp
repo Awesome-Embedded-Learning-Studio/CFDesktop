@@ -251,12 +251,14 @@ void WallpaperShellLayerStrategy::startTransitionAnim() {
 }
 
 void WallpaperShellLayerStrategy::composeFrame(qreal progress) {
-    if (!d->transitioning) {
+    if (!d->transitioning || d->cached_scaled_image.isNull()) {
         return;
     }
-    d->cached_scaled_image =
-        wallpaper::composeTransitionFrame(d->previous_scaled, d->current_scaled, progress,
-                                          d->pending_mode, d->current_geometry.size());
+    // Compose in-place into the cache buffer to avoid a per-frame QImage
+    // allocation (~8MB at 1080p). The first write detaches once; subsequent
+    // frames reuse the buffer in place.
+    wallpaper::composeTransitionFrameInto(d->cached_scaled_image, d->previous_scaled,
+                                          d->current_scaled, progress, d->pending_mode);
     requestLayerRepaint();
 }
 

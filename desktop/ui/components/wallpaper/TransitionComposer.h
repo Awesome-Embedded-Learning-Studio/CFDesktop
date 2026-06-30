@@ -67,4 +67,28 @@ enum class SwitchingMode {
 QImage composeTransitionFrame(const QImage& prev, const QImage& cur, qreal t, SwitchingMode mode,
                               const QSize& target);
 
+/**
+ * @brief  Composes one transition frame in-place into @p dst.
+ *
+ * Zero-allocation path for animation: reuses the caller's buffer instead of
+ * allocating a new QImage each frame. @p dst, @p prev, and @p cur must share
+ * the same size; prev+cur fully cover @p dst for every mode, so no clear/fill
+ * is performed.
+ *
+ * @param[in,out] dst  Target-sized frame buffer to compose into.
+ * @param[in] prev     Outgoing frame (same size as @p dst).
+ * @param[in] cur      Incoming frame (same size as @p dst).
+ * @param[in] t        Progress in [0, 1] (clamped).
+ * @param[in] mode     Compositing mode.
+ *
+ * @throws             None.
+ *
+ * @note               None.
+ * @warning            None.
+ * @since              0.19
+ * @ingroup            wallpaper
+ */
+void composeTransitionFrameInto(QImage& dst, const QImage& prev, const QImage& cur, qreal t,
+                                SwitchingMode mode);
+
 } // namespace cf::desktop::wallpaper
