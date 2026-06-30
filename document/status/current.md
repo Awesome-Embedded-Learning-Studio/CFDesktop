@@ -60,6 +60,7 @@ description: CFDesktop 项目进度的唯一事实来源与全局导航。
 
 - **2026-06**：`refactor: refactor the ui subsystem`；`hwtier system enabled`；文档清理
 - **2026-06（壁纸资源包发现）**：壁纸层支持运行时动态发现第三方资源包——新增 `Wallpapers` PathType（`<desktop_active_root>/Wallpapers/`）+ `filter_target_recursive` 递归扫描；`make_layer()` 改为「首个有图的源胜出」（config → Pictures 平铺，空则回退 Wallpapers 递归）。CF-Gallery 等包安装到 `Wallpapers/<pack>/` 即被发现，**CFDesktop 零编译期耦合**（无 submodule/无 `#ifdef`/无 CMake option）。详见 [aels_cross_repo_deps.md](../todo/desktop/aels_cross_repo_deps.md)。动画轮播引擎（Gradient 交叉淡入 / Movement 平移 + QTimer 定时 + Sequential/Random 选择器）**已落地**（2026-06-30,`feat/wallpaper-animation-engine`）——新增 `WallPaperEngine` + `TransitionComposer`,strategy 过渡状态机 + 逐帧 QImage 合成,后端无关;6 个 `switch_*` 配置 key + 顺手接 `scaling`/`background_color`;16 例单测全过。详见 [wallpaper_animation_engine.md](../todo/desktop/wallpaper_animation_engine.md) 末尾「实施记录」。
+- **2026-06（首个独立 App:Calculator）**：移植 CCIMXDesktop `Caculator` 为**独立可执行**(`apps/calculator/`)—— parser(递归下降 AST)保留 QString 建 `cfdesktop_calculator_parser` lib(53 例单测);UI cfui MD3(`Button` 网格 + `Label`)重写;CFDesktop 经 `AppLaunchService::launch`(QProcess)启动(隔离进程),`AppLaunchService` 加 `applicationDirPath()` 解析(自家 app 同 `bin/` 优先)。确立「工具型 App → 独立可执行」范式(展示型 about 仍 builtin)。
 - **已达成**：Milestone 1「桌面骨架可见」；Phase 0 / 1 / 2 / A(CI) / 6 / G(Widget) / H(显示后端)（详见 [SUMMARY.md](../todo/done/SUMMARY.md)）
 
 ## 新人入门

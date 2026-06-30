@@ -59,6 +59,8 @@ inline QList<AppEntry> defaultApps() {
         {QStringLiteral("browser"), QStringLiteral("Browser"),
          QStringLiteral(":/cfdesktop/taskbar/browser.png"),
          QStringLiteral("xdg-open https://example.com"), false},
+        {QStringLiteral("calculator"), QStringLiteral("Calculator"), QStringLiteral(""),
+         QStringLiteral("calculator"), false},
     };
 }
 

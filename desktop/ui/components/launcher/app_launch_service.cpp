@@ -18,6 +18,8 @@
 
 #include "cflog.h"
 
+#include <QCoreApplication>
+#include <QFileInfo>
 #include <QProcess>
 #include <QStringList>
 
@@ -43,8 +45,20 @@ aex::expected<qint64, AppLaunchError> AppLaunchService::launch(const QString& ex
     const QString program = parts.first();
     const QStringList args = parts.mid(1);
 
+    // Resolve CFDesktop's own apps (next to the desktop binary) before PATH:
+    // an exec_command like "calculator" finds <bin>/calculator without a
+    // system install. External commands (xdg-open, xterm) still resolve via
+    // PATH since they are absent from applicationDirPath().
+    QString resolved = program;
+    if (!program.contains(QLatin1Char('/'))) {
+        const QString local = QCoreApplication::applicationDirPath() + '/' + program;
+        if (QFileInfo::exists(local)) {
+            resolved = local;
+        }
+    }
+
     qint64 pid = 0;
-    if (QProcess::startDetached(program, args, QString{}, &pid)) {
+    if (QProcess::startDetached(resolved, args, QString{}, &pid)) {
         cf::log::infoftag(kTag, "launched '{}' (pid {})", exec_command.toStdString(), pid);
         return pid;
     }
