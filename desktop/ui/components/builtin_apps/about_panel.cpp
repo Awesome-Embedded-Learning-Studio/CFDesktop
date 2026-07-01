@@ -33,8 +33,7 @@ constexpr int kMaxHeight = 340;       ///< Maximum card height (px).
 } // namespace
 
 AboutPanel::AboutPanel(QWidget* parent)
-    : QWidget(parent),
-      version_text_(QStringLiteral("CFDesktop v0.19.0")),
+    : QWidget(parent), version_text_(QStringLiteral("CFDesktop v0.19.0")),
       target_text_(QStringLiteral("Running on i.MX6ULL  (Qt linuxfb)")) {
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
@@ -56,7 +55,8 @@ void AboutPanel::popup(const QRect& available) {
     }
 
     const int w = std::clamp(static_cast<int>(avail.width() * kWidthRatio), kMinWidth, kMaxWidth);
-    const int h = std::clamp(static_cast<int>(avail.height() * kHeightRatio), kMinHeight, kMaxHeight);
+    const int h =
+        std::clamp(static_cast<int>(avail.height() * kHeightRatio), kMinHeight, kMaxHeight);
     const int x = avail.center().x() - w / 2;
     const int y = avail.center().y() - h / 2;
 
@@ -67,6 +67,14 @@ void AboutPanel::popup(const QRect& available) {
 
 void AboutPanel::hidePanel() {
     hide();
+}
+
+QString AboutPanel::appId() const {
+    return QStringLiteral("about");
+}
+
+QString AboutPanel::displayName() const {
+    return QStringLiteral("About");
 }
 
 void AboutPanel::paintEvent(QPaintEvent* /*event*/) {

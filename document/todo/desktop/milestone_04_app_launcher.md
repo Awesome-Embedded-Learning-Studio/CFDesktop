@@ -233,4 +233,33 @@ description: "预计周期: 5-7 天，前置依赖: Milestone 3: 任务栏"
 
 ---
 
-*最后更新: 2026-06-29（核对代码现状：app_launcher/launcher_tile/app_launch_service 已落地；搜索框从"可选"升级为明确待办）*
+## 六、builtin 正式化 + 双态框架（2026-07 落地）
+
+> **状态**: ✅ 已落地（`feat/app-dual-mode` 分支）
+
+把 calculator 路线的「独立进程 App」与 about 的「进程内 builtin」**正式化为统一双态框架**,由硬件档位裁决。
+
+### 落地点
+
+- **`LaunchKind` 枚举**([app_entry.h](../../../desktop/ui/components/app_entry.h)):`Auto`/`DetachedProcess`/`BuiltinPanel`,替代原 `builtin:` 字符串前缀 hack
+- **`IBuiltinPanel` 接口**([ibuiltin_panel.h](../../../desktop/ui/components/builtin_apps/ibuiltin_panel.h)):照 IPanel 范式(无导出宏/纯虚)
+- **`BuiltinPanelRegistry`**([builtin_panel_registry.{h,cpp}](../../../desktop/ui/components/builtin_apps/)):map-based 自写(aex 无 named factory 变体),按 app_id 查 panel 单例,未命中记 warning(不静默)
+- **AboutPanel 实现 IBuiltinPanel** + **补网格入口**(原 `builtin:about` 入口未接——点不出 About,现已补)
+- **消灭 `if (id=="about")` 链**([CFDesktopEntity.cpp](../../../desktop/ui/CFDesktopEntity.cpp)):改按 `entry.launch_kind` 分发
+- **calculator 双态**:`CalculatorBuiltinPanel` 组合适配器包住 CalculatorPanel,同一份 panel 源码两种加载方式
+- **`HardwareTierCapabilities::prefer_inprocess_apps`**([hardware_tier_data.h](../../../base/include/system/hardware_tier/hardware_tier_data.h) + [default_policy.cpp](../../../base/system/hardware_tier/default/default_policy.cpp)):Low/Unknown 档=true
+- **manifest `launch_kind`**([app_discoverer.cpp](../../../desktop/ui/components/launcher/app_discoverer.cpp)):`auto`(默认,tier 裁决)/`detached`/`builtin`
+- **`loadAppsConfig` 合并 builtin + discovered**,Auto 按 `prefer_inprocess && registry 有实现` 裁决,无实现则降级 detached 并记日志(不静默 builtin)
+- **单测**:BuiltinPanelRegistry 5 例、AppDiscoverer launch_kind 3 例,全过
+
+### ⚠️ 架构例外(已登记)
+
+desktop 编译期引用 `apps/calculator/calculator_panel.cpp` 源文件 + `cfdesktop_calculator_parser` lib(desktop→apps 反向依赖,违反分层 spirit)。顶层 CMake 已调 `apps` 在 `desktop` 前配置。**架构债待还**:迁 calculator 核心到中立层,见 [milestone_07 §依赖与架构债](milestone_07_app_ecosystem.md)。
+
+### 验证
+
+点 About 弹出 panel(补入口);calculator 在 High 档走独立进程、`setDeviceConfigOverride(Low)` 下走 builtin;builtin 不产生额外进程(linuxfb/6ULL 心智模型成立)。
+
+---
+
+*最后更新: 2026-07-01（builtin 正式化 + 双态框架 + auto 裁决落地,`feat/app-dual-mode` 分支;第三方 App 平台路线见 milestone_07）*

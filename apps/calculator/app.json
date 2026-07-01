@@ -1,5 +1,6 @@
 {
     "app_id": "calculator",
     "display_name": "Calculator",
-    "exec": "calculator"
+    "exec": "calculator",
+    "launch_kind": "auto"
 }

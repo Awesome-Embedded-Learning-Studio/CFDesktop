@@ -67,6 +67,22 @@ QList<AppEntry> AppDiscoverer::discoverFrom(const QString& apps_dir) {
 
         entry.icon_path = icon.isEmpty() ? QString() : app_dir + QLatin1Char('/') + icon;
         entry.exec_command = app_dir + QLatin1Char('/') + exec;
+
+        // launch_kind defaults to Auto so the hardware tier decides at load
+        // time; detached/builtin force a path, unknown values fall back to Auto.
+        const QString kind_str = obj.value(QStringLiteral("launch_kind")).toString();
+        if (kind_str.isEmpty() || kind_str == QStringLiteral("auto")) {
+            entry.launch_kind = LaunchKind::Auto;
+        } else if (kind_str == QStringLiteral("detached")) {
+            entry.launch_kind = LaunchKind::DetachedProcess;
+        } else if (kind_str == QStringLiteral("builtin")) {
+            entry.launch_kind = LaunchKind::BuiltinPanel;
+        } else {
+            log::warningftag(kLogTag, "Unknown launch_kind '{}' in '{}', defaulting to auto",
+                             kind_str.toStdString(), manifest_path.toStdString());
+            entry.launch_kind = LaunchKind::Auto;
+        }
+
         result.append(entry);
     }
     return result;
