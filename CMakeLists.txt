@@ -66,9 +66,10 @@ setup_third_party(
     GIT_TAG        v0.1.0)
 
 # Standalone desktop apps. Each ships a standalone executable launched via
-# QProcess; the calculator parser lib (cfdesktop_calculator_parser) is also
-# reused in-process by the desktop builtin_apps target, so apps must configure
-# before desktop.
+# QProcess. (Historically apps/ had to precede desktop because desktop reused
+# the calculator parser lib defined here; that coupling has been removed -- the
+# desktop core no longer reaches into apps/. apps/ now only needs to precede
+# test/, which it does; the apps-before-desktop ordering below is convention.)
 log_module_start("apps")
 add_subdirectory(apps)
 log_module_end("apps")

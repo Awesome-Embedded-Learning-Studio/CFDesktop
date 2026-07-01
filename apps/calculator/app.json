@@ -2,5 +2,5 @@
     "app_id": "calculator",
     "display_name": "Calculator",
     "exec": "calculator",
-    "launch_kind": "auto"
+    "launch_kind": "detached"
 }
