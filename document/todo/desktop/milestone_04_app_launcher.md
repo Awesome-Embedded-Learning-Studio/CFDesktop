@@ -5,7 +5,7 @@ description: "预计周期: 5-7 天，前置依赖: Milestone 3: 任务栏"
 
 # Milestone 4: 应用启动器
 
-> **状态**: 🚧 闭环跑通·网格待做（`app_launcher` / `launcher_tile` / `app_launch_service` 已落地，点 Files/Browser 可真打开外部进程；开始菜单弹窗网格 + 搜索框待做）
+> **状态**: ✅ 闭环跑通（网格 + 搜索 + .desktop + 双态 + 入场/退场动画 + MD3 TextField 已落地）。仅余：动画切到 QuarkWidgets MD3 引擎（待引擎 MotionSpec 接入完成，见 §七 待做）
 > **预计周期**: 5-7 天
 > **前置依赖**: [Milestone 3: 任务栏](milestone_03_taskbar.md)
 > **目标**: 点击任务栏"开始"按钮或桌面区域，弹出一个应用网格，可启动外部程序
@@ -273,8 +273,10 @@ desktop 编译期引用 `apps/calculator/calculator_panel.cpp` 源文件 + `cfde
 
 ### 待做
 
-- 入场/退场动画(Day 5 原计划:Slide+Fade 组合,复用 `ui/components/animation/`)
-- 搜索框换 QuarkWidgets MD3 TextField(现用 QLineEdit 占位)
+- 入场/退场动画切到 QuarkWidgets MD3 引擎(`CFMaterialFadeAnimation`/`CFMaterialSlideAnimation`)。
+  当前 interim 用 `QPropertyAnimation`(OutCubic/InCubic + `QGraphicsOpacityEffect`,见 [app_launcher.cpp](../../../desktop/ui/components/launcher/app_launcher.cpp) `setupAnimations`)。
+  引擎自身的 `calculateEasedProgress` 目前是**线性** + 时长**硬编码**(MotionSpec 未接,`.cpp` 里 `// TODO: Integrate with MaterialMotionScheme`),
+  需先补完 QuarkWidgets 引擎再切,否则动画质量降级。
 
 ---
 

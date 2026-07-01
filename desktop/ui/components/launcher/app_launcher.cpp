@@ -5,12 +5,13 @@
  * Renders a frameless rounded Material surface holding a grid of LauncherTile
  * entries. popup() sizes and centers it above the taskbar; tile clicks forward
  * appLaunched() and dismiss the popup; ESC and outside clicks (Qt::Popup) also
- * dismiss it. All rendering is QPainter-native.
+ * dismiss it. The popup fades and slides in on open and reverses on close.
+ * All rendering is QPainter-native.
  *
  * @author Charliechen114514 (chengh1922@mails.jlu.edu.cn)
  * @date 2026-06-26
  * @version 0.1
- * @since 0.20
+ * @since   0.20
  * @ingroup components
  */
 
@@ -20,7 +21,10 @@
 
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
+#include "ui/widget/material/widget/textfield/textfield.h"
 
+#include <QEasingCurve>
+#include <QGraphicsOpacityEffect>
 #include <QGridLayout>
 #include <QGuiApplication>
 #include <QKeyEvent>
@@ -30,6 +34,7 @@
 #include <QPainterPath>
 #include <QScreen>
 #include <QVBoxLayout>
+#include <QVariantAnimation>
 
 #include <algorithm>
 
@@ -38,16 +43,19 @@ namespace cf::desktop::desktop_component {
 using namespace qw::core::token::literals;
 
 namespace {
-constexpr int kMaxColumns = 5;       ///< Maximum tiles per grid row.
-constexpr int kGridSpacing = 12;     ///< Gap between tiles (px).
-constexpr int kMargin = 24;          ///< Popup inner margin (px).
-constexpr qreal kCornerRadius = 16;  ///< Popup corner radius (px).
-constexpr qreal kWidthRatio = 0.5;   ///< Popup width as a fraction of available.
-constexpr qreal kHeightRatio = 0.55; ///< Popup height as a fraction of available.
-constexpr int kMinWidth = 480;       ///< Minimum popup width (px).
-constexpr int kMaxWidth = 720;       ///< Maximum popup width (px).
-constexpr int kMinHeight = 360;      ///< Minimum popup height (px).
-constexpr int kMaxHeight = 540;      ///< Maximum popup height (px).
+constexpr int kMaxColumns = 5;        ///< Maximum tiles per grid row.
+constexpr int kGridSpacing = 12;      ///< Gap between tiles (px).
+constexpr int kMargin = 24;           ///< Popup inner margin (px).
+constexpr qreal kCornerRadius = 16;   ///< Popup corner radius (px).
+constexpr qreal kWidthRatio = 0.5;    ///< Popup width as a fraction of available.
+constexpr qreal kHeightRatio = 0.55;  ///< Popup height as a fraction of available.
+constexpr int kMinWidth = 480;        ///< Minimum popup width (px).
+constexpr int kMaxWidth = 720;        ///< Maximum popup width (px).
+constexpr int kMinHeight = 360;       ///< Minimum popup height (px).
+constexpr int kMaxHeight = 540;       ///< Maximum popup height (px).
+constexpr int kEnterDurationMs = 250; ///< Enter animation duration (ms).
+constexpr int kExitDurationMs = 150;  ///< Exit animation duration (ms).
+constexpr int kEnterSlidePx = 24;     ///< Enter/exit vertical slide distance (px).
 } // namespace
 
 AppLauncher::AppLauncher(QWidget* parent) : QWidget(parent) {
@@ -64,6 +72,13 @@ AppLauncher::AppLauncher(QWidget* parent) : QWidget(parent) {
     setAutoFillBackground(false);
     setupUi();
     applyTheme();
+
+    // Whole-popup fade effect; drives the enter/exit fade alongside the slide.
+    opacity_effect_ = new QGraphicsOpacityEffect(this);
+    setGraphicsEffect(opacity_effect_);
+    opacity_effect_->setOpacity(1.0);
+    setupAnimations();
+
     // Stay hidden until popup() is called. As a child of the desktop (not a
     // top-level Qt::Popup), Qt would otherwise auto-show this widget when the
     // desktop becomes visible -- rendering the tiles at the default (0,0)
@@ -101,12 +116,31 @@ void AppLauncher::popup(const QRect& available) {
     if (grid_ != nullptr) {
         grid_->activate();
     }
+
+    rest_pos_ = pos();
+    // Seed the enter animation's initial frame (offset down + transparent)
+    // before show() so the popup never flashes fully opaque for one frame.
+    applyAnimProgress(0.0);
     show();
     raise();
+    // Cancel any in-flight exit before entering (e.g. re-open while closing).
+    exit_anim_->stop();
+    enter_anim_->stop();
+    enter_anim_->start();
 }
 
 void AppLauncher::hideLauncher() {
-    hide();
+    if (exit_anim_ == nullptr || !isVisible()) {
+        hide();
+        return;
+    }
+    // Animate out from the current opacity so a half-entered popup also exits
+    // smoothly rather than snapping.
+    enter_anim_->stop();
+    exit_anim_->stop();
+    exit_anim_->setStartValue(opacity_effect_ != nullptr ? opacity_effect_->opacity() : qreal(1.0));
+    exit_anim_->setEndValue(qreal(0.0));
+    exit_anim_->start();
 }
 
 bool AppLauncher::isShowing() const noexcept {
@@ -138,7 +172,8 @@ void AppLauncher::setupUi() {
     outer->setContentsMargins(kMargin, kMargin, kMargin, kMargin);
     outer->setSpacing(kGridSpacing);
 
-    search_edit_ = new QLineEdit(this);
+    using qw::widget::material::TextField;
+    search_edit_ = new TextField(TextField::TextFieldVariant::Outlined, this);
     search_edit_->setPlaceholderText(QStringLiteral("Search apps..."));
     outer->addWidget(search_edit_);
 
@@ -149,7 +184,9 @@ void AppLauncher::setupUi() {
     outer->addWidget(grid_container);
 
     // Live filter: any change to the search box rebuilds the grid with only
-    // tiles whose display_name contains the (case-insensitive) query.
+    // tiles whose display_name contains the (case-insensitive) query. TextField
+    // inherits QLineEdit::textChanged (its own textChanged is a protected
+    // helper, not a signal), so connect against the base signal explicitly.
     connect(search_edit_, &QLineEdit::textChanged, this, [this](const QString&) { rebuildGrid(); });
 }
 
@@ -193,6 +230,42 @@ void AppLauncher::rebuildGrid() {
             ++row;
         }
     }
+}
+
+void AppLauncher::setupAnimations() {
+    // TODO: eventually switch to the QuarkWidgets MD3 engine
+    // (CFMaterialFadeAnimation + CFMaterialSlideAnimation). Deferred because the
+    // engine's MotionSpec integration is unfinished today (linear easing via
+    // calculateEasedProgress, hardcoded durations) -- this OutCubic/InCubic
+    // variant is higher quality until the engine is completed.
+    enter_anim_ = new QVariantAnimation(this);
+    enter_anim_->setDuration(kEnterDurationMs);
+    enter_anim_->setEasingCurve(QEasingCurve::OutCubic);
+    enter_anim_->setStartValue(qreal(0.0));
+    enter_anim_->setEndValue(qreal(1.0));
+    connect(enter_anim_, &QVariantAnimation::valueChanged, this,
+            [this](const QVariant& v) { applyAnimProgress(v.toReal()); });
+
+    exit_anim_ = new QVariantAnimation(this);
+    exit_anim_->setDuration(kExitDurationMs);
+    exit_anim_->setEasingCurve(QEasingCurve::InCubic);
+    connect(exit_anim_, &QVariantAnimation::valueChanged, this,
+            [this](const QVariant& v) { applyAnimProgress(v.toReal()); });
+    // On exit completion: hide and reset to the resting state so the next
+    // popup() opens from a clean slate.
+    connect(exit_anim_, &QVariantAnimation::finished, this, [this]() {
+        hide();
+        applyAnimProgress(1.0);
+    });
+}
+
+void AppLauncher::applyAnimProgress(qreal t) {
+    if (opacity_effect_ != nullptr) {
+        opacity_effect_->setOpacity(t);
+    }
+    // Slide vertically: t=0 -> offset down by kEnterSlidePx; t=1 -> at rest_pos_.
+    const int dy = static_cast<int>((1.0 - t) * kEnterSlidePx);
+    move(rest_pos_ + QPoint(0, dy));
 }
 
 } // namespace cf::desktop::desktop_component

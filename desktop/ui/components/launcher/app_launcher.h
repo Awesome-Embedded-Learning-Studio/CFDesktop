@@ -26,11 +26,16 @@
 #include <QString>
 #include <QWidget>
 
+class QGraphicsOpacityEffect;
 class QGridLayout;
 class QKeyEvent;
-class QLineEdit;
 class QPaintEvent;
 class QRect;
+class QVariantAnimation;
+
+namespace qw::widget::material {
+class TextField;
+}
 
 namespace cf::desktop::desktop_component {
 
@@ -175,17 +180,29 @@ class AppLauncher final : public QWidget {
     void keyPressEvent(QKeyEvent* event) override;
 
   private:
-    /// @brief Creates the grid layout.
+    /// @brief Creates the grid + search box layout.
     void setupUi();
     /// @brief Resolves theme colors, then repaints.
     void applyTheme();
     /// @brief Rebuilds the tile grid from apps_.
     void rebuildGrid();
+    /// @brief Creates the opacity effect and the enter/exit animations.
+    void setupAnimations();
+    /// @brief Applies an animation progress value to the popup: t=0 is fully
+    ///        hidden and offset downward, t=1 is at rest (opaque, anchored).
+    /// @param[in] t  Progress in [0.0, 1.0].
+    void applyAnimProgress(qreal t);
 
-    QLineEdit* search_edit_{nullptr}; ///< Filter box (ownership: this widget).
-    QGridLayout* grid_{nullptr};      ///< Tile grid (ownership: grid container).
-    QList<LauncherTile*> tiles_;      ///< Current tiles. Ownership: Qt parented.
-    QList<AppEntry> apps_;            ///< Backing application list.
+    qw::widget::material::TextField* search_edit_{
+        nullptr};                ///< Filter box (ownership: this widget).
+    QGridLayout* grid_{nullptr}; ///< Tile grid (ownership: grid container).
+    QList<LauncherTile*> tiles_; ///< Current tiles. Ownership: Qt parented.
+    QList<AppEntry> apps_;       ///< Backing application list.
+
+    QGraphicsOpacityEffect* opacity_effect_{nullptr}; ///< Whole-popup fade (owned by this).
+    QVariantAnimation* enter_anim_{nullptr};          ///< Enter: 0.0 -> 1.0 (fade in + slide up).
+    QVariantAnimation* exit_anim_{nullptr};           ///< Exit: 1.0 -> 0.0 (fade out + slide down).
+    QPoint rest_pos_;                                 ///< Final anchored position (set in popup()).
 
     QColor surface_color_; ///< Popup background fill (surface).
     QColor outline_color_; ///< Reserved for future border (outline variant).
