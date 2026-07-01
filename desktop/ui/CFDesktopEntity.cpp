@@ -12,7 +12,6 @@
 #include "components/WindowManager.h"
 #include "components/builtin_apps/about_panel.h"
 #include "components/builtin_apps/builtin_panel_registry.h"
-#include "components/builtin_apps/calculator_builtin_panel.h"
 #include "components/launcher/app_discoverer.h"
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
@@ -330,9 +329,6 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     auto& builtin_registry = cf::desktop::desktop_component::BuiltinPanelRegistry::instance();
     auto* about_panel = new cf::desktop::desktop_component::AboutPanel(desktop_entity_);
     builtin_registry.registerPanel(about_panel);
-    auto* calc_builtin =
-        new cf::desktop::desktop_component::CalculatorBuiltinPanel(desktop_entity_);
-    builtin_registry.registerPanel(calc_builtin);
 
     // Hardware tier decides whether Auto apps run in-process (Low tier) or
     // detached (Mid/High). setDeviceConfigOverride (env/tests) takes precedence.
