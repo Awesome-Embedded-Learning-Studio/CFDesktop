@@ -1,0 +1,6 @@
+{
+    "app_id": "alarm_clock",
+    "display_name": "Alarm Clock",
+    "exec": "alarm_clock",
+    "launch_kind": "auto"
+}
