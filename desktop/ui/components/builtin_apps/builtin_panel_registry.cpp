@@ -60,4 +60,8 @@ std::vector<IBuiltinPanel*> BuiltinPanelRegistry::all() const {
     return result;
 }
 
+void BuiltinPanelRegistry::clear() {
+    panels_.clear();
+}
+
 } // namespace cf::desktop::desktop_component

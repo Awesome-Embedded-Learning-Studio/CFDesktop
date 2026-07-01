@@ -4,7 +4,7 @@
  *
  * @author  Charliechen114514 (chengh1922@mails.jlu.edu.cn)
  * @date    2026-07-01
- * @version 0.1
+ * @version 0.2
  * @since   0.20
  * @ingroup components
  */
@@ -34,15 +34,23 @@ class FakePanel : public cf::desktop::desktop_component::IBuiltinPanel {
 
 } // namespace
 
-// BuiltinPanelRegistry is a process-wide singleton, so registrations accumulate
-// across tests. Each test uses a unique id to stay independent of ordering.
+// BuiltinPanelRegistry is a process-wide singleton holding non-owning
+// pointers. Each test registers stack-local FakePanels; clearing in SetUp
+// avoids dangling pointers accumulating across tests (which crashes Clang/MSVC
+// when all() iterates them after the FakePanels went out of scope).
+class BuiltinPanelRegistryTest : public ::testing::Test {
+  protected:
+    void SetUp() override {
+        cf::desktop::desktop_component::BuiltinPanelRegistry::instance().clear();
+    }
+};
 
-TEST(BuiltinPanelRegistry, FindUnknownReturnsNull) {
+TEST_F(BuiltinPanelRegistryTest, FindUnknownReturnsNull) {
     auto& reg = cf::desktop::desktop_component::BuiltinPanelRegistry::instance();
     EXPECT_EQ(reg.find(QStringLiteral("definitely_unknown_id")), nullptr);
 }
 
-TEST(BuiltinPanelRegistry, RegisterAndFind) {
+TEST_F(BuiltinPanelRegistryTest, RegisterAndFind) {
     auto& reg = cf::desktop::desktop_component::BuiltinPanelRegistry::instance();
     FakePanel panel(QStringLiteral("register_and_find"), QStringLiteral("RegisterAndFind"));
     reg.registerPanel(&panel);
@@ -53,7 +61,7 @@ TEST(BuiltinPanelRegistry, RegisterAndFind) {
     EXPECT_EQ(found->displayName().toStdString(), "RegisterAndFind");
 }
 
-TEST(BuiltinPanelRegistry, ContainsMatchesRegistered) {
+TEST_F(BuiltinPanelRegistryTest, ContainsMatchesRegistered) {
     auto& reg = cf::desktop::desktop_component::BuiltinPanelRegistry::instance();
     EXPECT_FALSE(reg.contains(QStringLiteral("contains_match")));
     FakePanel panel(QStringLiteral("contains_match"), QStringLiteral("Contains"));
@@ -61,7 +69,7 @@ TEST(BuiltinPanelRegistry, ContainsMatchesRegistered) {
     EXPECT_TRUE(reg.contains(QStringLiteral("contains_match")));
 }
 
-TEST(BuiltinPanelRegistry, DuplicateIdReplaces) {
+TEST_F(BuiltinPanelRegistryTest, DuplicateIdReplaces) {
     auto& reg = cf::desktop::desktop_component::BuiltinPanelRegistry::instance();
     FakePanel first(QStringLiteral("dup_id"), QStringLiteral("First"));
     FakePanel second(QStringLiteral("dup_id"), QStringLiteral("Second"));
@@ -73,18 +81,13 @@ TEST(BuiltinPanelRegistry, DuplicateIdReplaces) {
     EXPECT_EQ(found->displayName().toStdString(), "Second");
 }
 
-TEST(BuiltinPanelRegistry, AllIncludesRegistered) {
+TEST_F(BuiltinPanelRegistryTest, AllIncludesRegistered) {
     auto& reg = cf::desktop::desktop_component::BuiltinPanelRegistry::instance();
     FakePanel panel(QStringLiteral("in_all"), QStringLiteral("InAll"));
     reg.registerPanel(&panel);
 
     const auto all = reg.all();
-    bool seen = false;
-    for (auto* p : all) {
-        if (p->appId() == QStringLiteral("in_all")) {
-            seen = true;
-            break;
-        }
-    }
-    EXPECT_TRUE(seen);
+    EXPECT_EQ(all.size(), 1u);
+    ASSERT_NE(all[0], nullptr);
+    EXPECT_EQ(all[0]->appId().toStdString(), "in_all");
 }

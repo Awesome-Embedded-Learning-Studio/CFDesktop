@@ -95,6 +95,16 @@ class BuiltinPanelRegistry {
      */
     std::vector<IBuiltinPanel*> all() const;
 
+    /**
+     * @brief   Removes all registered panels.
+     *
+     * @throws  None
+     * @note    Test/reset only; production registers once and never clears.
+     * @since   0.20
+     * @ingroup components
+     */
+    void clear();
+
   private:
     BuiltinPanelRegistry() = default;
     QHash<QString, IBuiltinPanel*> panels_;
