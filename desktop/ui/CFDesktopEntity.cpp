@@ -16,6 +16,7 @@
 #include "components/launcher/app_discoverer.h"
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
+#include "components/launcher/desktop_entry_index.h"
 #include "components/statusbar/status_bar.h"
 #include "components/taskbar/centered_taskbar.h"
 #include "components/window_placement/window_placement_policy.h"
@@ -88,7 +89,12 @@ QList<desktop_component::AppEntry> loadAppsConfig(bool prefer_inprocess) {
         upsert(entry);
     }
 
-    // 3. Legacy fallback when nothing is discovered: <bin>/../apps.json,
+    // 3. XDG .desktop entries (system applications: firefox, etc.).
+    for (auto& entry : desktop_component::DesktopEntryIndex::index()) {
+        upsert(entry);
+    }
+
+    // 4. Legacy fallback when nothing is discovered: <bin>/../apps.json,
     // then defaultApps() placeholder entries.
     if (discovered.isEmpty()) {
         const QString path =
