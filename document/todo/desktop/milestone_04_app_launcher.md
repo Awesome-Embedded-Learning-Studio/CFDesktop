@@ -262,4 +262,20 @@ desktop 编译期引用 `apps/calculator/calculator_panel.cpp` 源文件 + `cfde
 
 ---
 
-*最后更新: 2026-07-01（builtin 正式化 + 双态框架 + auto 裁决落地,`feat/app-dual-mode` 分支;第三方 App 平台路线见 milestone_07）*
+## 七、搜索 + .desktop 扫描 + Noter 移植（2026-07 落地）
+
+> **状态**: ✅ 已落地（`feat/noter-and-search` 分支）
+
+- **`DesktopEntryIndex`**([desktop_entry_index.{h,cpp}](../../../desktop/ui/components/launcher/)):扫 XDG `.desktop`(`~/.local/share/applications` + `/usr/share/applications`),freedesktop Type=Application && !NoDisplay,Exec 清理 `%` 占位符(`firefox %u`→`firefox`),app_id=文件 basename,进网格作 DetachedProcess。`loadAppsConfig` 合并 builtin + manifest + .desktop 三源
+- **AppLauncher 搜索框**:加 QLineEdit,`textChanged` 实时按 display_name 模糊过滤网格(大小写不敏感,不区分平台)
+- **Noter 移植**([apps/noter/](../../../apps/noter/)):CCIMXNoter → CFDesktop 第二个独立 App,QuarkWidgets MD3 Button 重写工具栏(Open/Save/Bold/Italic + 字号 QSlider),QTextEdit 编辑,manifest `launch_kind:auto`
+- 单测:DesktopEntryIndex 7 例(解析/NoDisplay/非 Application/Exec 清理/basename 回退),全过
+
+### 待做
+
+- 入场/退场动画(Day 5 原计划:Slide+Fade 组合,复用 `ui/components/animation/`)
+- 搜索框换 QuarkWidgets MD3 TextField(现用 QLineEdit 占位)
+
+---
+
+*最后更新: 2026-07-01（搜索 + .desktop + Noter 移植落地,`feat/noter-and-search` 分支；前置双态框架见 §六;第三方平台见 milestone_07）*

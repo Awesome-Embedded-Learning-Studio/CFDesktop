@@ -24,10 +24,12 @@
 #include <QGridLayout>
 #include <QGuiApplication>
 #include <QKeyEvent>
+#include <QLineEdit>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QScreen>
+#include <QVBoxLayout>
 
 #include <algorithm>
 
@@ -132,10 +134,23 @@ void AppLauncher::keyPressEvent(QKeyEvent* event) {
 
 // -- Internal --------------------------------------------------------------
 void AppLauncher::setupUi() {
-    grid_ = new QGridLayout(this);
+    auto* outer = new QVBoxLayout(this);
+    outer->setContentsMargins(kMargin, kMargin, kMargin, kMargin);
+    outer->setSpacing(kGridSpacing);
+
+    search_edit_ = new QLineEdit(this);
+    search_edit_->setPlaceholderText(QStringLiteral("Search apps..."));
+    outer->addWidget(search_edit_);
+
+    auto* grid_container = new QWidget(this);
+    grid_ = new QGridLayout(grid_container);
     grid_->setSpacing(kGridSpacing);
-    grid_->setContentsMargins(kMargin, kMargin, kMargin, kMargin);
     grid_->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    outer->addWidget(grid_container);
+
+    // Live filter: any change to the search box rebuilds the grid with only
+    // tiles whose display_name contains the (case-insensitive) query.
+    connect(search_edit_, &QLineEdit::textChanged, this, [this](const QString&) { rebuildGrid(); });
 }
 
 void AppLauncher::applyTheme() {
@@ -157,11 +172,14 @@ void AppLauncher::rebuildGrid() {
     qDeleteAll(tiles_);
     tiles_.clear();
 
-    const int n = apps_.size();
-    const int cols = std::max(1, std::min(kMaxColumns, n));
+    const QString filter =
+        search_edit_ != nullptr ? search_edit_->text().trimmed().toLower() : QString();
     int row = 0;
     int col = 0;
     for (const auto& app : apps_) {
+        if (!filter.isEmpty() && !app.display_name.toLower().contains(filter)) {
+            continue; // Filtered out by the search box.
+        }
         auto* tile = new LauncherTile(app, this);
         connect(tile, &LauncherTile::clicked, this, [this](const QString& app_id) {
             emit appLaunched(app_id);
@@ -170,7 +188,7 @@ void AppLauncher::rebuildGrid() {
         grid_->addWidget(tile, row, col);
         tiles_.append(tile);
         ++col;
-        if (col >= cols) {
+        if (col >= kMaxColumns) {
             col = 0;
             ++row;
         }

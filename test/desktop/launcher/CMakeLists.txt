@@ -19,3 +19,19 @@ add_gtest_executable(
     LABELS        "desktop;unit;launcher"
     LOG_MODULE    launcher_tests
 )
+
+add_gtest_executable(
+    TEST_NAME      desktop_entry_index_test
+    SOURCE_FILE    desktop_entry_index_test.cpp
+    LINK_LIBRARIES
+        cfdesktop_launcher
+        cflogger
+        cfbase
+        Qt6::Core
+        Qt6::Widgets
+        GTest::gtest
+        GTest::gtest_main
+    INCLUDE_DIRS  ${CMAKE_SOURCE_DIR}/desktop/ui/components
+    LABELS        "desktop;unit;launcher"
+    LOG_MODULE    launcher_tests
+)

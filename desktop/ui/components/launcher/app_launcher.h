@@ -28,6 +28,7 @@
 
 class QGridLayout;
 class QKeyEvent;
+class QLineEdit;
 class QPaintEvent;
 class QRect;
 
@@ -181,9 +182,10 @@ class AppLauncher final : public QWidget {
     /// @brief Rebuilds the tile grid from apps_.
     void rebuildGrid();
 
-    QGridLayout* grid_{nullptr}; ///< Tile grid. Ownership: this widget.
-    QList<LauncherTile*> tiles_; ///< Current tiles. Ownership: Qt parented.
-    QList<AppEntry> apps_;       ///< Backing application list.
+    QLineEdit* search_edit_{nullptr}; ///< Filter box (ownership: this widget).
+    QGridLayout* grid_{nullptr};      ///< Tile grid (ownership: grid container).
+    QList<LauncherTile*> tiles_;      ///< Current tiles. Ownership: Qt parented.
+    QList<AppEntry> apps_;            ///< Backing application list.
 
     QColor surface_color_; ///< Popup background fill (surface).
     QColor outline_color_; ///< Reserved for future border (outline variant).
