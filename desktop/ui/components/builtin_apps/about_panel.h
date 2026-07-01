@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "ibuiltin_panel.h"
+
 #include <QString>
 #include <QWidget>
 
@@ -35,7 +37,7 @@ namespace cf::desktop::desktop_component {
  *
  * @ingroup components
  */
-class AboutPanel final : public QWidget {
+class AboutPanel final : public QWidget, public IBuiltinPanel {
     Q_OBJECT
   public:
     /**
@@ -73,7 +75,7 @@ class AboutPanel final : public QWidget {
      * @since  0.20
      * @ingroup components
      */
-    void popup(const QRect& available);
+    void popup(const QRect& available) override;
 
     /**
      * @brief  Hides the panel.
@@ -84,7 +86,29 @@ class AboutPanel final : public QWidget {
      * @since  0.20
      * @ingroup components
      */
-    void hidePanel();
+    void hidePanel() override;
+
+    /**
+     * @brief   Returns the stable launcher app_id.
+     *
+     * @return  The id "about".
+     *
+     * @throws  None
+     * @since   0.20
+     * @ingroup components
+     */
+    QString appId() const override;
+
+    /**
+     * @brief   Returns the icon label.
+     *
+     * @return  The display name "About".
+     *
+     * @throws  None
+     * @since   0.20
+     * @ingroup components
+     */
+    QString displayName() const override;
 
   protected:
     /**

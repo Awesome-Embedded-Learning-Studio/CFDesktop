@@ -22,6 +22,7 @@
 #include <gtest/gtest.h>
 
 using cf::desktop::desktop_component::AppDiscoverer;
+using cf::desktop::desktop_component::LaunchKind;
 
 namespace {
 /// Writes a manifest body to <apps_dir>/<id>/app.json.
@@ -82,4 +83,31 @@ TEST(AppDiscoverer, EmptyIconYieldsEmptyIconPath) {
     const auto apps = AppDiscoverer::discoverFrom(tmp.path());
     ASSERT_EQ(apps.size(), 1);
     EXPECT_TRUE(apps[0].icon_path.isEmpty());
+}
+
+TEST(AppDiscoverer, DefaultLaunchKindIsAuto) {
+    QTemporaryDir tmp;
+    writeManifest(tmp.path(), QStringLiteral("calc"),
+                  R"({"app_id":"calc","exec":"calc"})"); // no launch_kind field
+    const auto apps = AppDiscoverer::discoverFrom(tmp.path());
+    ASSERT_EQ(apps.size(), 1);
+    EXPECT_EQ(apps[0].launch_kind, LaunchKind::Auto);
+}
+
+TEST(AppDiscoverer, ExplicitLaunchKindDetached) {
+    QTemporaryDir tmp;
+    writeManifest(tmp.path(), QStringLiteral("calc"),
+                  R"({"app_id":"calc","exec":"calc","launch_kind":"detached"})");
+    const auto apps = AppDiscoverer::discoverFrom(tmp.path());
+    ASSERT_EQ(apps.size(), 1);
+    EXPECT_EQ(apps[0].launch_kind, LaunchKind::DetachedProcess);
+}
+
+TEST(AppDiscoverer, ExplicitLaunchKindBuiltin) {
+    QTemporaryDir tmp;
+    writeManifest(tmp.path(), QStringLiteral("calc"),
+                  R"({"app_id":"calc","exec":"calc","launch_kind":"builtin"})");
+    const auto apps = AppDiscoverer::discoverFrom(tmp.path());
+    ASSERT_EQ(apps.size(), 1);
+    EXPECT_EQ(apps[0].launch_kind, LaunchKind::BuiltinPanel);
 }

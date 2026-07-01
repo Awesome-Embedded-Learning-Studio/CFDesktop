@@ -18,3 +18,6 @@ add_subdirectory(calculator)
 
 # Add launcher (app discovery) tests subdirectory
 add_subdirectory(launcher)
+
+# Add builtin apps registry tests subdirectory
+add_subdirectory(builtin_apps)

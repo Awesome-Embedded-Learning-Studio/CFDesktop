@@ -65,15 +65,18 @@ setup_third_party(
     GIT_REPOSITORY https://github.com/Awesome-Embedded-Learning-Studio/QuarkWidgets.git
     GIT_TAG        v0.1.0)
 
+# Standalone desktop apps. Each ships a standalone executable launched via
+# QProcess; the calculator parser lib (cfdesktop_calculator_parser) is also
+# reused in-process by the desktop builtin_apps target, so apps must configure
+# before desktop.
+log_module_start("apps")
+add_subdirectory(apps)
+log_module_end("apps")
+
 log_module_start("desktop")
 add_subdirectory(desktop)
 # Log base module end
 log_module_end("desktop")
-
-# Standalone desktop apps (launched via QProcess, not linked into the shell).
-log_module_start("apps")
-add_subdirectory(apps)
-log_module_end("apps")
 
 log_module_start("example")
 add_subdirectory("example")

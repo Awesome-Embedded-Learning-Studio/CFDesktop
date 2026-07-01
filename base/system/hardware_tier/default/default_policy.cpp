@@ -42,12 +42,14 @@ class DefaultPolicy : public IHardwarePolicy {
                 caps.use_software_render = true;
                 caps.use_hardware_decode = false;
                 caps.use_linuxfb = true;
+                caps.prefer_inprocess_apps = true;
                 break;
 
             case HardwareTierLevel::Unknown:
             default:
                 caps.use_software_render = true;
                 caps.use_linuxfb = true;
+                caps.prefer_inprocess_apps = true;
                 break;
         }
 

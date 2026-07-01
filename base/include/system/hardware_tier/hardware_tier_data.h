@@ -188,6 +188,7 @@ struct HardwareTierCapabilities {
     bool use_hardware_decode = false;      ///< Use hardware video decoding.
     bool use_eglfs = false;                ///< Use EGLFS platform plugin.
     bool use_linuxfb = false;              ///< Use linuxfb platform plugin.
+    bool prefer_inprocess_apps = false;    ///< Prefer in-process apps (saves RAM on Low tier).
 };
 
 // ─────────────────────────────────────────────────────────

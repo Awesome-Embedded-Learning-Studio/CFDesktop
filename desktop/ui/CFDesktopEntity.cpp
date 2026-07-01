@@ -11,6 +11,8 @@
 #include "components/PanelManager.h"
 #include "components/WindowManager.h"
 #include "components/builtin_apps/about_panel.h"
+#include "components/builtin_apps/builtin_panel_registry.h"
+#include "components/builtin_apps/calculator_builtin_panel.h"
 #include "components/launcher/app_discoverer.h"
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
@@ -21,6 +23,7 @@
 #include "platform/display_backend_helper.h"
 #include "platform/shell_layer_helper.h"
 #include "qt_format.h"
+#include "system/hardware_tier/hardware_tier.h"
 #include <QCoreApplication>
 #include <QFile>
 #include <QHash>
@@ -33,38 +36,93 @@
 namespace cf::desktop {
 
 namespace {
-/// Loads the app list with a fallback chain: auto-discovered apps
-/// (<bin>/../apps/<id>/app.json) first, then <bin>/../apps.json manual list,
-/// then defaultApps(). A board can drop app manifests or apps.json to
+/// Loads the app list by merging builtin in-process panels with auto-
+/// discovered standalone manifests, resolving Auto launch_kind against the
+/// hardware tier. Falls back to <bin>/../apps.json then defaultApps() when
+/// nothing is discovered. A board can drop app manifests or apps.json to
 /// customize the launcher/taskbar without a recompile.
-QList<desktop_component::AppEntry> loadAppsConfig() {
-    // Prefer auto-discovered apps (<bin>/../apps/<id>/app.json manifests).
+QList<desktop_component::AppEntry> loadAppsConfig(bool prefer_inprocess) {
+    // Upsert by app_id: builtin panels first (in-process implementations),
+    // then discovered manifests (icon/exec/display_name metadata) which may
+    // override a builtin entry when a standalone app exists for the same id.
+    QList<desktop_component::AppEntry> result;
+    const auto upsert = [&](desktop_component::AppEntry entry) {
+        for (auto& existing : result) {
+            if (existing.app_id == entry.app_id) {
+                existing = entry;
+                return;
+            }
+        }
+        result.append(entry);
+    };
+
+    // 1. Builtin in-process panels (always surfaced).
+    for (auto* panel : desktop_component::BuiltinPanelRegistry::instance().all()) {
+        desktop_component::AppEntry e;
+        e.app_id = panel->appId();
+        e.display_name = panel->displayName();
+        e.launch_kind = desktop_component::LaunchKind::BuiltinPanel;
+        upsert(e);
+    }
+
+    // 2. Auto-discovered standalone app manifests.
     auto discovered = desktop_component::AppDiscoverer::discover();
-    if (!discovered.isEmpty()) {
-        return discovered;
+    for (auto& entry : discovered) {
+        if (entry.launch_kind == desktop_component::LaunchKind::Auto) {
+            // Resolve Auto: prefer in-process only when a builtin implementation
+            // exists; otherwise detach (never silently fall back to builtin).
+            const bool has_builtin =
+                desktop_component::BuiltinPanelRegistry::instance().contains(entry.app_id);
+            if (prefer_inprocess && has_builtin) {
+                entry.launch_kind = desktop_component::LaunchKind::BuiltinPanel;
+                entry.exec_command.clear();
+            } else {
+                if (prefer_inprocess && !has_builtin) {
+                    cf::log::infoftag("CFDesktopEntity",
+                                      "App '{}' auto->detached (no builtin impl)",
+                                      entry.app_id.toStdString());
+                }
+                entry.launch_kind = desktop_component::LaunchKind::DetachedProcess;
+            }
+        }
+        upsert(entry);
     }
-    // Fallback: <bin>/../apps.json manual list. Kept out of the board-written
-    // settings/ dir so it stays owner-writable on the NFS root.
-    const QString path = QCoreApplication::applicationDirPath() + QStringLiteral("/../apps.json");
-    QFile file(path);
-    if (!file.open(QIODevice::ReadOnly)) {
-        return desktop_component::defaultApps();
-    }
-    const QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
-    const auto arr = doc.object().value(QStringLiteral("apps")).toArray();
-    QList<desktop_component::AppEntry> apps;
-    for (const auto& value : arr) {
-        const auto o = value.toObject();
-        desktop_component::AppEntry entry;
-        entry.app_id = o.value(QStringLiteral("app_id")).toString();
-        entry.display_name = o.value(QStringLiteral("display_name")).toString();
-        entry.icon_path = o.value(QStringLiteral("icon_path")).toString();
-        entry.exec_command = o.value(QStringLiteral("exec_command")).toString();
-        if (!entry.app_id.isEmpty() && !entry.exec_command.isEmpty()) {
-            apps.append(entry);
+
+    // 3. Legacy fallback when nothing is discovered: <bin>/../apps.json,
+    // then defaultApps() placeholder entries.
+    if (discovered.isEmpty()) {
+        const QString path =
+            QCoreApplication::applicationDirPath() + QStringLiteral("/../apps.json");
+        QFile file(path);
+        if (!file.open(QIODevice::ReadOnly)) {
+            for (const auto& d : desktop_component::defaultApps()) {
+                upsert(d);
+            }
+            return result;
+        }
+        const QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+        const auto arr = doc.object().value(QStringLiteral("apps")).toArray();
+        bool added_any = false;
+        for (const auto& value : arr) {
+            const auto o = value.toObject();
+            desktop_component::AppEntry entry;
+            entry.app_id = o.value(QStringLiteral("app_id")).toString();
+            entry.display_name = o.value(QStringLiteral("display_name")).toString();
+            entry.icon_path = o.value(QStringLiteral("icon_path")).toString();
+            entry.exec_command = o.value(QStringLiteral("exec_command")).toString();
+            if (!entry.app_id.isEmpty() && !entry.exec_command.isEmpty()) {
+                upsert(entry);
+                added_any = true;
+            }
+        }
+        if (!added_any) {
+            for (const auto& d : desktop_component::defaultApps()) {
+                upsert(d);
+            }
         }
     }
-    return apps.isEmpty() ? desktop_component::defaultApps() : apps;
+
+    return result;
 }
 } // namespace
 
@@ -261,50 +319,62 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
         }
     }
 
+    // ── Builtin in-process panels: register before loadAppsConfig so the
+    // merged app list can surface them and resolve Auto launch_kind. ──
+    auto& builtin_registry = cf::desktop::desktop_component::BuiltinPanelRegistry::instance();
+    auto* about_panel = new cf::desktop::desktop_component::AboutPanel(desktop_entity_);
+    builtin_registry.registerPanel(about_panel);
+    auto* calc_builtin =
+        new cf::desktop::desktop_component::CalculatorBuiltinPanel(desktop_entity_);
+    builtin_registry.registerPanel(calc_builtin);
+
+    // Hardware tier decides whether Auto apps run in-process (Low tier) or
+    // detached (Mid/High). setDeviceConfigOverride (env/tests) takes precedence.
+    bool prefer_inprocess = false;
+    if (auto res = cf::assessHardware(); res.has_value()) {
+        if (auto caps = cf::getHardwareTierCapabilities(); caps.has_value()) {
+            prefer_inprocess = caps->prefer_inprocess_apps;
+        }
+    }
+
     // ── Taskbar: bottom-edge panel (centered app icons) ──
-    // apps is captured by the click handler to resolve app_id -> exec_command.
-    // Loaded from settings/apps.json (per-board app list) if present.
-    const QList<cf::desktop::desktop_component::AppEntry> apps = loadAppsConfig();
+    // apps is captured by the click handler to resolve app_id -> entry.
+    const QList<cf::desktop::desktop_component::AppEntry> apps = loadAppsConfig(prefer_inprocess);
     auto* taskbar = new cf::desktop::desktop_component::CenteredTaskbar(desktop_entity_);
     taskbar->setApps(apps);
     taskbar->setBackdropSource(shell);
     panel_mgr->registerPanel(taskbar->GetWeak());
-    // Shared launch path: resolve app_id -> exec, launch, capture PID. Used by
-    // both the taskbar tile click and the launcher popup so the running-state
-    // indicator lights for either entry point.
-    // Builtin in-process apps live as hidden child widgets of the desktop and
-    // are shown when their "builtin:*" exec_command is launched (no QProcess,
-    // so no framebuffer fight with the desktop on linuxfb).
-    auto* about_panel = new cf::desktop::desktop_component::AboutPanel(desktop_entity_);
-
-    std::function<void(const QString&)> launch_app = [apps, app_pid, about_panel,
+    // Shared launch path: resolve app_id -> entry, dispatch by launch_kind.
+    // BuiltinPanel entries render in-process (registry lookup); DetachedProcess
+    // entries spawn a QProcess. Used by both taskbar click and launcher popup
+    // so the running-state indicator lights for either entry point.
+    std::function<void(const QString&)> launch_app = [apps, app_pid,
                                                       panel_mgr](const QString& app_id) {
-        QString exec;
+        const cf::desktop::desktop_component::AppEntry* found = nullptr;
         for (const auto& app : apps) {
             if (app.app_id == app_id) {
-                exec = app.exec_command;
+                found = &app;
                 break;
             }
         }
-        if (exec.isEmpty()) {
-            cf::log::warningftag("CFDesktopEntity", "No exec for app_id '{}'",
+        if (found == nullptr) {
+            cf::log::warningftag("CFDesktopEntity", "No entry for app_id '{}'",
                                  app_id.toStdString());
             return;
         }
-        // Builtin apps render in-process. External apps are launched
-        // detached (Stage 2 will add hide-desktop + managed-QProcess for
-        // GUI apps that need the full framebuffer).
-        if (exec.startsWith(QStringLiteral("builtin:"))) {
-            const auto id = exec.mid(QStringLiteral("builtin:").size());
-            if (id == QStringLiteral("about") && about_panel != nullptr) {
-                about_panel->popup(panel_mgr->availableGeometry());
+        if (found->launch_kind == cf::desktop::desktop_component::LaunchKind::BuiltinPanel) {
+            auto* panel =
+                cf::desktop::desktop_component::BuiltinPanelRegistry::instance().find(app_id);
+            if (panel != nullptr) {
+                panel->popup(panel_mgr->availableGeometry());
             } else {
-                cf::log::warningftag("CFDesktopEntity", "Unknown builtin app '{}'",
-                                     id.toStdString());
+                cf::log::warningftag("CFDesktopEntity", "No builtin panel for '{}'",
+                                     app_id.toStdString());
             }
             return;
         }
-        const auto launched = cf::desktop::desktop_component::AppLaunchService::launch(exec);
+        const auto launched =
+            cf::desktop::desktop_component::AppLaunchService::launch(found->exec_command);
         if (launched.has_value()) {
             (*app_pid)[app_id] = *launched;
         }
