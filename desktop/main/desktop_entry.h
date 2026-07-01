@@ -52,4 +52,21 @@ DesktopExitResult boot_desktop();
  */
 CF_DESKTOP_EXPORT int run_desktop_session();
 
+/**
+ * @brief  Tries to become the single desktop shell instance.
+ *
+ * Acquires a lock file (<tt>$TMPDIR/cfdesktop-shell.lock</tt>) via QLockFile;
+ * if a live shell already holds it, this returns false so the caller can exit
+ * cleanly. A stale lock from a crashed shell is reclaimed because QLockFile
+ * verifies the owning PID. Uses QLockFile (QtCore only -- no D-Bus, suits the
+ * 6ULL rule).
+ *
+ * @return              true if this process is the sole shell; false if another
+ *                      instance is already running (caller should exit).
+ * @throws              None
+ * @since               0.20
+ * @ingroup             none
+ */
+CF_DESKTOP_EXPORT bool acquireSingleInstanceLock();
+
 } // namespace cf::desktop
