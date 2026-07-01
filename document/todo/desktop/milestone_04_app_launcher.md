@@ -5,7 +5,7 @@ description: "预计周期: 5-7 天，前置依赖: Milestone 3: 任务栏"
 
 # Milestone 4: 应用启动器
 
-> **状态**: ✅ 闭环跑通（网格 + 搜索 + .desktop + 双态 + 入场/退场动画 + MD3 TextField 已落地）。仅余：动画切到 QuarkWidgets MD3 引擎（待引擎 MotionSpec 接入完成，见 §七 待做）
+> **状态**: ✅ 闭环跑通（网格 + 搜索 + .desktop + 双态 + 入场/退场动画[QuarkWidgets MD3 引擎] + MD3 TextField）。仅余：引擎 Backward/stop 语义待修（见 §七）
 > **预计周期**: 5-7 天
 > **前置依赖**: [Milestone 3: 任务栏](milestone_03_taskbar.md)
 > **目标**: 点击任务栏"开始"按钮或桌面区域，弹出一个应用网格，可启动外部程序
@@ -271,12 +271,14 @@ desktop 编译期引用 `apps/calculator/calculator_panel.cpp` 源文件 + `cfde
 - **Noter 移植**([apps/noter/](../../../apps/noter/)):CCIMXNoter → CFDesktop 第二个独立 App,QuarkWidgets MD3 Button 重写工具栏(Open/Save/Bold/Italic + 字号 QSlider),QTextEdit 编辑,manifest `launch_kind:auto`
 - 单测:DesktopEntryIndex 7 例(解析/NoDisplay/非 Application/Exec 清理/basename 回退),全过
 
-### 待做
+### 已落地(动画)
 
-- 入场/退场动画切到 QuarkWidgets MD3 引擎(`CFMaterialFadeAnimation`/`CFMaterialSlideAnimation`)。
-  当前 interim 用 `QPropertyAnimation`(OutCubic/InCubic + `QGraphicsOpacityEffect`,见 [app_launcher.cpp](../../../desktop/ui/components/launcher/app_launcher.cpp) `setupAnimations`)。
-  引擎自身的 `calculateEasedProgress` 目前是**线性** + 时长**硬编码**(MotionSpec 未接,`.cpp` 里 `// TODO: Integrate with MaterialMotionScheme`),
-  需先补完 QuarkWidgets 引擎再切,否则动画质量降级。
+- 入场/退场动画改用 QuarkWidgets MD3 引擎(`CFMaterialFadeAnimation`/`CFMaterialSlideAnimation`),motion token 绑定(`shortEnter`/`mediumEnter` 进,`shortExit`/`mediumExit` 出),duration + easing 从 theme 的 `IMotionSpec` 解析。4 个 Forward-only 动画(enter/exit × fade/slide),见 [app_launcher.cpp](../../../desktop/ui/components/launcher/app_launcher.cpp) `setupAnimations`。
+
+### 引擎遗留(后续)
+
+- 引擎 `tick()` 不认 `Backward` 方向 + `stop()` reset 回 `m_from` → launcher 用 Forward-only + 反转 range 绕过。「开着立刻关」(~250ms 窗)可能轻微抖动;修引擎 `tick` 方向 + `stop` 语义可彻底干净。
+- 引擎修复 5 文件在 QuarkWidgets 子模块(分支 `feat/finish-md3-animation-engine`,待 push):`calculateEasedProgress` 接 MotionSpec、factory 死代码 → `setMotionToken`、mapping 双前缀、`timing_animation.h` 错误的 `qw::components::core` forward decl。
 
 ---
 

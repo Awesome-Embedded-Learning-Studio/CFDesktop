@@ -5,8 +5,9 @@
  * Renders a frameless rounded Material surface holding a grid of LauncherTile
  * entries. popup() sizes and centers it above the taskbar; tile clicks forward
  * appLaunched() and dismiss the popup; ESC and outside clicks (Qt::Popup) also
- * dismiss it. The popup fades and slides in on open and reverses on close.
- * All rendering is QPainter-native.
+ * dismiss it. The popup fades and slides in on open and reverses on close,
+ * driven by the QuarkWidgets MD3 engine: motion-token-bound fade + slide
+ * animations whose duration and easing resolve from the active theme.
  *
  * @author Charliechen114514 (chengh1922@mails.jlu.edu.cn)
  * @date 2026-06-26
@@ -19,12 +20,12 @@
 
 #include "launcher_tile.h"
 
+#include "components/material/cfmaterial_fade_animation.h"
+#include "components/material/cfmaterial_slide_animation.h"
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 #include "ui/widget/material/widget/textfield/textfield.h"
 
-#include <QEasingCurve>
-#include <QGraphicsOpacityEffect>
 #include <QGridLayout>
 #include <QGuiApplication>
 #include <QKeyEvent>
@@ -34,7 +35,6 @@
 #include <QPainterPath>
 #include <QScreen>
 #include <QVBoxLayout>
-#include <QVariantAnimation>
 
 #include <algorithm>
 
@@ -43,19 +43,17 @@ namespace cf::desktop::desktop_component {
 using namespace qw::core::token::literals;
 
 namespace {
-constexpr int kMaxColumns = 5;        ///< Maximum tiles per grid row.
-constexpr int kGridSpacing = 12;      ///< Gap between tiles (px).
-constexpr int kMargin = 24;           ///< Popup inner margin (px).
-constexpr qreal kCornerRadius = 16;   ///< Popup corner radius (px).
-constexpr qreal kWidthRatio = 0.5;    ///< Popup width as a fraction of available.
-constexpr qreal kHeightRatio = 0.55;  ///< Popup height as a fraction of available.
-constexpr int kMinWidth = 480;        ///< Minimum popup width (px).
-constexpr int kMaxWidth = 720;        ///< Maximum popup width (px).
-constexpr int kMinHeight = 360;       ///< Minimum popup height (px).
-constexpr int kMaxHeight = 540;       ///< Maximum popup height (px).
-constexpr int kEnterDurationMs = 250; ///< Enter animation duration (ms).
-constexpr int kExitDurationMs = 150;  ///< Exit animation duration (ms).
-constexpr int kEnterSlidePx = 24;     ///< Enter/exit vertical slide distance (px).
+constexpr int kMaxColumns = 5;       ///< Maximum tiles per grid row.
+constexpr int kGridSpacing = 12;     ///< Gap between tiles (px).
+constexpr int kMargin = 24;          ///< Popup inner margin (px).
+constexpr qreal kCornerRadius = 16;  ///< Popup corner radius (px).
+constexpr qreal kWidthRatio = 0.5;   ///< Popup width as a fraction of available.
+constexpr qreal kHeightRatio = 0.55; ///< Popup height as a fraction of available.
+constexpr int kMinWidth = 480;       ///< Minimum popup width (px).
+constexpr int kMaxWidth = 720;       ///< Maximum popup width (px).
+constexpr int kMinHeight = 360;      ///< Minimum popup height (px).
+constexpr int kMaxHeight = 540;      ///< Maximum popup height (px).
+constexpr int kEnterSlidePx = 24;    ///< Enter/exit vertical slide distance (px).
 } // namespace
 
 AppLauncher::AppLauncher(QWidget* parent) : QWidget(parent) {
@@ -72,11 +70,9 @@ AppLauncher::AppLauncher(QWidget* parent) : QWidget(parent) {
     setAutoFillBackground(false);
     setupUi();
     applyTheme();
-
-    // Whole-popup fade effect; drives the enter/exit fade alongside the slide.
-    opacity_effect_ = new QGraphicsOpacityEffect(this);
-    setGraphicsEffect(opacity_effect_);
-    opacity_effect_->setOpacity(1.0);
+    // setupAnimations creates the MD3 fade + slide animations; the fade pair
+    // installs the QGraphicsOpacityEffect on this widget via setTargetWidget(),
+    // so no manual effect ownership is needed here.
     setupAnimations();
 
     // Stay hidden until popup() is called. As a child of the desktop (not a
@@ -118,29 +114,26 @@ void AppLauncher::popup(const QRect& available) {
     }
 
     rest_pos_ = pos();
-    // Seed the enter animation's initial frame (offset down + transparent)
-    // before show() so the popup never flashes fully opaque for one frame.
-    applyAnimProgress(0.0);
+    // Start the enter pair BEFORE show() so the initial frame (transparent +
+    // offset downward) is applied to a still-hidden widget -- the popup never
+    // flashes fully opaque for one frame. The slide captures pos() (== rest_pos_)
+    // as its anchor; the fade seeds opacity 0 via its opacity effect.
+    enter_slide_->start();
+    enter_fade_->start();
     show();
     raise();
-    // Cancel any in-flight exit before entering (e.g. re-open while closing).
-    exit_anim_->stop();
-    enter_anim_->stop();
-    enter_anim_->start();
 }
 
 void AppLauncher::hideLauncher() {
-    if (exit_anim_ == nullptr || !isVisible()) {
+    if (!isVisible()) {
         hide();
         return;
     }
-    // Animate out from the current opacity so a half-entered popup also exits
-    // smoothly rather than snapping.
-    enter_anim_->stop();
-    exit_anim_->stop();
-    exit_anim_->setStartValue(opacity_effect_ != nullptr ? opacity_effect_->opacity() : qreal(1.0));
-    exit_anim_->setEndValue(qreal(0.0));
-    exit_anim_->start();
+    // Start the exit pair. In the normal flow the enter pair already finished
+    // (popup was fully open), so there is no overlap on the shared opacity
+    // effect. exit_fade_::finished hides the widget once the fade-out completes.
+    exit_slide_->start();
+    exit_fade_->start();
 }
 
 bool AppLauncher::isShowing() const noexcept {
@@ -233,39 +226,46 @@ void AppLauncher::rebuildGrid() {
 }
 
 void AppLauncher::setupAnimations() {
-    // TODO: eventually switch to the QuarkWidgets MD3 engine
-    // (CFMaterialFadeAnimation + CFMaterialSlideAnimation). Deferred because the
-    // engine's MotionSpec integration is unfinished today (linear easing via
-    // calculateEasedProgress, hardcoded durations) -- this OutCubic/InCubic
-    // variant is higher quality until the engine is completed.
-    enter_anim_ = new QVariantAnimation(this);
-    enter_anim_->setDuration(kEnterDurationMs);
-    enter_anim_->setEasingCurve(QEasingCurve::OutCubic);
-    enter_anim_->setStartValue(qreal(0.0));
-    enter_anim_->setEndValue(qreal(1.0));
-    connect(enter_anim_, &QVariantAnimation::valueChanged, this,
-            [this](const QVariant& v) { applyAnimProgress(v.toReal()); });
-
-    exit_anim_ = new QVariantAnimation(this);
-    exit_anim_->setDuration(kExitDurationMs);
-    exit_anim_->setEasingCurve(QEasingCurve::InCubic);
-    connect(exit_anim_, &QVariantAnimation::valueChanged, this,
-            [this](const QVariant& v) { applyAnimProgress(v.toReal()); });
-    // On exit completion: hide and reset to the resting state so the next
-    // popup() opens from a clean slate.
-    connect(exit_anim_, &QVariantAnimation::finished, this, [this]() {
-        hide();
-        applyAnimProgress(1.0);
-    });
-}
-
-void AppLauncher::applyAnimProgress(qreal t) {
-    if (opacity_effect_ != nullptr) {
-        opacity_effect_->setOpacity(t);
+    // Resolve the theme's motion spec once; each animation queries it for MD3
+    // duration + easing via its bound motion token at start().
+    qw::core::IMotionSpec* spec = nullptr;
+    try {
+        auto& tm = qw::core::ThemeManager::instance();
+        spec = &tm.theme(tm.currentThemeName()).motion_spec();
+    } catch (...) {
+        // No theme registered yet; animations fall back to default timing.
     }
-    // Slide vertically: t=0 -> offset down by kEnterSlidePx; t=1 -> at rest_pos_.
-    const int dy = static_cast<int>((1.0 - t) * kEnterSlidePx);
-    move(rest_pos_ + QPoint(0, dy));
+
+    using qw::components::material::CFMaterialFadeAnimation;
+    using qw::components::material::CFMaterialSlideAnimation;
+    using qw::components::material::SlideDirection;
+
+    // Enter: fade in (0->1, shortEnter) + slide up (-px->0, mediumEnter).
+    // enter_fade_ installs the shared QGraphicsOpacityEffect; exit_fade_ reuses
+    // it (the fade animation detects the existing effect on the widget).
+    enter_fade_ = new CFMaterialFadeAnimation(spec, this);
+    enter_fade_->setRange(0.0f, 1.0f);
+    enter_fade_->setMotionToken("shortEnter");
+    enter_fade_->setTargetWidget(this);
+
+    enter_slide_ = new CFMaterialSlideAnimation(spec, SlideDirection::Up, this);
+    enter_slide_->setRange(static_cast<float>(-kEnterSlidePx), 0.0f);
+    enter_slide_->setMotionToken("mediumEnter");
+    enter_slide_->setTargetWidget(this);
+
+    // Exit: fade out (1->0, shortExit) + slide down (0->+px, mediumExit).
+    // exit_fade_::finished hides the popup once the fade-out completes.
+    exit_fade_ = new CFMaterialFadeAnimation(spec, this);
+    exit_fade_->setRange(1.0f, 0.0f);
+    exit_fade_->setMotionToken("shortExit");
+    exit_fade_->setTargetWidget(this);
+    connect(exit_fade_, &qw::components::ICFAbstractAnimation::finished, this,
+            [this]() { hide(); });
+
+    exit_slide_ = new CFMaterialSlideAnimation(spec, SlideDirection::Down, this);
+    exit_slide_->setRange(0.0f, static_cast<float>(kEnterSlidePx));
+    exit_slide_->setMotionToken("mediumExit");
+    exit_slide_->setTargetWidget(this);
 }
 
 } // namespace cf::desktop::desktop_component
