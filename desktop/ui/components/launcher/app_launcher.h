@@ -28,9 +28,16 @@
 
 class QGridLayout;
 class QKeyEvent;
-class QLineEdit;
 class QPaintEvent;
 class QRect;
+
+namespace qw::components::material {
+class CFMaterialFadeAnimation;
+class CFMaterialSlideAnimation;
+} // namespace qw::components::material
+namespace qw::widget::material {
+class TextField;
+}
 
 namespace cf::desktop::desktop_component {
 
@@ -175,17 +182,31 @@ class AppLauncher final : public QWidget {
     void keyPressEvent(QKeyEvent* event) override;
 
   private:
-    /// @brief Creates the grid layout.
+    /// @brief Creates the grid + search box layout.
     void setupUi();
     /// @brief Resolves theme colors, then repaints.
     void applyTheme();
     /// @brief Rebuilds the tile grid from apps_.
     void rebuildGrid();
+    /// @brief Creates the four MD3 enter/exit animations (fade + slide each),
+    /// bound to motion tokens so duration + easing resolve from the theme.
+    void setupAnimations();
 
-    QLineEdit* search_edit_{nullptr}; ///< Filter box (ownership: this widget).
-    QGridLayout* grid_{nullptr};      ///< Tile grid (ownership: grid container).
-    QList<LauncherTile*> tiles_;      ///< Current tiles. Ownership: Qt parented.
-    QList<AppEntry> apps_;            ///< Backing application list.
+    qw::widget::material::TextField* search_edit_{
+        nullptr};                ///< Filter box (ownership: this widget).
+    QGridLayout* grid_{nullptr}; ///< Tile grid (ownership: grid container).
+    QList<LauncherTile*> tiles_; ///< Current tiles. Ownership: Qt parented.
+    QList<AppEntry> apps_;       ///< Backing application list.
+
+    qw::components::material::CFMaterialFadeAnimation* enter_fade_{
+        nullptr}; ///< Enter fade in (0->1, shortEnter).
+    qw::components::material::CFMaterialSlideAnimation* enter_slide_{
+        nullptr}; ///< Enter slide up (-px->0, mediumEnter).
+    qw::components::material::CFMaterialFadeAnimation* exit_fade_{
+        nullptr}; ///< Exit fade out (1->0, shortExit); finished -> hide.
+    qw::components::material::CFMaterialSlideAnimation* exit_slide_{
+        nullptr};     ///< Exit slide down (0->+px, mediumExit).
+    QPoint rest_pos_; ///< Final anchored position (set in popup()).
 
     QColor surface_color_; ///< Popup background fill (surface).
     QColor outline_color_; ///< Reserved for future border (outline variant).
