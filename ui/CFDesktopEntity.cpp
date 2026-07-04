@@ -358,8 +358,8 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // BuiltinPanel entries render in-process (registry lookup); DetachedProcess
     // entries spawn a QProcess. Used by both taskbar click and launcher popup
     // so the running-state indicator lights for either entry point.
-    std::function<void(const QString&)> launch_app = [apps, app_pid,
-                                                      panel_mgr](const QString& app_id) {
+    std::function<void(const QString&)> launch_app = [apps, app_pid, panel_mgr,
+                                                      window_mgr](const QString& app_id) {
         const cf::desktop::desktop_component::AppEntry* found = nullptr;
         for (const auto& app : apps) {
             if (app.app_id == app_id) {
@@ -382,6 +382,31 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                                      app_id.toStdString());
             }
             return;
+        }
+        // DetachedProcess: if this app already has a live tracked window, toggle
+        // it (raise / minimize) instead of spawning a second instance. A stale
+        // app_pid entry whose window already died falls through to relaunch —
+        // findWindowByPid returns nullopt once the window is gone.
+        if (app_pid->contains(app_id)) {
+            const qint64 pid = (*app_pid)[app_id];
+            if (auto win_id = window_mgr->findWindowByPid(pid); win_id.has_value()) {
+                using cf::desktop::WindowState;
+                const auto info = window_mgr->getWindowInfo(*win_id);
+                if (info.state == WindowState::Normal) {
+                    window_mgr->minimizeWindow(*win_id);
+                } else if (info.state == WindowState::Minimized) {
+                    window_mgr->restoreWindow(*win_id);
+                    if (auto* w = window_mgr->find_window(*win_id).Get()) {
+                        w->raise();
+                    }
+                } else {
+                    // Maximized / other: leave the state alone, just raise.
+                    if (auto* w = window_mgr->find_window(*win_id).Get()) {
+                        w->raise();
+                    }
+                }
+                return;
+            }
         }
         const auto launched =
             cf::desktop::desktop_component::AppLaunchService::launch(found->exec_command);
