@@ -27,6 +27,12 @@ document/api/
 third_party/*/
 !third_party/aex/
 !third_party/QuarkWidgets/
+!third_party/apps/
+# third_party/apps/ is a local parking spot for cloned app source trees
+# (CFDeskit, future pdfReader/MediaPlayer/...). Only the README is tracked;
+# each developer clones their own app repos, content stays untracked.
+third_party/apps/*
+!third_party/apps/README.md
 !third_party/.gitkeep
 
 __pycache__/

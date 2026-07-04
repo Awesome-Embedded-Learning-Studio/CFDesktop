@@ -41,6 +41,12 @@ bool DesktopMainPathProvider::request_created(const PathType p) {
 }
 
 QString DesktopMainPathProvider::absolutePath(const PathType p) {
+    // Apps is the runtime deployment target for standalone apps — lowercase to
+    // match the unix-style "apps" directory convention. Other PathTypes use
+    // their X-macro stringified name (Home, Desktop, Documents, ...).
+    if (p == PathType::Apps) {
+        return make(root, "apps");
+    }
     return make(root, DesktopMainPathProvider::kPathNames[static_cast<size_t>(p)]);
 }
 

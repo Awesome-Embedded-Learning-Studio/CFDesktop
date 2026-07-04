@@ -12,8 +12,8 @@
 #include "app_discoverer.h"
 
 #include "cflog.h"
+#include "cfpath/desktop_main_path_resolvers.h"
 
-#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -30,18 +30,24 @@ constexpr const char* kManifestName = "app.json";
 } // namespace
 
 QList<AppEntry> AppDiscoverer::discover() {
-    const QString apps_dir = QCoreApplication::applicationDirPath() + QStringLiteral("/../apps");
+    // Apps deployment target: <active_root>/apps/<id>/{exe, app.json}. This is
+    // where installed/built apps land (e.g. via CFDeskit's cmake --install).
+    const QString apps_dir = cf::desktop::path::DesktopMainPathProvider::instance().absolutePath(
+        cf::desktop::path::DesktopMainPathProvider::PathType::Apps);
     return discoverFrom(apps_dir);
 }
 
 QList<AppEntry> AppDiscoverer::discoverFrom(const QString& apps_dir) {
     QList<AppEntry> result;
-    QDir dir(apps_dir);
-    if (!dir.exists()) {
+    if (!QDir(apps_dir).exists()) {
+        // Apps are optional — a missing apps directory is normal (nothing
+        // deployed yet). Log INFO, not a warning, and return empty.
+        log::infoftag(kLogTag, "Apps directory '{}' not found; no apps to discover",
+                      apps_dir.toStdString());
         return result;
     }
 
-    const QFileInfoList subdirs = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    const QFileInfoList subdirs = QDir(apps_dir).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
     for (const auto& sub : subdirs) {
         const QString app_dir = sub.absoluteFilePath();
         const QString manifest_path =
@@ -84,6 +90,10 @@ QList<AppEntry> AppDiscoverer::discoverFrom(const QString& apps_dir) {
         }
 
         result.append(entry);
+    }
+
+    if (result.isEmpty()) {
+        log::infoftag(kLogTag, "No apps discovered under '{}'", apps_dir.toStdString());
     }
     return result;
 }
