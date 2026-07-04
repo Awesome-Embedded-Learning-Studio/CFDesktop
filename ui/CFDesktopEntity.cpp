@@ -18,6 +18,7 @@
 #include "components/launcher/desktop_entry_index.h"
 #include "components/statusbar/status_bar.h"
 #include "components/taskbar/centered_taskbar.h"
+#include "components/window_placement/floating_policy.h"
 #include "components/window_placement/window_placement_policy.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include "platform/display_backend_helper.h"
@@ -285,18 +286,22 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
         }
     }
 
-    // ── Window placement: constrain launched windows into the work area ──
-    // On each external window appearance, clamp it inside the central work area
-    // (between the status bar and the taskbar) so it neither overlaps a bar nor
-    // flies off-screen, mirroring a real desktop WM. The policy is stateless, so
-    // a temporary is fine here. Runtime toggle via config domain
+    // ── Window placement: give each new window an initial floating geometry ──
+    // On each external window appearance, place it via FloatingPolicy: centered
+    // in the central work area (between the status bar and the taskbar),
+    // shrunk to fit when larger than the work area, and nudged by a small
+    // cascade offset per consecutive window so a burst of launches does not
+    // stack exactly on top of each other. The WindowPlacementPolicy still runs
+    // on work-area changes (see reconstrain_windows above) to pull windows back
+    // inside when the desktop is resized. Runtime toggle via config domain
     // "window_management" / key "constrain_to_workarea" (default on), read per
     // appearance so flipping the config needs no restart.
+    auto cascade_index = std::make_shared<int>(0);
     if (display_backend_) {
         if (auto window_backend = display_backend_->windowBackend()) {
             QObject::connect(
                 window_backend.Get(), &cf::desktop::IWindowBackend::window_came, this,
-                [panel_mgr, this](aex::WeakPtr<cf::desktop::IWindow> win) {
+                [panel_mgr, this, cascade_index](aex::WeakPtr<cf::desktop::IWindow> win) {
                     if (!win) {
                         cf::log::warningftag("WindowPlacement", "window_came with null window");
                         return;
@@ -309,16 +314,19 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                             .query<bool>(cfg::KeyView{.group = "window_management",
                                                       .key = "constrain_to_workarea"},
                                          true);
+                    if (!enabled) {
+                        return;
+                    }
                     const QRect work =
                         panel_mgr->availableGeometry().translated(desktop_entity_->pos());
                     const QRect cur = w->geometry();
-                    const auto target =
-                        cf::desktop::placement::WindowPlacementPolicy{}.computeConstrain(cur, work,
-                                                                                         enabled);
-                    if (target.has_value()) {
-                        w->set_geometry(*target);
-                        cf::log::infoftag("WindowPlacement", "constrained '{}' {} -> {}",
-                                          w->title().toStdString(), cur, *target);
+                    const int idx = (*cascade_index)++;
+                    const auto target = cf::desktop::placement::FloatingPolicy::initialGeometry(
+                        work, idx, cur.size());
+                    if (target != cur) {
+                        w->set_geometry(target);
+                        cf::log::infoftag("WindowPlacement", "placed '{}' {} -> {} (cascade #{})",
+                                          w->title().toStdString(), cur, target, idx);
                     }
                 });
         }
