@@ -1,6 +1,0 @@
-{
-    "app_id": "system_state",
-    "display_name": "System State",
-    "exec": "system_state",
-    "launch_kind": "auto"
-}

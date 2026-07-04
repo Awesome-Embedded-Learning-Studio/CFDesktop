@@ -1,6 +1,0 @@
-{
-    "app_id": "calendar",
-    "display_name": "Calendar",
-    "exec": "calendar",
-    "launch_kind": "auto"
-}

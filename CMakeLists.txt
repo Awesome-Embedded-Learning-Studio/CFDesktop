@@ -65,14 +65,11 @@ setup_third_party(
     GIT_REPOSITORY https://github.com/Awesome-Embedded-Learning-Studio/QuarkWidgets.git
     GIT_TAG        v0.1.0)
 
-# Standalone desktop apps. Each ships a standalone executable launched via
-# QProcess. (Historically apps/ had to precede desktop because desktop reused
-# the calculator parser lib defined here; that coupling has been removed -- the
-# desktop core no longer reaches into apps/. apps/ now only needs to precede
-# test/, which it does; the apps-before-desktop ordering below is convention.)
-log_module_start("apps")
-add_subdirectory(apps)
-log_module_end("apps")
+# Standalone desktop apps now live in the separate `mini-apps` repo
+# (https://github.com/Awesome-Embedded-Learning-Studio/mini-apps). The main
+# repo no longer compiles apps — they are deployed as prebuilt artifacts into
+# <bin>/../apps/<id>/ at install/runtime, where AppDiscoverer scans them.
+# See apps/README.md for the deployment contract.
 
 log_module_start("desktop")
 add_subdirectory(desktop)

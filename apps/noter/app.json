@@ -1,6 +1,0 @@
-{
-    "app_id": "noter",
-    "display_name": "Noter",
-    "exec": "noter",
-    "launch_kind": "auto"
-}
