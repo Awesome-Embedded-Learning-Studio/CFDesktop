@@ -21,4 +21,5 @@ PRIVATE
     QuarkWidgets::quarkwidgets # ThemeManager + Material tokens for the popup/tiles
     cfbase      # aex::expected / WeakPtrFactory (propagated via cfbase -> aex::aex)
     cflogger    # Diagnostic logging for launch success/failure
+    cfpath      # DesktopMainPathProvider: third_party/apps discovery path
 )

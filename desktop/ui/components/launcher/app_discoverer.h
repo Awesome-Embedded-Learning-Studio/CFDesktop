@@ -27,13 +27,15 @@ namespace cf::desktop::desktop_component {
  * @brief  Discovers standalone apps from per-app @c app.json manifests.
  *
  * The discovery contract:
- * - @c <apps_dir>/<id>/app.json is the manifest (JSON object).
+ * - Scans @c <active_root>/apps/<id>/app.json (the runtime deployment target
+ *   — where built apps are installed, e.g. via CFDeskit's @c cmake --install).
  * - Fields: @c app_id, @c display_name, @c icon (relative to manifest),
  *   @c exec (relative to manifest).
  * - @c icon_path / @c exec_command are resolved to absolute paths
  *   (@c <app_dir>/<icon|exec>).
  * - Subdirs without @c app.json are skipped silently; manifests missing
  *   @c app_id or @c exec are skipped with a warning (no silent fallback).
+ * - Empty/missing apps directory → INFO log, empty result (apps are optional).
  *
  * @ingroup components
  */
@@ -42,13 +44,11 @@ class AppDiscoverer {
     AppDiscoverer() = delete;
 
     /**
-     * @brief   Discovers apps under @c <bin>/../apps/<id>/app.json.
+     * @brief   Discovers apps under @c <active_root>/apps/<id>/app.json.
      *
      * @return  Parsed AppEntry list (icon/exec resolved to absolute paths);
      *          empty if the apps directory is absent or has no manifests.
-     *
      * @throws  None.
-     *
      * @since   0.20
      * @ingroup components
      */
@@ -58,9 +58,7 @@ class AppDiscoverer {
      * @brief              Discovers apps under @p apps_dir.
      *
      * @param[in] apps_dir  Directory containing <id>/ subdirs with app.json.
-     *
      * @return             Parsed AppEntry list.
-     *
      * @throws             None.
      * @note               Used by discover(); exposed for unit tests.
      * @since              0.20
