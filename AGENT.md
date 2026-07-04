@@ -17,15 +17,15 @@
 ## Architecture: Three-Layer Strict Dependency
 
 ```
-desktop/ (Layer 3)  →  ui/ (Layer 2)  →  base/ (Layer 1)  →  Qt/OS API
+main/ (Layer 3)  →  ui/ (Layer 2)  →  base/ (Layer 1)  →  Qt/OS API
 ```
 
 **Rules (STRICT single-direction):**
-- `base/` MUST NOT `#include` from `ui/` or `desktop/`
-- `ui/` MUST NOT `#include` from `desktop/`
-- `desktop/` MAY `#include` from `ui/` and `base/`
-- Verify: `grep -r '#include.*\(ui/\|desktop/\)' base/` must return nothing
-- Verify: `grep -r '#include.*desktop/' ui/` must return nothing
+- `base/` MUST NOT `#include` from `ui/` or `main/`
+- `ui/` MUST NOT `#include` from `main/`
+- `main/` MAY `#include` from `ui/` and `base/`
+- Verify: `grep -r '#include.*\(ui/\|main/\)' base/` must return nothing
+- Verify: `grep -r '#include.*main/' ui/` must return nothing
 
 ## Build System
 
@@ -93,13 +93,24 @@ Material Design 3 UI framework (5-layer pipeline):
 - Layer 4: Material Behavior (`StateMachine`, `RippleHelper`, `MdElevationController`)
 - Layer 5: Widget Adapter (19 MD3 widgets: Button, TextField, Slider, etc.)
 
-### desktop/ → CFDesktop_shared
-Desktop environment implementation.
-- `main/` — DAG-based initialization chain + entry point
-- `base/config_manager/` — 4-layer ConfigStore (Temp/App/User/System) with JSON backend
-- `base/logger/` — Async multi-sink logging (lock-free MPSC queue)
-- `ui/components/` — Core interfaces (`IWindow`, `IDisplayServerBackend`)
-- `ui/platform/` — Platform backends (Windows, WSL X11, Wayland planned)
+### base/ → cfbase + desktop infrastructure (merged)
+Foundation layer: hardware probes + desktop infrastructure (cfbase SHARED + 6 desktop-base STATIC modules).
+- `cfbase/` — Hardware probes (CPU/memory/GPU/network) + HWTier + console (SHARED)
+- `config_manager/` — 4-layer ConfigStore (Temp/App/User/System) with JSON backend
+- `logger/` — Async multi-sink logging (lock-free MPSC queue, SHARED)
+- `path/` / `file_operations/` / `fundamental/` / `ascii_art/` — path resolution, file ops, helpers
+
+### ui/ → CFDesktopUi
+Shell-specific Material Design 3 UI (the reusable widget lib is the QuarkWidgets submodule).
+- `components/` — Core interfaces (`IWindow`, `IDisplayServerBackend`)
+- `platform/` — Platform backends (Windows, WSL X11, Wayland planned)
+- `widget/` / `models/` / `render/` / `base/`
+
+### main/ → CFDesktopMain (+ CFDesktop_shared assembled at top level)
+Desktop entry point + initialization.
+- `init/` — DAG-based initialization chain
+- `early_session/` — Pre-QApplication setup
+- `desktop_entry.cpp` + top-level `main.cpp` + `desktop_run_session.cpp` — entry + session
 
 ## Phase System
 

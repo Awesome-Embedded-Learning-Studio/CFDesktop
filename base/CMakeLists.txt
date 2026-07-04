@@ -1,87 +1,14 @@
-# Base library - fundamental utilities and platform abstractions
-cmake_minimum_required(VERSION 3.16)
-
 # ============================================================
-# Header-only exposure for base/include (system probes + platform helpers).
-# Foundation utilities (expected, scope_guard, weak_ptr, macro, ...) were
-# extracted to the aex submodule; retained headers (e.g. windows/co_helper.hpp)
-# include them, so aex::aex is propagated here.
+# base/ — Foundation layer
+# Merges cfbase (hardware probes + HWTier + console, SHARED) with the desktop
+# infrastructure (logger/config/path/filesystem/fundamental/ascii_art, STATIC)
+# into a single base layer. Downstream (main/CFDesktop_shared) consumes them
+# via the existing target aliases (CFDesktop::base, cfconfig, cfpath, ...).
 # ============================================================
-add_library(cfbase_headers INTERFACE)
-target_include_directories(cfbase_headers INTERFACE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-target_link_libraries(cfbase_headers INTERFACE aex::aex)
-add_library(CFDesktop::base_headers ALIAS cfbase_headers)
-
-# Include subdirectory CMakeLists (static libraries)
-add_subdirectory(system)
-add_subdirectory(device)
-
-# ============================================================
-# Unified Base Library - Single DLL: cfbase.dll
-# ============================================================
-
-# Create the unified shared library
-add_library(cfbase SHARED)
-
-set(CFBASE_MODULE_TARGETS
-    cfbase_cpu
-    cfbase_memory
-    cfbase_network
-    cfbase_gpu
-    cfbase_console
-    cfbase_hardware_tier
-)
-
-# Link static libraries from sub-modules with --whole-archive to ensure
-# all symbols (including dllexport) are included in cfbase.dll.
-# Without this, the linker skips static lib objects since cfbase has no own sources.
-# Force all objects into cfbase.dll (PRIVATE: only affects cfbase's link step).
-if(MSVC)
-    target_link_libraries(cfbase PRIVATE ${CFBASE_MODULE_TARGETS})
-    foreach(_cfbase_module IN LISTS CFBASE_MODULE_TARGETS)
-        target_link_options(cfbase PRIVATE "/WHOLEARCHIVE:$<TARGET_FILE:${_cfbase_module}>")
-    endforeach()
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND NOT APPLE)
-    target_link_libraries(cfbase PRIVATE
-        -Wl,--whole-archive
-        ${CFBASE_MODULE_TARGETS}
-        -Wl,--no-whole-archive
-    )
-else()
-    target_link_libraries(cfbase PRIVATE ${CFBASE_MODULE_TARGETS})
-endif()
-
-# Set include directories
-# Expose both include/ (for public headers) and . (for sub-module headers like device/console)
-target_include_directories(cfbase PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:include>
-)
-
-# Link dependencies
-target_link_libraries(cfbase PUBLIC
-    Qt6::Core
-    aex::aex
-)
-
-# Platform-specific link libraries
-if(WIN32)
-    target_link_libraries(cfbase PUBLIC
-        wbemuuid
-        PowrProf
-        pdh
-        psapi
-    )
-endif()
-
-# ============================================================
-# Aliases
-# ============================================================
-add_library(CFDesktop::base ALIAS cfbase)
-# For backward compatibility
-add_library(CFDesktop::base_cpu ALIAS cfbase)
-add_library(CFDesktop::base_memory ALIAS cfbase)
-add_library(CFDesktop::base_console ALIAS cfbase)
+add_subdirectory(cfbase)
+add_subdirectory(fundamental)
+add_subdirectory(path)
+add_subdirectory(logger)
+add_subdirectory(file_operations)
+add_subdirectory(config_manager)
+add_subdirectory(ascii_art)

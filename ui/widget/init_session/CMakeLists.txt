@@ -24,9 +24,9 @@ add_library(cf_desktop_ui_widget_init_session STATIC
 
 target_include_directories(cf_desktop_ui_widget_init_session PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    # For boot_stage_info.h, init_stage.h from desktop/main/init/
-    # Note: Cannot link CFDesktopInit (circular dep: CFDesktopInit links this target)
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/desktop/main/init>
+    # For boot_stage_info.h, init_stage.h from main/init/
+    # Note: Cannot link CFDesktopMain (circular dep: CFDesktopMain links this target)
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/main/init>
 )
 
 target_link_libraries(cf_desktop_ui_widget_init_session PUBLIC
