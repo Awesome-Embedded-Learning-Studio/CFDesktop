@@ -179,6 +179,7 @@ bool WSLX11WindowBackend::internAtoms() {
     atoms_.net_wm_pid = internAtom("_NET_WM_PID");
     atoms_.wm_protocols = internAtom("WM_PROTOCOLS");
     atoms_.wm_delete_window = internAtom("WM_DELETE_WINDOW");
+    atoms_.wm_change_state = internAtom("WM_CHANGE_STATE");
     atoms_.net_wm_window_type = internAtom("_NET_WM_WINDOW_TYPE");
     atoms_.net_wm_window_type_dock = internAtom("_NET_WM_WINDOW_TYPE_DOCK");
     atoms_.net_wm_window_type_desktop = internAtom("_NET_WM_WINDOW_TYPE_DESKTOP");

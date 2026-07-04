@@ -21,6 +21,15 @@
 
 namespace cf::desktop::backend::wsl {
 
+namespace {
+
+/// ICCCM WM_STATE action values (see ICCCM 4.1.4 / WM_CHANGE_STATE). xcb does
+/// not ship these Xlib constants, so they are defined here as plain literals.
+constexpr long kIconicState = 3; ///< Iconified / minimized.
+constexpr long kNormalState = 1; ///< Mapped / restored.
+
+} // namespace
+
 WSLX11Window::WSLX11Window(xcb_connection_t* conn, xcb_window_t root, xcb_window_t win,
                            const XcbAtoms& atoms, QObject* parent)
     : IWindow(parent), conn_(conn), root_(root), window_(win), atoms_(atoms) {
@@ -173,6 +182,37 @@ void WSLX11Window::raise() {
 
     const uint32_t values[] = {XCB_STACK_MODE_ABOVE};
     xcb_configure_window(conn_, window_, XCB_CONFIG_WINDOW_STACK_MODE, values);
+    xcb_flush(conn_);
+}
+
+void WSLX11Window::minimize() {
+    sendWmChangeState(kIconicState);
+}
+
+void WSLX11Window::restore() {
+    sendWmChangeState(kNormalState);
+}
+
+void WSLX11Window::sendWmChangeState(long stateAction) const {
+    if (!conn_ || window_ == XCB_WINDOW_NONE || atoms_.wm_change_state == XCB_ATOM_NONE) {
+        return;
+    }
+
+    // ICCCM 4.1.4: a client asks the WM to change a window's state by sending a
+    // WM_CHANGE_STATE ClientMessage to the root window with
+    // SubstructureRedirectMask. The WM intercepts it and performs the iconify
+    // or restore. This is the path XIconifyWindow(3) and xdotool(1) use.
+    xcb_client_message_event_t event;
+    std::memset(&event, 0, sizeof(event));
+    event.response_type = XCB_CLIENT_MESSAGE;
+    event.window = window_;
+    event.type = atoms_.wm_change_state;
+    event.format = 32;
+    event.data.data32[0] = static_cast<uint32_t>(stateAction);
+
+    xcb_send_event(conn_, 0, root_,
+                   XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY,
+                   reinterpret_cast<const char*>(&event));
     xcb_flush(conn_);
 }
 

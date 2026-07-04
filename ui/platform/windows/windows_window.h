@@ -72,6 +72,21 @@ class WindowsWindow : public IWindow {
     void raise() override;
 
     /**
+     * @brief  Minimizes (iconifies) this window via ShowWindow(SW_MINIMIZE).
+     */
+    void minimize() override;
+
+    /**
+     * @brief  Maximizes this window via ShowWindow(SW_MAXIMIZE).
+     */
+    void maximize() override;
+
+    /**
+     * @brief  Restores this window via ShowWindow(SW_RESTORE).
+     */
+    void restore() override;
+
+    /**
      * @brief  Returns the native Win32 window handle.
      *
      * @return The underlying HWND.
