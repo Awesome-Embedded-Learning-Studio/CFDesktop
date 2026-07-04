@@ -65,8 +65,8 @@ setup_third_party(
     GIT_REPOSITORY https://github.com/Awesome-Embedded-Learning-Studio/QuarkWidgets.git
     GIT_TAG        v0.1.0)
 
-# Standalone desktop apps now live in the separate `mini-apps` repo
-# (https://github.com/Awesome-Embedded-Learning-Studio/mini-apps). The main
+# Standalone desktop apps now live in the separate `CFDeskit` repo
+# (https://github.com/Awesome-Embedded-Learning-Studio/CFDeskit). The main
 # repo no longer compiles apps — they are deployed as prebuilt artifacts into
 # <bin>/../apps/<id>/ at install/runtime, where AppDiscoverer scans them.
 # See apps/README.md for the deployment contract.

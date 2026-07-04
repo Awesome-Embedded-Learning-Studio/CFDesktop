@@ -2,7 +2,7 @@
 
 This directory is the **runtime deployment target** for standalone desktop apps.
 App sources no longer live in this repo — they were extracted to the separate
-[`mini-apps`](https://github.com/Awesome-Embedded-Learning-Studio/mini-apps)
+[`CFDeskit`](https://github.com/Awesome-Embedded-Learning-Studio/CFDeskit)
 repository (calculator, noter, alarm_clock, calendar, system_state).
 
 ## Deployment contract
@@ -21,13 +21,13 @@ package:
 
 ## How to deploy
 
-Build mini-apps and install (or copy) its `apps/` tree here:
+Build CFDeskit and install (or copy) its `apps/` tree here:
 
 ```bash
 # clean install:
-( cd ~/mini-apps && cmake --install build --prefix <CFDesktop deploy root> )
+( cd ~/CFDeskit && cmake --install build --prefix <CFDesktop deploy root> )
 # quick local test against an existing CFDesktop build tree:
-cp -r ~/mini-apps/build/apps/. <CFDesktop build>/out/build_develop/apps/
+cp -r ~/CFDeskit/build/apps/. <CFDesktop build>/out/build_develop/apps/
 ```
 
 Apps resolve `libquarkwidgets.so` via rpath `$ORIGIN/..` and runtime-verify the
