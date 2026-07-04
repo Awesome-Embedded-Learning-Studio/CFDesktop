@@ -68,17 +68,112 @@ setup_third_party(
 # Standalone desktop apps now live in the separate `CFDeskit` repo
 # (https://github.com/Awesome-Embedded-Learning-Studio/CFDeskit). The main
 # repo no longer compiles apps — they are deployed as prebuilt artifacts into
-# <bin>/../apps/<id>/ at install/runtime, where AppDiscoverer scans them.
-# See apps/README.md for the deployment contract.
+# <active_root>/apps/<id>/ at install/runtime, where AppDiscoverer scans them.
+# See third_party/apps/README.md for the deployment contract.
 
-log_module_start("desktop")
-add_subdirectory(desktop)
-# Log base module end
-log_module_end("desktop")
+# ============================================================
+# UI layer (Material Design 3 components, platform backends; was desktop/ui/)
+# ============================================================
+log_module_start("ui")
+add_subdirectory(ui)
+log_module_end("ui")
+
+# ============================================================
+# Main layer (init chain + entry; was desktop/main/)
+# ============================================================
+log_module_start("main")
+add_subdirectory(main)
+log_module_end("main")
+
+# ============================================================
+# Unified CFDesktop Shared Library — assembles static libs from base/ui/main.
+# Moved here from the deleted desktop/CMakeLists.txt.
+# ============================================================
+log_info("Desktop" "Creating unified CFDesktop shared library")
+
+add_library(CFDesktop_shared SHARED)
+
+if(WIN32)
+    target_compile_definitions(CFDesktop_shared PRIVATE CFDESKTOP_EXPORTS)
+endif()
+if(UNIX AND NOT APPLE)
+    target_compile_options(CFDesktop_shared PRIVATE -fvisibility=hidden)
+endif()
+
+target_include_directories(CFDesktop_shared PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/base>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/main>
+)
+
+# Static libs folded into the .so via --whole-archive.
+set(CFDESKTOP_STATIC_LIBS
+    cffilesystem
+    cfconfig
+    cfasciiart
+    CFDesktopMain
+    CFDesktopUi
+    cf_desktop_render
+)
+
+# Sources compiled directly into the DLL (with CFDESKTOP_EXPORTS defined).
+target_sources(CFDesktop_shared PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/main/desktop_run_session.cpp
+)
+
+if(MSVC)
+    target_link_libraries(CFDesktop_shared PRIVATE ${CFDESKTOP_STATIC_LIBS})
+    foreach(_cfdesktop_module IN LISTS CFDESKTOP_STATIC_LIBS)
+        target_link_options(CFDesktop_shared PRIVATE "/WHOLEARCHIVE:$<TARGET_FILE:${_cfdesktop_module}>")
+    endforeach()
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang" AND NOT APPLE)
+    target_link_libraries(CFDesktop_shared PRIVATE
+        "-Wl,--whole-archive"
+        ${CFDESKTOP_STATIC_LIBS}
+        "-Wl,--no-whole-archive"
+    )
+else()
+    target_link_libraries(CFDesktop_shared PRIVATE ${CFDESKTOP_STATIC_LIBS})
+endif()
+
+target_link_libraries(CFDesktop_shared PUBLIC
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+)
+# QuarkWidgets::quarkwidgets is PUBLIC so the thin EXE can include the
+# QApplication subclass (MaterialApplication) it instantiates in main.cpp.
+target_link_libraries(CFDesktop_shared
+PRIVATE
+    cfbase
+    cflogger
+PUBLIC
+    QuarkWidgets::quarkwidgets
+)
+
+if(WIN32)
+    target_link_libraries(CFDesktop_shared PUBLIC
+        wbemuuid PowrProf pdh psapi
+    )
+endif()
+
+add_library(CFDesktop::lib ALIAS CFDesktop_shared)
+
+# ============================================================
+# Main executable — thin shell that calls into the DLL
+# ============================================================
+add_executable(CFDesktop main.cpp)
+target_link_libraries(CFDesktop PRIVATE CFDesktop_shared)
+
+log_info("Desktop Buildings" "Configuring Desktop Buildings Done")
 
 log_module_start("example")
 add_subdirectory("example")
 log_module_end("example")
+
+# Enable CTest at the top level so CTestTestfile.cmake is generated for the
+# build root (enable_testing() inside test/CMakeLists.txt only covers that scope).
+enable_testing()
 
 # Log test module start
 log_module_start("test")

@@ -140,16 +140,16 @@ while IFS= read -r file; do
     [ ! -f "$file" ] && continue
     case "$file" in
         base/*)
-            if grep -nE '#include[[:space:]]+[<"]?(ui/|desktop/)' "$file" >/dev/null 2>&1; then
-                log_error "base 层违规: $file 引用了 ui/ 或 desktop/"
-                grep -nE '#include[[:space:]]+[<"]?(ui/|desktop/)' "$file"
+            if grep -nE '#include[[:space:]]+[<"]?(ui/|main/)' "$file" >/dev/null 2>&1; then
+                log_error "base 层违规: $file 引用了 ui/ 或 main/"
+                grep -nE '#include[[:space:]]+[<"]?(ui/|main/)' "$file"
                 LAYER_ERR=1
             fi
             ;;
         ui/*)
-            if grep -nE '#include[[:space:]]+[<"]?desktop/' "$file" >/dev/null 2>&1; then
-                log_error "ui 层违规: $file 引用了 desktop/"
-                grep -nE '#include[[:space:]]+[<"]?desktop/' "$file"
+            if grep -nE '#include[[:space:]]+[<"]?main/' "$file" >/dev/null 2>&1; then
+                log_error "ui 层违规: $file 引用了 main/"
+                grep -nE '#include[[:space:]]+[<"]?main/' "$file"
                 LAYER_ERR=1
             fi
             ;;
@@ -157,7 +157,7 @@ while IFS= read -r file; do
 done <<< "$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(cpp|cc|cxx|h|hpp|hxx)$' || true)"
 if [ "$LAYER_ERR" -ne 0 ]; then
     echo ""
-    echo "三层依赖规则: base ↛ ui/desktop, ui ↛ desktop（见 AGENT.md Architecture）"
+    echo "三层依赖规则: base ↛ ui/main, ui ↛ main（见 AGENT.md Architecture）"
     echo "提示: 使用 --no-verify 可跳过（不推荐）"
     exit 1
 fi

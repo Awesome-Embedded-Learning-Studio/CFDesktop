@@ -20,5 +20,5 @@ add_gtest_executable(
     LINK_LIBRARIES CFDesktop::config;Qt6::Core;GTest::gtest;GTest::gtest_main
     LABELS         "config_manager;unit;functional"
     LOG_MODULE     config_manager_json_tests
-    INCLUDE_DIRS   ${CMAKE_SOURCE_DIR}/desktop/base/config_manager/src
+    INCLUDE_DIRS   ${CMAKE_SOURCE_DIR}/base/config_manager/src
 )
