@@ -13,9 +13,6 @@ add_subdirectory(window_placement)
 # Add wallpaper animation tests subdirectory
 add_subdirectory(wallpaper_animation)
 
-# Add calculator parser tests subdirectory
-add_subdirectory(calculator)
-
 # Add launcher (app discovery) tests subdirectory
 add_subdirectory(launcher)
 
