@@ -20,15 +20,12 @@
 #include "aex/weak_ptr/weak_ptr_factory.h"
 #include "app_entry.h"
 #include "components/IPanel.h"
-#include "components/IShellLayer.h"
-#include "components/frosted_backdrop/frosted_backdrop.h"
 
 #include <QColor>
 #include <QList>
 #include <QWidget>
 
 class QHBoxLayout;
-class QTimer;
 
 namespace cf::desktop::desktop_component {
 
@@ -165,17 +162,6 @@ class CenteredTaskbar final : public QWidget, public cf::desktop::IPanel {
      */
     aex::WeakPtr<CenteredTaskbar> GetWeak() const { return weak_factory_.GetWeakPtr(); }
 
-    /**
-     * @brief  Sets the backdrop source for the frosted-glass surface.
-     *
-     * @param[in] source  Shell layer supplying the wallpaper image (non-owning).
-     *
-     * @throws None
-     * @note   @p source must outlive this taskbar.
-     * @since  0.20
-     */
-    void setBackdropSource(cf::desktop::IShellLayer* source);
-
   signals:
     /**
      * @brief  Emitted when a tile is clicked.
@@ -197,7 +183,7 @@ class CenteredTaskbar final : public QWidget, public cf::desktop::IPanel {
 
   protected:
     /**
-     * @brief  Paints the translucent surface and top divider.
+     * @brief  Paints the fixed-transparency surface and top divider.
      *
      * @param[in] event  The paint event descriptor.
      *
@@ -208,16 +194,6 @@ class CenteredTaskbar final : public QWidget, public cf::desktop::IPanel {
      * @ingroup components
      */
     void paintEvent(QPaintEvent* event) override;
-
-    /**
-     * @brief  Coalesces geometry changes into a debounced backdrop reblur.
-     *
-     * @param[in] event  The resize event descriptor.
-     *
-     * @throws None
-     * @since  0.20
-     */
-    void resizeEvent(QResizeEvent* event) override;
 
   private:
     /// @brief Creates the centered row layout.
@@ -232,17 +208,6 @@ class CenteredTaskbar final : public QWidget, public cf::desktop::IPanel {
 
     QColor background_color_; ///< Surface fill for the bar.
     QColor divider_color_;    ///< Top hairline divider color.
-
-    /// Shell layer backing the frosted surface (non-owning; may be null).
-    cf::desktop::IShellLayer* backdrop_source_{nullptr};
-    /// Frosted-glass renderer with its own cache (one instance per bar).
-    cf::desktop::FrostedBackdrop frosted_;
-    /// Resolved frosted parameters; the tint tracks the active theme surface.
-    cf::desktop::FrostedParams frosted_params_{};
-    /// Coalesces rapid resizes into a single backdrop reblur. Ownership: this.
-    QTimer* reblur_debounce_{nullptr};
-    /// Guards the null-backdrop warning so it fires once per transition.
-    bool backdrop_null_warned_{false};
 
     /// Weak pointer factory (must be the last member).
     mutable aex::WeakPtrFactory<CenteredTaskbar> weak_factory_{this};

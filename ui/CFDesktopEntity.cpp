@@ -270,7 +270,6 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
 
     // ── Status bar: top-edge panel (clock + system icons) ──
     auto* status_bar = new cf::desktop::desktop_component::StatusBar(desktop_entity_);
-    status_bar->setBackdropSource(shell);
     panel_mgr->registerPanel(status_bar->GetWeak());
     status_bar->show();
 
@@ -352,7 +351,6 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     const QList<cf::desktop::desktop_component::AppEntry> apps = loadAppsConfig(prefer_inprocess);
     auto* taskbar = new cf::desktop::desktop_component::CenteredTaskbar(desktop_entity_);
     taskbar->setApps(apps);
-    taskbar->setBackdropSource(shell);
     panel_mgr->registerPanel(taskbar->GetWeak());
     // Shared launch path: resolve app_id -> entry, dispatch by launch_kind.
     // BuiltinPanel entries render in-process (registry lookup); DetachedProcess
