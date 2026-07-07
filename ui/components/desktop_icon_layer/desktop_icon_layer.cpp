@@ -20,6 +20,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QRect>
+#include <QTimer>
 
 #include <algorithm>
 
@@ -129,7 +130,10 @@ void DesktopIconLayer::addShortcut(const QString& app_id) {
     s.row = cell.y();
     shortcuts_.append(s);
     emit shortcutsChanged(shortcuts_);
-    rebuildGrid();
+    // Defer rebuild: addShortcut runs inside the launcher tile's mouseRelease
+    // handler, and rebuildGrid's qDeleteAll would delete a widget mid-event —
+    // singleShot(0) runs once control returns to the event loop, where it's safe.
+    QTimer::singleShot(0, this, [this]() { rebuildGrid(); });
 }
 
 void DesktopIconLayer::onAvailableGeometryChanged(const QRect& available) {
@@ -162,13 +166,44 @@ void DesktopIconLayer::paintEvent(QPaintEvent* /*event*/) {
 }
 
 void DesktopIconLayer::rebuildGrid() {
-    qDeleteAll(tiles_);
+    // removeWidget BEFORE delete: deleting a widget leaves a stale item in the
+    // QGridLayout until the destroyed signal is processed (asynchronous). The
+    // next addWidget then lands in a layout that still references dead widgets,
+    // and every new tile ends up at pos (0,0) — the data layer is correct but
+    // nothing is visually where shortcuts_ says. Removing synchronously keeps
+    // the layout clean so the new addWidget lands in the right cell.
+    for (auto* tile : tiles_) {
+        grid_->removeWidget(tile);
+        delete tile;
+    }
     tiles_.clear();
 
     const auto dims =
         computeGridDimensions(last_available_.size(), static_cast<int>(shortcuts_.size()));
     if (dims.columns <= 0 || dims.rows <= 0) {
         return; // No valid geometry yet.
+    }
+    // Force EVERY row/column (including empty ones) to a full cell size. Without
+    // this, QGridLayout collapses rows/cols that hold no widget to zero, so the
+    // grid occupies only the rows that have tiles instead of cols*stride x
+    // rows*stride. A tile at row 5 with rows 2-4 empty then renders visually at
+    // row 2 — cellAt()'s (margin + row*stride) math no longer matches where the
+    // widget actually is, and the tile looks like it "bounced back" or "flew".
+    // Clear row/col minimums from a previous (possibly larger) grid first:
+    // setRowMinimumHeight only updates the rows we name, so rows beyond the new
+    // capacity would keep their old 96px minimum and the grid would stay
+    // oversized after a window shrink, flinging tiles out of place.
+    for (int r = 0; r < grid_->rowCount(); ++r) {
+        grid_->setRowMinimumHeight(r, 0);
+    }
+    for (int c = 0; c < grid_->columnCount(); ++c) {
+        grid_->setColumnMinimumWidth(c, 0);
+    }
+    for (int r = 0; r < dims.rows; ++r) {
+        grid_->setRowMinimumHeight(r, kCellSize);
+    }
+    for (int c = 0; c < dims.columns; ++c) {
+        grid_->setColumnMinimumWidth(c, kCellSize);
     }
     for (const auto& s : shortcuts_) {
         if (s.col < 0 || s.col >= dims.columns || s.row < 0 || s.row >= dims.rows) {
@@ -191,6 +226,8 @@ void DesktopIconLayer::rebuildGrid() {
         grid_->addWidget(tile, s.row, s.col);
         tiles_.append(tile);
     }
+    grid_->activate(); // Force reflow after bulk add/remove — without this the
+                       // new widgets can stay at stale positions after a drag.
 }
 
 LauncherTile* DesktopIconLayer::tileForApp(const QString& app_id) const {
@@ -287,6 +324,8 @@ void DesktopIconLayer::onTileDragEnded(const QPoint& global_pos) {
     }
     const QPoint layer_pos = mapFromGlobal(global_pos);
     const QPoint target = cellAt(layer_pos);
+    cf::log::infoftag(kLogTag, "dragEnd: target=({},{}) origin=({},{})", target.x(), target.y(),
+                      drag_origin_cell_.x(), drag_origin_cell_.y());
 
     bool changed = false;
     QList<DesktopShortcut> updated = shortcuts_;
@@ -324,7 +363,16 @@ void DesktopIconLayer::onTileDragEnded(const QPoint& global_pos) {
     if (changed) {
         shortcuts_ = std::move(updated);
         emit shortcutsChanged(shortcuts_);
-        rebuildGrid();
+        // Defer the rebuild to after this mouseRelease handler returns:
+        // rebuildGrid uses qDeleteAll on the tiles, and the drag-source tile is
+        // the very widget receiving this event — deleting it mid-event hits
+        // Qt's deferred-delete trap and the new positions never visually land
+        // (the tile "bounces back"). singleShot(0) runs once the event loop
+        // regains control, where deleting any widget is safe.
+        QTimer::singleShot(0, this, [this]() {
+            cf::log::infoftag(kLogTag, "deferred rebuildGrid firing");
+            rebuildGrid();
+        });
     }
     update();
 }
