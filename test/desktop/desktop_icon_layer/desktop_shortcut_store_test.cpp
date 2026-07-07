@@ -63,7 +63,7 @@ TEST(DesktopShortcutStore, SeedFromLaysOutInGridOrder) {
         e.app_id = QStringLiteral("app%1").arg(i);
         apps.append(e);
     }
-    const auto seed = DesktopShortcutStore::seedFrom(apps);
+    const auto seed = DesktopShortcutStore::seedFrom(apps, 8);
     ASSERT_EQ(seed.size(), 5);
     // kSeedCols = 8, so the first 8 land in row 0, left-to-right.
     for (int i = 0; i < 5; ++i) {
@@ -80,7 +80,7 @@ TEST(DesktopShortcutStore, SeedFromWrapsToSecondRow) {
         e.app_id = QStringLiteral("a%1").arg(i);
         apps.append(e);
     }
-    const auto seed = DesktopShortcutStore::seedFrom(apps);
+    const auto seed = DesktopShortcutStore::seedFrom(apps, 8);
     ASSERT_EQ(seed.size(), 10);
     // Index 8 wraps to col 0, row 1.
     EXPECT_EQ(seed[8].col, 0);
@@ -94,5 +94,5 @@ TEST(DesktopShortcutStore, SeedFromCapsAtLimit) {
         e.app_id = QStringLiteral("a%1").arg(i);
         apps.append(e);
     }
-    EXPECT_EQ(DesktopShortcutStore::seedFrom(apps).size(), 12); // kSeedCount
+    EXPECT_EQ(DesktopShortcutStore::seedFrom(apps, 8).size(), 12); // kSeedCount
 }

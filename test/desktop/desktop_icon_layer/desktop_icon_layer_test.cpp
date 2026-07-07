@@ -5,7 +5,7 @@
  * Exercises the pure grid-sizing math (column clamp, row capacity, cap-and-
  * truncate) without instantiating a QWidget. Layout constants mirror the
  * anonymous namespace in desktop_icon_layer.cpp: kCellSize=96, kGridSpacing=16,
- * kMargin=24, kMaxColumns=8 (stride = 96+16 = 112; usable = side - 2*24 + 16).
+ * kMargin=24 (stride = 96+16 = 112; usable = side - 2*24 + 16; no column cap).
  *
  * @author  Charliechen114514 (chengh1922@mails.jlu.edu.cn)
  * @date    2026-07-07
@@ -39,10 +39,10 @@ TEST(DesktopIconLayerGrid, NegativeCountReturnsZero) {
     EXPECT_EQ(d.shown, 0);
 }
 
-TEST(DesktopIconLayerGrid, ColumnsClampedToMax) {
-    // usable_w = 1280 - 48 + 16 = 1248; 1248 / 112 = 11 -> clamped to kMaxColumns=8.
+TEST(DesktopIconLayerGrid, ColumnsFillWideWidth) {
+    // usable_w = 1280 - 48 + 16 = 1248; 1248 / 112 = 11 (no artificial cap).
     const auto d = computeGridDimensions(QSize(1280, 720), 5);
-    EXPECT_EQ(d.columns, 8);
+    EXPECT_EQ(d.columns, 11);
 }
 
 TEST(DesktopIconLayerGrid, RowsAndCapacityForTypicalDesktop) {
@@ -54,9 +54,9 @@ TEST(DesktopIconLayerGrid, RowsAndCapacityForTypicalDesktop) {
 
 TEST(DesktopIconLayerGrid, TruncatesWhenOverCapacity) {
     const auto d = computeGridDimensions(QSize(1280, 720), 100);
-    EXPECT_EQ(d.columns, 8);
+    EXPECT_EQ(d.columns, 11);
     EXPECT_EQ(d.rows, 6);
-    EXPECT_EQ(d.shown, 48); // 8*6, not 100.
+    EXPECT_EQ(d.shown, 66); // 11*6, not 100.
 }
 
 TEST(DesktopIconLayerGrid, NarrowWidthFloorOneColumn) {

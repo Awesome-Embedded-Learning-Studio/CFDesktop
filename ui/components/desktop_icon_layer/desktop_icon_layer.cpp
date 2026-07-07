@@ -74,9 +74,8 @@ GridDimensions computeGridDimensions(const QSize& available, int app_count) {
     if (cols < 1) {
         cols = 1;
     }
-    if (cols > kMaxColumns) {
-        cols = kMaxColumns;
-    }
+    // No artificial column cap: the grid fills the available width. (A prior
+    // kMaxColumns=8 cap left wide displays half-empty horizontally.)
 
     const int rows = (usable_h > 0) ? (usable_h / stride) : 0;
     const int capacity = cols * rows;

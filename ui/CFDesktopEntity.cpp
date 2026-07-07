@@ -29,10 +29,12 @@
 #include "system/hardware_tier/hardware_tier.h"
 #include <QCoreApplication>
 #include <QFile>
+#include <QGuiApplication>
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QScreen>
 #include <functional>
 #include <memory>
 
@@ -369,7 +371,16 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     QList<cf::desktop::desktop_component::DesktopShortcut> desktop_shortcuts =
         cf::desktop::desktop_component::DesktopShortcutStore::load();
     if (desktop_shortcuts.isEmpty()) {
-        desktop_shortcuts = cf::desktop::desktop_component::DesktopShortcutStore::seedFrom(apps);
+        // Seed across as many columns as the primary screen can hold, so the
+        // first-run layout fills the width instead of clustering in the left
+        // half. The seed runs before PanelManager relayout delivers the real
+        // central rect, so estimate from the screen geometry.
+        int seed_cols = 8;
+        if (const auto* screen = QGuiApplication::primaryScreen()) {
+            seed_cols = std::max(8, (screen->availableGeometry().width() - 48) / 112);
+        }
+        desktop_shortcuts =
+            cf::desktop::desktop_component::DesktopShortcutStore::seedFrom(apps, seed_cols);
         cf::desktop::desktop_component::DesktopShortcutStore::save(desktop_shortcuts);
     }
 

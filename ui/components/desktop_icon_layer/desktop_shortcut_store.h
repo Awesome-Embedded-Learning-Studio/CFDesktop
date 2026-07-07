@@ -70,6 +70,8 @@ class DesktopShortcutStore {
      * result so subsequent runs are user-managed.
      *
      * @param[in] apps  The merged app registry (builtin + manifest + .desktop).
+     * @param[in] cols  Column count for the seed layout (fills the width on
+     *                  wide screens; the caller derives it from screen size).
      *
      * @return  A seeded shortcut list (about + the first few apps in grid order).
      *
@@ -77,7 +79,7 @@ class DesktopShortcutStore {
      * @since   0.20
      * @ingroup components
      */
-    static QList<DesktopShortcut> seedFrom(const QList<AppEntry>& apps);
+    static QList<DesktopShortcut> seedFrom(const QList<AppEntry>& apps, int cols);
 
     /**
      * @brief           Serializes shortcuts to compact JSON bytes.
