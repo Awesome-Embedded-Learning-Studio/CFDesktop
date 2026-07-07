@@ -152,9 +152,14 @@ void DesktopIconLayer::paintEvent(QPaintEvent* /*event*/) {
     if (dragging_app_id_.isEmpty() || drag_target_cell_.x() < 0) {
         return;
     }
-    const int stride = kCellSize + kGridSpacing;
-    const QRect cell_rect(kMargin + drag_target_cell_.x() * stride,
-                          kMargin + drag_target_cell_.y() * stride, kCellSize, kCellSize);
+    // Use the grid's actual cell geometry so the highlight lines up exactly
+    // with the tile that will land there — hand-computing margin + row*stride
+    // drifts off the real cell when the layout's alignment / minimum decisions
+    // differ from the constants.
+    const QRect cell_rect = grid_->cellRect(drag_target_cell_.y(), drag_target_cell_.x());
+    if (!cell_rect.isValid()) {
+        return;
+    }
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing, true);
     QPen pen(QColor(0x6F, 0x5B, 0xA4, 200)); // MD3-ish primary, semi-transparent.
@@ -257,10 +262,27 @@ QPoint DesktopIconLayer::cellAt(const QPoint& layer_pos) const {
     if (dims.columns <= 0 || dims.rows <= 0) {
         return {-1, -1};
     }
-    const int stride = kCellSize + kGridSpacing;
-    const int col = std::clamp((layer_pos.x() - kMargin) / stride, 0, dims.columns - 1);
-    const int row = std::clamp((layer_pos.y() - kMargin) / stride, 0, dims.rows - 1);
-    return {col, row};
+    // Use the grid's actual cell geometry (cellRect) instead of hand-computed
+    // margin + row*stride: the constants drift from the real cells once the
+    // layout's alignment / minimum-size / spacing decisions move them, and the
+    // highlight ended up offset from the tile. Inside the layer but in a margin
+    // band, snap to the nearest cell rather than treating it as a delete.
+    QPoint nearest = {-1, -1};
+    int best_dist = -1;
+    for (int r = 0; r < dims.rows; ++r) {
+        for (int c = 0; c < dims.columns; ++c) {
+            const QRect cr = grid_->cellRect(r, c);
+            if (cr.contains(layer_pos)) {
+                return {c, r};
+            }
+            const int d = (layer_pos - cr.center()).manhattanLength();
+            if (best_dist < 0 || d < best_dist) {
+                best_dist = d;
+                nearest = {c, r};
+            }
+        }
+    }
+    return nearest;
 }
 
 QPoint DesktopIconLayer::firstFreeCell() const {
