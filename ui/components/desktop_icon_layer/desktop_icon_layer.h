@@ -11,9 +11,10 @@
  * as appClicked(app_id) so the same launch_app path drives desktop, taskbar,
  * and launcher entries.
  *
- * The container paints nothing and is transparent to mouse events so clicks
- * on empty grid cells pass through to the wallpaper; each LauncherTile keeps
- * default input handling and receives its own clicks.
+ * The container paints nothing so the wallpaper shows through. It does NOT set
+ * WA_TransparentForMouseEvents (that starves child widgets of mouse events on
+ * several Qt versions); tiles receive their own clicks, and empty-cell clicks
+ * propagate to the desktop surface.
  *
  * @author  Charliechen114514 (chengh1922@mails.jlu.edu.cn)
  * @date    2026-07-07

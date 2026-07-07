@@ -21,4 +21,5 @@ PRIVATE
     cfbase         # WeakPtr / WeakPtrFactory
     cflogger       # Diagnostic logging for null-backdrop fallback
     cfdesktop_frosted_backdrop  # Frosted-glass backdrop renderer
+    cfdesktop_launcher           # app_icon_resolver for full-color .desktop icons
 )

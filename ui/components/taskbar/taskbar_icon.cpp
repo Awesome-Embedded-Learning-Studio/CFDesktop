@@ -17,6 +17,7 @@
 #include "taskbar_icon.h"
 
 #include "icon_mask.h"
+#include "launcher/app_icon_resolver.h"
 
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
@@ -112,9 +113,9 @@ void TaskbarIcon::paintEvent(QPaintEvent* /*event*/) {
         p.drawEllipse(ripple_center_, radius, radius);
     }
 
-    // App glyph: the tinted icon mask, or — when no icon resolves (manifest apps
-    // ship none, .desktop Icon= is a theme name we do not look up, builtin
-    // panels set none) — the display-name initial so every tile is identifiable.
+    // App glyph: the resolved icon (full-color for .desktop / manifest apps,
+    // tinted mask for builtin ":/..." resources), or the display-name initial
+    // when nothing resolves — so every tile is identifiable.
     if (!icon_mask_.isNull()) {
         const qreal glyph = edge * 0.6;
         const QRectF glyph_rect(c.x() - glyph / 2.0, c.y() - glyph / 2.0, glyph, glyph);
@@ -190,7 +191,17 @@ void TaskbarIcon::applyTheme() {
 }
 
 void TaskbarIcon::refreshIcon() {
-    icon_mask_ = tintedIconMask(entry_.icon_path, foreground_color_);
+    const QString& path = entry_.icon_path;
+    // Builtin taskbar masks ship as ":/..." resources (single-color silhouettes):
+    // tint them to the on-surface token for the taskbar's monochrome style.
+    // Everything else (freedesktop theme names from .desktop, manifest absolute
+    // paths) is a full-color icon: resolve it as-is via the shared resolver so
+    // firefox and friends show their real artwork.
+    if (path.startsWith(QLatin1Char(':'))) {
+        icon_mask_ = tintedIconMask(path, foreground_color_);
+    } else {
+        icon_mask_ = resolve_app_icon(entry_, QSize(72, 72)); // 2x kIconBase for crisp hover.
+    }
 }
 
 void TaskbarIcon::startHover(bool entering) {

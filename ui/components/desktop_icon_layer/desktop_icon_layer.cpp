@@ -68,11 +68,13 @@ GridDimensions computeGridDimensions(const QSize& available, int app_count) {
 }
 
 DesktopIconLayer::DesktopIconLayer(QWidget* parent) : QWidget(parent) {
-    // The container must not paint a background (the wallpaper shows through)
-    // and must not consume mouse events on empty cells (clicks between tiles
-    // fall through to the wallpaper). Each LauncherTile clears the attribute
-    // explicitly in rebuildGrid() so it still receives its own clicks.
-    setAttribute(Qt::WA_TransparentForMouseEvents);
+    // The container must not paint a background so the wallpaper shows through
+    // (empty paintEvent + WA_NoSystemBackground). It deliberately does NOT set
+    // WA_TransparentForMouseEvents: that attribute reliably starves child
+    // widgets of mouse events under several Qt versions (and on WSLg), so
+    // LauncherTile would never receive clicks. Empty-cell clicks fall through
+    // to the desktop surface via QWidget's default ignore — the wallpaper has
+    // no click handler today, so passthrough is not needed.
     setAttribute(Qt::WA_NoSystemBackground);
     setAutoFillBackground(false);
 
@@ -118,9 +120,6 @@ void DesktopIconLayer::rebuildGrid() {
     int col = 0;
     for (int i = 0; i < dims.shown; ++i) {
         auto* tile = new LauncherTile(apps_[i], this);
-        // Defensive: the container is transparent-for-mouse; ensure each tile
-        // is not, so its hover/click still work under every Qt version.
-        tile->setAttribute(Qt::WA_TransparentForMouseEvents, false);
         connect(tile, &LauncherTile::clicked, this, &DesktopIconLayer::appClicked);
         grid_->addWidget(tile, row, col);
         tiles_.append(tile);
