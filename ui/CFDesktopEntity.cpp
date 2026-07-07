@@ -18,6 +18,7 @@
 #include "components/launcher/desktop_entry_index.h"
 #include "components/statusbar/status_bar.h"
 #include "components/taskbar/centered_taskbar.h"
+#include "components/window_placement/floating_policy.h"
 #include "components/window_placement/window_placement_policy.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include "platform/display_backend_helper.h"
@@ -269,7 +270,6 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
 
     // ── Status bar: top-edge panel (clock + system icons) ──
     auto* status_bar = new cf::desktop::desktop_component::StatusBar(desktop_entity_);
-    status_bar->setBackdropSource(shell);
     panel_mgr->registerPanel(status_bar->GetWeak());
     status_bar->show();
 
@@ -285,18 +285,22 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
         }
     }
 
-    // ── Window placement: constrain launched windows into the work area ──
-    // On each external window appearance, clamp it inside the central work area
-    // (between the status bar and the taskbar) so it neither overlaps a bar nor
-    // flies off-screen, mirroring a real desktop WM. The policy is stateless, so
-    // a temporary is fine here. Runtime toggle via config domain
+    // ── Window placement: give each new window an initial floating geometry ──
+    // On each external window appearance, place it via FloatingPolicy: centered
+    // in the central work area (between the status bar and the taskbar),
+    // shrunk to fit when larger than the work area, and nudged by a small
+    // cascade offset per consecutive window so a burst of launches does not
+    // stack exactly on top of each other. The WindowPlacementPolicy still runs
+    // on work-area changes (see reconstrain_windows above) to pull windows back
+    // inside when the desktop is resized. Runtime toggle via config domain
     // "window_management" / key "constrain_to_workarea" (default on), read per
     // appearance so flipping the config needs no restart.
+    auto cascade_index = std::make_shared<int>(0);
     if (display_backend_) {
         if (auto window_backend = display_backend_->windowBackend()) {
             QObject::connect(
                 window_backend.Get(), &cf::desktop::IWindowBackend::window_came, this,
-                [panel_mgr, this](aex::WeakPtr<cf::desktop::IWindow> win) {
+                [panel_mgr, this, cascade_index](aex::WeakPtr<cf::desktop::IWindow> win) {
                     if (!win) {
                         cf::log::warningftag("WindowPlacement", "window_came with null window");
                         return;
@@ -309,16 +313,19 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                             .query<bool>(cfg::KeyView{.group = "window_management",
                                                       .key = "constrain_to_workarea"},
                                          true);
+                    if (!enabled) {
+                        return;
+                    }
                     const QRect work =
                         panel_mgr->availableGeometry().translated(desktop_entity_->pos());
                     const QRect cur = w->geometry();
-                    const auto target =
-                        cf::desktop::placement::WindowPlacementPolicy{}.computeConstrain(cur, work,
-                                                                                         enabled);
-                    if (target.has_value()) {
-                        w->set_geometry(*target);
-                        cf::log::infoftag("WindowPlacement", "constrained '{}' {} -> {}",
-                                          w->title().toStdString(), cur, *target);
+                    const int idx = (*cascade_index)++;
+                    const auto target = cf::desktop::placement::FloatingPolicy::initialGeometry(
+                        work, idx, cur.size());
+                    if (target != cur) {
+                        w->set_geometry(target);
+                        cf::log::infoftag("WindowPlacement", "placed '{}' {} -> {} (cascade #{})",
+                                          w->title().toStdString(), cur, target, idx);
                     }
                 });
         }
@@ -344,14 +351,13 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     const QList<cf::desktop::desktop_component::AppEntry> apps = loadAppsConfig(prefer_inprocess);
     auto* taskbar = new cf::desktop::desktop_component::CenteredTaskbar(desktop_entity_);
     taskbar->setApps(apps);
-    taskbar->setBackdropSource(shell);
     panel_mgr->registerPanel(taskbar->GetWeak());
     // Shared launch path: resolve app_id -> entry, dispatch by launch_kind.
     // BuiltinPanel entries render in-process (registry lookup); DetachedProcess
     // entries spawn a QProcess. Used by both taskbar click and launcher popup
     // so the running-state indicator lights for either entry point.
-    std::function<void(const QString&)> launch_app = [apps, app_pid,
-                                                      panel_mgr](const QString& app_id) {
+    std::function<void(const QString&)> launch_app = [apps, app_pid, panel_mgr,
+                                                      window_mgr](const QString& app_id) {
         const cf::desktop::desktop_component::AppEntry* found = nullptr;
         for (const auto& app : apps) {
             if (app.app_id == app_id) {
@@ -374,6 +380,31 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                                      app_id.toStdString());
             }
             return;
+        }
+        // DetachedProcess: if this app already has a live tracked window, toggle
+        // it (raise / minimize) instead of spawning a second instance. A stale
+        // app_pid entry whose window already died falls through to relaunch —
+        // findWindowByPid returns nullopt once the window is gone.
+        if (app_pid->contains(app_id)) {
+            const qint64 pid = (*app_pid)[app_id];
+            if (auto win_id = window_mgr->findWindowByPid(pid); win_id.has_value()) {
+                using cf::desktop::WindowState;
+                const auto info = window_mgr->getWindowInfo(*win_id);
+                if (info.state == WindowState::Normal) {
+                    window_mgr->minimizeWindow(*win_id);
+                } else if (info.state == WindowState::Minimized) {
+                    window_mgr->restoreWindow(*win_id);
+                    if (auto* w = window_mgr->find_window(*win_id).Get()) {
+                        w->raise();
+                    }
+                } else {
+                    // Maximized / other: leave the state alone, just raise.
+                    if (auto* w = window_mgr->find_window(*win_id).Get()) {
+                        w->raise();
+                    }
+                }
+                return;
+            }
         }
         const auto launched =
             cf::desktop::desktop_component::AppLaunchService::launch(found->exec_command);

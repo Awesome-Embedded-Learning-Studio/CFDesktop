@@ -5,12 +5,14 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 3: 任务栏 (任
 
 # Milestone 5: 窗口管理可见
 
-> **状态**: 🚧 进行中（追踪 + 任务栏联动切片跑通；窗口装饰走 overlay 渲染〔策略 A〕待实现）
+> **状态**: 🚧 进行中（窗口状态机 + 任务栏 raise/minimize 联动 + FloatingPolicy 落地〔2026-07-05〕；装饰 overlay 渲染 DEFERRED 到 EGLFS 阶段）
 > **预计周期**: 7-10 天
 > **前置依赖**: [Milestone 3: 任务栏](milestone_03_taskbar.md) (任务栏联动)
-> **目标**: 外部应用窗口能被管理——有窗口装饰，支持最小化/最大化/关闭，任务栏同步显示运行中应用
+> **目标**: 外部应用窗口能被管理——支持最小化/最大化/恢复/关闭，任务栏同步显示运行中应用，点击运行图标切换 raise/minimize
 >
 > **决策（2026-06-26）**：窗口装饰采用**策略 A — overlay 渲染**为初期路径（CFDesktop 自绘层呈现标题栏 + 控制按钮，纯视觉指示；WSL X11 客户端模式下外部窗口由 XWayland 管理无法直接装饰）。策略 B（X11 WM）/ 策略 C（Wayland Compositor）延后到 EGLFS/Wayland 后端阶段。
+>
+> **决策（2026-07-05）**：**装饰 overlay（策略 A）DEFERRED 到 EGLFS/Wayland-compositor 阶段**。详见文末「装饰 DEFERRED 决策」。本切片先行落地状态机 + 任务栏联动 + 浮动布局策略，不依赖装饰。
 
 ---
 
@@ -257,15 +259,34 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 3: 任务栏 (任
 
 ## 五、验收标准
 
-- [ ] 启动外部应用后 WindowManager 能追踪到新窗口
-- [ ] WindowManager 维护 WindowInfo 数据 (标题、PID、状态)
-- [ ] 窗口状态可在 Normal/Minimized/Maximized 之间转换
-- [ ] Taskbar 同步显示运行中应用图标
-- [ ] 点击 Taskbar 图标可 raise/minimize 对应窗口
-- [ ] 窗口有自定义装饰 (至少标题 + 关闭按钮的视觉呈现)
-- [ ] 窗口关闭后 Taskbar 图标自动消失
-- [ ] Light/Dark 主题切换时装饰正确变色
+- [x] 启动外部应用后 WindowManager 能追踪到新窗口
+- [x] WindowManager 维护 WindowInfo 数据 (标题、PID、状态、icon_hint/z_index/is_always_on_top/created_at)
+- [x] 窗口状态可在 Normal/Minimized/Maximized 之间转换（IWindow minimize/maximize/restore + WindowManager 状态机；X11 上 maximize 留默认 no-op，详见 Step B6）
+- [x] Taskbar 同步显示运行中应用图标
+- [x] 点击 Taskbar 图标可 raise/minimize 对应窗口（Normal→minimize、Minimized→restore+raise、其他→仅 raise）
+- [ ] 窗口有自定义装饰 (至少标题 + 关闭按钮的视觉呈现) — **DEFERRED 到 EGLFS 阶段**（见下）
+- [x] 窗口关闭后 Taskbar 图标自动消失（destroyed 观察发 Closed 迁移 + windowDisappeared）
+- [ ] Light/Dark 主题切换时装饰正确变色 — 随装饰一同 DEFERRED
 
 ---
 
-*最后更新: 2026-06-29（核对代码现状：`window_info.h` 骨架已存在待补字段、`WindowPlacementPolicy` 已落地补录）*
+## 装饰 DEFERRED 决策（2026-07-05）
+
+WindowDecoration（策略 A overlay）推迟到 EGLFS/Wayland-compositor 后端阶段。理由：
+
+1. **WSL X11 客户端模式无法直接装饰外部窗口**——外部窗口由 XWayland 管理，自带原生标题栏；CFDesktop 只能做纯视觉 overlay 指示，叠加上去会与原生标题栏重影。
+2. **Win32 后端同理**——外部窗口自带原生标题栏，overlay 重影。
+3. **EGLFS/Wayland-compositor 后端将原生持有窗口装饰权**——那时 CFDesktop 是 compositor，装饰才有真实价值；纯视觉 overlay 在没有 compositor 权限下收益有限，且会在后端切换时被重写。
+
+本切片先行落地、且**不依赖装饰**的成果：
+
+- **WindowState 状态机**——`isValidTransition`（Normal↔Minimized、Normal↔Maximized；Maximized↔Minimized 须 restore 中转；Closed 终态）+ `applyState`（校验→派发 IWindow op→回写 info→发信号）。
+- **IWindow minimize/maximize/restore**——非纯虚默认 no-op；Windows 三态全实现（`ShowWindow`）；WSL X11 实现 minimize+restore（ICCCM 4.1.4 `WM_CHANGE_STATE` ClientMessage → root + SubstructureRedirectMask，即 `XIconifyWindow`/xdotool 路径），maximize 留默认 no-op（XWayland 下 EWMH `_NET_WM_STATE` 不可靠）。
+- **WindowManager 查询/信号**——`getWindowInfo`/`getAllWindowInfos`/`findWindowByPid` + `windowStateChanged`/`windowInfoUpdated`。
+- **Taskbar raise/minimize toggle**——点击运行图标不再二次启动，而是按状态切换。
+- **FloatingPolicy**——新窗口初始位置（居中 + 24px 级联 + 缩进 work area）。
+- **单测**——FloatingPolicy 13 例 + WindowManager 14 例（FakeWindow + QSignalSpy）全绿。
+
+---
+
+*最后更新: 2026-07-05（MS5 状态机 + 任务栏 raise/minimize 联动 + FloatingPolicy 落地；装饰 overlay DEFERRED 到 EGLFS）*

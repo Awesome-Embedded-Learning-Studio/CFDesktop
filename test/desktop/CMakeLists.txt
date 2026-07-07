@@ -10,6 +10,9 @@ add_subdirectory(frosted_backdrop)
 # Add window placement tests subdirectory
 add_subdirectory(window_placement)
 
+# Add window manager (state machine) tests subdirectory
+add_subdirectory(window_manager)
+
 # Add wallpaper animation tests subdirectory
 add_subdirectory(wallpaper_animation)
 

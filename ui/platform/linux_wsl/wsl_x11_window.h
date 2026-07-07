@@ -31,6 +31,7 @@ struct XcbAtoms {
     xcb_atom_t net_wm_pid = XCB_ATOM_NONE;
     xcb_atom_t wm_protocols = XCB_ATOM_NONE;
     xcb_atom_t wm_delete_window = XCB_ATOM_NONE;
+    xcb_atom_t wm_change_state = XCB_ATOM_NONE;
     xcb_atom_t net_wm_window_type = XCB_ATOM_NONE;
     xcb_atom_t net_wm_window_type_dock = XCB_ATOM_NONE;
     xcb_atom_t net_wm_window_type_desktop = XCB_ATOM_NONE;
@@ -98,6 +99,33 @@ class WSLX11Window : public IWindow {
     void raise() override;
 
     /**
+     * @brief  Minimizes (iconifies) the window via WM_CHANGE_STATE.
+     *
+     * Sends the ICCCM 4.1.4 WM_CHANGE_STATE ClientMessage to the root window
+     * with SubstructureRedirectMask so the window manager (XWayland on WSL)
+     * iconifies the window. This is the same path used by XIconifyWindow and
+     * xdotool(1).
+     *
+     * @throws None
+     * @note   No-op when the WM_CHANGE_STATE atom could not be interned.
+     * @since  0.21
+     */
+    void minimize() override;
+
+    /**
+     * @brief  Restores the window from minimized via WM_CHANGE_STATE.
+     *
+     * Sends the ICCCM 4.1.4 WM_CHANGE_STATE ClientMessage with NormalState to
+     * the root window so the window manager (XWayland on WSL) restores the
+     * window.
+     *
+     * @throws None
+     * @note   No-op when the WM_CHANGE_STATE atom could not be interned.
+     * @since  0.21
+     */
+    void restore() override;
+
+    /**
      * @brief  Returns the owning process id read from _NET_WM_PID.
      * @return The process id, or 0 when unavailable.
      */
@@ -125,6 +153,21 @@ class WSLX11Window : public IWindow {
 
     /// @brief Queries _NET_WM_PID once; returns 0 when unavailable.
     qint64 readPid() const;
+
+    /// @brief Sends the ICCCM WM_CHANGE_STATE ClientMessage to the root window.
+    ///
+    /// @p state_action is the ICCCM state value (3 = IconicState, 1 =
+    /// NormalState). Routed to the root window with SubstructureRedirectMask so
+    /// the window manager (XWayland on WSL) performs the actual state change.
+    ///
+    /// @param[in] stateAction   IconicState (3) to minimize, NormalState (1) to
+    ///                          restore.
+    ///
+    /// @throws None
+    /// @note   No-op when the connection, window, or WM_CHANGE_STATE atom is
+    ///         missing.
+    /// @since  0.21
+    void sendWmChangeState(long stateAction) const;
 };
 
 } // namespace cf::desktop::backend::wsl

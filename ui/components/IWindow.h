@@ -74,6 +74,46 @@ class IWindow : public QObject {
     virtual void raise() = 0;
 
     /**
+     * @brief  Minimizes (iconifies) this window.
+     *
+     * Default no-op; concrete backends override where the platform exposes a
+     * minimize operation. On X11/XWayland this is the ICCCM WM_CHANGE_STATE
+     * ClientMessage (IconicState); on Win32 it is ShowWindow(SW_MINIMIZE).
+     *
+     * @throws None
+     * @note   Default implementation is a no-op.
+     * @since  0.21
+     */
+    virtual void minimize() {}
+
+    /**
+     * @brief  Maximizes this window to fill the work area.
+     *
+     * Default no-op; concrete backends override where the platform exposes a
+     * reliable maximize operation. On Win32 it is ShowWindow(SW_MAXIMIZE); on
+     * X11/XWayland the EWMH _NET_WM_STATE hint is unreliable and this stays a
+     * no-op by default.
+     *
+     * @throws None
+     * @note   Default implementation is a no-op.
+     * @since  0.21
+     */
+    virtual void maximize() {}
+
+    /**
+     * @brief  Restores this window from a minimized or maximized state.
+     *
+     * Default no-op; concrete backends override where the platform exposes a
+     * restore operation. On X11/XWayland this is the ICCCM WM_CHANGE_STATE
+     * ClientMessage (NormalState); on Win32 it is ShowWindow(SW_RESTORE).
+     *
+     * @throws None
+     * @note   Default implementation is a no-op.
+     * @since  0.21
+     */
+    virtual void restore() {}
+
+    /**
      * @brief  Returns the owning process id of this window.
      *
      * @return The process id, or 0 when the backend cannot determine it.

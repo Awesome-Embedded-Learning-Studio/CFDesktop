@@ -16,7 +16,6 @@
 
 #include "status_bar.h"
 
-#include "base/color.h"
 #include "base/device_pixel.h"
 #include "cflog.h"
 #include "core/theme_manager.h"
@@ -25,15 +24,12 @@
 
 #include <QDateTime>
 #include <QEasingCurve>
-#include <QGuiApplication>
 #include <QLinearGradient>
 #include <QPaintEvent>
 #include <QPainter>
-#include <QResizeEvent>
 #include <QTimer>
 #include <QVariantAnimation>
 
-#include <algorithm>
 #include <string>
 
 // Q_INIT_RESOURCE must run at global scope: the rcc-generated registration
@@ -48,19 +44,18 @@ static void registerStatusbarIconsResource() {
 namespace cf::desktop::desktop_component {
 
 using cf::desktop::PanelPosition;
-using qw::base::CFColor;
 using qw::base::device::CanvasUnitHelper;
 using namespace qw::core::token::literals;
 
 namespace {
 // Fallback palette used when no theme is available (mirrors MD3 light).
-constexpr int kBarHeight = 48;          ///< Status bar thickness in device pixels.
-constexpr int kSideMarginDp = 16;       ///< Horizontal padding for clock/icons (dp).
-constexpr int kIconGapDp = 12;          ///< Spacing between adjacent icons (dp).
-constexpr int kIconSizeDp = 16;         ///< Icon cell edge length (dp).
-constexpr int kTimeGapDp = 10;          ///< Gap between the time and the icon cluster (dp).
-constexpr qreal kShadowBandDp = 5.0;    ///< In-band elevation shadow height (dp).
-constexpr qreal kFrostTintAlpha = 0.60; ///< Frosted-glass tint opacity (wallpaper bleed).
+constexpr int kBarHeight = 48;        ///< Status bar thickness in device pixels.
+constexpr int kSideMarginDp = 16;     ///< Horizontal padding for clock/icons (dp).
+constexpr int kIconGapDp = 12;        ///< Spacing between adjacent icons (dp).
+constexpr int kIconSizeDp = 16;       ///< Icon cell edge length (dp).
+constexpr int kTimeGapDp = 10;        ///< Gap between the time and the icon cluster (dp).
+constexpr qreal kShadowBandDp = 5.0;  ///< In-band elevation shadow height (dp).
+constexpr qreal kSurfaceAlpha = 0.82; ///< Fixed surface transparency over the wallpaper.
 
 // Icon kinds and their compiled-resource mask paths. Indices align with
 // StatusBar::icon_masks_[]. A missing mask leaves a visible gap in the bar
@@ -78,7 +73,8 @@ constexpr const char* const kIconMaskPaths[kStatusIconCount] = {
 StatusBar::StatusBar(QWidget* parent)
     : QWidget(parent), timer_(new QTimer(this)), cached_time_(currentTimeText()),
       cached_date_(currentDateText()) {
-    setAttribute(Qt::WA_OpaquePaintEvent);
+    // No WA_OpaquePaintEvent: the bar paints a fixed-alpha surface so the
+    // wallpaper composites through it. Declaring it opaque would suppress that.
     setAutoFillBackground(false);
     setFixedHeight(kBarHeight);
     setupUi();
@@ -92,25 +88,6 @@ StatusBar::~StatusBar() = default;
 void StatusBar::setupUi() {
     connect(timer_, &QTimer::timeout, this, &StatusBar::onTimeout);
     timer_->start(1000);
-
-    // Coalesce rapid resizes (e.g. a window drag) into a single frosted-backdrop
-    // reblur instead of rebuilding on every intermediate geometry.
-    reblur_debounce_ = new QTimer(this);
-    reblur_debounce_->setSingleShot(true);
-    reblur_debounce_->setInterval(80);
-    connect(reblur_debounce_, &QTimer::timeout, this, [this]() {
-        frosted_.invalidate();
-        update();
-    });
-
-    // A screen change (different monitor / device-pixel-ratio) invalidates the
-    // backdrop cache so the next paint rebuilds at the new DPR. QWidget has no
-    // screenChanged signal, so listen to the application-wide primary-screen
-    // change; devicePixelRatioF() is also part of the cache key as a backstop.
-    connect(qApp, &QGuiApplication::primaryScreenChanged, this, [this]() {
-        frosted_.invalidate();
-        update();
-    });
 
     // React to theme switches (ThemeManager is the canonical source).
     connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
@@ -127,29 +104,15 @@ void StatusBar::applyTheme() {
         icon_color_ = cs.queryColor(ON_SURFACE_VARIANT);
         divider_color_ = cs.queryColor(OUTLINE_VARIANT);
         clock_font_ = theme.font_type().queryTargetFont(TYPOGRAPHY_TITLE_MEDIUM);
-        // MD3 elevation tonal lift: lighten the surface tone a few steps for the
-        // top of the gradient, so the bar reads as raised above the shell.
-        const CFColor base(background_color_);
-        surface_top_color_ =
-            CFColor(base.hue(), base.chroma(), std::clamp(base.tone() + 3.0f, 0.0f, 100.0f))
-                .native_color();
     } catch (...) {
         // Fallback palette when no theme is registered yet.
         background_color_ = QColor(0xF7, 0xF5, 0xF3);
-        surface_top_color_ = QColor(0xFF, 0xFF, 0xFF);
         foreground_color_ = QColor(0x1C, 0x1B, 0x1F);
         icon_color_ = QColor(0x49, 0x45, 0x4E);
         divider_color_ = QColor(0xCA, 0xC4, 0xD0);
         clock_font_ = font();
         clock_font_.setPixelSize(15);
     }
-    // Frosted-glass tint tracks the resolved surface color (covers both the
-    // themed and fallback branches above). The top highlight gives the top bar
-    // its "raised glass" reading.
-    frosted_params_.tint = background_color_;
-    frosted_params_.tint_alpha = kFrostTintAlpha;
-    frosted_params_.top_highlight = true;
-    frosted_.invalidate();
     update();
 }
 
@@ -279,49 +242,21 @@ StatusBarStyle StatusBar::style() const {
     return style_;
 }
 
-// -- Backdrop --------------------------------------------------------------
-void StatusBar::setBackdropSource(cf::desktop::IShellLayer* source) {
-    backdrop_source_ = source;
-    frosted_.invalidate();
-    update();
-}
-
-void StatusBar::resizeEvent(QResizeEvent* event) {
-    QWidget::resizeEvent(event);
-    // Debounce: collapse a burst of resizes (e.g. a window drag) into one
-    // frosted-backdrop reblur rather than rebuilding on every intermediate size.
-    if (reblur_debounce_ != nullptr) {
-        reblur_debounce_->start();
-    }
-}
-
 // -- Painting --------------------------------------------------------------
 void StatusBar::paintEvent(QPaintEvent* /*event*/) {
     const CanvasUnitHelper h(devicePixelRatioF());
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing, true);
     p.setRenderHint(QPainter::SmoothPixmapTransform, true);
-    // 1. Frosted-glass backdrop at FULL opacity. The boot fade must only fade
-    //    the content layer (clock, icons, chrome); if the glass faded too, the
-    //    raw wallpaper would bleed through during the 250ms fade-in.
+    // 1. Fixed-transparency surface at FULL opacity. The wallpaper composites
+    //    through the baked alpha (no per-wallpaper blur, no stale cache, no
+    //    transition snap). The boot fade must only fade the content layer
+    //    (clock, icons, chrome); if the surface faded too, the raw wallpaper
+    //    would bleed through during the 250ms fade-in.
     p.setOpacity(1.0);
-    const QImage backdrop =
-        backdrop_source_ != nullptr ? backdrop_source_->currentBackgroundImage() : QImage{};
-    const QRect strip = geometry();
-    if (!backdrop.isNull() && !strip.isEmpty()) {
-        p.drawPixmap(0, 0, frosted_.render(backdrop, strip, devicePixelRatioF(), frosted_params_));
-        backdrop_null_warned_ = false;
-    } else {
-        // Flat fallback (e.g. before the wallpaper loads). Fail loud, once.
-        QLinearGradient surface(0, 0, 0, height());
-        surface.setColorAt(0.0, surface_top_color_);
-        surface.setColorAt(1.0, background_color_);
-        p.fillRect(rect(), surface);
-        if (!backdrop_null_warned_) {
-            backdrop_null_warned_ = true;
-            cf::log::warningftag("StatusBar", "backdrop image null; using flat fallback");
-        }
-    }
+    QColor surface = background_color_;
+    surface.setAlphaF(kSurfaceAlpha);
+    p.fillRect(rect(), surface);
 
     // 2. Content layer fades in on boot.
     p.setOpacity(fade_opacity_);

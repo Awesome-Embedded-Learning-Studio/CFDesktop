@@ -76,6 +76,27 @@ void WindowsWindow::raise() {
     BringWindowToTop(hwnd_);
 }
 
+void WindowsWindow::minimize() {
+    if (!hwnd_ || !IsWindow(hwnd_)) {
+        return;
+    }
+    ShowWindow(hwnd_, SW_MINIMIZE);
+}
+
+void WindowsWindow::maximize() {
+    if (!hwnd_ || !IsWindow(hwnd_)) {
+        return;
+    }
+    ShowWindow(hwnd_, SW_MAXIMIZE);
+}
+
+void WindowsWindow::restore() {
+    if (!hwnd_ || !IsWindow(hwnd_)) {
+        return;
+    }
+    ShowWindow(hwnd_, SW_RESTORE);
+}
+
 } // namespace cf::desktop::backend::windows
 
 #endif // CFDESKTOP_OS_WINDOWS
