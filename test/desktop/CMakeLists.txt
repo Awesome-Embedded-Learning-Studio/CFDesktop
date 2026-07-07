@@ -19,5 +19,8 @@ add_subdirectory(wallpaper_animation)
 # Add launcher (app discovery) tests subdirectory
 add_subdirectory(launcher)
 
+# Add desktop icon layer (grid math) tests subdirectory
+add_subdirectory(desktop_icon_layer)
+
 # Add builtin apps registry tests subdirectory
 add_subdirectory(builtin_apps)

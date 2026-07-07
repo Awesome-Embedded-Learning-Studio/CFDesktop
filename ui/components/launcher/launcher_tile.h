@@ -21,6 +21,7 @@
 
 #include <QColor>
 #include <QFont>
+#include <QPixmap>
 #include <QPointF>
 #include <QString>
 #include <QWidget>
@@ -196,8 +197,11 @@ class LauncherTile final : public QWidget {
     void startRipple(const QPointF& center);
     /// @brief Creates the hover and ripple animations and wires them.
     void setupAnimations();
+    /// @brief Resolves entry_.icon_path into cached_icon_ (null -> letter fallback).
+    void refreshIcon();
 
     AppEntry entry_;             ///< Backing application entry.
+    QPixmap cached_icon_;        ///< Resolved icon (null -> initial-letter fallback).
     qreal hover_scale_{1.0};     ///< Current glyph scale (1.0 idle, >1 hover).
     qreal ripple_progress_{0.0}; ///< Ripple expansion in [0, 1].
     QPointF ripple_center_;      ///< Ripple origin in local coordinates.

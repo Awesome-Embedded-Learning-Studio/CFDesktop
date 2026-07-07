@@ -17,6 +17,8 @@
 
 #include "launcher_tile.h"
 
+#include "app_icon_resolver.h"
+
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 #include "core/token/typography/cfmaterial_typography_token_literals.h"
@@ -59,12 +61,14 @@ LauncherTile::LauncherTile(AppEntry entry, QWidget* parent)
     setAutoFillBackground(false);
     setupAnimations();
     applyTheme();
+    refreshIcon();
 }
 
 LauncherTile::~LauncherTile() = default;
 
 void LauncherTile::setEntry(const AppEntry& entry) {
     entry_ = entry;
+    refreshIcon();
     update();
 }
 
@@ -105,13 +109,20 @@ void LauncherTile::paintEvent(QPaintEvent* /*event*/) {
         p.drawEllipse(ripple_center_, radius, radius);
     }
 
-    // Initial letter, centered on the glyph tile.
-    p.setPen(foreground_color_);
-    p.setFont(glyph_font_);
-    const QString letter = entry_.display_name.isEmpty()
-                               ? QStringLiteral("?")
-                               : QString(entry_.display_name.at(0)).toUpper();
-    p.drawText(glyph, Qt::AlignCenter, letter);
+    // Real icon image when one resolves (manifest path or .desktop theme name);
+    // otherwise the application's initial letter, centered on the glyph tile.
+    if (!cached_icon_.isNull()) {
+        p.setRenderHint(QPainter::SmoothPixmapTransform, true);
+        p.drawPixmap(glyph, cached_icon_,
+                     QRectF(0, 0, cached_icon_.width(), cached_icon_.height()));
+    } else {
+        p.setPen(foreground_color_);
+        p.setFont(glyph_font_);
+        const QString letter = entry_.display_name.isEmpty()
+                                   ? QStringLiteral("?")
+                                   : QString(entry_.display_name.at(0)).toUpper();
+        p.drawText(glyph, Qt::AlignCenter, letter);
+    }
 
     // Caption beneath the glyph, elided to the available width.
     p.setPen(label_color_);
@@ -218,6 +229,12 @@ void LauncherTile::setupAnimations() {
     // Follow live theme switches (ThemeManager is the canonical source).
     connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
             [this](const qw::core::ICFTheme&) { applyTheme(); });
+}
+
+void LauncherTile::refreshIcon() {
+    // Cache at 2x the resting glyph edge (kIconBase = 48) so the hover zoom
+    // (kHoverScale = 1.12) stays crisp instead of upscaling a 48px source.
+    cached_icon_ = resolve_app_icon(entry_, QSize(96, 96));
 }
 
 } // namespace cf::desktop::desktop_component
