@@ -211,8 +211,14 @@ void AppLauncher::rebuildGrid() {
             continue; // Filtered out by the search box.
         }
         auto* tile = new LauncherTile(app, this);
+        tile->setContext(TileContext::Launcher);
         connect(tile, &LauncherTile::clicked, this, [this](const QString& app_id) {
             emit appLaunched(app_id);
+            hideLauncher();
+        });
+        // Long-press in the launcher pins the app to the desktop.
+        connect(tile, &LauncherTile::addToDesktopRequested, this, [this](const QString& app_id) {
+            emit addToDesktopRequested(app_id);
             hideLauncher();
         });
         grid_->addWidget(tile, row, col);

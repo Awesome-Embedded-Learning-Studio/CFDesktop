@@ -26,9 +26,11 @@
 #include <QEasingCurve>
 #include <QEnterEvent>
 #include <QFontMetrics>
+#include <QLineF>
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QTimer>
 #include <QVariantAnimation>
 
 #include <cmath>
@@ -52,6 +54,14 @@ constexpr int kHoverDurationMs = 150;  ///< Hover zoom duration (ms).
 constexpr int kRippleDurationMs = 350; ///< Ripple expansion duration (ms).
 constexpr int kRippleAlpha = 90;       ///< Peak ripple overlay alpha.
 constexpr int kHoverOverlayAlpha = 24; ///< Hover state-layer alpha.
+/// Long-press delay before a desktop tile enters drag mode. Resistive touch
+/// (i.MX6ULL tslib) needs a longer hold so a real tap never trips it.
+constexpr int kLongPressMs = 500;
+/// Move distance (px) from the press point that cancels a pending long-press.
+/// Resistive panels jitter several px when held still, so this is generous.
+constexpr qreal kDragThresholdPx = 10.0;
+/// Tile opacity while being dragged (the floating ghost carries the full look).
+constexpr qreal kDragDimOpacity = 0.45;
 } // namespace
 
 LauncherTile::LauncherTile(AppEntry entry, QWidget* parent)
@@ -62,6 +72,30 @@ LauncherTile::LauncherTile(AppEntry entry, QWidget* parent)
     setupAnimations();
     applyTheme();
     refreshIcon();
+
+    long_press_timer_ = new QTimer(this);
+    long_press_timer_->setSingleShot(true);
+    long_press_timer_->setInterval(kLongPressMs);
+    connect(long_press_timer_, &QTimer::timeout, this, [this]() {
+        if (drag_state_ != DragState::Pressed) {
+            return;
+        }
+        if (context_ == TileContext::Launcher) {
+            // Launcher long-press pins the app to the desktop; release is a no-op.
+            drag_state_ = DragState::Cancelled;
+            emit addToDesktopRequested(entry_.app_id);
+        } else {
+            // Desktop long-press enters drag mode. Kill the ripple so it does
+            // not expand under the finger for the whole drag.
+            if (rippling_) {
+                ripple_anim_->stop();
+                rippling_ = false;
+            }
+            drag_state_ = DragState::DragReady;
+            emit longPressed(entry_.app_id);
+        }
+        update();
+    });
 }
 
 LauncherTile::~LauncherTile() = default;
@@ -80,6 +114,12 @@ QSize LauncherTile::sizeHint() const {
 void LauncherTile::paintEvent(QPaintEvent* /*event*/) {
     QPainter p(this);
     p.setRenderHint(QPainter::Antialiasing, true);
+
+    // Dim the tile while it is being dragged; the floating ghost (owned by
+    // DesktopIconLayer) carries the full-opacity look under the finger.
+    if (drag_state_ == DragState::DragReady || drag_state_ == DragState::Dragging) {
+        p.setOpacity(kDragDimOpacity);
+    }
 
     const QRectF cell = rect();
     const qreal edge = kIconBase * hover_scale_;
@@ -151,15 +191,50 @@ void LauncherTile::leaveEvent(QEvent* /*event*/) {
 void LauncherTile::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
         startRipple(event->position());
+        // Arm the long-press timer in both contexts: launcher long-press pins
+        // to desktop, desktop long-press starts a drag. A quick tap (release
+        // before the timer fires) still emits clicked() in mouseReleaseEvent.
+        press_pos_ = event->position();
+        drag_state_ = DragState::Pressed;
+        long_press_timer_->start();
     }
     QWidget::mousePressEvent(event);
 }
 
 void LauncherTile::mouseReleaseEvent(QMouseEvent* event) {
-    if (event->button() == Qt::LeftButton && rect().contains(event->position().toPoint())) {
-        emit clicked(entry_.app_id);
+    if (event->button() == Qt::LeftButton) {
+        long_press_timer_->stop();
+        const DragState state = drag_state_;
+        drag_state_ = DragState::Idle;
+        if (state == DragState::Dragging || state == DragState::DragReady) {
+            // Drag end: the layer computes the drop cell and commits.
+            emit dragEnded(event->globalPosition().toPoint());
+        } else if (state == DragState::Pressed && rect().contains(event->position().toPoint())) {
+            // Quick tap (no long-press, no big move): launch.
+            emit clicked(entry_.app_id);
+        }
+        // Cancelled (or launcher add-to-desktop already fired): no-op.
+        update();
     }
     QWidget::mouseReleaseEvent(event);
+}
+
+void LauncherTile::mouseMoveEvent(QMouseEvent* event) {
+    if (event->buttons() & Qt::LeftButton) {
+        if (drag_state_ == DragState::Pressed) {
+            // Moved beyond threshold before the long-press fired: scrap. Do
+            // not click either — a deliberate sweep is not a tap. Resistive
+            // touch jitters, so only cancel past the threshold.
+            if (QLineF(press_pos_, event->position()).length() >= kDragThresholdPx) {
+                long_press_timer_->stop();
+                drag_state_ = DragState::Cancelled;
+            }
+        } else if (drag_state_ == DragState::DragReady || drag_state_ == DragState::Dragging) {
+            drag_state_ = DragState::Dragging;
+            emit dragMoved(event->globalPosition().toPoint());
+        }
+    }
+    QWidget::mouseMoveEvent(event);
 }
 
 // -- Internal --------------------------------------------------------------

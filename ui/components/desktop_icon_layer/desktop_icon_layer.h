@@ -1,24 +1,22 @@
 /**
  * @file    desktop/ui/components/desktop_icon_layer/desktop_icon_layer.h
- * @brief   Desktop shortcut icon grid sitting on the wallpaper.
+ * @brief   User-managed desktop shortcut grid on the wallpaper.
  *
- * DesktopIconLayer renders the merged application list (builtin panels,
- * discovered manifests, and XDG .desktop entries) as a grid of LauncherTile
- * shortcuts directly on the desktop background, above the wallpaper and below
- * the status/task bars. It is a plain child widget of the desktop surface
- * (not an IShellLayer, not an IPanel): it consumes PanelManager's central
- * availableGeometry() like the launcher popup does, and forwards tile clicks
- * as appClicked(app_id) so the same launch_app path drives desktop, taskbar,
- * and launcher entries.
+ * DesktopIconLayer renders a user-managed set of DesktopShortcut values (each
+ * an app_id placed at a grid cell) as LauncherTile widgets on the desktop
+ * background, above the wallpaper and below the status/task bars. It is a plain
+ * child widget of the desktop surface (not an IShellLayer, not an IPanel) and
+ * consumes PanelManager's central availableGeometry() like the launcher popup.
  *
- * The container paints nothing so the wallpaper shows through. It does NOT set
- * WA_TransparentForMouseEvents (that starves child widgets of mouse events on
- * several Qt versions); tiles receive their own clicks, and empty-cell clicks
- * propagate to the desktop surface.
+ * Tiles are long-press-draggable (target: i.MX6ULL resistive touch). A drag
+ * shows a floating ghost (grabbed pixmap) over a dimmed source tile; dropping
+ * on a grid cell swaps positions, dropping outside the layer removes the
+ * shortcut. Every layout change emits shortcutsChanged() so the caller can
+ * persist via DesktopShortcutStore.
  *
  * @author  Charliechen114514 (chengh1922@mails.jlu.edu.cn)
  * @date    2026-07-07
- * @version 0.1
+ * @version 0.2
  * @since   0.20
  * @ingroup components
  */
@@ -26,14 +24,17 @@
 #pragma once
 
 #include "app_entry.h"
+#include "desktop_shortcut.h"
 
 #include <QList>
+#include <QPoint>
 #include <QRect>
 #include <QSize>
 #include <QString>
 #include <QWidget>
 
 class QGridLayout;
+class QLabel;
 
 namespace cf::desktop::desktop_component {
 
@@ -50,40 +51,33 @@ class LauncherTile;
 struct GridDimensions {
     int columns{0}; ///< Tile columns that fit the available width (1..kMaxColumns).
     int rows{0};    ///< Tile rows that fit the available height.
-    int shown{0};   ///< Entries actually displayed after cap-and-truncate.
+    int shown{0};   ///< Capacity (columns*rows) capped to the app count.
 };
 
 /**
- * @brief   Computes how many tiles fit the available area and how many to show.
+ * @brief   Computes how many tiles fit the available area.
  *
- * The desktop background never scrolls, so when the merged app list is larger
- * than what fits on screen the visible count is capped to columns*rows and the
- * caller logs the truncation. The math is extracted here as a free function so
- * it can be exercised by unit tests without a QWidget.
+ * Extracted as a free function so the grid math is unit-testable without a
+ * QWidget. Layout constants live in the .cpp.
  *
  * @param[in] available   The central desktop area available for icons.
  * @param[in] app_count   Number of applications that want a tile.
  *
- * @return  GridDimensions with columns/rows clamped to layout constants and
- *          shown capped to the on-screen capacity. A zero result is returned
- *          for invalid geometry or non-positive count.
+ * @return  GridDimensions; columns/rows clamped to constants, shown = capacity.
+ *          Zero result for invalid geometry or non-positive count.
  *
  * @throws  None.
- * @note    Layout constants (cell size, spacing, margins, max columns) are
- *          defined in the .cpp; this function is the single source of truth
- *          for grid sizing.
  * @since   0.20
  * @ingroup components
  */
 GridDimensions computeGridDimensions(const QSize& available, int app_count);
 
 /**
- * @brief  Grid of application shortcut tiles on the desktop background.
+ * @brief  Grid of user-placed application shortcut tiles on the wallpaper.
  *
- * Parents LauncherTile instances in a QGridLayout aligned to the top-left of
- * the central desktop area. Reuses LauncherTile unchanged (it already emits
- * clicked(app_id)); this layer owns the grid container, geometry, and the
- * passthrough behavior for empty cells.
+ * Parents LauncherTile instances in a QGridLayout, one per DesktopShortcut at
+ * the shortcut's (col, row). Tiles use TileContext::Desktop so a long-press
+ * enters drag mode (rearrange / remove); clicks forward as appClicked().
  *
  * @ingroup components
  */
@@ -93,15 +87,12 @@ class DesktopIconLayer final : public QWidget {
     /**
      * @brief   Constructs the icon layer.
      *
-     * Sets up the transparent, mouse-passthrough container with an empty
-     * grid layout. No tiles are created until setApps() + a valid geometry
-     * arrive.
+     * Sets up the transparent container with an empty grid. No tiles are
+     * created until setShortcuts() + a valid geometry arrive.
      *
      * @param[in] parent  Owning widget (the desktop surface).
      *
      * @throws  None.
-     * @note    Must be constructed after the wallpaper shell layer and before
-     *          the status/task bars so creation order stacks it between them.
      * @since   0.20
      * @ingroup components
      */
@@ -110,8 +101,6 @@ class DesktopIconLayer final : public QWidget {
     /**
      * @brief   Destructs the layer.
      *
-     * Qt parent ownership releases the tiles.
-     *
      * @throws  None.
      * @since   0.20
      * @ingroup components
@@ -119,27 +108,36 @@ class DesktopIconLayer final : public QWidget {
     ~DesktopIconLayer() override;
 
     /**
-     * @brief   Replaces the application list backing the grid.
+     * @brief   Loads the shortcut layout and app registry into the grid.
      *
-     * Same contract as CenteredTaskbar::setApps / AppLauncher::setApps: stores
-     * the merged list and rebuilds the tiles. Tiles are not created until a
-     * valid geometry has been received via onAvailableGeometryChanged().
-     *
-     * @param[in] apps  The applications to show as desktop shortcuts.
+     * @param[in] shortcuts  User-placed shortcuts (app_id + cell).
+     * @param[in] registry   Full app list for app_id -> AppEntry resolution.
      *
      * @throws  None.
-     * @note    Replaces any previously shown tiles.
+     * @note    Rebuilds tiles; shortcuts whose app_id is not in the registry
+     *          or whose cell is outside the grid are skipped with a warning.
      * @since   0.20
      * @ingroup components
      */
-    void setApps(const QList<AppEntry>& apps);
+    void setShortcuts(const QList<DesktopShortcut>& shortcuts, const QList<AppEntry>& registry);
+
+    /**
+     * @brief   Adds one shortcut at the first free cell (launcher "send here").
+     *
+     * @param[in] app_id  Application to pin. No-op if already on the desktop or
+     *                    not in the registry.
+     *
+     * @throws  None.
+     * @since   0.20
+     * @ingroup components
+     */
+    void addShortcut(const QString& app_id);
 
     /**
      * @brief   Updates this layer's geometry from the desktop's central area.
      *
-     * Wire to PanelManager::availableGeometryChanged. Invalid or empty rects
-     * are ignored (tiles would otherwise flash at 0,0 before relayout). The
-     * grid is rebuilt because column count may change with width.
+     * Wire to PanelManager::availableGeometryChanged. Invalid/empty rects are
+     * ignored (tiles would flash at 0,0 before relayout).
      *
      * @param[in] available  The central rectangle between the bars.
      *
@@ -151,10 +149,7 @@ class DesktopIconLayer final : public QWidget {
 
   signals:
     /**
-     * @brief  Emitted when a desktop tile is clicked.
-     *
-     * Connect to the same launch_app handler used by the taskbar and launcher
-     * so all three entry points share one dispatch path.
+     * @brief  Emitted when a desktop tile is tapped (launched).
      *
      * @param[in] app_id  The clicked application identifier.
      *
@@ -163,12 +158,21 @@ class DesktopIconLayer final : public QWidget {
      */
     void appClicked(const QString& app_id);
 
+    /**
+     * @brief  Emitted whenever the shortcut layout changes (add / remove / swap).
+     *
+     * Connect to DesktopShortcutStore::save to persist.
+     *
+     * @param[in] shortcuts  The new shortcut layout.
+     *
+     * @since 0.20
+     * @ingroup components
+     */
+    void shortcutsChanged(const QList<DesktopShortcut>& shortcuts);
+
   protected:
     /**
-     * @brief   Paints nothing.
-     *
-     * The container is a transparent passthrough; LauncherTile children paint
-     * themselves.
+     * @brief   Paints only the drag snap-highlight (transparent otherwise).
      *
      * @param[in] event  The paint event descriptor (unused).
      *
@@ -179,13 +183,30 @@ class DesktopIconLayer final : public QWidget {
     void paintEvent(QPaintEvent* event) override;
 
   private:
-    /// @brief Clears existing tiles and lays them out for the current geometry.
+    /// @brief Clears existing tiles and lays them out by shortcut cell.
     void rebuildGrid();
+    /// @brief Creates the floating ghost when a tile's long-press fires.
+    void onTileLongPressed(const QString& app_id);
+    /// @brief Moves the ghost and updates the snap target cell.
+    void onTileDragMoved(const QPoint& global_pos);
+    /// @brief Commits the drop: swap, remove, persist, rebuild.
+    void onTileDragEnded(const QPoint& global_pos);
 
-    QGridLayout* grid_{nullptr}; ///< Tile grid. Ownership: this widget.
-    QList<LauncherTile*> tiles_; ///< Current tiles. Ownership: Qt parented.
-    QList<AppEntry> apps_;       ///< Backing application list.
-    QRect last_available_;       ///< Last valid central geometry received.
+    LauncherTile* tileForApp(const QString& app_id) const;
+    const AppEntry* findEntry(const QString& app_id) const;
+    QPoint cellAt(const QPoint& layer_pos) const; ///< (col,row) or (-1,-1) if out.
+    QPoint firstFreeCell() const;
+
+    QGridLayout* grid_{nullptr};       ///< Tile grid. Ownership: this widget.
+    QList<LauncherTile*> tiles_;       ///< Current tiles. Ownership: Qt parented.
+    QList<DesktopShortcut> shortcuts_; ///< User-managed layout.
+    QList<AppEntry> registry_;         ///< App registry for app_id resolution.
+    QRect last_available_;             ///< Last valid central geometry.
+
+    QString dragging_app_id_;         ///< app_id being dragged ("" = none).
+    QPoint drag_origin_cell_{-1, -1}; ///< Cell the drag started from.
+    QPoint drag_target_cell_{-1, -1}; ///< Current snap target (or (-1,-1)).
+    QLabel* drag_ghost_{nullptr};     ///< Floating pixmap overlay. Ownership: this.
 };
 
 } // namespace cf::desktop::desktop_component
