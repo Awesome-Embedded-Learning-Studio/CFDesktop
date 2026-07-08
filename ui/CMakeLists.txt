@@ -36,6 +36,7 @@ PRIVATE
     cf_desktop_ui_platform  # Link platform submodule
     cf_desktop_render     # Link render backend abstraction
     cfconfig              # ConfigStore: window_management.constrain_to_workarea toggle
+    cfipc                 # IPCServer: single-instance raise signal
     QuarkWidgets::quarkwidgets            # For qt_format.h (std::formatter<QString>)
 )
 

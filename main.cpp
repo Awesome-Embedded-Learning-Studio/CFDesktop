@@ -5,6 +5,7 @@
 #include <QString>
 #include <QtGlobal>
 
+#include "cfipc/ipc_client.h"
 #include "ui/widget/material/application/material_application.h"
 
 namespace {
@@ -32,7 +33,10 @@ int main(int argc, char* argv[]) {
     // screen fight over geometry and WindowManagers cross-track each other's
     // windows.
     if (!acquireSingleInstanceLock()) {
-        qWarning("CFDesktop: another instance is already running; exiting.");
+        // Ask the running shell to bring itself to front, then exit. Best-effort:
+        // if no listener is around (crashed mid-boot) send fails silently.
+        cf::ipc::IPCClient::send(QDir::tempPath() + QStringLiteral("/cfdesktop-shell.ipc"),
+                                 QStringLiteral("raise"));
         return 0;
     }
 

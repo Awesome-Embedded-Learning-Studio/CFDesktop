@@ -2,6 +2,7 @@
 #include "early_session/impl/desktop_backbone_setup.h"
 #include "early_session/impl/early_config_stage.h"
 #include "early_session/impl/early_welcome_impl.h"
+#include "early_session/impl/ipc_stage.h"
 #include "early_session/impl/logger_stage.h"
 #include "init.h"
 #include "init_chain/init_chain.h"
@@ -23,7 +24,11 @@ void RunEarlyInit() {
     early_runner.register_stage_execute_before(
         []() { return std::make_unique<early_stage::LoggerStage>(); });
 
-    /* Stage 3: Check the Desktop Backbones, if failed, we sucks */
+    /* Stage 3: IPC server boots (single-instance raise channel) */
+    early_runner.register_stage_execute_before(
+        []() { return std::make_unique<early_stage::IpcStage>(); });
+
+    /* Stage 4: Check the Desktop Backbones, if failed, we sucks */
     early_runner.register_stage_execute_before(
         []() { return std::make_unique<early_stage::DesktopBackboneEarlySetup>(); });
 

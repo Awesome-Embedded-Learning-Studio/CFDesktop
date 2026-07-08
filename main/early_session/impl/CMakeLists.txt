@@ -7,6 +7,7 @@ set(IMPL_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/logger_stage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/early_config_stage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/desktop_backbone_setup.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ipc_stage.cpp
 )
 
 # Return to parent via PARENT_SCOPE

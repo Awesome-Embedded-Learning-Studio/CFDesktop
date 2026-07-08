@@ -5,6 +5,7 @@
 #include "IDesktopPropertyStrategy.h"
 #include "aex/weak_ptr/weak_ptr.h"
 #include "cfconfig.hpp"
+#include "cfipc/ipc_server.h"
 #include "cflog.h"
 #include "components/DisplayServerBackendFactory.h"
 #include "components/IDisplayServerBackend.h"
@@ -155,6 +156,16 @@ CFDesktopEntity::CFDesktopEntity()
                                                                  std::move(api.release_func));
     }
     log::tracef("Desktop Entity is created");
+
+    // Single-instance raise: a second shell signals via IPC to bring us to front.
+    QObject::connect(&cf::ipc::IPCServer::instance(), &cf::ipc::IPCServer::raiseRequested, this,
+                     [this]() {
+                         if (desktop_entity_ != nullptr) {
+                             desktop_entity_->showNormal();
+                             desktop_entity_->raise();
+                             desktop_entity_->activateWindow();
+                         }
+                     });
 }
 
 CFDesktopEntity::~CFDesktopEntity() {
