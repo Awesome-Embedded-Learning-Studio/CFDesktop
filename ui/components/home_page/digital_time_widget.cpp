@@ -42,7 +42,9 @@ void DigitalTimeWidget::paintEvent(QPaintEvent* /*event*/) {
     const QDate date = QDate::currentDate();
     const QString date_text = date.toString("yyyy MMM dd ddd");
 
-    QFont time_font("Helvetica Neue", 40, QFont::Bold);
+    QFont time_font = painter.font();
+    time_font.setPointSize(40);
+    time_font.setBold(true);
     painter.setFont(time_font);
     const int time_text_height = QFontMetrics(time_font).height();
 
@@ -53,7 +55,9 @@ void DigitalTimeWidget::paintEvent(QPaintEvent* /*event*/) {
     painter.setPen(Qt::white);
     painter.drawText(time_rect, Qt::AlignCenter, time_text);
 
-    QFont date_font("Helvetica Neue", 15, QFont::Light);
+    QFont date_font = painter.font();
+    date_font.setPointSize(15);
+    date_font.setWeight(QFont::Light);
     painter.setFont(date_font);
     const int date_text_height = QFontMetrics(date_font).height();
 

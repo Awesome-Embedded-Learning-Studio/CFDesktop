@@ -49,10 +49,11 @@ DateCard::DateCard(QWidget* parent) : QWidget(parent) {
     full_text_label_ = new QLabel(this);
     full_text_label_->setObjectName("full_text_label");
 
-    layout->addWidget(title_label_);
-    layout->addWidget(day_label_);
-    layout->addWidget(full_text_label_);
-    layout->addStretch();
+    layout->addWidget(title_label_, 0, Qt::AlignLeft);
+    layout->addStretch(1);
+    layout->addWidget(day_label_, 0, Qt::AlignCenter);
+    layout->addWidget(full_text_label_, 0, Qt::AlignCenter);
+    layout->addStretch(1);
 
     auto* shadow = new QGraphicsDropShadowEffect(this);
     shadow->setBlurRadius(16);

@@ -65,11 +65,12 @@ SystemUsageCard::SystemUsageCard(const QString& title, Probe probe, int interval
     detail_label_ = new QLabel(this);
     detail_label_->setObjectName("detail_label");
 
-    layout->addWidget(title_label_);
-    layout->addWidget(value_label_);
+    layout->addWidget(title_label_, 0, Qt::AlignLeft);
+    layout->addStretch(1);
+    layout->addWidget(value_label_, 0, Qt::AlignCenter);
+    layout->addStretch(1);
     layout->addWidget(bar_);
-    layout->addWidget(detail_label_);
-    layout->addStretch();
+    layout->addWidget(detail_label_, 0, Qt::AlignLeft);
 
     auto* shadow = new QGraphicsDropShadowEffect(this);
     shadow->setBlurRadius(20);
