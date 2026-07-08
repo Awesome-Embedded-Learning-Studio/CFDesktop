@@ -15,6 +15,8 @@
 #include "components/builtin_apps/builtin_panel_registry.h"
 #include "components/desktop_icon_layer/desktop_icon_layer.h"
 #include "components/desktop_icon_layer/desktop_shortcut_store.h"
+#include "components/desktop_widget/clock_widget.h"
+#include "components/desktop_widget/widget_container.h"
 #include "components/launcher/app_discoverer.h"
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
@@ -237,6 +239,13 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // (edge-anchored) — a plain child widget that consumes the central
     // availableGeometry() like the launcher popup does. ──
     auto* icon_layer = new cf::desktop::desktop_component::DesktopIconLayer(desktop_entity_);
+
+    // Desktop widget layer: free-positionable widgets (clock, future widgets)
+    // floating above the icon layer. Created after the icon layer so Qt child
+    // z-order stacks widgets above icons; each widget owns its own drag.
+    auto* widget_container = new cf::desktop::desktop_component::WidgetContainer(desktop_entity_);
+    auto* clock_widget = new cf::desktop::desktop_component::ClockWidget();
+    widget_container->addWidget(clock_widget, desktop_entity_, QPoint(120, 120));
 
     // Connect PanelManager geometry changes to ShellLayer. The wallpaper shell
     // spans the FULL host geometry (not the panel-reduced central rect) so it
