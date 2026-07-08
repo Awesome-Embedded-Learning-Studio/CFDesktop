@@ -14,11 +14,16 @@
 #include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QSysInfo>
 #include <QVBoxLayout>
 
-#include <pwd.h>
-#include <sys/utsname.h>
-#include <unistd.h>
+#if defined(_WIN32)
+#    include <lmcons.h>
+#    include <windows.h>
+#else
+#    include <pwd.h>
+#    include <unistd.h>
+#endif
 
 namespace cf::desktop::desktop_component {
 
@@ -35,8 +40,16 @@ inline constexpr const char* kCardQss = R"(
     #host_label, #os_label { font-size: 20px; }
 )";
 
-/// @brief Reads the login user's display name (GECOS first segment, else login).
+/// @brief Reads the login user's display name (POSIX GECOS or Windows session user).
 QString readUserName() {
+#if defined(_WIN32)
+    wchar_t buf[UNLEN + 1] = {};
+    DWORD len = UNLEN + 1;
+    if (GetUserNameW(buf, &len)) {
+        return QString::fromWCharArray(buf);
+    }
+    return QStringLiteral("user");
+#else
     const struct passwd* pw = getpwuid(getuid());
     if (pw != nullptr) {
         if (pw->pw_gecos != nullptr && pw->pw_gecos[0] != '\0') {
@@ -52,26 +65,17 @@ QString readUserName() {
         }
     }
     return QStringLiteral("user");
+#endif
 }
 
-/// @brief Reads the machine hostname.
+/// @brief Reads the machine hostname (cross-platform via QSysInfo).
 QString readHostName() {
-    char buf[256] = {0};
-    if (gethostname(buf, sizeof(buf) - 1) == 0) {
-        return QString::fromLocal8Bit(buf);
-    }
-    return QStringLiteral("localhost");
+    return QSysInfo::machineHostName();
 }
 
-/// @brief Reads the OS name and architecture (e.g. "Linux x86_64").
+/// @brief Reads the OS name and architecture (cross-platform via QSysInfo).
 QString readOsLine() {
-    struct utsname u{};
-    if (uname(&u) == 0) {
-        return QStringLiteral("%1 %2")
-            .arg(QString::fromLocal8Bit(u.sysname))
-            .arg(QString::fromLocal8Bit(u.machine));
-    }
-    return QStringLiteral("Linux");
+    return QSysInfo::prettyProductName();
 }
 } // namespace
 
