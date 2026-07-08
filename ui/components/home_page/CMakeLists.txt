@@ -9,6 +9,10 @@ add_library(cfdesktop_home_page STATIC
     home_card_manager.cpp
     date_card.cpp
     system_usage_card.cpp
+    user_info_card.cpp
+    gauge_widget.cpp
+    disk_gauge_card.cpp
+    modern_calendar_widget.cpp
     home_page.cpp
     page_stack_widget.cpp
 )

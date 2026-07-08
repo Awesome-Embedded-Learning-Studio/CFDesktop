@@ -15,10 +15,13 @@
 #include "card_stack_widget.h"
 #include "date_card.h"
 #include "digital_time_widget.h"
+#include "disk_gauge_card.h"
 #include "home_card_manager.h"
+#include "modern_calendar_widget.h"
 #include "system/cpu/cfcpu_profile.h"
 #include "system/memory/memory_info.h"
 #include "system_usage_card.h"
+#include "user_info_card.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -112,11 +115,15 @@ HomePage::HomePage(QWidget* parent) : QWidget(parent) {
     outer->setStretchFactor(left, 1);
     outer->setStretchFactor(right, 1);
 
+    // Card-stack order mirrors CCIMX (UserInfo, Calendar, Date, Disk, Memory);
+    // CPU is an extra card reusing the SystemUsageCard renderer.
     card_manager_ = std::make_unique<HomeCardManager>(card_stack_);
+    card_manager_->installCard(new UserInfoCard(card_stack_));
+    card_manager_->installCard(new ModernCalendarWidget(card_stack_));
     card_manager_->installCard(new DateCard(card_stack_));
+    card_manager_->installCard(new DiskGaugeCard("Disk", diskSample, 10000, card_stack_));
     card_manager_->installCard(new SystemUsageCard("Memory", memorySample, 2000, card_stack_));
     card_manager_->installCard(new SystemUsageCard("CPU", cpuSample, 5000, card_stack_));
-    card_manager_->installCard(new SystemUsageCard("Disk", diskSample, 10000, card_stack_));
 }
 
 HomeCardManager* HomePage::cardManager() const {
