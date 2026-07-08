@@ -50,8 +50,13 @@ TEST(CrashFinalize, PendingFoldsIntoJsonWithLoggerTail) {
     EXPECT_TRUE(fs::exists(dir / "cfdesktop-999-11.json"));
     EXPECT_FALSE(fs::exists(dir / "cfdesktop-999-11.pending"));
 
-    std::ifstream in(dir / "cfdesktop-999-11.json");
-    const std::string json((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    std::string json;
+    {
+        // Scope the stream so it closes before remove_all() — Windows refuses
+        // to delete a file still held open, unlike Linux.
+        std::ifstream in(dir / "cfdesktop-999-11.json");
+        json.assign((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    }
 
     EXPECT_NE(json.find("\"signal\": 11"), std::string::npos);
     EXPECT_NE(json.find("\"pid\": 999"), std::string::npos);

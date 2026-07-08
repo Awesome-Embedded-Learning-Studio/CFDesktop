@@ -64,9 +64,17 @@ TEST_F(IPCTransportTest, ClientMessageDispatchesOnServer) {
 
     QJsonObject payload;
     payload["hello"] = "world";
-    ASSERT_TRUE(cf::ipc::IPCClient::send(path_, "transport_test", payload));
+
+    // Send from inside the event loop. On Windows named pipes the server must
+    // be spinning its loop to accept the connection and emit readyRead before
+    // the one-shot client disconnects; sending before loop.exec() drops the
+    // message there. (Production always has the server loop running.)
+    bool sent = false;
+    QTimer::singleShot(
+        0, [&]() { sent = cf::ipc::IPCClient::send(path_, "transport_test", payload); });
 
     loop.exec();
+    ASSERT_TRUE(sent);
     EXPECT_EQ(received.value("hello").toString().toStdString(), "world");
 }
 
