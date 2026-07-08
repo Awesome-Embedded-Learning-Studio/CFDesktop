@@ -29,9 +29,12 @@ namespace cf::desktop::desktop_component {
 namespace {
 /// Tag for DesktopIconLayer log lines.
 constexpr const char* kLogTag = "DesktopIconLayer";
-/// Tile widget edge length (px). Mirrors LauncherTile::kCellSize in
-/// launcher_tile.cpp; if that changes, update here too.
-constexpr int kCellSize = 96;
+/// Maximum tile edge length (px) used when the grid has room to spare. Mirrors
+/// LauncherTile::kCellSize in launcher_tile.cpp; if that changes, update here.
+constexpr int kCellMax = 96;
+/// Minimum tile edge length (px). When app_count exceeds what fits even at this
+/// size, the grid truncates (shows only what fits) rather than shrink further.
+constexpr int kCellMin = 48;
 /// Gap between adjacent tiles (px).
 constexpr int kGridSpacing = 16;
 /// Inner padding between the central area edge and the tile grid (px).
@@ -66,22 +69,35 @@ GridDimensions computeGridDimensions(const QSize& available, int app_count) {
         return result;
     }
 
-    const int stride = kCellSize + kGridSpacing;
     const int usable_w = available.width() - 2 * kMargin + kGridSpacing;
     const int usable_h = available.height() - 2 * kMargin + kGridSpacing;
 
-    int cols = (usable_w > 0) ? (usable_w / stride) : 0;
-    if (cols < 1) {
-        cols = 1;
+    // Pick the LARGEST tile edge in [kCellMin, kCellMax] whose capacity still
+    // covers app_count. cols(s) and rows(s) are each non-increasing in s, so
+    // their product is too — scanning 96 down to 48 hits a unique largest fit.
+    // The pre-loop default keeps kCellMin when even the floor cannot fit all
+    // (genuine truncation: shown < app_count). Columns are floored to >=1 (a
+    // too-narrow area still shows one column); rows are NOT floored, so a
+    // too-short area honestly reports zero rows. Do not "fix" that asymmetry.
+    int cell = kCellMin;
+    for (int s = kCellMax; s >= kCellMin; --s) {
+        const int stride = s + kGridSpacing;
+        const int cols = (usable_w > 0) ? std::max(1, usable_w / stride) : 1;
+        const int rows = (usable_h > 0) ? (usable_h / stride) : 0;
+        if (cols * rows >= app_count) {
+            cell = s;
+            break;
+        }
     }
-    // No artificial column cap: the grid fills the available width. (A prior
-    // kMaxColumns=8 cap left wide displays half-empty horizontally.)
 
-    const int rows = (usable_h > 0) ? (usable_h / stride) : 0;
-    const int capacity = cols * rows;
-    result.columns = cols;
-    result.rows = rows;
-    result.shown = std::min(app_count, capacity);
+    const int stride = cell + kGridSpacing;
+    result.columns = (usable_w > 0) ? std::max(1, usable_w / stride) : 1;
+    result.rows = (usable_h > 0) ? (usable_h / stride) : 0;
+    result.shown = std::min(app_count, result.columns * result.rows);
+    // When the area is too short to fit even one row, columns*rows is 0 and the
+    // scanned cell is meaningless — report 0 so callers read "no valid layout"
+    // consistently with the invalid-input early return above.
+    result.cell = (result.columns * result.rows > 0) ? cell : 0;
     return result;
 }
 
@@ -204,10 +220,10 @@ void DesktopIconLayer::rebuildGrid() {
         grid_->setColumnMinimumWidth(c, 0);
     }
     for (int r = 0; r < dims.rows; ++r) {
-        grid_->setRowMinimumHeight(r, kCellSize);
+        grid_->setRowMinimumHeight(r, dims.cell);
     }
     for (int c = 0; c < dims.columns; ++c) {
-        grid_->setColumnMinimumWidth(c, kCellSize);
+        grid_->setColumnMinimumWidth(c, dims.cell);
     }
     for (const auto& s : shortcuts_) {
         if (s.col < 0 || s.col >= dims.columns || s.row < 0 || s.row >= dims.rows) {
@@ -223,6 +239,10 @@ void DesktopIconLayer::rebuildGrid() {
         }
         auto* tile = new LauncherTile(*entry, this);
         tile->setContext(cf::desktop::desktop_component::TileContext::Desktop);
+        // Size the tile to the chosen cell so a shrunk grid (small window) shows
+        // scaled tiles instead of dropping them. Launcher popup tiles keep the
+        // constructor default (96) since AppLauncher never calls setFixedSize.
+        tile->setFixedSize(dims.cell, dims.cell);
         connect(tile, &LauncherTile::clicked, this, &DesktopIconLayer::appClicked);
         connect(tile, &LauncherTile::longPressed, this, &DesktopIconLayer::onTileLongPressed);
         connect(tile, &LauncherTile::dragMoved, this, &DesktopIconLayer::onTileDragMoved);

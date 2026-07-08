@@ -49,9 +49,10 @@ class LauncherTile;
  * @ingroup components
  */
 struct GridDimensions {
-    int columns{0}; ///< Tile columns that fit the available width (1..kMaxColumns).
+    int columns{0}; ///< Tile columns that fit the available width (>=1 when valid).
     int rows{0};    ///< Tile rows that fit the available height.
     int shown{0};   ///< Capacity (columns*rows) capped to the app count.
+    int cell{0};    ///< Tile edge length chosen for this area (px), clamped to [48,96].
 };
 
 /**
@@ -63,8 +64,11 @@ struct GridDimensions {
  * @param[in] available   The central desktop area available for icons.
  * @param[in] app_count   Number of applications that want a tile.
  *
- * @return  GridDimensions; columns/rows clamped to constants, shown = capacity.
- *          Zero result for invalid geometry or non-positive count.
+ * @return  GridDimensions; columns/rows for the chosen tile edge, shown = capacity
+ *          capped to the app count. The cell field is the largest tile edge in
+ *          [48,96] whose columns*rows still fits app_count (96 when nothing needs
+ *          to shrink, 48 when even that truncates); 0 for invalid input or when
+ *          the area is too short to fit even one row.
  *
  * @throws  None.
  * @since   0.20
