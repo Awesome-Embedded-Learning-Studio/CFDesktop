@@ -66,9 +66,15 @@ void IPCServer::onNewConnection() {
     };
     connect(conn, &QLocalSocket::readyRead, this, drain);
     connect(conn, &QLocalSocket::disconnected, this, [conn, drain]() {
+        // A one-shot peer can deliver final bytes without a readyRead (notably
+        // on Windows named pipes); force Qt to pull them before draining.
+        conn->waitForReadyRead(100);
         drain();
         conn->deleteLater();
     });
+    // Bytes may have arrived (and the peer gone) before this slot was wired;
+    // pull and drain now.
+    conn->waitForReadyRead(100);
     drain();
 }
 
