@@ -1,4 +1,6 @@
 # Desktop home page: clock column + swipeable card stack (migrated from CCIMX).
+find_package(Qt6 QUIET COMPONENTS Concurrent)
+
 add_library(cfdesktop_home_page STATIC
     global_clock_sources.cpp
     analog_clock_widget.cpp
@@ -22,5 +24,6 @@ PUBLIC
     QuarkWidgets::quarkwidgets           # ThemeManager, color/typography tokens
 PRIVATE
     Qt6::Widgets
+    Qt6::Concurrent                      # off-thread system probes (QtConcurrent::run)
     cfbase                               # memory/cpu probes
 )

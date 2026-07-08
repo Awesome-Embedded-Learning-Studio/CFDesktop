@@ -11,11 +11,13 @@
 
 #include "system_usage_card.h"
 
+#include <QFutureWatcher>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include <QProgressBar>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QtConcurrent>
 
 namespace cf::desktop::desktop_component {
 
@@ -78,7 +80,16 @@ SystemUsageCard::SystemUsageCard(const QString& title, Probe probe, int interval
     shadow->setColor(QColor(0, 0, 0, 100));
     setGraphicsEffect(shadow);
 
-    refresh();
+    // The CPU probe sleeps ~100 ms internally to measure usage; running it on
+    // the UI thread would freeze the desktop each tick. QtConcurrent::run moves
+    // it to the thread pool, and the watcher delivers the result back here.
+    probe_watcher_ = new QFutureWatcher<UsageSample>(this);
+    connect(probe_watcher_, &QFutureWatcher<UsageSample>::finished, this, [this]() {
+        applySample(probe_watcher_->result());
+        in_flight_ = false;
+    });
+
+    refresh(); // first (async) sample
 
     timer_ = new QTimer(this);
     timer_->setTimerType(Qt::CoarseTimer);
@@ -87,10 +98,17 @@ SystemUsageCard::SystemUsageCard(const QString& title, Probe probe, int interval
 }
 
 void SystemUsageCard::refresh() {
-    if (!probe_) {
+    // Skip when no probe or a previous probe is still in flight — never queue
+    // overlapping probes (a slow CPU sample must not stack up behind itself).
+    if (!probe_ || in_flight_) {
         return;
     }
-    const UsageSample sample = probe_();
+    in_flight_ = true;
+    // Capture the probe by value so the worker never dereferences `this`.
+    probe_watcher_->setFuture(QtConcurrent::run([probe = probe_]() { return probe(); }));
+}
+
+void SystemUsageCard::applySample(const UsageSample& sample) {
     int pct = sample.pct;
     if (pct < 0) {
         pct = 0;

@@ -23,6 +23,7 @@
 class QLabel;
 class QProgressBar;
 class QTimer;
+template <typename T> class QFutureWatcher;
 
 namespace cf::desktop::desktop_component {
 
@@ -35,8 +36,8 @@ struct UsageSample {
 /**
  * @brief  Reusable system-usage card driven by a probe callable.
  *
- * @note   Polls the probe on a coarse timer; the card itself is theme-less
- *         (hardcoded QSS, CCIMX style).
+ * @note   Polls the probe off the UI thread (QtConcurrent) on a coarse timer;
+ *         the card itself is theme-less (hardcoded QSS, CCIMX style).
  * @warning None
  * @since  0.19.0
  * @ingroup home_page
@@ -63,15 +64,20 @@ class SystemUsageCard : public QWidget {
     SystemUsageCard(const QString& title, Probe probe, int interval_ms, QWidget* parent = nullptr);
 
   private:
-    /// @brief Runs the probe and updates the labels + bar.
+    /// @brief Kicks the probe off the UI thread; skips when a probe is in flight.
     void refresh();
 
-    QLabel* title_label_;  ///< Card title.
-    QLabel* value_label_;  ///< Percentage text.
-    QProgressBar* bar_;    ///< Progress bar.
-    QLabel* detail_label_; ///< Detail line.
-    Probe probe_;          ///< Sample source.
-    QTimer* timer_;        ///< Poll timer.
+    /// @brief Applies a fetched sample to the labels + bar (UI thread only).
+    void applySample(const UsageSample& sample);
+
+    QLabel* title_label_;                        ///< Card title.
+    QLabel* value_label_;                        ///< Percentage text.
+    QProgressBar* bar_;                          ///< Progress bar.
+    QLabel* detail_label_;                       ///< Detail line.
+    Probe probe_;                                ///< Sample source.
+    QTimer* timer_;                              ///< Poll timer.
+    QFutureWatcher<UsageSample>* probe_watcher_; ///< Marshals probe results back to the UI thread.
+    bool in_flight_ = false; ///< True while a probe is pending (UI thread only).
 };
 
 } // namespace cf::desktop::desktop_component
