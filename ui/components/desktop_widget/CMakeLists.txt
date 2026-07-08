@@ -1,8 +1,6 @@
-# Desktop widget framework: draggable WidgetBase + registry container + clock.
+# Desktop widget framework: draggable WidgetBase (future free-positionable widgets).
 add_library(cfdesktop_desktop_widget STATIC
     widget_base.cpp
-    widget_container.cpp
-    clock_widget.cpp
 )
 
 target_include_directories(cfdesktop_desktop_widget PUBLIC

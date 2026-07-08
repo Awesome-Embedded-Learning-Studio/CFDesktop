@@ -15,8 +15,8 @@
 #include "components/builtin_apps/builtin_panel_registry.h"
 #include "components/desktop_icon_layer/desktop_icon_layer.h"
 #include "components/desktop_icon_layer/desktop_shortcut_store.h"
-#include "components/desktop_widget/clock_widget.h"
-#include "components/desktop_widget/widget_container.h"
+#include "components/home_page/home_page.h"
+#include "components/home_page/page_stack_widget.h"
 #include "components/launcher/app_discoverer.h"
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
@@ -240,12 +240,21 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // availableGeometry() like the launcher popup does. ──
     auto* icon_layer = new cf::desktop::desktop_component::DesktopIconLayer(desktop_entity_);
 
-    // Desktop widget layer: free-positionable widgets (clock, future widgets)
-    // floating above the icon layer. Created after the icon layer so Qt child
-    // z-order stacks widgets above icons; each widget owns its own drag.
-    auto* widget_container = new cf::desktop::desktop_component::WidgetContainer(desktop_entity_);
-    auto* clock_widget = new cf::desktop::desktop_component::ClockWidget();
-    widget_container->addWidget(clock_widget, desktop_entity_, QPoint(120, 120));
+    // Desktop pages: HomePage (information-flow home, page 0) and the icon grid
+    // (Win11-style, page 1) stacked and flipped with a horizontal swipe. The
+    // icon layer is still wired below (its signals stay); as page 1 it no longer
+    // overlaps the home page. HomePage and the clocks do not accept mouse press,
+    // so it bubbles to PageStackWidget for the horizontal swipe, while
+    // CardStackWidget (inside HomePage) keeps vertical card swipe.
+    auto* home_page = new cf::desktop::desktop_component::HomePage();
+    auto* page_stack = new cf::desktop::desktop_component::PageStackWidget(desktop_entity_);
+    page_stack->addWidget(home_page);
+    page_stack->addWidget(icon_layer);
+    page_stack->setGeometry(panel_mgr->availableGeometry());
+    QObject::connect(panel_mgr, &PanelManager::availableGeometryChanged, desktop_entity_,
+                     [page_stack, panel_mgr](const QRect&) {
+                         page_stack->setGeometry(panel_mgr->availableGeometry());
+                     });
 
     // Connect PanelManager geometry changes to ShellLayer. The wallpaper shell
     // spans the FULL host geometry (not the panel-reduced central rect) so it
@@ -488,10 +497,17 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // until a valid geometry arrives, so showing early does not flash tiles at
     // (0,0). The first panel_mgr->relayout() below delivers the real rect. ──
     icon_layer->setShortcuts(desktop_shortcuts, apps);
-    QObject::connect(
-        panel_mgr, &PanelManager::availableGeometryChanged, desktop_entity_,
-        [icon_layer](const QRect& avail) { icon_layer->onAvailableGeometryChanged(avail); });
-    icon_layer->onAvailableGeometryChanged(panel_mgr->availableGeometry()); // seed geometry
+    // icon_layer is now a page inside PageStackWidget (local coords 0,0), so
+    // feed it the page size rather than the desktop-relative available rect.
+    QObject::connect(panel_mgr, &PanelManager::availableGeometryChanged, desktop_entity_,
+                     [icon_layer](const QRect& avail) {
+                         icon_layer->onAvailableGeometryChanged(
+                             QRect(0, 0, avail.width(), avail.height()));
+                     });
+    {
+        const QRect seed = panel_mgr->availableGeometry();
+        icon_layer->onAvailableGeometryChanged(QRect(0, 0, seed.width(), seed.height()));
+    }
     QObject::connect(icon_layer, &cf::desktop::desktop_component::DesktopIconLayer::appClicked,
                      this, launch_app);
     // Persist any layout change (drag swap / drag-off-remove / launcher add).
@@ -500,7 +516,7 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                      [](const QList<cf::desktop::desktop_component::DesktopShortcut>& shortcuts) {
                          cf::desktop::desktop_component::DesktopShortcutStore::save(shortcuts);
                      });
-    icon_layer->show();
+    // icon_layer is shown by PageStackWidget when its page becomes current.
 
     QObject::connect(taskbar, &cf::desktop::desktop_component::CenteredTaskbar::launcherRequested,
                      this, [app_launcher, panel_mgr]() {

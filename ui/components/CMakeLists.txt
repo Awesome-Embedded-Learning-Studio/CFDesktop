@@ -13,6 +13,7 @@ add_subdirectory(launcher)
 add_subdirectory(desktop_icon_layer)
 add_subdirectory(builtin_apps)
 add_subdirectory(desktop_widget)
+add_subdirectory(home_page)
 
 # Create interface library for convenience
 add_library(cf_desktop_components STATIC)
@@ -45,5 +46,6 @@ PRIVATE
     cfdesktop_builtin_apps
     cfdesktop_window_placement
     cfdesktop_desktop_widget
+    cfdesktop_home_page
     Qt6::Core Qt6::Gui Qt6::Widgets
 )
