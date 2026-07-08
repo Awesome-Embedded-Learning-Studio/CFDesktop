@@ -30,6 +30,7 @@
 #include <QPainter>
 #include <QVariantAnimation>
 
+#include <algorithm>
 #include <cmath>
 
 namespace cf::desktop::desktop_component {
@@ -37,13 +38,18 @@ namespace cf::desktop::desktop_component {
 using namespace qw::core::token::literals;
 
 namespace {
-constexpr int kCellSize = 56;          ///< Tile widget edge length (px).
-constexpr qreal kIconBase = 36.0;      ///< Resting tile square edge (px).
+// kCellSize is the resting widget edge AND the reference for the geometry
+// below. CenteredTaskbar shrinks tiles (setFixedSize) to fit a narrowed bar,
+// so paintEvent scales every geometry/font value by width()/kCellSize; at
+// width()==56 they reproduce the original pixel values exactly. CONST/kRef
+// (not a float ratio) keeps reference values exact at 56.
+constexpr int kCellSize = 56;          ///< Tile widget edge length (px); reference cell.
+constexpr qreal kIconBase = 36.0;      ///< Resting tile square edge (px) at 56.
 constexpr qreal kHoverScale = 1.2;     ///< Scale factor when hovered.
-constexpr qreal kIconRadius = 10.0;    ///< Tile corner radius (px).
-constexpr qreal kDotRadius = 2.5;      ///< Running-indicator dot radius (px).
-constexpr qreal kDotOffset = 6.0;      ///< Dot offset below the tile (px).
-constexpr int kGlyphPixelSize = 18;    ///< Initial-letter font size (px).
+constexpr qreal kIconRadius = 10.0;    ///< Tile corner radius (px) at 56.
+constexpr qreal kDotRadius = 2.5;      ///< Running-indicator dot radius (px) at 56.
+constexpr qreal kDotOffset = 6.0;      ///< Dot offset below the tile (px) at 56.
+constexpr int kGlyphPixelSize = 18;    ///< Initial-letter font size (px) at 56.
 constexpr int kHoverDurationMs = 150;  ///< Hover zoom duration (ms).
 constexpr int kRippleDurationMs = 350; ///< Ripple expansion duration (ms).
 constexpr int kRippleAlpha = 90;       ///< Peak ripple overlay alpha.
@@ -86,7 +92,12 @@ void TaskbarIcon::paintEvent(QPaintEvent* /*event*/) {
     p.setRenderHint(QPainter::Antialiasing, true);
 
     const QRectF cell = rect();
-    const qreal edge = kIconBase * hover_scale_;
+    const qreal w = cell.width();
+    const qreal kRef = qreal(kCellSize);
+    const qreal edge = (w * kIconBase / kRef) * hover_scale_;
+    const qreal cornerRadius = w * kIconRadius / kRef;
+    const qreal dotRadius = w * kDotRadius / kRef;
+    const qreal dotOffset = w * kDotOffset / kRef;
     const QPointF c = cell.center();
     const QRectF tile(c.x() - edge / 2.0, c.y() - edge / 2.0, edge, edge);
 
@@ -94,13 +105,13 @@ void TaskbarIcon::paintEvent(QPaintEvent* /*event*/) {
 
     // Tile body.
     p.setBrush(tile_color_);
-    p.drawRoundedRect(tile, kIconRadius, kIconRadius);
+    p.drawRoundedRect(tile, cornerRadius, cornerRadius);
 
     // Hover state overlay (MD3 state layer), shown only while zoomed in.
     if (hover_scale_ > 1.001) {
         p.setBrush(QColor(foreground_color_.red(), foreground_color_.green(),
                           foreground_color_.blue(), kHoverOverlayAlpha));
-        p.drawRoundedRect(tile, kIconRadius, kIconRadius);
+        p.drawRoundedRect(tile, cornerRadius, cornerRadius);
     }
 
     // Press ripple: an expanding circle that fades out.
@@ -122,6 +133,7 @@ void TaskbarIcon::paintEvent(QPaintEvent* /*event*/) {
         p.setRenderHint(QPainter::SmoothPixmapTransform, true);
         p.drawPixmap(glyph_rect, icon_mask_, QRectF(0, 0, icon_mask_.width(), icon_mask_.height()));
     } else {
+        glyph_font_.setPixelSize(std::clamp(int(w * kGlyphPixelSize / kRef), 12, 18));
         const QString letter = entry_.display_name.isEmpty()
                                    ? QStringLiteral("?")
                                    : QString(entry_.display_name.at(0)).toUpper();
@@ -132,10 +144,10 @@ void TaskbarIcon::paintEvent(QPaintEvent* /*event*/) {
 
     // Running indicator dot near the tile bottom.
     if (running_) {
-        const QPointF dot(c.x(), tile.bottom() + kDotOffset);
+        const QPointF dot(c.x(), tile.bottom() + dotOffset);
         p.setPen(Qt::NoPen);
         p.setBrush(indicator_color_);
-        p.drawEllipse(dot, kDotRadius, kDotRadius);
+        p.drawEllipse(dot, dotRadius, dotRadius);
     }
 }
 
@@ -177,14 +189,12 @@ void TaskbarIcon::applyTheme() {
         foreground_color_ = cs.queryColor(ON_SURFACE);
         indicator_color_ = cs.queryColor(ON_SURFACE_VARIANT);
         glyph_font_ = theme.font_type().queryTargetFont(TYPOGRAPHY_TITLE_MEDIUM);
-        glyph_font_.setPixelSize(kGlyphPixelSize);
     } catch (...) {
         // Fallback palette when no theme is registered yet.
         tile_color_ = QColor(0xE7, 0xE0, 0xEC);
         foreground_color_ = QColor(0x1C, 0x1B, 0x1F);
         indicator_color_ = QColor(0x49, 0x45, 0x4E);
         glyph_font_ = font();
-        glyph_font_.setPixelSize(kGlyphPixelSize);
     }
     refreshIcon();
     update();

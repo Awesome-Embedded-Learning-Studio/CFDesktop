@@ -26,11 +26,15 @@
 #include <QWidget>
 
 class QHBoxLayout;
+class QResizeEvent;
+class QScrollArea;
+class QVariantAnimation;
 
 namespace cf::desktop::desktop_component {
 
 class StartButton;
 class TaskbarIcon;
+class TaskbarScrollArrow;
 
 /**
  * @brief  QWidget-based centered taskbar.
@@ -195,16 +199,35 @@ class CenteredTaskbar final : public QWidget, public cf::desktop::IPanel {
      */
     void paintEvent(QPaintEvent* event) override;
 
+    /**
+     * @brief   Updates arrow visibility + enabled state on bar resize.
+     *
+     * @param[in] event  The resize event descriptor (forwarded to the base).
+     *
+     * @throws  None.
+     * @since   0.20
+     * @ingroup components
+     */
+    void resizeEvent(QResizeEvent* event) override;
+
   private:
     /// @brief Creates the centered row layout.
     void setupUi();
     /// @brief Resolves theme colors, then repaints.
     void applyTheme();
+    /// @brief Shows/hides the scroll arrows and refreshes their enabled state.
+    void updateArrows();
+    /// @brief Scrolls the icon row by @p delta px (one arrow click = one stride).
+    void scrollBy(int delta);
 
-    QHBoxLayout* layout_{nullptr};       ///< Outer row: start button + centered icons.
-    QHBoxLayout* icon_layout_{nullptr};  ///< Dynamic icon row. Ownership: this widget.
-    StartButton* start_button_{nullptr}; ///< Launcher trigger. Ownership: this widget.
-    QList<TaskbarIcon*> icons_;          ///< Current tiles. Ownership: Qt parented.
+    QHBoxLayout* layout_{nullptr};              ///< Outer row: start button + centered icons.
+    QHBoxLayout* icon_layout_{nullptr};         ///< Dynamic icon row. Ownership: this widget.
+    StartButton* start_button_{nullptr};        ///< Launcher trigger. Ownership: this widget.
+    QScrollArea* scroll_area_{nullptr};         ///< Viewport that holds + clips the icon row.
+    TaskbarScrollArrow* scroll_left_{nullptr};  ///< "‹" affordance. Ownership: this widget.
+    TaskbarScrollArrow* scroll_right_{nullptr}; ///< "›" affordance. Ownership: this widget.
+    QVariantAnimation* scroll_anim_{nullptr};   ///< Smooths ‹/› clicks. Ownership: this widget.
+    QList<TaskbarIcon*> icons_;                 ///< Current tiles. Ownership: Qt parented.
 
     QColor background_color_; ///< Surface fill for the bar.
     QColor divider_color_;    ///< Top hairline divider color.
