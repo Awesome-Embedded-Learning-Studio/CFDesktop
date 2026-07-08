@@ -50,16 +50,26 @@ void IPCServer::onNewConnection() {
     }
     // The server owns the connection for its lifetime; auto-delete on close.
     conn->setParent(this);
-    connect(conn, &QLocalSocket::disconnected, conn, &QObject::deleteLater);
-    connect(conn, &QLocalSocket::readyRead, this, [conn]() {
-        // Line-based JSON framing: one IPCMessage per newline.
+
+    // Line-based JSON framing: one IPCMessage per newline. Drain on every
+    // readyRead, on disconnect, and once up front. The disconnect + up-front
+    // drains matter on Windows named pipes: a one-shot client that writes and
+    // closes immediately can deliver the final bytes without a separate
+    // readyRead, and bytes may already be buffered before this slot is wired.
+    auto drain = [conn]() {
         while (conn->canReadLine()) {
             const auto msg = IPCMessage::fromJson(conn->readLine());
             if (msg.has_value()) {
                 IPCMessageRegistry::instance().dispatch(*msg);
             }
         }
+    };
+    connect(conn, &QLocalSocket::readyRead, this, drain);
+    connect(conn, &QLocalSocket::disconnected, this, [conn, drain]() {
+        drain();
+        conn->deleteLater();
     });
+    drain();
 }
 
 } // namespace cf::ipc
