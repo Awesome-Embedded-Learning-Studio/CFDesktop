@@ -4,7 +4,8 @@
 # Discipline"). clangd reads this automatically for in-editor hints; to silence
 # naming noise temporarily, comment out `readability-identifier-naming` in Checks.
 # Naming rules mirror AGENT.md "Code Style": PascalCase types, camelCase methods,
-# snake_case files/variables, UPPER_CASE constants, lower_case namespaces.
+# snake_case files/variables, kCamelCase constants (Google-style 'k' + CamelCase),
+# CamelCase enum constants, lower_case namespaces.
 ---
 Checks: >
   -*,
@@ -71,7 +72,7 @@ CheckOptions:
   - { key: readability-identifier-naming.StructCase,           value: CamelCase  }
   - { key: readability-identifier-naming.UnionCase,            value: CamelCase  }
   - { key: readability-identifier-naming.EnumCase,             value: CamelCase  }
-  - { key: readability-identifier-naming.EnumConstantCase,     value: UPPER_CASE }
+  - { key: readability-identifier-naming.EnumConstantCase,     value: CamelCase  }
   - { key: readability-identifier-naming.TypedefCase,          value: CamelCase  }
   - { key: readability-identifier-naming.TypeAliasCase,        value: CamelCase  }
   - { key: readability-identifier-naming.FunctionCase,         value: camelBack }
@@ -80,7 +81,7 @@ CheckOptions:
   - { key: readability-identifier-naming.VariableCase,         value: camelBack }
   - { key: readability-identifier-naming.PrivateMemberPrefix,  value: m_         }
   - { key: readability-identifier-naming.PrivateMemberCase,    value: camelBack }
-  - { key: readability-identifier-naming.ConstantCase,          value: UPPER_CASE }
-  - { key: readability-identifier-naming.GlobalConstantCase,    value: UPPER_CASE }
+  - { key: readability-identifier-naming.GlobalConstantCase,    value: CamelCase  }
+  - { key: readability-identifier-naming.GlobalConstantPrefix,  value: k         }
   - { key: readability-identifier-naming.NamespaceCase,        value: lower_case }
   - { key: readability-identifier-naming.FileIgnoringCase,      value: lower_case }

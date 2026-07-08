@@ -1,0 +1,421 @@
+/**
+ * @file    desktop/ui/components/desktop_icon_layer/desktop_icon_layer.cpp
+ * @brief   Implementation of DesktopIconLayer.
+ *
+ * @author  Charliechen114514 (chengh1922@mails.jlu.edu.cn)
+ * @date    2026-07-07
+ * @version 0.2
+ * @since   0.20
+ * @ingroup components
+ */
+
+#include "desktop_icon_layer.h"
+
+#include "cflog.h"
+#include "launcher/launcher_tile.h"
+
+#include <QGridLayout>
+#include <QLabel>
+#include <QPaintEvent>
+#include <QPainter>
+#include <QPixmap>
+#include <QRect>
+#include <QTimer>
+
+#include <algorithm>
+
+namespace cf::desktop::desktop_component {
+
+namespace {
+/// Tag for DesktopIconLayer log lines.
+constexpr const char* kLogTag = "DesktopIconLayer";
+/// Maximum tile edge length (px) used when the grid has room to spare. Mirrors
+/// LauncherTile::kCellSize in launcher_tile.cpp; if that changes, update here.
+constexpr int kCellMax = 96;
+/// Minimum tile edge length (px). When app_count exceeds what fits even at this
+/// size, the grid truncates (shows only what fits) rather than shrink further.
+constexpr int kCellMin = 48;
+/// Gap between adjacent tiles (px).
+constexpr int kGridSpacing = 16;
+/// Inner padding between the central area edge and the tile grid (px).
+constexpr int kMargin = 24;
+/// Upper bound on columns so very wide screens do not stretch the grid.
+constexpr int kMaxColumns = 8;
+
+/// Index of the shortcut with @p app_id, or -1.
+int indexOfApp(const QList<DesktopShortcut>& list, const QString& app_id) {
+    for (int i = 0; i < list.size(); ++i) {
+        if (list[i].app_id == app_id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+/// Index of the shortcut occupying @p cell (col in x, row in y), or -1.
+int indexOfCell(const QList<DesktopShortcut>& list, const QPoint& cell) {
+    for (int i = 0; i < list.size(); ++i) {
+        if (list[i].col == cell.x() && list[i].row == cell.y()) {
+            return i;
+        }
+    }
+    return -1;
+}
+} // namespace
+
+GridDimensions computeGridDimensions(const QSize& available, int app_count) {
+    GridDimensions result;
+    if (!available.isValid() || available.isEmpty() || app_count <= 0) {
+        return result;
+    }
+
+    const int usable_w = available.width() - 2 * kMargin + kGridSpacing;
+    const int usable_h = available.height() - 2 * kMargin + kGridSpacing;
+
+    // Pick the LARGEST tile edge in [kCellMin, kCellMax] whose capacity still
+    // covers app_count. cols(s) and rows(s) are each non-increasing in s, so
+    // their product is too — scanning 96 down to 48 hits a unique largest fit.
+    // The pre-loop default keeps kCellMin when even the floor cannot fit all
+    // (genuine truncation: shown < app_count). Columns are floored to >=1 (a
+    // too-narrow area still shows one column); rows are NOT floored, so a
+    // too-short area honestly reports zero rows. Do not "fix" that asymmetry.
+    int cell = kCellMin;
+    for (int s = kCellMax; s >= kCellMin; --s) {
+        const int stride = s + kGridSpacing;
+        const int cols = (usable_w > 0) ? std::max(1, usable_w / stride) : 1;
+        const int rows = (usable_h > 0) ? (usable_h / stride) : 0;
+        if (cols * rows >= app_count) {
+            cell = s;
+            break;
+        }
+    }
+
+    const int stride = cell + kGridSpacing;
+    result.columns = (usable_w > 0) ? std::max(1, usable_w / stride) : 1;
+    result.rows = (usable_h > 0) ? (usable_h / stride) : 0;
+    result.shown = std::min(app_count, result.columns * result.rows);
+    // When the area is too short to fit even one row, columns*rows is 0 and the
+    // scanned cell is meaningless — report 0 so callers read "no valid layout"
+    // consistently with the invalid-input early return above.
+    result.cell = (result.columns * result.rows > 0) ? cell : 0;
+    return result;
+}
+
+DesktopIconLayer::DesktopIconLayer(QWidget* parent) : QWidget(parent) {
+    // No background paint (wallpaper shows through). Deliberately NOT
+    // WA_TransparentForMouseEvents: that starves child widgets of mouse events
+    // under several Qt versions / on WSLg, so LauncherTile would not get the
+    // long-press that starts a drag.
+    setAttribute(Qt::WA_NoSystemBackground);
+    setAutoFillBackground(false);
+
+    grid_ = new QGridLayout(this);
+    grid_->setSpacing(kGridSpacing);
+    grid_->setContentsMargins(kMargin, kMargin, kMargin, kMargin);
+    grid_->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+}
+
+DesktopIconLayer::~DesktopIconLayer() = default;
+
+void DesktopIconLayer::setShortcuts(const QList<DesktopShortcut>& shortcuts,
+                                    const QList<AppEntry>& registry) {
+    shortcuts_ = shortcuts;
+    registry_ = registry;
+    rebuildGrid();
+}
+
+void DesktopIconLayer::addShortcut(const QString& app_id) {
+    if (app_id.isEmpty()) {
+        return;
+    }
+    if (indexOfApp(shortcuts_, app_id) >= 0) {
+        cf::log::infoftag(kLogTag, "app {} already on desktop; addShortcut no-op",
+                          app_id.toStdString());
+        return;
+    }
+    if (findEntry(app_id) == nullptr) {
+        cf::log::warningftag(kLogTag, "addShortcut: app {} not in registry; skipped",
+                             app_id.toStdString());
+        return;
+    }
+    const QPoint cell = firstFreeCell();
+    DesktopShortcut s;
+    s.app_id = app_id;
+    s.col = cell.x();
+    s.row = cell.y();
+    shortcuts_.append(s);
+    emit shortcutsChanged(shortcuts_);
+    // Defer rebuild: addShortcut runs inside the launcher tile's mouseRelease
+    // handler, and rebuildGrid's qDeleteAll would delete a widget mid-event —
+    // singleShot(0) runs once control returns to the event loop, where it's safe.
+    QTimer::singleShot(0, this, [this]() { rebuildGrid(); });
+}
+
+void DesktopIconLayer::onAvailableGeometryChanged(const QRect& available) {
+    if (!available.isValid() || available.isEmpty()) {
+        return;
+    }
+    if (available == last_available_) {
+        return;
+    }
+    last_available_ = available;
+    setGeometry(available);
+    rebuildGrid();
+}
+
+void DesktopIconLayer::paintEvent(QPaintEvent* /*event*/) {
+    // Transparent by default; only draw the drag snap-highlight when active.
+    if (dragging_app_id_.isEmpty() || drag_target_cell_.x() < 0) {
+        return;
+    }
+    // Use the grid's actual cell geometry so the highlight lines up exactly
+    // with the tile that will land there — hand-computing margin + row*stride
+    // drifts off the real cell when the layout's alignment / minimum decisions
+    // differ from the constants.
+    const QRect cell_rect = grid_->cellRect(drag_target_cell_.y(), drag_target_cell_.x());
+    if (!cell_rect.isValid()) {
+        return;
+    }
+    QPainter p(this);
+    p.setRenderHint(QPainter::Antialiasing, true);
+    QPen pen(QColor(0x6F, 0x5B, 0xA4, 200)); // MD3-ish primary, semi-transparent.
+    pen.setWidthF(2.5);
+    p.setPen(pen);
+    p.setBrush(Qt::NoBrush);
+    p.drawRoundedRect(cell_rect, 12, 12);
+}
+
+void DesktopIconLayer::rebuildGrid() {
+    // removeWidget BEFORE delete: deleting a widget leaves a stale item in the
+    // QGridLayout until the destroyed signal is processed (asynchronous). The
+    // next addWidget then lands in a layout that still references dead widgets,
+    // and every new tile ends up at pos (0,0) — the data layer is correct but
+    // nothing is visually where shortcuts_ says. Removing synchronously keeps
+    // the layout clean so the new addWidget lands in the right cell.
+    for (auto* tile : tiles_) {
+        grid_->removeWidget(tile);
+        delete tile;
+    }
+    tiles_.clear();
+
+    const auto dims =
+        computeGridDimensions(last_available_.size(), static_cast<int>(shortcuts_.size()));
+    if (dims.columns <= 0 || dims.rows <= 0) {
+        return; // No valid geometry yet.
+    }
+    // Force EVERY row/column (including empty ones) to a full cell size. Without
+    // this, QGridLayout collapses rows/cols that hold no widget to zero, so the
+    // grid occupies only the rows that have tiles instead of cols*stride x
+    // rows*stride. A tile at row 5 with rows 2-4 empty then renders visually at
+    // row 2 — cellAt()'s (margin + row*stride) math no longer matches where the
+    // widget actually is, and the tile looks like it "bounced back" or "flew".
+    // Clear row/col minimums from a previous (possibly larger) grid first:
+    // setRowMinimumHeight only updates the rows we name, so rows beyond the new
+    // capacity would keep their old 96px minimum and the grid would stay
+    // oversized after a window shrink, flinging tiles out of place.
+    for (int r = 0; r < grid_->rowCount(); ++r) {
+        grid_->setRowMinimumHeight(r, 0);
+    }
+    for (int c = 0; c < grid_->columnCount(); ++c) {
+        grid_->setColumnMinimumWidth(c, 0);
+    }
+    for (int r = 0; r < dims.rows; ++r) {
+        grid_->setRowMinimumHeight(r, dims.cell);
+    }
+    for (int c = 0; c < dims.columns; ++c) {
+        grid_->setColumnMinimumWidth(c, dims.cell);
+    }
+    for (const auto& s : shortcuts_) {
+        if (s.col < 0 || s.col >= dims.columns || s.row < 0 || s.row >= dims.rows) {
+            cf::log::warningftag(kLogTag, "shortcut {} at ({},{}) outside grid ({}x{}); skipped",
+                                 s.app_id.toStdString(), s.col, s.row, dims.columns, dims.rows);
+            continue;
+        }
+        const AppEntry* entry = findEntry(s.app_id);
+        if (entry == nullptr) {
+            cf::log::warningftag(kLogTag, "shortcut {} resolves to no app entry; skipped",
+                                 s.app_id.toStdString());
+            continue;
+        }
+        auto* tile = new LauncherTile(*entry, this);
+        tile->setContext(cf::desktop::desktop_component::TileContext::Desktop);
+        // Size the tile to the chosen cell so a shrunk grid (small window) shows
+        // scaled tiles instead of dropping them. Launcher popup tiles keep the
+        // constructor default (96) since AppLauncher never calls setFixedSize.
+        tile->setFixedSize(dims.cell, dims.cell);
+        connect(tile, &LauncherTile::clicked, this, &DesktopIconLayer::appClicked);
+        connect(tile, &LauncherTile::longPressed, this, &DesktopIconLayer::onTileLongPressed);
+        connect(tile, &LauncherTile::dragMoved, this, &DesktopIconLayer::onTileDragMoved);
+        connect(tile, &LauncherTile::dragEnded, this, &DesktopIconLayer::onTileDragEnded);
+        grid_->addWidget(tile, s.row, s.col);
+        tiles_.append(tile);
+    }
+    grid_->activate(); // Force reflow after bulk add/remove — without this the
+                       // new widgets can stay at stale positions after a drag.
+}
+
+LauncherTile* DesktopIconLayer::tileForApp(const QString& app_id) const {
+    for (auto* tile : tiles_) {
+        if (tile->appId() == app_id) {
+            return tile;
+        }
+    }
+    return nullptr;
+}
+
+const AppEntry* DesktopIconLayer::findEntry(const QString& app_id) const {
+    for (const auto& entry : registry_) {
+        if (entry.app_id == app_id) {
+            return &entry;
+        }
+    }
+    return nullptr;
+}
+
+QPoint DesktopIconLayer::cellAt(const QPoint& layer_pos) const {
+    // Outside the layer entirely → (-1,-1) = "drop to delete".
+    if (!rect().contains(layer_pos)) {
+        return {-1, -1};
+    }
+    const auto dims =
+        computeGridDimensions(last_available_.size(), static_cast<int>(shortcuts_.size()));
+    if (dims.columns <= 0 || dims.rows <= 0) {
+        return {-1, -1};
+    }
+    // Use the grid's actual cell geometry (cellRect) instead of hand-computed
+    // margin + row*stride: the constants drift from the real cells once the
+    // layout's alignment / minimum-size / spacing decisions move them, and the
+    // highlight ended up offset from the tile. Inside the layer but in a margin
+    // band, snap to the nearest cell rather than treating it as a delete.
+    QPoint nearest = {-1, -1};
+    int best_dist = -1;
+    for (int r = 0; r < dims.rows; ++r) {
+        for (int c = 0; c < dims.columns; ++c) {
+            const QRect cr = grid_->cellRect(r, c);
+            if (cr.contains(layer_pos)) {
+                return {c, r};
+            }
+            const int d = (layer_pos - cr.center()).manhattanLength();
+            if (best_dist < 0 || d < best_dist) {
+                best_dist = d;
+                nearest = {c, r};
+            }
+        }
+    }
+    return nearest;
+}
+
+QPoint DesktopIconLayer::firstFreeCell() const {
+    const auto dims =
+        computeGridDimensions(last_available_.size(), static_cast<int>(shortcuts_.size()));
+    for (int r = 0; r < dims.rows; ++r) {
+        for (int c = 0; c < dims.columns; ++c) {
+            bool taken = false;
+            for (const auto& s : shortcuts_) {
+                if (s.col == c && s.row == r) {
+                    taken = true;
+                    break;
+                }
+            }
+            if (!taken) {
+                return {c, r};
+            }
+        }
+    }
+    return {0, 0}; // Grid full: overlap (rebuildGrid stacks at the same cell).
+}
+
+void DesktopIconLayer::onTileLongPressed(const QString& app_id) {
+    auto* tile = tileForApp(app_id);
+    if (tile == nullptr) {
+        return;
+    }
+    dragging_app_id_ = app_id;
+    const int idx = indexOfApp(shortcuts_, app_id);
+    drag_origin_cell_ =
+        (idx >= 0) ? QPoint(shortcuts_[idx].col, shortcuts_[idx].row) : QPoint(-1, -1);
+    drag_target_cell_ = drag_origin_cell_;
+    // Floating ghost = grabbed pixmap of the tile, follows the finger. It is
+    // transparent for mouse events so the source tile keeps receiving moves.
+    const QPixmap pm = tile->grab();
+    drag_ghost_ = new QLabel(this);
+    drag_ghost_->setPixmap(pm);
+    drag_ghost_->setScaledContents(false);
+    drag_ghost_->setAttribute(Qt::WA_TransparentForMouseEvents);
+    drag_ghost_->setGeometry(QRect(tile->pos(), tile->size()));
+    drag_ghost_->show();
+    drag_ghost_->raise();
+    update();
+}
+
+void DesktopIconLayer::onTileDragMoved(const QPoint& global_pos) {
+    if (dragging_app_id_.isEmpty() || drag_ghost_ == nullptr) {
+        return;
+    }
+    const QPoint layer_pos = mapFromGlobal(global_pos);
+    const QSize sz = drag_ghost_->size();
+    drag_ghost_->move(layer_pos - QPoint(sz.width() / 2, sz.height() / 2));
+    drag_target_cell_ = cellAt(layer_pos);
+    update();
+}
+
+void DesktopIconLayer::onTileDragEnded(const QPoint& global_pos) {
+    if (dragging_app_id_.isEmpty()) {
+        return;
+    }
+    const QPoint layer_pos = mapFromGlobal(global_pos);
+    const QPoint target = cellAt(layer_pos);
+    cf::log::infoftag(kLogTag, "dragEnd: target=({},{}) origin=({},{})", target.x(), target.y(),
+                      drag_origin_cell_.x(), drag_origin_cell_.y());
+
+    bool changed = false;
+    QList<DesktopShortcut> updated = shortcuts_;
+    if (target.x() < 0 || target.y() < 0) {
+        // Dropped outside the layer → remove the shortcut.
+        updated.erase(
+            std::remove_if(updated.begin(), updated.end(),
+                           [&](const DesktopShortcut& s) { return s.app_id == dragging_app_id_; }),
+            updated.end());
+        changed = true;
+        cf::log::infoftag(kLogTag, "removed shortcut {} (dragged off desktop)",
+                          dragging_app_id_.toStdString());
+    } else if (target != drag_origin_cell_) {
+        const int drag_idx = indexOfApp(updated, dragging_app_id_);
+        const int tgt_idx = indexOfCell(updated, target);
+        if (drag_idx >= 0 && tgt_idx >= 0) {
+            // Swap the two shortcuts' positions.
+            std::swap(updated[drag_idx].col, updated[tgt_idx].col);
+            std::swap(updated[drag_idx].row, updated[tgt_idx].row);
+            changed = true;
+        } else if (drag_idx >= 0) {
+            // Target cell empty: just move.
+            updated[drag_idx].col = target.x();
+            updated[drag_idx].row = target.y();
+            changed = true;
+        }
+    }
+
+    delete drag_ghost_;
+    drag_ghost_ = nullptr;
+    dragging_app_id_.clear();
+    drag_origin_cell_ = {-1, -1};
+    drag_target_cell_ = {-1, -1};
+
+    if (changed) {
+        shortcuts_ = std::move(updated);
+        emit shortcutsChanged(shortcuts_);
+        // Defer the rebuild to after this mouseRelease handler returns:
+        // rebuildGrid uses qDeleteAll on the tiles, and the drag-source tile is
+        // the very widget receiving this event — deleting it mid-event hits
+        // Qt's deferred-delete trap and the new positions never visually land
+        // (the tile "bounces back"). singleShot(0) runs once the event loop
+        // regains control, where deleting any widget is safe.
+        QTimer::singleShot(0, this, [this]() {
+            cf::log::infoftag(kLogTag, "deferred rebuildGrid firing");
+            rebuildGrid();
+        });
+    }
+    update();
+}
+
+} // namespace cf::desktop::desktop_component

@@ -18,15 +18,23 @@
 
 #include "start_button.h"
 #include "taskbar_icon.h"
+#include "taskbar_scroll_arrow.h"
 
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 
+#include <QEasingCurve>
 #include <QHBoxLayout>
 #include <QLayoutItem>
 #include <QLinearGradient>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QResizeEvent>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QVariantAnimation>
+
+#include <algorithm>
 
 // Q_INIT_RESOURCE must run at global scope: the rcc-generated registration
 // function lives in the global namespace, but the macro's extern declaration is
@@ -45,10 +53,14 @@ using cf::desktop::PanelPosition;
 using namespace qw::core::token::literals;
 
 namespace {
-constexpr int kTaskbarHeight = 64;    ///< Bar thickness (px).
-constexpr int kSideMargin = 12;       ///< Horizontal padding (px).
-constexpr int kTopBottomMargin = 4;   ///< Vertical padding (px).
-constexpr int kIconSpacing = 8;       ///< Gap between tiles (px).
+constexpr int kTaskbarHeight = 64;  ///< Bar thickness (px).
+constexpr int kSideMargin = 12;     ///< Horizontal padding (px).
+constexpr int kTopBottomMargin = 4; ///< Vertical padding (px).
+constexpr int kIconSpacing = 8;     ///< Outer layout gap (px).
+constexpr int kTileSize = 56;       ///< Tile edge (px); mirrors TaskbarIcon::kCellSize.
+constexpr int kTileSpacing = 16;    ///< Gap between tiles (px) — relaxed, Windows-like.
+constexpr int kScrollStride = kTileSize + kTileSpacing; ///< Pixels scrolled per arrow click.
+constexpr int kScrollAnimMs = 220; ///< ‹/› glide duration (ms); tuned to feel smooth, not sluggish.
 constexpr int kStartButtonGap = 16;   ///< Gap after the start button (px).
 constexpr qreal kSurfaceAlpha = 0.82; ///< Fixed surface transparency over the wallpaper.
 } // namespace
@@ -76,12 +88,54 @@ void CenteredTaskbar::setupUi() {
     layout_->addWidget(start_button_);
     layout_->addSpacing(kStartButtonGap);
 
-    // The centered icon row lives in its own sub-layout so setApps() can rebuild
-    // it without disturbing the start button or the centering stretchers.
-    icon_layout_ = new QHBoxLayout();
-    icon_layout_->setSpacing(kIconSpacing);
+    // The icon row lives in a horizontally-scrollable area. When every tile fits
+    // the inner widget centers (AlignCenter, non-resizable); when it overflows,
+    // the ‹ › arrows flanking the area scroll it by one tile per click — far
+    // easier to hit on i.MX6ULL resistive touch than a swipe or a dropdown.
+    scroll_area_ = new QScrollArea(this);
+    scroll_area_->setFrameShape(QFrame::NoFrame);
+    scroll_area_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scroll_area_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scroll_area_->setWidgetResizable(false); // keep the inner widget at sizeHint so it can scroll
+    scroll_area_->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+    scroll_area_->setAutoFillBackground(false);
+    scroll_area_->viewport()->setAutoFillBackground(false);
+    // Inner host widget owns icon_layout_ so setApps() can rebuild the row
+    // without touching the scroll area or the centering stretchers.
+    auto* icon_host = new QWidget();
+    icon_layout_ = new QHBoxLayout(icon_host);
+    icon_layout_->setSpacing(kTileSpacing);
+    icon_layout_->setContentsMargins(0, 0, 0, 0);
+    scroll_area_->setWidget(icon_host);
+    // ‹ / › scroll arrows: hidden unless the row overflows (updateArrows decides).
+    scroll_left_ = new TaskbarScrollArrow(ScrollDirection::Left, this);
+    scroll_right_ = new TaskbarScrollArrow(ScrollDirection::Right, this);
+    scroll_left_->hide();
+    scroll_right_->hide();
+    connect(scroll_left_, &TaskbarScrollArrow::clicked, this,
+            [this]() { scrollBy(-kScrollStride); });
+    connect(scroll_right_, &TaskbarScrollArrow::clicked, this,
+            [this]() { scrollBy(kScrollStride); });
+    // Recompute arrow state when the scroll range or position changes (resize,
+    // setApps, or a click all flow through here).
+    connect(scroll_area_->horizontalScrollBar(), &QScrollBar::rangeChanged, this,
+            [this](int, int) { updateArrows(); });
+    connect(scroll_area_->horizontalScrollBar(), &QScrollBar::valueChanged, this,
+            [this](int) { updateArrows(); });
+    // Smooth ‹/› glide: the animation drives the scroll bar's value so a click
+    // eases into place instead of snapping a full stride instantly.
+    scroll_anim_ = new QVariantAnimation(this);
+    scroll_anim_->setDuration(kScrollAnimMs);
+    scroll_anim_->setEasingCurve(QEasingCurve::OutCubic);
+    connect(scroll_anim_, &QVariantAnimation::valueChanged, this, [this](const QVariant& v) {
+        if (scroll_area_ != nullptr) {
+            scroll_area_->horizontalScrollBar()->setValue(v.toInt());
+        }
+    });
     layout_->addStretch();
-    layout_->addLayout(icon_layout_);
+    layout_->addWidget(scroll_left_);
+    layout_->addWidget(scroll_area_);
+    layout_->addWidget(scroll_right_);
     layout_->addStretch();
 
     // React to theme switches (ThemeManager is the canonical source).
@@ -139,6 +193,12 @@ void CenteredTaskbar::setApps(const QList<AppEntry>& apps) {
         icon_layout_->addWidget(icon);
         icons_.append(icon);
     }
+    // Resize the scroll host to its new sizeHint so QScrollArea recomputes the
+    // scroll range (or re-centers the row when it fits).
+    if (auto* host = scroll_area_->widget()) {
+        host->resize(host->sizeHint());
+    }
+    updateArrows();
 }
 
 void CenteredTaskbar::updateRunningState(const QString& app_id, bool running) {
@@ -179,6 +239,45 @@ void CenteredTaskbar::paintEvent(QPaintEvent* /*event*/) {
     hairline.setColorAt(1.0, lineEdge);
     p.setPen(QPen(hairline, 1));
     p.drawLine(QPointF(0, 0.5), QPointF(width(), 0.5));
+}
+
+void CenteredTaskbar::resizeEvent(QResizeEvent* event) {
+    QWidget::resizeEvent(event);
+    // A resized bar changes whether the row overflows; the scroll bar also
+    // emits rangeChanged, but updating here covers the no-change-range edge.
+    updateArrows();
+}
+
+void CenteredTaskbar::updateArrows() {
+    if (scroll_left_ == nullptr || scroll_right_ == nullptr || scroll_area_ == nullptr) {
+        return;
+    }
+    auto* bar = scroll_area_->horizontalScrollBar();
+    const bool overflows = bar->maximum() > bar->minimum();
+    // Show the pair only when the row overflows; hidden widgets are ignored by
+    // the layout so the centered row reflows cleanly when they vanish.
+    scroll_left_->setVisible(overflows);
+    scroll_right_->setVisible(overflows);
+    // Disable the arrow whose scroll end is reached so it reads inactive.
+    scroll_left_->setEnabled(bar->value() > bar->minimum());
+    scroll_right_->setEnabled(bar->value() < bar->maximum());
+}
+
+void CenteredTaskbar::scrollBy(int delta) {
+    if (scroll_area_ == nullptr || scroll_anim_ == nullptr) {
+        return;
+    }
+    auto* bar = scroll_area_->horizontalScrollBar();
+    // Resume from the live value so rapid clicks chain smoothly, then glide to
+    // the clamped target instead of snapping the whole stride in one frame.
+    const int target = std::clamp(bar->value() + delta, bar->minimum(), bar->maximum());
+    if (target == bar->value()) {
+        return;
+    }
+    scroll_anim_->stop();
+    scroll_anim_->setStartValue(bar->value());
+    scroll_anim_->setEndValue(target);
+    scroll_anim_->start();
 }
 
 } // namespace cf::desktop::desktop_component

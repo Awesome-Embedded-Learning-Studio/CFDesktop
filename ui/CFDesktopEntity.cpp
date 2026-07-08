@@ -12,6 +12,8 @@
 #include "components/WindowManager.h"
 #include "components/builtin_apps/about_panel.h"
 #include "components/builtin_apps/builtin_panel_registry.h"
+#include "components/desktop_icon_layer/desktop_icon_layer.h"
+#include "components/desktop_icon_layer/desktop_shortcut_store.h"
 #include "components/launcher/app_discoverer.h"
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
@@ -27,10 +29,12 @@
 #include "system/hardware_tier/hardware_tier.h"
 #include <QCoreApplication>
 #include <QFile>
+#include <QGuiApplication>
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QScreen>
 #include <functional>
 #include <memory>
 
@@ -213,6 +217,16 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     res.shell_layer_ = shell;
     desktop_entity_->register_desktop_resources(res);
 
+    // ── Desktop icon layer: construct right after the wallpaper shell layer
+    // so Qt child-widget z-order stacks it ABOVE the wallpaper and BELOW the
+    // status/task bars created later (creation order = stacking order under a
+    // shared parent). Data wiring happens later, once the merged app list and
+    // launch_app handler exist; only the widget is created here to lock z-order.
+    // Not an IShellLayer (wallpaper-strategy specific) and not an IPanel
+    // (edge-anchored) — a plain child widget that consumes the central
+    // availableGeometry() like the launcher popup does. ──
+    auto* icon_layer = new cf::desktop::desktop_component::DesktopIconLayer(desktop_entity_);
+
     // Connect PanelManager geometry changes to ShellLayer. The wallpaper shell
     // spans the FULL host geometry (not the panel-reduced central rect) so it
     // renders continuously behind the top/bottom bars; each bar composites a
@@ -349,6 +363,27 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // ── Taskbar: bottom-edge panel (centered app icons) ──
     // apps is captured by the click handler to resolve app_id -> entry.
     const QList<cf::desktop::desktop_component::AppEntry> apps = loadAppsConfig(prefer_inprocess);
+
+    // Desktop icon shortcuts: a user-managed layout persisted via ConfigStore.
+    // First run (nothing stored) seeds a default set from the merged registry,
+    // then every subsequent change (drag swap / drag-off-remove / launcher add)
+    // re-persists via the shortcutsChanged signal wired below.
+    QList<cf::desktop::desktop_component::DesktopShortcut> desktop_shortcuts =
+        cf::desktop::desktop_component::DesktopShortcutStore::load();
+    if (desktop_shortcuts.isEmpty()) {
+        // Seed across as many columns as the primary screen can hold, so the
+        // first-run layout fills the width instead of clustering in the left
+        // half. The seed runs before PanelManager relayout delivers the real
+        // central rect, so estimate from the screen geometry.
+        int seed_cols = 8;
+        if (const auto* screen = QGuiApplication::primaryScreen()) {
+            seed_cols = std::max(8, (screen->availableGeometry().width() - 48) / 112);
+        }
+        desktop_shortcuts =
+            cf::desktop::desktop_component::DesktopShortcutStore::seedFrom(apps, seed_cols);
+        cf::desktop::desktop_component::DesktopShortcutStore::save(desktop_shortcuts);
+    }
+
     auto* taskbar = new cf::desktop::desktop_component::CenteredTaskbar(desktop_entity_);
     taskbar->setApps(apps);
     panel_mgr->registerPanel(taskbar->GetWeak());
@@ -420,6 +455,33 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     app_launcher->setApps(apps);
     QObject::connect(app_launcher, &cf::desktop::desktop_component::AppLauncher::appLaunched, this,
                      launch_app);
+    // Launcher long-press "send to desktop": append to the desktop icon layer
+    // (which finds the first free cell and persists).
+    QObject::connect(app_launcher,
+                     &cf::desktop::desktop_component::AppLauncher::addToDesktopRequested,
+                     icon_layer, &cf::desktop::desktop_component::DesktopIconLayer::addShortcut);
+
+    // ── Desktop icon layer wiring: same merged apps list and same launch_app
+    // dispatch as the taskbar and launcher, so a desktop shortcut launch lights
+    // the taskbar running indicator too (shared app_pid tracking). Geometry is
+    // the PanelManager central rect (between the bars); tiles are not created
+    // until a valid geometry arrives, so showing early does not flash tiles at
+    // (0,0). The first panel_mgr->relayout() below delivers the real rect. ──
+    icon_layer->setShortcuts(desktop_shortcuts, apps);
+    QObject::connect(
+        panel_mgr, &PanelManager::availableGeometryChanged, desktop_entity_,
+        [icon_layer](const QRect& avail) { icon_layer->onAvailableGeometryChanged(avail); });
+    icon_layer->onAvailableGeometryChanged(panel_mgr->availableGeometry()); // seed geometry
+    QObject::connect(icon_layer, &cf::desktop::desktop_component::DesktopIconLayer::appClicked,
+                     this, launch_app);
+    // Persist any layout change (drag swap / drag-off-remove / launcher add).
+    QObject::connect(icon_layer,
+                     &cf::desktop::desktop_component::DesktopIconLayer::shortcutsChanged, this,
+                     [](const QList<cf::desktop::desktop_component::DesktopShortcut>& shortcuts) {
+                         cf::desktop::desktop_component::DesktopShortcutStore::save(shortcuts);
+                     });
+    icon_layer->show();
+
     QObject::connect(taskbar, &cf::desktop::desktop_component::CenteredTaskbar::launcherRequested,
                      this, [app_launcher, panel_mgr]() {
                          // Toggle: clicking Start while the launcher is open dismisses it,

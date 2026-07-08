@@ -220,7 +220,7 @@ class TaskbarIcon final : public QWidget {
     QColor tile_color_;       ///< Tile fill (surface variant).
     QColor foreground_color_; ///< Icon tint color (on surface).
     QColor indicator_color_;  ///< Running dot color (on surface variant).
-    QPixmap icon_mask_;       ///< Tinted icon pixmap; null -> letter fallback.
+    QPixmap icon_mask_;       ///< Icon (mask or full-color); null -> letter fallback.
     QFont glyph_font_;        ///< Font for the initial-letter fallback.
 
     QVariantAnimation* hover_anim_{nullptr};  ///< Zoom-in/out animation.

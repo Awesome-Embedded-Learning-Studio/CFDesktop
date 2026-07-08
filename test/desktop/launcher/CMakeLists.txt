@@ -35,3 +35,22 @@ add_gtest_executable(
     LABELS        "desktop;unit;launcher"
     LOG_MODULE    launcher_tests
 )
+
+# resolve_app_icon unit tests. Provides its own main() (constructs a
+# QGuiApplication on the offscreen QPA platform for QIcon/QPixmap), so
+# GTest::gtest_main is intentionally NOT linked here.
+add_gtest_executable(
+    TEST_NAME      app_icon_resolver_test
+    SOURCE_FILE    app_icon_resolver_test.cpp
+    LINK_LIBRARIES
+        cfdesktop_launcher
+        cflogger
+        cfbase
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
+        GTest::gtest
+    INCLUDE_DIRS  ${CMAKE_SOURCE_DIR}/desktop/ui/components
+    LABELS        "desktop;unit;launcher"
+    LOG_MODULE    launcher_tests
+)

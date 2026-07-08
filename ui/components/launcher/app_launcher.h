@@ -154,6 +154,16 @@ class AppLauncher final : public QWidget {
      */
     void appLaunched(const QString& app_id);
 
+    /**
+     * @brief  Emitted when a tile is long-pressed (pin the app to the desktop).
+     *
+     * @param[in] app_id  The application to add to the desktop.
+     *
+     * @since 0.20
+     * @ingroup components
+     */
+    void addToDesktopRequested(const QString& app_id);
+
   protected:
     /**
      * @brief  Paints the rounded Material surface background.

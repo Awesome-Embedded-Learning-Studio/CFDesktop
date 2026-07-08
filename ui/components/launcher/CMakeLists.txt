@@ -4,6 +4,7 @@ add_library(cfdesktop_launcher STATIC
     desktop_entry_index.cpp
     app_launch_service.cpp
     app_launcher.cpp
+    app_icon_resolver.cpp
     launcher_tile.cpp
 )
 
