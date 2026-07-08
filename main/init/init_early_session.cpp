@@ -1,4 +1,5 @@
 #include "early_session/impl/console_signal_stage.h"
+#include "early_session/impl/crash_handler_stage.h"
 #include "early_session/impl/desktop_backbone_setup.h"
 #include "early_session/impl/early_config_stage.h"
 #include "early_session/impl/early_welcome_impl.h"
@@ -28,7 +29,11 @@ void RunEarlyInit() {
     early_runner.register_stage_execute_before(
         []() { return std::make_unique<early_stage::IpcStage>(); });
 
-    /* Stage 4: Check the Desktop Backbones, if failed, we sucks */
+    /* Stage 4: Crash handler arms signals + finalizes prior crash reports */
+    early_runner.register_stage_execute_before(
+        []() { return std::make_unique<early_stage::CrashHandlerStage>(); });
+
+    /* Stage 5: Check the Desktop Backbones, if failed, we sucks */
     early_runner.register_stage_execute_before(
         []() { return std::make_unique<early_stage::DesktopBackboneEarlySetup>(); });
 

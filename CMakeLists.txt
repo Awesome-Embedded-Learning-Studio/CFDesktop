@@ -115,6 +115,7 @@ set(CFDESKTOP_STATIC_LIBS
     CFDesktopUi
     cf_desktop_render
     cfipc
+    cfcrash
 )
 
 # Sources compiled directly into the DLL (with CFDESKTOP_EXPORTS defined).

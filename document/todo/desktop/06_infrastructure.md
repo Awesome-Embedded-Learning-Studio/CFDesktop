@@ -62,44 +62,38 @@ description: "状态: 🚧 部分完成 (~50%)，预计周期: 4~5 周"
 
 ### CrashHandler 崩溃处理与自动重启
 
-#### Day 1-2: 崩溃捕获核心
-- [ ] 创建 CrashHandler 类
-  - [ ] 单例模式
-  - [ ] 应用启动时注册
-- [ ] 实现信号捕获（Linux）
-  - [ ] `SIGSEGV`（段错误）
-  - [ ] `SIGABRT`（中止）
-  - [ ] `SIGFPE`（浮点异常）
-  - [ ] `SIGBUS`（总线错误）
-  - [ ] `SIGILL`（非法指令）
-- [ ] 实现异常捕获（Windows）
+> **Phase 1 已落地（2026-07-08，feat/shell-foundation）**：信号捕获 + async-signal-safe raw 快照 + 下次启动 finalize 成 JSON 报告（含 logger tail 的 lastLogs）+ 20 份保留。落 `base/crash_handler/`（STATIC lib `cfcrash`，不 link Qt），early_session `CrashHandlerStage`（Stage 4，Logger 之后）注册。**订正**：报告路径跟 logger 同根 `<exe_dir>/crashes/`（非 `~/.cache/...`）；lastLogs 不在 handler 内取（logger 异步线程，UB），改为 defer finalize。符号解析 / CrashReporter 弹窗 / Watchdog 属 Phase 2。
+
+#### Day 1-2: 崩溃捕获核心 — ✅ Phase 1 完成（Linux）
+- [x] 创建 CrashHandler 类（`base/crash_handler/include/cfcrash/crash_handler.h`）
+  - [x] 单例模式（`CrashHandler::instance()`）
+  - [x] 应用启动时注册（`CrashHandlerStage`，early_session Stage 4）
+- [x] 实现信号捕获（Linux，`sigaction` + `sigaltstack` + `SA_ONSTACK`/`SA_RESETHAND`）
+  - [x] `SIGSEGV`（段错误）
+  - [x] `SIGABRT`（中止）
+  - [x] `SIGFPE`（浮点异常）
+  - [x] `SIGBUS`（总线错误）
+  - [x] `SIGILL`（非法指令）
+- [ ] 实现异常捕获（Windows）— Phase 1 占位 stub，完整版 Phase 2
   - [ ] `SetUnhandledExceptionFilter`
   - [ ] `std::set_terminate`
-- [ ] 实现堆栈回溯
-  - [ ] Linux: `backtrace()` / `backtrace_symbols()`
-  - [ ] Windows: `StackWalk64`
-  - [ ] 符号解析（addr2line 集成）
-- [ ] 编写单元测试
+- [x] 实现堆栈回溯（Linux `backtrace()` 写**裸地址**到 `.pending`）
+  - [ ] `backtrace_symbols()` + addr2line 符号解析 — **defer Phase 2**（handler 内非 async-signal-safe）
+  - [ ] Windows: `StackWalk64` — Phase 2
+- [x] 编写单元测试（`test/crash/` 4 测：report 序列化 / retention / finalize 组装 / fork+SIGSEGV 端到端）
 
-#### Day 3: 崩溃信息存储
-- [ ] 定义 CrashReport 结构
-  - [ ] `timestamp`（崩溃时间）
-  - [ ] `processName`（进程名称）
-  - [ ] `processId`（进程 ID）
-  - [ ] `signal`（崩溃信号）
-  - [ ] `stackTrace`（堆栈回溯）
-  - [ ] `registers`（寄存器状态）
-  - [ ] `lastLogs`（最近 50 条日志）
-  - [ ] `systemInfo`（系统信息/HWTier）
-- [ ] 实现崩溃报告存储
-  - [ ] 存储路径 `~/.cache/CFDesktop/crashes/`
-  - [ ] JSON 格式序列化
-  - [ ] Mini dump 支持（Windows）
-- [ ] 实现崩溃历史管理
-  - [ ] 最多保留 20 个报告
-  - [ ] 按时间排序
-  - [ ] 清理过期报告（30 天）
-- [ ] 编写单元测试
+#### Day 3: 崩溃信息存储 — ✅ Phase 1 完成
+- [x] 定义 CrashReport 结构（`crash_report.h`：timestamp / pid / signal / signal_name / raw_frames / last_logs）
+  - [ ] processName / registers / systemInfo（HWTier）字段 — Phase 2 增项
+- [x] 实现崩溃报告存储
+  - [x] 存储路径 `<exe_dir>/crashes/`（跟 logger 同根，**订正**早期 `~/.cache/...`）
+  - [x] JSON 格式序列化（`CrashReport::toJson()`）
+  - [ ] Mini dump 支持（Windows）— Phase 2
+- [x] 实现崩溃历史管理
+  - [x] 最多保留 20 个报告（`pruneReports`）
+  - [x] 按 mtime 排序删最旧
+  - [ ] 清理过期报告（30 天）— Phase 2（可选）
+- [x] 编写单元测试
 
 #### Day 4: CrashReporter 崩溃报告弹窗
 - [ ] 创建 CrashReporter 独立进程
