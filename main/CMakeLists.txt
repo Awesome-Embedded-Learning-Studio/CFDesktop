@@ -40,7 +40,7 @@ target_include_directories(CFDesktopMain PUBLIC
 )
 
 target_link_libraries(CFDesktopMain PUBLIC
-    cfbase cflogger cfasciiart cffilesystem cffundamental cfpath cfconfig
+    cfbase cflogger cfasciiart cffilesystem cffundamental cfpath cfconfig cfipc cfcrash
     cf_desktop_ui_widget_init_session
     Qt6::Core Qt6::Gui Qt6::Widgets
 )

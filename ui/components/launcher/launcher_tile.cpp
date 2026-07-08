@@ -218,6 +218,12 @@ void LauncherTile::mousePressEvent(QMouseEvent* event) {
         press_pos_ = event->position();
         drag_state_ = DragState::Pressed;
         long_press_timer_->start();
+        // Accept so the press does not bubble up to PageStackWidget -- a tile
+        // is being tapped/dragged, the page must not swipe under it. The icon
+        // grid's empty cells (not on a tile) still bubble, so swiping the grid
+        // background returns to the home page.
+        event->accept();
+        return;
     }
     QWidget::mousePressEvent(event);
 }

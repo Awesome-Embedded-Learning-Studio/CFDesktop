@@ -114,6 +114,8 @@ set(CFDESKTOP_STATIC_LIBS
     CFDesktopMain
     CFDesktopUi
     cf_desktop_render
+    cfipc
+    cfcrash
 )
 
 # Sources compiled directly into the DLL (with CFDESKTOP_EXPORTS defined).
@@ -163,7 +165,7 @@ add_library(CFDesktop::lib ALIAS CFDesktop_shared)
 # Main executable — thin shell that calls into the DLL
 # ============================================================
 add_executable(CFDesktop main.cpp)
-target_link_libraries(CFDesktop PRIVATE CFDesktop_shared)
+target_link_libraries(CFDesktop PRIVATE CFDesktop_shared cfipc)
 
 log_info("Desktop Buildings" "Configuring Desktop Buildings Done")
 

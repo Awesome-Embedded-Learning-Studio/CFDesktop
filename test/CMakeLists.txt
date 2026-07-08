@@ -47,6 +47,12 @@ add_subdirectory(logger)
 # Add System Test
 add_subdirectory(system)
 
+# Add IPC tests subdirectory
+add_subdirectory(ipc)
+
+# Add CrashHandler tests subdirectory
+add_subdirectory(crash)
+
 # NOTE: ui tests now live in the QuarkWidgets submodule (third_party/QuarkWidgets/test).
 
 # Add desktop tests
