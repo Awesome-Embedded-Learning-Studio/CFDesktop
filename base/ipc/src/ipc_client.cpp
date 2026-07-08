@@ -19,14 +19,17 @@
 
 namespace cf::ipc {
 
-bool IPCClient::send(const QString& socket_path, const QString& message) {
+namespace {
+/// @brief Connects, writes raw bytes, disconnects. Best-effort, blocking.
+/// @note  Yields Windows foreground privilege afterward so the running
+///        instance may activate its window.
+bool sendRaw(const QString& socket_path, const QByteArray& data) {
     QLocalSocket socket;
     socket.connectToServer(socket_path);
     if (!socket.waitForConnected(200)) {
-        // No running instance listening (or it crashed mid-handshake).
         return false;
     }
-    socket.write((message + '\n').toUtf8());
+    socket.write(data);
     socket.waitForBytesWritten(200);
     socket.disconnectFromServer();
     if (socket.state() != QLocalSocket::UnconnectedState) {
@@ -34,12 +37,19 @@ bool IPCClient::send(const QString& socket_path, const QString& message) {
     }
 
 #ifdef Q_OS_WIN
-    // Yield foreground privilege so the running instance may activate its
-    // window; otherwise SetForegroundWindow is blocked by the foreground lock.
     AllowSetForegroundWindow(ASFW_ANY);
 #endif
 
     return true;
+}
+} // namespace
+
+bool IPCClient::send(const QString& socket_path, const IPCMessage& msg) {
+    return sendRaw(socket_path, msg.toJson() + '\n');
+}
+
+bool IPCClient::send(const QString& socket_path, const QString& type, const QJsonObject& payload) {
+    return send(socket_path, IPCMessage{type, payload});
 }
 
 } // namespace cf::ipc

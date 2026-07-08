@@ -11,6 +11,10 @@
 
 #include "cfipc/ipc_server.h"
 
+#include "cfipc/ipc_message.h"
+#include "cfipc/ipc_message_registry.h"
+
+#include <QJsonObject>
 #include <QLocalSocket>
 
 namespace cf::ipc {
@@ -22,6 +26,10 @@ IPCServer& IPCServer::instance() {
 
 IPCServer::IPCServer() {
     connect(&server_, &QLocalServer::newConnection, this, &IPCServer::onNewConnection);
+    // Route the "raise" message type to our signal; other types are owned
+    // by whoever registered them in the registry.
+    IPCMessageRegistry::instance().registerHandler(
+        "raise", [this](const QJsonObject&) { emit raiseRequested(); });
 }
 
 bool IPCServer::start(const QString& socket_path) {
@@ -43,11 +51,12 @@ void IPCServer::onNewConnection() {
     // The server owns the connection for its lifetime; auto-delete on close.
     conn->setParent(this);
     connect(conn, &QLocalSocket::disconnected, conn, &QObject::deleteLater);
-    connect(conn, &QLocalSocket::readyRead, this, [this, conn]() {
+    connect(conn, &QLocalSocket::readyRead, this, [conn]() {
+        // Line-based JSON framing: one IPCMessage per newline.
         while (conn->canReadLine()) {
-            const QByteArray line = conn->readLine().trimmed();
-            if (line == "raise") {
-                emit raiseRequested();
+            const auto msg = IPCMessage::fromJson(conn->readLine());
+            if (msg.has_value()) {
+                IPCMessageRegistry::instance().dispatch(*msg);
             }
         }
     });

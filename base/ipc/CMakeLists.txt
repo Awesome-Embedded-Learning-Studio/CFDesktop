@@ -8,6 +8,8 @@ target_sources(cfipc
 PRIVATE
     src/ipc_server.cpp
     src/ipc_client.cpp
+    src/ipc_message.cpp
+    src/ipc_message_registry.cpp
     # Listed explicitly so AUTOMOC scans the Q_OBJECT in ipc_server.h
     # (headers reached only via include dirs are not auto-discovered).
     ${CMAKE_CURRENT_SOURCE_DIR}/include/cfipc/ipc_server.h

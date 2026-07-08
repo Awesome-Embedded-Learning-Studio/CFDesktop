@@ -1,11 +1,11 @@
 /**
  * @file    ipc_client.h
- * @brief   One-shot IPC client for signaling the running shell instance.
+ * @brief   One-shot IPC client for sending a message to the running shell.
  *
- * Provides a blocking send() that connects to the running shell's
- * IPCServer socket, writes one line-based message, and disconnects.
- * Used by a second shell instance (which failed to acquire the single-
- * instance lock) to ask the running one to raise itself before exiting.
+ * Provides blocking send() overloads that connect to the running shell's
+ * IPCServer socket, write one JSON message, and disconnect. Used by a
+ * second shell instance (which failed to acquire the single-instance
+ * lock) to ask the running one to raise itself before exiting.
  *
  * @author  CFDesktop Team
  * @date    2026-07-08
@@ -16,6 +16,9 @@
 
 #pragma once
 
+#include "cfipc/ipc_message.h"
+
+#include <QJsonObject>
 #include <QObject>
 #include <QString>
 
@@ -35,23 +38,34 @@ namespace cf::ipc {
 class IPCClient {
   public:
     /**
-     * @brief  Sends a single message token to the running shell.
-     *
-     * Connects to the socket at socket_path, writes the token followed by
-     * a newline, then disconnects. On Windows, yields foreground privilege
-     * afterward so the running instance can come to the front.
+     * @brief  Sends a fully-formed message to the running shell.
      *
      * @param[in]  socket_path  Path of the running shell's IPC socket.
-     * @param[in]  message      Single token to send (no embedded newline).
-     * @return     True if the message was written; false on connect failure
-     *             (no running instance listening).
+     * @param[in]  msg          The message to serialize and send.
+     * @return     True if the message was written; false on connect failure.
      * @throws     None
      * @note       Blocks up to ~200 ms per phase (connect / write).
      * @warning    None
      * @since      0.19.0
      * @ingroup    ipc
      */
-    static bool send(const QString& socket_path, const QString& message);
+    static bool send(const QString& socket_path, const IPCMessage& msg);
+
+    /**
+     * @brief  Convenience overload: builds a message from type + payload.
+     *
+     * @param[in]  socket_path  Path of the running shell's IPC socket.
+     * @param[in]  type         Message type tag.
+     * @param[in]  payload      Optional JSON payload (defaults to empty).
+     * @return     True if the message was written; false on connect failure.
+     * @throws     None
+     * @note       None
+     * @warning    None
+     * @since      0.19.0
+     * @ingroup    ipc
+     */
+    static bool send(const QString& socket_path, const QString& type,
+                     const QJsonObject& payload = {});
 };
 
 } // namespace cf::ipc
