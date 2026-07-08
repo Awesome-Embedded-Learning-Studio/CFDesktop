@@ -17,12 +17,15 @@
 #include "digital_time_widget.h"
 #include "disk_gauge_card.h"
 #include "home_card_manager.h"
+#include "local_temp_card.h"
 #include "modern_calendar_widget.h"
+#include "net_status_card.h"
 #include "system/cpu/cfcpu_profile.h"
 #include "system/memory/memory_info.h"
 #include "system_usage_card.h"
 #include "user_info_card.h"
 
+#include <QGridLayout>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QWidget>
@@ -95,20 +98,21 @@ HomePage::HomePage(QWidget* parent) : QWidget(parent) {
     left_layout->addWidget(analog_clock_, 5);
     left_layout->addWidget(digital_time_, 2);
 
-    // Right column: card stack (3) above a gradient placeholder (1).
+    // Right column: card stack (3) above a gadget grid (1) — net status + local
+    // temp, mirroring CCIMX's right-bottom NetCardGadget / LocalWeatherCard.
     auto* right = new QWidget(this);
     auto* right_layout = new QVBoxLayout(right);
     right_layout->setContentsMargins(0, 0, 0, 0);
     right_layout->setSpacing(0);
     card_stack_ = new CardStackWidget(right);
-    auto* placeholder_grid = new QWidget(right);
-    placeholder_grid->setObjectName("HomeBottomPanel");
-    placeholder_grid->setStyleSheet(
-        "#HomeBottomPanel { background: qlineargradient(x1:0, y1:0, x2:1, y2:1,"
-        " stop:0 rgba(150, 150, 150, 100), stop:1 rgba(130, 130, 130, 255));"
-        " border-radius: 15px; border: 2px solid rgba(0, 0, 0, 100); }");
+    auto* bottom_grid = new QWidget(right);
+    auto* grid_layout = new QGridLayout(bottom_grid);
+    grid_layout->setContentsMargins(2, 2, 2, 2);
+    grid_layout->setSpacing(3);
+    grid_layout->addWidget(new NetStatusCard(bottom_grid), 0, 0);
+    grid_layout->addWidget(new LocalTempCard(bottom_grid), 0, 1);
     right_layout->addWidget(card_stack_, 3);
-    right_layout->addWidget(placeholder_grid, 1);
+    right_layout->addWidget(bottom_grid, 1);
 
     outer->addWidget(left);
     outer->addWidget(right);
