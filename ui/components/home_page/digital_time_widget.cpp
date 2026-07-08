@@ -13,70 +13,55 @@
 
 #include "global_clock_sources.h"
 
-#include "core/theme_manager.h"
-#include "core/token/material_scheme/cfmaterial_token_literals.h"
-#include "core/token/typography/cfmaterial_typography_token_literals.h"
-
-#include <QDate>
+#include <QFont>
+#include <QFontMetrics>
 #include <QPaintEvent>
 #include <QPainter>
-#include <QTime>
 
 namespace cf::desktop::desktop_component {
 
-using namespace qw::core::token::literals;
-
 DigitalTimeWidget::DigitalTimeWidget(QWidget* parent) : QWidget(parent) {
     setAttribute(Qt::WA_TranslucentBackground);
-    onTimeUpdate(QTime::currentTime());
-    applyTheme();
-    connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
-            [this]() { applyTheme(); });
+    stored_time_ = QTime::currentTime();
     connect(&GlobalClockSources::instance(), &GlobalClockSources::timeUpdate, this,
             &DigitalTimeWidget::onTimeUpdate);
 }
 
 void DigitalTimeWidget::onTimeUpdate(const QTime& time) {
-    time_text_ = time.toString("HH:mm:ss");
-    date_text_ = QDate::currentDate().toString("yyyy-MM-dd dddd");
-    update();
-}
-
-void DigitalTimeWidget::applyTheme() {
-    try {
-        auto& tm = qw::core::ThemeManager::instance();
-        auto& theme = tm.theme(tm.currentThemeName());
-        auto& cs = theme.color_scheme();
-        time_color_ = cs.queryColor(ON_SURFACE);
-        date_color_ = cs.queryColor(ON_SURFACE_VARIANT);
-        time_font_ = theme.font_type().queryTargetFont(TYPOGRAPHY_DISPLAY_MEDIUM);
-        date_font_ = theme.font_type().queryTargetFont(TYPOGRAPHY_BODY_SMALL);
-    } catch (...) {
-        time_color_ = QColor(0x1C, 0x1B, 0x1F);
-        date_color_ = QColor(0x49, 0x45, 0x4E);
-        time_font_.setPointSize(28);
-        time_font_.setBold(true);
-        date_font_.setPointSize(11);
-    }
+    stored_time_ = time;
     update();
 }
 
 void DigitalTimeWidget::paintEvent(QPaintEvent* /*event*/) {
-    QPainter p(this);
-    p.setRenderHint(QPainter::Antialiasing, true);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    const QTime time = stored_time_;
+    const QString time_text = time.toString("hh:mm:ss");
+
+    const QDate date = QDate::currentDate();
+    const QString date_text = date.toString("yyyy MMM dd ddd");
+
+    QFont time_font("Helvetica Neue", 40, QFont::Bold);
+    painter.setFont(time_font);
+    const int time_text_height = QFontMetrics(time_font).height();
 
     QRect time_rect = rect();
-    time_rect.setBottom(rect().center().y());
+    time_rect.setHeight(time_text_height);
+    time_rect.moveTop(rect().center().y() - time_text_height); // vertically centered
+
+    painter.setPen(Qt::white);
+    painter.drawText(time_rect, Qt::AlignCenter, time_text);
+
+    QFont date_font("Helvetica Neue", 15, QFont::Light);
+    painter.setFont(date_font);
+    const int date_text_height = QFontMetrics(date_font).height();
+
     QRect date_rect = rect();
-    date_rect.setTop(rect().center().y());
+    date_rect.setHeight(date_text_height);
+    date_rect.moveTop(time_rect.bottom() + 10);
 
-    p.setPen(time_color_);
-    p.setFont(time_font_);
-    p.drawText(time_rect, Qt::AlignCenter, time_text_);
-
-    p.setPen(date_color_);
-    p.setFont(date_font_);
-    p.drawText(date_rect, Qt::AlignCenter, date_text_);
+    painter.drawText(date_rect, Qt::AlignCenter, date_text);
 }
 
 } // namespace cf::desktop::desktop_component

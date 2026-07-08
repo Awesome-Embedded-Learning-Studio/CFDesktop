@@ -6,9 +6,7 @@ add_library(cfdesktop_home_page STATIC
     card_stack_widget.cpp
     home_card_manager.cpp
     date_card.cpp
-    memory_card.cpp
-    cpu_card.cpp
-    disk_card.cpp
+    system_usage_card.cpp
     home_page.cpp
     page_stack_widget.cpp
 )

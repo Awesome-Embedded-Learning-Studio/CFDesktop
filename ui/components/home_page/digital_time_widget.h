@@ -2,9 +2,8 @@
  * @file    digital_time_widget.h
  * @brief   Digital HH:mm:ss + date display driven by GlobalClockSources.
  *
- * Migrated from CCIMXDesktop DigitalTimeWidget: colors/fonts re-based on
- * ThemeManager MD3 tokens (onSurface / onSurfaceVariant) instead of the
- * original hardcoded white.
+ * Ported verbatim from CCIMXDesktop DigitalTimeWidget: white Helvetica Neue
+ * (40pt Bold time / 15pt Light date), no MD3 theming (Phase G re-themes later).
  *
  * @author  CFDesktop Team
  * @date    2026-07-08
@@ -15,12 +14,8 @@
 
 #pragma once
 
-#include <QColor>
-#include <QFont>
-#include <QString>
+#include <QTime>
 #include <QWidget>
-
-class QTime;
 
 namespace cf::desktop::desktop_component {
 
@@ -61,19 +56,11 @@ class DigitalTimeWidget : public QWidget {
     void paintEvent(QPaintEvent* event) override;
 
   private:
-    /// @brief Re-reads colors and fonts from the active theme.
-    void applyTheme();
-
-    /// @brief Updates the cached strings and repaints on each tick.
+    /// @brief Updates the cached time and repaints on each tick.
     /// @param[in]  time  Current time.
     void onTimeUpdate(const QTime& time);
 
-    QColor time_color_; ///< Time text color (onSurface).
-    QColor date_color_; ///< Date text color (onSurfaceVariant).
-    QFont time_font_;   ///< Time font (displayMedium).
-    QFont date_font_;   ///< Date font (bodySmall).
-    QString time_text_; ///< Formatted "HH:mm:ss".
-    QString date_text_; ///< Formatted "yyyy-MM-dd dddd".
+    QTime stored_time_; ///< Latest received time.
 };
 
 } // namespace cf::desktop::desktop_component

@@ -13,20 +13,16 @@
 
 #include "global_clock_sources.h"
 
-#include "core/theme_manager.h"
-#include "core/token/material_scheme/cfmaterial_token_literals.h"
-
 #include <QPaintEvent>
 #include <QPainter>
+#include <QPointF>
 #include <QRadialGradient>
 
 namespace cf::desktop::desktop_component {
 
-using namespace qw::core::token::literals;
-
 namespace {
-// Fixed dial geometry (unchanged from CCIMX; the painter is scaled so the dial
-// fits the widget).
+// Fixed dial geometry, ported verbatim from CCIMXDesktop. The painter is
+// scaled so the dial fits the widget.
 inline constexpr int kDialSize = 200;
 inline constexpr int kOuterCircleRadius = 95;
 inline constexpr int kThickBorderWidth = 8;
@@ -40,7 +36,10 @@ inline constexpr int kCenterDotRadius = 4;
 inline constexpr int kHourHandLength = 50;
 inline constexpr int kMinuteHandLength = 70;
 inline constexpr int kSecondHandLength = 80;
-inline constexpr int kHandWidth = 4;
+inline constexpr int kHandWidth = 7;
+
+inline constexpr int kNumberDistanceFromCenter = 70;
+inline constexpr int kNumberFontSize = 14;
 
 inline constexpr double kHourRotationPerHour = 30.0;
 inline constexpr double kMinuteRotationPerMinute = 6.0;
@@ -50,37 +49,12 @@ inline constexpr double kSecondRotationPerSecond = 6.0;
 AnalogClockWidget::AnalogClockWidget(QWidget* parent) : QWidget(parent) {
     setAttribute(Qt::WA_TranslucentBackground);
     current_time_ = QTime::currentTime();
-    applyTheme();
-    connect(&qw::core::ThemeManager::instance(), &qw::core::ThemeManager::themeChanged, this,
-            [this]() { applyTheme(); });
     connect(&GlobalClockSources::instance(), &GlobalClockSources::timeUpdate, this,
             &AnalogClockWidget::onTimeUpdate);
 }
 
 void AnalogClockWidget::onTimeUpdate(const QTime& time) {
     current_time_ = time;
-    update();
-}
-
-void AnalogClockWidget::applyTheme() {
-    try {
-        auto& tm = qw::core::ThemeManager::instance();
-        auto& theme = tm.theme(tm.currentThemeName());
-        auto& cs = theme.color_scheme();
-        surface_color_ = cs.queryColor(SURFACE);
-        surface_variant_color_ = cs.queryColor(SURFACE_VARIANT);
-        outline_color_ = cs.queryColor(OUTLINE);
-        hand_color_ = cs.queryColor(ON_SURFACE);
-        minute_tick_color_ = cs.queryColor(ON_SURFACE_VARIANT);
-        second_hand_color_ = cs.queryColor(PRIMARY);
-    } catch (...) {
-        surface_color_ = QColor(0xFA, 0xF9, 0xF8);
-        surface_variant_color_ = QColor(0xE7, 0xE0, 0xE9);
-        outline_color_ = QColor(0x79, 0x75, 0x7A);
-        hand_color_ = QColor(0x1C, 0x1B, 0x1F);
-        minute_tick_color_ = QColor(0x49, 0x45, 0x4E);
-        second_hand_color_ = QColor(0x67, 0x50, 0xA4);
-    }
     update();
 }
 
@@ -93,6 +67,7 @@ void AnalogClockWidget::paintEvent(QPaintEvent* /*event*/) {
     p.scale(side / static_cast<double>(kDialSize), side / static_cast<double>(kDialSize));
 
     drawBackground(&p);
+    drawNumbers(&p);
     drawTicks(&p);
     drawHands(&p);
     drawCenterDot(&p);
@@ -100,32 +75,64 @@ void AnalogClockWidget::paintEvent(QPaintEvent* /*event*/) {
 
 void AnalogClockWidget::drawBackground(QPainter* p) {
     p->save();
-    p->setPen(QPen(outline_color_, kThickBorderWidth));
+    p->setPen(Qt::NoPen);
+
+    // 8px black thick outer border.
+    p->setPen(QPen(QColor(0, 0, 0), kThickBorderWidth));
     p->setBrush(Qt::NoBrush);
     p->drawEllipse(QPoint(0, 0), kOuterCircleRadius - kThickBorderWidth / 2,
                    kOuterCircleRadius - kThickBorderWidth / 2);
 
+    // White radial gradient dial face.
     QRadialGradient gradient(0, 0, kOuterCircleRadius);
-    gradient.setColorAt(0.0, surface_color_);
-    gradient.setColorAt(1.0, surface_variant_color_);
+    gradient.setColorAt(0.0, QColor(255, 255, 255));
+    gradient.setColorAt(1.0, QColor(230, 230, 230));
     p->setBrush(gradient);
     p->setPen(Qt::NoPen);
     p->drawEllipse(QPoint(0, 0), kOuterCircleRadius, kOuterCircleRadius);
 
-    p->setPen(QPen(outline_color_, 2));
+    // Thin gray rim.
+    p->setPen(QPen(QColor(200, 200, 200), 2));
     p->setBrush(Qt::NoBrush);
     p->drawEllipse(QPoint(0, 0), kOuterCircleRadius, kOuterCircleRadius);
     p->restore();
 }
 
+void AnalogClockWidget::drawNumbers(QPainter* p) {
+    p->save();
+    QFont font = p->font();
+    font.setPointSize(kNumberFontSize);
+    p->setFont(font);
+    p->setPen(Qt::black);
+
+    struct NumberInfo {
+        int number;
+        double angle_degree;
+    };
+    static constexpr NumberInfo numbers[] = {
+        {12, 0.0},
+        {3, 90.0},
+        {6, 180.0},
+        {9, 270.0},
+    };
+    for (const auto& num : numbers) {
+        const double radians = qDegreesToRadians(num.angle_degree);
+        const double x = kNumberDistanceFromCenter * qSin(radians);
+        const double y = -kNumberDistanceFromCenter * qCos(radians);
+        const QRectF rect(x - 10, y - 10, 20, 20);
+        p->drawText(rect, Qt::AlignCenter, QString::number(num.number));
+    }
+    p->restore();
+}
+
 void AnalogClockWidget::drawTicks(QPainter* p) {
     p->save();
-    p->setPen(QPen(hand_color_, kHourTickWidth));
+    p->setPen(QPen(Qt::black, kHourTickWidth));
     for (int i = 0; i < 12; ++i) {
         p->drawLine(0, -(kOuterCircleRadius - kHourTickLength), 0, -kOuterCircleRadius);
         p->rotate(kHourRotationPerHour);
     }
-    p->setPen(QPen(minute_tick_color_, kMinuteTickWidth));
+    p->setPen(QPen(Qt::gray, kMinuteTickWidth));
     for (int i = 0; i < 60; ++i) {
         if (i % 5 != 0) {
             p->drawLine(0, -(kOuterCircleRadius - kMinuteTickLength), 0, -kOuterCircleRadius);
@@ -136,10 +143,10 @@ void AnalogClockWidget::drawTicks(QPainter* p) {
 }
 
 void AnalogClockWidget::drawHands(QPainter* p) {
-    // Hour hand.
+    // Hour hand (black).
     p->save();
     p->setPen(Qt::NoPen);
-    p->setBrush(hand_color_);
+    p->setBrush(Qt::black);
     p->rotate(kHourRotationPerHour * (current_time_.hour() % 12) + current_time_.minute() / 2.0);
     static const QPoint hour_hand[4] = {
         QPoint(0, kHandWidth),
@@ -150,13 +157,13 @@ void AnalogClockWidget::drawHands(QPainter* p) {
     p->drawConvexPolygon(hour_hand, 4);
     p->restore();
 
-    // Minute hand.
+    // Minute hand (black).
     p->save();
     p->setPen(Qt::NoPen);
-    p->setBrush(hand_color_);
+    p->setBrush(Qt::black);
     p->rotate(kMinuteRotationPerMinute * current_time_.minute() + current_time_.second() / 10.0);
     static const QPoint minute_hand[4] = {
-        QPoint(0, kHandWidth - 1),
+        QPoint(0, kHandWidth),
         QPoint(-3, 0),
         QPoint(0, -kMinuteHandLength),
         QPoint(3, 0),
@@ -164,10 +171,10 @@ void AnalogClockWidget::drawHands(QPainter* p) {
     p->drawConvexPolygon(minute_hand, 4);
     p->restore();
 
-    // Second hand.
+    // Second hand (red).
     p->save();
     p->setPen(Qt::NoPen);
-    p->setBrush(second_hand_color_);
+    p->setBrush(Qt::red);
     p->rotate(kSecondRotationPerSecond * current_time_.second());
     static const QPoint second_hand[4] = {
         QPoint(0, kHandWidth / 2),
@@ -182,7 +189,7 @@ void AnalogClockWidget::drawHands(QPainter* p) {
 void AnalogClockWidget::drawCenterDot(QPainter* p) {
     p->save();
     p->setPen(Qt::NoPen);
-    p->setBrush(hand_color_);
+    p->setBrush(Qt::black);
     p->drawEllipse(QPoint(0, 0), kCenterDotRadius, kCenterDotRadius);
     p->restore();
 }

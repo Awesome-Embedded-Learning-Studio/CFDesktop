@@ -1,10 +1,10 @@
 /**
  * @file    analog_clock_widget.h
- * @brief   Analog clock dial (hands + ticks) painted with QPainter.
+ * @brief   Analog clock dial (hands + ticks + numerals) painted with QPainter.
  *
- * Migrated from CCIMXDesktop ClockWidget. Geometry is unchanged (fixed dial
- * constants); colors are re-based on ThemeManager MD3 tokens instead of the
- * original hardcoded black/white/red.
+ * Ported verbatim from CCIMXDesktop ClockWidget: hardcoded geometry + classic
+ * palette (white radial gradient dial, 8px black border, black hands, red
+ * second hand, 12/3/6/9 numerals). No MD3 theming (Phase G re-themes later).
  *
  * @author  CFDesktop Team
  * @date    2026-07-08
@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include <QColor>
 #include <QTime>
 #include <QWidget>
 
@@ -46,7 +45,7 @@ class AnalogClockWidget : public QWidget {
 
   protected:
     /**
-     * @brief  Paints the dial, ticks, hands, and center dot.
+     * @brief  Paints the dial, numerals, ticks, hands, and center dot.
      * @param[in]  event  Paint event (unused).
      * @return     None
      * @throws     None
@@ -58,26 +57,17 @@ class AnalogClockWidget : public QWidget {
     void paintEvent(QPaintEvent* event) override;
 
   private:
-    /// @brief Re-reads colors from the active theme.
-    void applyTheme();
-
     /// @brief Caches the latest time and repaints.
     /// @param[in]  time  Current time.
     void onTimeUpdate(const QTime& time);
 
-    void drawBackground(QPainter* p); ///< Dial background + border.
+    void drawBackground(QPainter* p); ///< Dial gradient + thick border.
+    void drawNumbers(QPainter* p);    ///< 12 / 3 / 6 / 9 numerals.
     void drawTicks(QPainter* p);      ///< Hour and minute tick marks.
     void drawHands(QPainter* p);      ///< Hour, minute, second hands.
     void drawCenterDot(QPainter* p);  ///< Pivot dot.
 
     QTime current_time_; ///< Latest received time.
-
-    QColor surface_color_;         ///< Dial fill center (surface).
-    QColor surface_variant_color_; ///< Dial fill edge (surfaceVariant).
-    QColor outline_color_;         ///< Dial border (outline).
-    QColor hand_color_;            ///< Hour/minute hand + hour ticks (onSurface).
-    QColor minute_tick_color_;     ///< Minute ticks (onSurfaceVariant).
-    QColor second_hand_color_;     ///< Second hand (primary).
 };
 
 } // namespace cf::desktop::desktop_component
