@@ -6,6 +6,9 @@ add_library(cfdesktop_home_page STATIC
     card_stack_widget.cpp
     home_card_manager.cpp
     date_card.cpp
+    memory_card.cpp
+    cpu_card.cpp
+    disk_card.cpp
     home_page.cpp
     page_stack_widget.cpp
 )
@@ -21,4 +24,5 @@ PUBLIC
     QuarkWidgets::quarkwidgets           # ThemeManager, color/typography tokens
 PRIVATE
     Qt6::Widgets
+    cfbase                               # memory/cpu probes
 )

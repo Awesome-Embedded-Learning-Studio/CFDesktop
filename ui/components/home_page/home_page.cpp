@@ -13,9 +13,12 @@
 
 #include "analog_clock_widget.h"
 #include "card_stack_widget.h"
+#include "cpu_card.h"
 #include "date_card.h"
 #include "digital_time_widget.h"
+#include "disk_card.h"
 #include "home_card_manager.h"
+#include "memory_card.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -64,9 +67,10 @@ HomePage::HomePage(QWidget* parent) : QWidget(parent) {
     outer->setStretchFactor(right, 1);
 
     card_manager_ = std::make_unique<HomeCardManager>(card_stack_);
-    // Two placeholder cards so the stack is swipeable; Step B replaces these.
     card_manager_->installCard(new DateCard(card_stack_));
-    card_manager_->installCard(new DateCard(card_stack_));
+    card_manager_->installCard(new MemoryCard(card_stack_));
+    card_manager_->installCard(new CpuCard(card_stack_));
+    card_manager_->installCard(new DiskCard(card_stack_));
 }
 
 HomeCardManager* HomePage::cardManager() const {
