@@ -27,6 +27,14 @@ add_gtest_executable(
     LOG_MODULE     ipc_tests
 )
 
+add_gtest_executable(
+    TEST_NAME      ipc_notify_test
+    SOURCE_FILE    ipc_notify_test.cpp
+    LINK_LIBRARIES cfipc;Qt6::Core;GTest::gtest;GTest::gtest_main
+    LABELS         "ipc;unit;notify"
+    LOG_MODULE     ipc_tests
+)
+
 # Transport test owns its main() (QCoreApplication for QLocalSocket),
 # so it links gtest (not gtest_main) and adds Qt6::Network.
 add_gtest_executable(
