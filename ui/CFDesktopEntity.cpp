@@ -14,6 +14,8 @@
 #include "components/builtin_apps/about_panel.h"
 #include "components/builtin_apps/builtin_panel_registry.h"
 #include "components/control_center/control_center.h"
+#include "components/crash_reporter/crash_reporter_dialog.h"
+#include "components/crash_reporter/seen_marker.h"
 #include "components/desktop_icon_layer/desktop_icon_layer.h"
 #include "components/desktop_icon_layer/desktop_shortcut_store.h"
 #include "components/home_page/home_page.h"
@@ -35,13 +37,16 @@
 #include "qt_format.h"
 #include "system/hardware_tier/hardware_tier.h"
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QGuiApplication>
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QScreen>
+#include <QTimer>
 #include <functional>
 #include <memory>
 
@@ -613,6 +618,24 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
 
     // Show the desktop full-screen
     desktop_entity_->showFullScreen();
+
+    // Phase 2: surface the most recent unseen crash report (from a previous
+    // crashed run) shortly after boot, so the user sees the symbolized stack.
+    const QString crashes_dir = QCoreApplication::applicationDirPath() + "/crashes";
+    QTimer::singleShot(1500, this, [this, crashes_dir]() {
+        const QDir dir(crashes_dir);
+        const auto jsons = dir.entryInfoList(QStringList() << "*.json", QDir::Files, QDir::Time);
+        for (const QFileInfo& fi : jsons) {
+            const QString path = fi.absoluteFilePath();
+            if (cf::desktop::desktop_component::isCrashSeen(path)) {
+                continue;
+            }
+            auto* reporter =
+                new cf::desktop::desktop_component::CrashReporterDialog(path, desktop_entity_);
+            reporter->popup(desktop_entity_->rect());
+            break; // one report per boot; the next unseen one shows next time
+        }
+    });
 
     log::trace("Entity Init");
     return RunsSetupResult::OK;
