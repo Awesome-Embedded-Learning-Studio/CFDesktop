@@ -49,5 +49,7 @@ PRIVATE
     cfdesktop_window_placement
     cfdesktop_desktop_widget
     cfdesktop_home_page
+    cfdesktop_notification            # NotificationService + banner + center
+    cfdesktop_control_center          # ControlCenter quick-settings popup
     Qt6::Core Qt6::Gui Qt6::Widgets
 )

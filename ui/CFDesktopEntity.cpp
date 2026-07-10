@@ -13,6 +13,7 @@
 #include "components/WindowManager.h"
 #include "components/builtin_apps/about_panel.h"
 #include "components/builtin_apps/builtin_panel_registry.h"
+#include "components/control_center/control_center.h"
 #include "components/desktop_icon_layer/desktop_icon_layer.h"
 #include "components/desktop_icon_layer/desktop_shortcut_store.h"
 #include "components/home_page/home_page.h"
@@ -21,6 +22,9 @@
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
 #include "components/launcher/desktop_entry_index.h"
+#include "components/notification/notification_banner.h"
+#include "components/notification/notification_center_panel.h"
+#include "components/notification/notification_service.h"
 #include "components/statusbar/status_bar.h"
 #include "components/taskbar/centered_taskbar.h"
 #include "components/window_placement/floating_policy.h"
@@ -530,6 +534,54 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                              app_launcher->popup(panel_mgr->availableGeometry());
                          }
                      });
+    // ── Control center + notification system ──
+    // NotificationService is a process singleton; force its construction.
+    auto& notification_svc = cf::desktop::desktop_component::NotificationService::instance();
+    auto* control_center = new cf::desktop::desktop_component::ControlCenter(desktop_entity_);
+    auto* notif_center =
+        new cf::desktop::desktop_component::NotificationCenterPanel(desktop_entity_);
+    auto* notif_banner = new cf::desktop::desktop_component::NotificationBanner(desktop_entity_);
+
+    // Status bar entries: click the clock / notification icon to toggle.
+    QObject::connect(status_bar, &cf::desktop::desktop_component::StatusBar::timeClicked, this,
+                     [control_center, panel_mgr]() {
+                         if (control_center->isShowing()) {
+                             control_center->hidePanel();
+                         } else {
+                             control_center->popup(panel_mgr->availableGeometry());
+                         }
+                     });
+    QObject::connect(status_bar, &cf::desktop::desktop_component::StatusBar::notifyIconClicked,
+                     this, [notif_center, panel_mgr]() {
+                         if (notif_center->isShowing()) {
+                             notif_center->hidePanel();
+                         } else {
+                             notif_center->popup(panel_mgr->availableGeometry());
+                         }
+                     });
+
+    // Banner shows for every non-suppressed post (DND off).
+    QObject::connect(&notification_svc,
+                     &cf::desktop::desktop_component::NotificationService::notificationPosted, this,
+                     [notif_banner, panel_mgr](
+                         const cf::desktop::desktop_component::Notification& n, bool suppressed) {
+                         if (!suppressed) {
+                             notif_banner->showFor(n, panel_mgr->availableGeometry());
+                         }
+                     });
+
+    // External apps deliver notifications over IPC; payload -> service.
+    QObject::connect(&cf::ipc::IPCServer::instance(), &cf::ipc::IPCServer::notifyReceived, this,
+                     [&notification_svc](const QJsonObject& payload) {
+                         cf::desktop::desktop_component::Notification n;
+                         n.title = payload.value("title").toString();
+                         n.message = payload.value("message").toString();
+                         n.app_id = payload.value("app_id").toString();
+                         notification_svc.post(n);
+                     });
+    // Outside-click dismissal is deferred (matches AppLauncher, which relies on
+    // ESC + the toggle entry). ESC closes either popup.
+
     taskbar->show();
     panel_mgr->relayout();
 
