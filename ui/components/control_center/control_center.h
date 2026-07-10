@@ -110,6 +110,18 @@ class ControlCenter : public QWidget {
      */
     bool isShowing() const noexcept;
 
+  signals:
+    /**
+     * @brief  Emitted when the Settings button is clicked.
+     *
+     * @throws     None
+     * @note       Wired to the SettingsWindow popup in CFDesktopEntity.
+     * @warning    None
+     * @since      0.19.0
+     * @ingroup    control_center
+     */
+    void settingsRequested();
+
   protected:
     /**
      * @brief  Paints the rounded Material surface background.
@@ -159,6 +171,8 @@ class ControlCenter : public QWidget {
     qw::widget::material::Button* screenshot_btn_{nullptr};
     /// @brief Test stub: posts a "Hello World" notification (end-to-end check).
     qw::widget::material::Button* test_notif_btn_{nullptr};
+    /// @brief Settings button (opens SettingsWindow; handled by the entity).
+    qw::widget::material::Button* settings_btn_{nullptr};
 
     qw::components::material::CFMaterialFadeAnimation* enter_fade_{nullptr};
     qw::components::material::CFMaterialSlideAnimation* enter_slide_{nullptr};

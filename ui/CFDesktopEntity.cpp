@@ -27,6 +27,7 @@
 #include "components/notification/notification_banner.h"
 #include "components/notification/notification_center_panel.h"
 #include "components/notification/notification_service.h"
+#include "components/settings/settings_window.h"
 #include "components/statusbar/status_bar.h"
 #include "components/taskbar/centered_taskbar.h"
 #include "components/window_placement/floating_policy.h"
@@ -562,6 +563,18 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                              notif_center->hidePanel();
                          } else {
                              notif_center->popup(panel_mgr->availableGeometry());
+                         }
+                     });
+
+    // Settings window, toggled from the control center's Settings button.
+    auto* settings_window = new cf::desktop::desktop_component::SettingsWindow(desktop_entity_);
+    QObject::connect(control_center,
+                     &cf::desktop::desktop_component::ControlCenter::settingsRequested, this,
+                     [settings_window, panel_mgr]() {
+                         if (settings_window->isShowing()) {
+                             settings_window->hidePanel();
+                         } else {
+                             settings_window->popup(panel_mgr->availableGeometry());
                          }
                      });
 

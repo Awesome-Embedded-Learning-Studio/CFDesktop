@@ -164,6 +164,17 @@ void ControlCenter::setupUi() {
         n.app_id = "org.cf.control_center";
         NotificationService::instance().post(n);
     });
+
+    // Settings entry: the entity owns the SettingsWindow and toggles it.
+    auto* settings_row = new QWidget(this);
+    auto* sh = new QHBoxLayout(settings_row);
+    sh->setContentsMargins(0, 0, 0, 0);
+    settings_btn_ =
+        new Button(QStringLiteral("Settings"), Button::ButtonVariant::Outlined, settings_row);
+    sh->addWidget(settings_btn_);
+    sh->addStretch(1);
+    root->addWidget(settings_row);
+    connect(settings_btn_, &QPushButton::clicked, this, [this]() { emit settingsRequested(); });
 }
 
 void ControlCenter::popup(const QRect& available) {
