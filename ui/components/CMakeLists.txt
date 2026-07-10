@@ -17,6 +17,7 @@ add_subdirectory(home_page)
 add_subdirectory(notification)
 add_subdirectory(control_center)
 add_subdirectory(crash_reporter)
+add_subdirectory(settings)
 
 # Create interface library for convenience
 add_library(cf_desktop_components STATIC)
@@ -53,5 +54,6 @@ PRIVATE
     cfdesktop_notification            # NotificationService + banner + center
     cfdesktop_control_center          # ControlCenter quick-settings popup
     cfdesktop_crash_reporter          # CrashReporter dialog + .seen marker
+    cfdesktop_settings                # SettingsWindow (wallpaper/theme/about)
     Qt6::Core Qt6::Gui Qt6::Widgets
 )
