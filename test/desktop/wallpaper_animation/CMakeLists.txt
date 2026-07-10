@@ -8,7 +8,7 @@ add_executable(wallpaper_animation_test
 )
 
 target_include_directories(wallpaper_animation_test PRIVATE
-    ${CMAKE_SOURCE_DIR}/desktop/ui/components
+    ${CMAKE_SOURCE_DIR}/test/config_manager
 )
 
 target_link_libraries(wallpaper_animation_test PRIVATE
