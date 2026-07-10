@@ -18,6 +18,7 @@
 
 #include "base/device_pixel.h"
 #include "cflog.h"
+#include "components/notification/notification_service.h"
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
 #include "core/token/typography/cfmaterial_typography_token_literals.h"
@@ -25,8 +26,10 @@
 #include <QDateTime>
 #include <QEasingCurve>
 #include <QLinearGradient>
+#include <QMouseEvent>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QPainterPath>
 #include <QTimer>
 #include <QVariantAnimation>
 
@@ -266,7 +269,8 @@ void StatusBar::paintEvent(QPaintEvent* /*event*/) {
     const qreal sideMargin = h.dpToPx(kSideMarginDp);
     const qreal iconSize = h.dpToPx(kIconSizeDp);
     const qreal iconGap = h.dpToPx(kIconGapDp);
-    const qreal clusterWidth = icons_visible_ ? (4 * iconSize + 3 * iconGap) : 0;
+    // 4 mask icons (Signal/Battery/Wifi/Volume) + 1 vector notification icon.
+    const qreal clusterWidth = icons_visible_ ? (5 * iconSize + 4 * iconGap) : 0;
     const qreal iconClusterLeft = width() - sideMargin - clusterWidth;
 
     if (time_visible_) {
@@ -312,6 +316,30 @@ void StatusBar::paintEvent(QPaintEvent* /*event*/) {
         drawStatusIcon(StatusIcon::Battery, x);
         x -= (iconSize + iconGap);
         drawStatusIcon(StatusIcon::Signal, x);
+        x -= (iconSize + iconGap);
+
+        // Notification icon: a vector bell + unread badge. Drawn as a path
+        // rather than a PNG mask so it needs no compiled resource.
+        const QRectF nbCell = cell(x);
+        const qreal cx = nbCell.center().x();
+        const qreal bw = iconSize * 0.72;
+        const qreal bh = iconSize * 0.72;
+        const qreal baseY = nbCell.center().y() + bh * 0.30;
+        p.setPen(Qt::NoPen);
+        p.setBrush(icon_color_);
+        QPainterPath bell;
+        bell.moveTo(cx - bw / 2, baseY);
+        bell.cubicTo(cx - bw / 2, baseY - bh, cx + bw / 2, baseY - bh, cx + bw / 2, baseY);
+        bell.lineTo(cx + bw / 2, baseY + bh * 0.05);
+        bell.lineTo(cx - bw / 2, baseY + bh * 0.05);
+        bell.closeSubpath();
+        p.drawPath(bell);
+        p.drawEllipse(QPointF(cx, baseY + bh * 0.16), bw * 0.09, bw * 0.09); // clapper
+        if (NotificationService::instance().count() > 0) {
+            p.setBrush(QColor(0xE2, 0x45, 0x45)); // unread red dot
+            p.drawEllipse(QPointF(nbCell.right() - 1, nbCell.top() + 1), iconSize * 0.20,
+                          iconSize * 0.20);
+        }
     }
 
     // In-band soft elevation shadow at the bottom seam (PanelManager locks the
@@ -334,6 +362,47 @@ void StatusBar::paintEvent(QPaintEvent* /*event*/) {
     hairline.setColorAt(1.0, lineEdge);
     p.setPen(QPen(hairline, h.dpToPx(1)));
     p.drawLine(QPointF(0, height() - h.dpToPx(0.5)), QPointF(width(), height() - h.dpToPx(0.5)));
+}
+
+void StatusBar::mousePressEvent(QMouseEvent* event) {
+    if (event->button() != Qt::LeftButton) {
+        QWidget::mousePressEvent(event);
+        return;
+    }
+    const CanvasUnitHelper h(devicePixelRatioF());
+    const qreal sideMargin = h.dpToPx(kSideMarginDp);
+    const qreal iconSize = h.dpToPx(kIconSizeDp);
+    const qreal iconGap = h.dpToPx(kIconGapDp);
+    // Mirror paintEvent's cluster geometry (5 cells now).
+    const qreal clusterWidth = icons_visible_ ? (5 * iconSize + 4 * iconGap) : 0;
+    const qreal iconClusterLeft = width() - sideMargin - clusterWidth;
+    const int sm = static_cast<int>(sideMargin);
+
+    // Notification icon is the leftmost cell of the cluster.
+    if (icons_visible_) {
+        const qreal y = (height() - iconSize) / 2.0;
+        const QRectF notifCell(iconClusterLeft, y, iconSize, iconSize);
+        if (notifCell.contains(event->pos())) {
+            emit notifyIconClicked();
+            return;
+        }
+    }
+
+    // Clock region. Centered style spans the full width; Split style ends
+    // just before the icon cluster (same rect paintEvent draws the time into).
+    if (time_visible_) {
+        if (style_ == StatusBarStyle::Centered) {
+            emit timeClicked();
+            return;
+        }
+        const qreal timeRight = iconClusterLeft - h.dpToPx(kTimeGapDp);
+        const QRect timeRect(sm, 0, static_cast<int>(timeRight) - sm, height());
+        if (timeRect.contains(event->pos())) {
+            emit timeClicked();
+            return;
+        }
+    }
+    QWidget::mousePressEvent(event);
 }
 
 } // namespace cf::desktop::desktop_component

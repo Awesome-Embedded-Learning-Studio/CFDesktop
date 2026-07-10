@@ -19,4 +19,5 @@ PRIVATE
     cfbase         # WeakPtr / WeakPtrFactory
     cflogger       # Diagnostic logging for icon-mask loading
     cfdesktop_frosted_backdrop  # Frosted-glass backdrop renderer
+    cfdesktop_notification       # Unread badge: NotificationService::count()
 )

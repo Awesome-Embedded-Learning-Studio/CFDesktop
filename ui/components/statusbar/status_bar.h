@@ -24,6 +24,7 @@
 #include <QPixmap>
 #include <QWidget>
 
+class QMouseEvent;
 class QTimer;
 
 namespace cf::desktop::desktop_component {
@@ -209,6 +210,29 @@ class StatusBar final : public QWidget, public IStatusBar {
      */
     aex::WeakPtr<StatusBar> GetWeak() const { return weak_factory_.GetWeakPtr(); }
 
+  signals:
+    /**
+     * @brief  Emitted when the clock region is clicked.
+     *
+     * @throws     None
+     * @note       Wired to the control center popup in CFDesktopEntity.
+     * @warning    None
+     * @since      0.19.0
+     * @ingroup    components
+     */
+    void timeClicked();
+
+    /**
+     * @brief  Emitted when the notification icon is clicked.
+     *
+     * @throws     None
+     * @note       Wired to the notification center popup in CFDesktopEntity.
+     * @warning    None
+     * @since      0.19.0
+     * @ingroup    components
+     */
+    void notifyIconClicked();
+
   protected:
     /**
      * @brief  Paints the background, clock, and icon glyphs.
@@ -222,6 +246,18 @@ class StatusBar final : public QWidget, public IStatusBar {
      * @ingroup components
      */
     void paintEvent(QPaintEvent* event) override;
+
+    /**
+     * @brief  Routes clicks on the clock / notification icon to signals.
+     *
+     * @param[in]  event  The mouse event descriptor.
+     * @throws     None
+     * @note       Hit geometry mirrors paintEvent's clock / icon layout.
+     * @warning    None
+     * @since      0.19.0
+     * @ingroup    components
+     */
+    void mousePressEvent(QMouseEvent* event) override;
 
   private slots:
     /// @brief Refreshes the clock text each second.
