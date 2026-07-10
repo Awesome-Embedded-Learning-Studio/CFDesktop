@@ -115,6 +115,15 @@ WallPaperEngine::WallPaperEngine(WallPaperLayer* layer, RequestTransition reques
     : QObject(parent), layer_(layer), request_(std::move(request)), timer_(this) {
     loadConfig();
     connect(&timer_, &QTimer::timeout, this, &WallPaperEngine::onTimerTick);
+    // Live reload: re-evaluate rotation whenever a wallpaper config key changes
+    // (the Settings window writes this domain).
+    config_watch_ = cf::config::ConfigStore::instance()
+                        .domain("wallpaper")
+                        .watch(
+                            "wallpaper.*",
+                            [this](const cf::config::Key&, const std::any*, const std::any*,
+                                   cf::config::Layer) { onConfigChanged(); },
+                            cf::config::NotifyPolicy::Immediate);
     log::traceftag(kLogTag, "Constructed: mode={} selector={} interval={}ms duration={}ms",
                    static_cast<int>(mode_), static_cast<int>(selector_), interval_ms_,
                    duration_ms_);
@@ -122,6 +131,9 @@ WallPaperEngine::WallPaperEngine(WallPaperLayer* layer, RequestTransition reques
 
 WallPaperEngine::~WallPaperEngine() {
     stop();
+    if (config_watch_ != 0) {
+        cf::config::ConfigStore::instance().domain("wallpaper").unwatch(config_watch_);
+    }
 }
 
 void WallPaperEngine::loadConfig() {
@@ -138,6 +150,12 @@ void WallPaperEngine::loadConfig() {
         cf::config::KeyView{.group = "wallpaper", .key = "switch_easing"}, "inoutcubic"));
     disable_animation_ = wp.query<bool>(
         cf::config::KeyView{.group = "wallpaper", .key = "disable_animation"}, false);
+}
+
+void WallPaperEngine::onConfigChanged() {
+    // start() reloads config and re-evaluates (disable/mode/size guards).
+    stop();
+    start();
 }
 
 void WallPaperEngine::start() {

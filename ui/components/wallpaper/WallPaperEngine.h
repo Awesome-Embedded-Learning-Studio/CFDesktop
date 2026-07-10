@@ -19,6 +19,7 @@
 
 #pragma once
 #include "WallPaperLayer.h"
+#include "cfconfig/cfconfig_watcher.h"
 #include "wallpaper/TransitionComposer.h"
 #include "wallpaper/WallPaperToken.h"
 
@@ -185,6 +186,9 @@ class WallPaperEngine : public QObject {
      */
     void loadConfig();
 
+    /// @brief Reloads config and re-evaluates rotation when the config changes.
+    void onConfigChanged();
+
     WallPaperLayer* layer_;
     RequestTransition request_;
     QTimer timer_;
@@ -194,6 +198,9 @@ class WallPaperEngine : public QObject {
     int duration_ms_{2000};
     QEasingCurve easing_{QEasingCurve::InOutCubic};
     bool disable_animation_{false};
+
+    /// @brief ConfigStore watcher handle for live wallpaper reload.
+    cf::config::WatcherHandle config_watch_{0};
 };
 
 } // namespace cf::desktop::wallpaper
