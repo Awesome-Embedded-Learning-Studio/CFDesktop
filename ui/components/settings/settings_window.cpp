@@ -318,14 +318,18 @@ QWidget* SettingsWindow::buildThemeTab() {
 
     auto* card = makeCard(QStringLiteral("Theme"),
                           QStringLiteral("Switch the active Material theme. The active one is "
-                                         "disabled so you can tell which is current."),
+                                         "highlighted (filled); both stay clickable."),
                           tab);
     using qw::widget::material::Button;
-    auto* light_btn = new Button(QStringLiteral("Light"), Button::ButtonVariant::Tonal, card);
-    auto* dark_btn = new Button(QStringLiteral("Dark"), Button::ButtonVariant::Tonal, card);
-    // Dim/disable the currently active one as a "you are here" indicator.
-    light_btn->setEnabled(dark);
-    dark_btn->setEnabled(!dark);
+    // Filled = current (highlighted), Tonal = the other. Both stay enabled —
+    // disabling the current one made it unclickable, so toggling back felt
+    // broken ("theme switch did nothing").
+    auto* light_btn =
+        new Button(QStringLiteral("Light"),
+                   dark ? Button::ButtonVariant::Tonal : Button::ButtonVariant::Filled, card);
+    auto* dark_btn =
+        new Button(QStringLiteral("Dark"),
+                   dark ? Button::ButtonVariant::Filled : Button::ButtonVariant::Tonal, card);
     auto* row = new QWidget(card);
     auto* h = new QHBoxLayout(row);
     h->setContentsMargins(0, 0, 0, 0);
@@ -333,20 +337,19 @@ QWidget* SettingsWindow::buildThemeTab() {
     h->addWidget(dark_btn);
     h->addStretch(1);
     card->layout()->addWidget(row);
-    layout->addWidget(card);
+    layout->addWidget(card, 1);
 
     connect(light_btn, &QPushButton::clicked, tab, [light_btn, dark_btn]() {
         qw::core::ThemeManager::instance().setThemeTo("light");
-        light_btn->setEnabled(false);
-        dark_btn->setEnabled(true);
+        light_btn->setVariant(Button::ButtonVariant::Filled);
+        dark_btn->setVariant(Button::ButtonVariant::Tonal);
     });
     connect(dark_btn, &QPushButton::clicked, tab, [light_btn, dark_btn]() {
         qw::core::ThemeManager::instance().setThemeTo("dark");
-        dark_btn->setEnabled(false);
-        light_btn->setEnabled(true);
+        dark_btn->setVariant(Button::ButtonVariant::Filled);
+        light_btn->setVariant(Button::ButtonVariant::Tonal);
     });
 
-    layout->addStretch(1);
     return tab;
 }
 
@@ -369,9 +372,13 @@ QWidget* SettingsWindow::buildAboutTab() {
         "<p><a style='color:#1abc9c;' href='https://github.com/Charliechen114514/CFDesktop'>"
         "github.com/Charliechen114514/CFDesktop</a></p>"));
     rich->setWordWrap(true);
-    card->layout()->addWidget(rich);
-    layout->addWidget(card);
-    layout->addStretch(1);
+    // Center the text vertically inside the card; the card itself fills the tab.
+    // makeCard() builds a QVBoxLayout, so the cast is safe.
+    auto* card_layout = static_cast<QVBoxLayout*>(card->layout());
+    card_layout->addStretch(1);
+    card_layout->addWidget(rich);
+    card_layout->addStretch(2);
+    layout->addWidget(card, 1);
     return tab;
 }
 
