@@ -23,13 +23,16 @@
 #include "ui/widget/material/widget/switch/switch.h"
 #include "ui/widget/material/widget/tabview/tabview.h"
 
+#include <QButtonGroup>
 #include <QGuiApplication>
 #include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QPainter>
 #include <QPainterPath>
+#include <QRadioButton>
 #include <QScreen>
+#include <QScrollArea>
 #include <QSlider>
 #include <QVBoxLayout>
 
@@ -41,10 +44,27 @@ using namespace qw::core::token::literals;
 
 namespace {
 constexpr int kWindowWidth = 720;  ///< Window width (px).
-constexpr int kWindowHeight = 520; ///< Window height (px).
+constexpr int kWindowHeight = 560; ///< Window height (px).
 constexpr qreal kRadius = 16.0;    ///< Corner radius (px).
 constexpr int kEnterSlidePx = 24;  ///< Enter/exit slide distance (px).
 constexpr const char* kLogTag = "SettingsWindow";
+
+/// @brief Card QSS: a rounded gradient surface (mirrors the home-page gadget
+/// cards; deliberately not bound to the live theme, matching that style).
+constexpr const char* kCardQss = "QWidget { background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
+                                 " stop:0 #5D6D7E, stop:1 #2C3E50); border-radius: 12px; }";
+constexpr const char* kTitleQss = "color: white; font-weight: bold; font-size: 13px;"
+                                  " background: transparent; border: none;";
+constexpr const char* kValueQss = "color: #1abc9c; font-size: 12px;"
+                                  " background: transparent; border: none;";
+constexpr const char* kHintQss = "color: #bdc3c7; font-size: 11px;"
+                                 " background: transparent; border: none;";
+constexpr const char* kRadioQss = "color: white; background: transparent; border: none;";
+constexpr const char* kTabQss =
+    "QTabWidget::pane { border: none; background: transparent; top: 0px; }"
+    "QTabBar::tab { background: #E5E1E8; color: #2C3E50; padding: 8px 20px;"
+    "  border-top-left-radius: 8px; border-top-right-radius: 8px; margin: 0 2px; }"
+    "QTabBar::tab::selected { background: #6750A4; color: white; }";
 
 /// @brief Writes one wallpaper config key (User layer, immediate notify).
 void setWallpaperKey(const char* key, auto&& value) {
@@ -54,6 +74,39 @@ void setWallpaperKey(const char* key, auto&& value) {
         .set(cfg::KeyView{.group = "wallpaper", .key = key}, value, cfg::Layer::User,
              cfg::NotifyPolicy::Immediate);
     cf::config::ConfigStore::instance().sync();
+}
+
+/// @brief Reads one wallpaper config key with a default.
+template <typename T> T wallpaperKey(const char* key, T fallback) {
+    return cf::config::ConfigStore::instance()
+        .domain("wallpaper")
+        .query<T>(cf::config::KeyView{.group = "wallpaper", .key = key}, fallback);
+}
+
+/// @brief Builds an empty titled card; caller adds child widgets to its layout.
+QWidget* makeCard(const QString& title, const QString& hint, QWidget* parent) {
+    auto* card = new QWidget(parent);
+    card->setStyleSheet(QString::fromLatin1(kCardQss));
+    auto* layout = new QVBoxLayout(card);
+    layout->setContentsMargins(16, 12, 16, 12);
+    layout->setSpacing(6);
+    auto* t = new QLabel(title, card);
+    t->setStyleSheet(QString::fromLatin1(kTitleQss));
+    layout->addWidget(t);
+    if (!hint.isEmpty()) {
+        auto* h = new QLabel(hint, card);
+        h->setStyleSheet(QString::fromLatin1(kHintQss));
+        h->setWordWrap(true);
+        layout->addWidget(h);
+    }
+    return card;
+}
+
+/// @brief Styles a value label that mirrors a slider's current value.
+QLabel* makeValueLabel(QWidget* parent, int ms) {
+    auto* label = new QLabel(QString::number(ms) + QStringLiteral(" ms"), parent);
+    label->setStyleSheet(QString::fromLatin1(kValueQss));
+    return label;
 }
 } // namespace
 
@@ -80,10 +133,11 @@ SettingsWindow::~SettingsWindow() = default;
 
 void SettingsWindow::setupUi() {
     auto* root = new QVBoxLayout(this);
-    root->setContentsMargins(0, 0, 0, 0);
-    root->setSpacing(0);
+    root->setContentsMargins(12, 12, 12, 12);
+    root->setSpacing(8);
 
     auto* tabs = new qw::widget::material::TabView(this);
+    tabs->setStyleSheet(QString::fromLatin1(kTabQss));
     tabs->addTab(buildWallpaperTab(), QStringLiteral("Wallpaper"));
     tabs->addTab(buildThemeTab(), QStringLiteral("Theme"));
     tabs->addTab(buildAboutTab(), QStringLiteral("About"));
@@ -93,78 +147,204 @@ void SettingsWindow::setupUi() {
 QWidget* SettingsWindow::buildWallpaperTab() {
     auto* tab = new QWidget(this);
     auto* layout = new QVBoxLayout(tab);
-    layout->setContentsMargins(16, 16, 16, 16);
-    layout->setSpacing(12);
+    layout->setContentsMargins(8, 8, 8, 8);
+    layout->setSpacing(10);
 
-    namespace cfg = cf::config;
-    auto domain = cf::config::ConfigStore::instance().domain("wallpaper");
+    // --- Animation enabled (disable_animation) ---
+    {
+        auto* card = makeCard(QStringLiteral("Animation"),
+                              QStringLiteral("Auto-switch the wallpaper on a timer."), tab);
+        auto* row = new QWidget(card);
+        auto* h = new QHBoxLayout(row);
+        h->setContentsMargins(0, 0, 0, 0);
+        auto* sw = new qw::widget::material::Switch(QStringLiteral("Enabled"), row);
+        sw->setChecked(!wallpaperKey<bool>("disable_animation", false));
+        h->addWidget(sw);
+        h->addStretch(1);
+        card->layout()->addWidget(row);
+        connect(sw, &QCheckBox::toggled, tab, [](bool on) {
+            setWallpaperKey("disable_animation", !on);
+            cf::log::infoftag(kLogTag, "wallpaper disable_animation -> {} (applies next start)",
+                              !on);
+        });
+        layout->addWidget(card);
+    }
 
-    // Animation enabled = NOT disable_animation. Live wallpaper reload is the
-    // engine's job; settings only persist. Values apply on next engine start.
-    auto* anim = new qw::widget::material::Switch(QStringLiteral("Animation enabled"), tab);
-    anim->setChecked(
-        !domain.query<bool>(cfg::KeyView{.group = "wallpaper", .key = "disable_animation"}, false));
-    layout->addWidget(anim);
-    connect(anim, &QCheckBox::toggled, tab, [](bool on) {
-        setWallpaperKey("disable_animation", !on);
-        cf::log::infoftag(kLogTag, "wallpaper disable_animation -> {} (applies next start)", !on);
-    });
+    // --- Switch interval (switch_interval_ms) ---
+    {
+        const int cur = wallpaperKey<int>("switch_interval_ms", 20000);
+        auto* card =
+            makeCard(QStringLiteral("Switch interval"),
+                     QStringLiteral("How long each wallpaper stays before switching."), tab);
+        auto* row = new QWidget(card);
+        auto* h = new QHBoxLayout(row);
+        h->setContentsMargins(0, 0, 0, 0);
+        auto* value = makeValueLabel(row, cur);
+        auto* slider = new qw::widget::material::Slider(Qt::Horizontal, row);
+        slider->setRange(2000, 60000);
+        slider->setSingleStep(1000);
+        slider->setValue(cur);
+        h->addWidget(value, 0);
+        h->addWidget(slider, 1);
+        card->layout()->addWidget(row);
+        connect(slider, &QSlider::valueChanged, tab, [value](int v) {
+            value->setText(QString::number(v) + QStringLiteral(" ms"));
+            setWallpaperKey("switch_interval_ms", v);
+        });
+        layout->addWidget(card);
+    }
 
-    // Switch interval slider (2-60 s).
-    auto* irow = new QWidget(tab);
-    auto* ih = new QHBoxLayout(irow);
-    ih->setContentsMargins(0, 0, 0, 0);
-    auto* ilab = new QLabel(QStringLiteral("Switch interval"), irow);
-    ilab->setMinimumWidth(130);
-    auto* isld = new qw::widget::material::Slider(Qt::Horizontal, irow);
-    isld->setRange(2000, 60000);
-    isld->setSingleStep(1000);
-    isld->setValue(
-        domain.query<int>(cfg::KeyView{.group = "wallpaper", .key = "switch_interval_ms"}, 20000));
-    ih->addWidget(ilab);
-    ih->addWidget(isld, 1);
-    layout->addWidget(irow);
-    connect(isld, &QSlider::valueChanged, tab,
-            [](int v) { setWallpaperKey("switch_interval_ms", v); });
+    // --- Transition duration (animation_duration_ms) ---
+    {
+        const int cur = wallpaperKey<int>("animation_duration_ms", 2000);
+        auto* card = makeCard(QStringLiteral("Transition duration"),
+                              QStringLiteral("Fade/move length when switching wallpapers."), tab);
+        auto* row = new QWidget(card);
+        auto* h = new QHBoxLayout(row);
+        h->setContentsMargins(0, 0, 0, 0);
+        auto* value = makeValueLabel(row, cur);
+        auto* slider = new qw::widget::material::Slider(Qt::Horizontal, row);
+        slider->setRange(200, 5000);
+        slider->setSingleStep(100);
+        slider->setValue(cur);
+        h->addWidget(value, 0);
+        h->addWidget(slider, 1);
+        card->layout()->addWidget(row);
+        connect(slider, &QSlider::valueChanged, tab, [value](int v) {
+            value->setText(QString::number(v) + QStringLiteral(" ms"));
+            setWallpaperKey("animation_duration_ms", v);
+        });
+        layout->addWidget(card);
+    }
 
-    // Transition duration slider (200-5000 ms).
-    auto* drow = new QWidget(tab);
-    auto* dh = new QHBoxLayout(drow);
-    dh->setContentsMargins(0, 0, 0, 0);
-    auto* dlab = new QLabel(QStringLiteral("Transition duration"), drow);
-    dlab->setMinimumWidth(130);
-    auto* dsld = new qw::widget::material::Slider(Qt::Horizontal, drow);
-    dsld->setRange(200, 5000);
-    dsld->setSingleStep(100);
-    dsld->setValue(domain.query<int>(
-        cfg::KeyView{.group = "wallpaper", .key = "animation_duration_ms"}, 2000));
-    dh->addWidget(dlab);
-    dh->addWidget(dsld, 1);
-    layout->addWidget(drow);
-    connect(dsld, &QSlider::valueChanged, tab,
-            [](int v) { setWallpaperKey("animation_duration_ms", v); });
+    // --- Switch mode (switch_mode: fixed/gradient/movement) ---
+    {
+        const QString cur =
+            QString::fromStdString(wallpaperKey<std::string>("switch_mode", "movement"));
+        auto* card = makeCard(QStringLiteral("Switch mode"),
+                              QStringLiteral("fixed = no switch; gradient = cross-fade;"
+                                             " movement = pan."),
+                              tab);
+        auto* group = new QButtonGroup(card);
+        for (const QString& m :
+             {QStringLiteral("fixed"), QStringLiteral("gradient"), QStringLiteral("movement")}) {
+            auto* rb = new QRadioButton(m, card);
+            rb->setStyleSheet(QString::fromLatin1(kRadioQss));
+            rb->setChecked(m == cur);
+            group->addButton(rb);
+            card->layout()->addWidget(rb);
+        }
+        connect(group, &QButtonGroup::idClicked, tab, [group](int) {
+            auto* rb = qobject_cast<QRadioButton*>(group->checkedButton());
+            if (rb != nullptr) {
+                setWallpaperKey("switch_mode", rb->text().toStdString());
+            }
+        });
+        layout->addWidget(card);
+    }
+
+    // --- Selector (switch_selector: sequential/random) ---
+    {
+        const QString cur =
+            QString::fromStdString(wallpaperKey<std::string>("switch_selector", "sequential"));
+        auto* card =
+            makeCard(QStringLiteral("Order"), QStringLiteral("sequential or random."), tab);
+        auto* group = new QButtonGroup(card);
+        for (const QString& m : {QStringLiteral("sequential"), QStringLiteral("random")}) {
+            auto* rb = new QRadioButton(m, card);
+            rb->setStyleSheet(QString::fromLatin1(kRadioQss));
+            rb->setChecked(m == cur);
+            group->addButton(rb);
+            card->layout()->addWidget(rb);
+        }
+        connect(group, &QButtonGroup::idClicked, tab, [group](int) {
+            auto* rb = qobject_cast<QRadioButton*>(group->checkedButton());
+            if (rb != nullptr) {
+                setWallpaperKey("switch_selector", rb->text().toStdString());
+            }
+        });
+        layout->addWidget(card);
+    }
+
+    // --- Easing (switch_easing: inoutcubic/outcubic/linear) ---
+    {
+        const QString cur =
+            QString::fromStdString(wallpaperKey<std::string>("switch_easing", "inoutcubic"));
+        auto* card = makeCard(QStringLiteral("Easing"),
+                              QStringLiteral("inoutcubic / outcubic / linear."), tab);
+        auto* group = new QButtonGroup(card);
+        for (const QString& m :
+             {QStringLiteral("inoutcubic"), QStringLiteral("outcubic"), QStringLiteral("linear")}) {
+            auto* rb = new QRadioButton(m, card);
+            rb->setStyleSheet(QString::fromLatin1(kRadioQss));
+            rb->setChecked(m == cur);
+            group->addButton(rb);
+            card->layout()->addWidget(rb);
+        }
+        connect(group, &QButtonGroup::idClicked, tab, [group](int) {
+            auto* rb = qobject_cast<QRadioButton*>(group->checkedButton());
+            if (rb != nullptr) {
+                setWallpaperKey("switch_easing", rb->text().toStdString());
+            }
+        });
+        layout->addWidget(card);
+    }
 
     layout->addStretch(1);
-    return tab;
+
+    // Wrap in a scroll area: six cards can exceed the window height.
+    auto* scroll = new QScrollArea(this);
+    scroll->setWidgetResizable(true);
+    scroll->setWidget(tab);
+    scroll->setFrameShape(QFrame::NoFrame);
+    scroll->setAttribute(Qt::WA_TranslucentBackground, true);
+    return scroll;
 }
 
 QWidget* SettingsWindow::buildThemeTab() {
     auto* tab = new QWidget(this);
     auto* layout = new QVBoxLayout(tab);
-    layout->setContentsMargins(16, 16, 16, 16);
-    layout->setSpacing(12);
+    layout->setContentsMargins(8, 8, 8, 8);
+    layout->setSpacing(10);
 
+    QString current_name;
+    try {
+        current_name =
+            QString::fromStdString(qw::core::ThemeManager::instance().currentThemeName());
+    } catch (...) {
+        current_name = QStringLiteral("light");
+    }
+    const bool dark = current_name == QStringLiteral("dark");
+
+    auto* card = makeCard(QStringLiteral("Theme"),
+                          QStringLiteral("Switch the active Material theme. The active one is "
+                                         "disabled so you can tell which is current."),
+                          tab);
     using qw::widget::material::Button;
-    auto* light_btn = new Button(QStringLiteral("Light"), Button::ButtonVariant::Tonal, tab);
-    auto* dark_btn = new Button(QStringLiteral("Dark"), Button::ButtonVariant::Tonal, tab);
-    layout->addWidget(light_btn);
-    layout->addWidget(dark_btn);
+    auto* light_btn = new Button(QStringLiteral("Light"), Button::ButtonVariant::Tonal, card);
+    auto* dark_btn = new Button(QStringLiteral("Dark"), Button::ButtonVariant::Tonal, card);
+    // Dim/disable the currently active one as a "you are here" indicator.
+    light_btn->setEnabled(dark);
+    dark_btn->setEnabled(!dark);
+    auto* row = new QWidget(card);
+    auto* h = new QHBoxLayout(row);
+    h->setContentsMargins(0, 0, 0, 0);
+    h->addWidget(light_btn);
+    h->addWidget(dark_btn);
+    h->addStretch(1);
+    card->layout()->addWidget(row);
+    layout->addWidget(card);
 
-    // Live: ThemeManager broadcasts themeChanged, so every panel re-themes.
-    connect(light_btn, &QPushButton::clicked, tab,
-            []() { qw::core::ThemeManager::instance().setThemeTo("light"); });
-    connect(dark_btn, &QPushButton::clicked, tab,
-            []() { qw::core::ThemeManager::instance().setThemeTo("dark"); });
+    connect(light_btn, &QPushButton::clicked, tab, [light_btn, dark_btn]() {
+        qw::core::ThemeManager::instance().setThemeTo("light");
+        light_btn->setEnabled(false);
+        dark_btn->setEnabled(true);
+    });
+    connect(dark_btn, &QPushButton::clicked, tab, [light_btn, dark_btn]() {
+        qw::core::ThemeManager::instance().setThemeTo("dark");
+        dark_btn->setEnabled(false);
+        light_btn->setEnabled(true);
+    });
 
     layout->addStretch(1);
     return tab;
@@ -173,14 +353,24 @@ QWidget* SettingsWindow::buildThemeTab() {
 QWidget* SettingsWindow::buildAboutTab() {
     auto* tab = new QWidget(this);
     auto* layout = new QVBoxLayout(tab);
-    layout->setContentsMargins(16, 16, 16, 16);
-    auto* label = new QLabel(QStringLiteral("CFDesktop v0.19.0\n\n"
-                                            "Cross-platform Desktop Environment Framework\n"
-                                            "C++23 / Qt 6.8 / Material Design 3\n\n"
-                                            "github.com/Charliechen114514/CFDesktop"),
-                             tab);
-    label->setWordWrap(true);
-    layout->addWidget(label);
+    layout->setContentsMargins(8, 8, 8, 8);
+    layout->setSpacing(10);
+
+    auto* card = makeCard(QStringLiteral("About"), QString(), tab);
+    auto* rich = new QLabel(card);
+    rich->setTextFormat(Qt::RichText);
+    rich->setOpenExternalLinks(true);
+    rich->setStyleSheet("color: white; font-size: 13px; background: transparent; border: none;");
+    rich->setText(QStringLiteral(
+        "<p style='font-size:18px; font-weight:600;'>CFDesktop</p>"
+        "<p>Version 0.19.0</p>"
+        "<p>Cross-platform Desktop Environment Framework<br>"
+        "C++23 / Qt 6.8 / Material Design 3</p>"
+        "<p><a style='color:#1abc9c;' href='https://github.com/Charliechen114514/CFDesktop'>"
+        "github.com/Charliechen114514/CFDesktop</a></p>"));
+    rich->setWordWrap(true);
+    card->layout()->addWidget(rich);
+    layout->addWidget(card);
     layout->addStretch(1);
     return tab;
 }

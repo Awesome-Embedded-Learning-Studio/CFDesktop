@@ -136,7 +136,7 @@ void CrashReporterDialog::loadCrash() {
         for (const auto& v : raw) {
             body += QStringLiteral("  %1\n").arg(v.toString());
         }
-        body += QStringLiteral("  (not symbolized)\n");
+        body += QStringLiteral("  (runtime addresses — full symbolization deferred; see docs)\n");
     }
     body += QStringLiteral("\nLast logs:\n");
     const QJsonArray logs = o.value("last_logs").toArray();
