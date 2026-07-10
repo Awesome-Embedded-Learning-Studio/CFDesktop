@@ -157,6 +157,8 @@ class ControlCenter : public QWidget {
     qw::widget::material::Button* theme_btn_{nullptr};
     /// @brief Screenshot placeholder button.
     qw::widget::material::Button* screenshot_btn_{nullptr};
+    /// @brief Test stub: posts a "Hello World" notification (end-to-end check).
+    qw::widget::material::Button* test_notif_btn_{nullptr};
 
     qw::components::material::CFMaterialFadeAnimation* enter_fade_{nullptr};
     qw::components::material::CFMaterialSlideAnimation* enter_slide_{nullptr};

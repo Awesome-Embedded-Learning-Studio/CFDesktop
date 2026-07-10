@@ -145,6 +145,25 @@ void ControlCenter::setupUi() {
     });
     connect(screenshot_btn_, &QPushButton::clicked, this,
             []() { cf::log::infoftag(kLogTag, "screenshot requested (placeholder)"); });
+
+    // Test stub: posts a "Hello World" notification so the banner + center can
+    // be exercised end-to-end without an IPC client. Drop once real producers
+    // arrive.
+    auto* testRow = new QWidget(this);
+    auto* th = new QHBoxLayout(testRow);
+    th->setContentsMargins(0, 0, 0, 0);
+    test_notif_btn_ = new Button(QStringLiteral("Send test notification"),
+                                 Button::ButtonVariant::Filled, testRow);
+    th->addWidget(test_notif_btn_);
+    th->addStretch(1);
+    root->addWidget(testRow);
+    connect(test_notif_btn_, &QPushButton::clicked, this, []() {
+        Notification n;
+        n.title = "Hello World";
+        n.message = "Test notification from the control center";
+        n.app_id = "org.cf.control_center";
+        NotificationService::instance().post(n);
+    });
 }
 
 void ControlCenter::popup(const QRect& available) {
@@ -155,7 +174,10 @@ void ControlCenter::popup(const QRect& available) {
         }
     }
     const int w = kPanelWidth;
-    const int h = kPanelHeight;
+    // Height follows the layout so switches / buttons are never clipped (a
+    // fixed 360 px left the bottom row cut off). Bounded to the work area.
+    layout()->activate();
+    const int h = std::min(layout()->sizeHint().height(), avail.height() - kSideMargin * 2);
     const int x = avail.right() - w - kSideMargin;
     const int y = avail.top() + kSideMargin;
     setGeometry(x, y, w, h);
