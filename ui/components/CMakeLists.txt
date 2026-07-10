@@ -15,6 +15,7 @@ add_subdirectory(builtin_apps)
 add_subdirectory(desktop_widget)
 add_subdirectory(home_page)
 add_subdirectory(notification)
+add_subdirectory(control_center)
 
 # Create interface library for convenience
 add_library(cf_desktop_components STATIC)
