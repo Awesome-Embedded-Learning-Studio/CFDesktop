@@ -12,6 +12,7 @@
 #include "cfcrash/crash_handler.h"
 
 #include "cfcrash/crash_report.h"
+#include "cfcrash/symbolizer.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -129,7 +130,8 @@ void CrashHandler::uninstall() {
 }
 
 std::size_t CrashHandler::finalizePendingReports(const std::string& logger_path,
-                                                 std::size_t tail_lines) {
+                                                 std::size_t tail_lines,
+                                                 const std::string& exe_path) {
     if (crashes_dir_.empty()) {
         return 0;
     }
@@ -153,6 +155,10 @@ std::size_t CrashHandler::finalizePendingReports(const std::string& logger_path,
         // fall back to the caller-supplied path for snapshots without one.
         const std::string effective_logger = pending_logger.empty() ? logger_path : pending_logger;
         report.last_logs = tailLines(effective_logger, tail_lines);
+        // Phase 2: symbolize raw addresses against the running executable.
+        if (!exe_path.empty()) {
+            report.resolved_frames = resolveFrames(report.raw_frames, exe_path);
+        }
 
         const auto out_path = fs::path(crashes_dir_) / (stem + ".json");
         std::ofstream of(out_path);

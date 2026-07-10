@@ -38,3 +38,12 @@ add_gtest_executable(
     LOG_MODULE     crash_tests
     INCLUDE_DIRS   ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+add_gtest_executable(
+    TEST_NAME      crash_symbolizer_test
+    SOURCE_FILE    crash_symbolizer_test.cpp
+    LINK_LIBRARIES cfcrash;GTest::gtest;GTest::gtest_main
+    LABELS         "crash;unit;symbolizer"
+    LOG_MODULE     crash_tests
+    INCLUDE_DIRS   ${CMAKE_CURRENT_SOURCE_DIR}
+)

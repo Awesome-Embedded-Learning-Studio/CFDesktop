@@ -64,6 +64,26 @@ std::string toJsonArray(const std::vector<std::string>& v) {
     return out;
 }
 
+/// @brief Renders resolved frames as a pretty JSON object array (one/line).
+std::string toJsonResolvedArray(const std::vector<ResolvedFrame>& v) {
+    if (v.empty()) {
+        return "[]";
+    }
+    std::string out = "[";
+    for (std::size_t i = 0; i < v.size(); ++i) {
+        out += "\n    {\"function\": \"";
+        out += escapeJson(v[i].function);
+        out += "\", \"file\": \"";
+        out += escapeJson(v[i].file);
+        out += "\", \"line\": \"";
+        out += escapeJson(v[i].line);
+        out += "\"}";
+        out += (i + 1 == v.size()) ? "" : ",";
+    }
+    out += "\n  ]";
+    return out;
+}
+
 } // namespace
 
 std::string CrashReport::toJson() const {
@@ -74,6 +94,8 @@ std::string CrashReport::toJson() const {
     out += std::format("  \"signal_name\": \"{}\",\n", escapeJson(signal_name));
     out += "  \"raw_frames\": ";
     out += toJsonArray(raw_frames);
+    out += ",\n  \"resolved_frames\": ";
+    out += toJsonResolvedArray(resolved_frames);
     out += ",\n  \"last_logs\": ";
     out += toJsonArray(last_logs);
     out += '\n';
