@@ -307,40 +307,41 @@ QWidget* SettingsWindow::buildWallpaperTab() {
 QWidget* SettingsWindow::buildThemeTab() {
     auto* tab = new QWidget(this);
     auto* layout = new QVBoxLayout(tab);
-    layout->setContentsMargins(8, 8, 8, 8);
-    layout->setSpacing(10);
+    layout->setContentsMargins(24, 24, 24, 24);
+    layout->setSpacing(20);
 
     QString current_name;
     try {
         current_name =
             QString::fromStdString(qw::core::ThemeManager::instance().currentThemeName());
     } catch (...) {
-        current_name = QStringLiteral("light");
+        current_name = QString::fromLatin1(MATERIAL_THEME_LIGHT);
     }
     const bool dark = current_name == QString::fromLatin1(MATERIAL_THEME_DARK);
 
-    auto* card = makeCard(QStringLiteral("Theme"),
-                          QStringLiteral("Switch the active Material theme. The active one is "
-                                         "highlighted (filled); both stay clickable."),
-                          tab);
+    // One big title (no card). No explicit color: QLabel uses WindowText from
+    // the app palette, which the entity syncs to the theme, so it reads on
+    // both light and dark.
+    auto* title = new QLabel(QStringLiteral("Theme"), tab);
+    title->setStyleSheet(
+        "font-size: 32px; font-weight: 600; background: transparent; border: none;");
+    layout->addWidget(title);
+
     using qw::widget::material::Button;
-    // Filled = current (highlighted), Tonal = the other. Both stay enabled —
-    // disabling the current one made it unclickable, so toggling back felt
-    // broken ("theme switch did nothing").
-    auto* light_btn =
-        new Button(QStringLiteral("Light"),
-                   dark ? Button::ButtonVariant::Tonal : Button::ButtonVariant::Filled, card);
-    auto* dark_btn =
-        new Button(QStringLiteral("Dark"),
-                   dark ? Button::ButtonVariant::Filled : Button::ButtonVariant::Tonal, card);
-    auto* row = new QWidget(card);
+    auto* row = new QWidget(tab);
     auto* h = new QHBoxLayout(row);
     h->setContentsMargins(0, 0, 0, 0);
+    auto* light_btn =
+        new Button(QStringLiteral("Light"),
+                   dark ? Button::ButtonVariant::Tonal : Button::ButtonVariant::Filled, row);
+    auto* dark_btn =
+        new Button(QStringLiteral("Dark"),
+                   dark ? Button::ButtonVariant::Filled : Button::ButtonVariant::Tonal, row);
     h->addWidget(light_btn);
     h->addWidget(dark_btn);
     h->addStretch(1);
-    card->layout()->addWidget(row);
-    layout->addWidget(card, 1);
+    layout->addWidget(row);
+    layout->addStretch(1);
 
     connect(light_btn, &QPushButton::clicked, tab, [light_btn, dark_btn]() {
         qw::core::ThemeManager::instance().setThemeTo(MATERIAL_THEME_LIGHT);
