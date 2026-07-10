@@ -366,9 +366,9 @@ QWidget* SettingsWindow::buildAboutTab() {
     auto* rich = new QLabel(card);
     rich->setTextFormat(Qt::RichText);
     rich->setOpenExternalLinks(true);
-    rich->setStyleSheet("color: white; font-size: 15px; background: transparent; border: none;");
+    rich->setStyleSheet("color: white; font-size: 20px; background: transparent; border: none;");
     rich->setText(QStringLiteral(
-        "<p style='font-size:22px; font-weight:600;'>CFDesktop</p>"
+        "<p style='font-size:32px; font-weight:600;'>CFDesktop</p>"
         "<p>Version 0.19.0</p>"
         "<p>Cross-platform Desktop Environment Framework<br>"
         "C++23 / Qt 6.8 / Material Design 3</p>"
