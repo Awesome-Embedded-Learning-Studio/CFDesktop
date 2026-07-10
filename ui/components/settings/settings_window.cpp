@@ -54,17 +54,19 @@ constexpr const char* kLogTag = "SettingsWindow";
 /// cards; deliberately not bound to the live theme, matching that style).
 constexpr const char* kCardQss = "QWidget { background: qlineargradient(x1:0, y1:0, x2:0, y2:1,"
                                  " stop:0 #5D6D7E, stop:1 #2C3E50); border-radius: 12px; }";
-constexpr const char* kTitleQss = "color: white; font-weight: bold; font-size: 13px;"
+constexpr const char* kTitleQss = "color: white; font-weight: bold; font-size: 16px;"
                                   " background: transparent; border: none;";
-constexpr const char* kValueQss = "color: #1abc9c; font-size: 12px;"
+constexpr const char* kValueQss = "color: #1abc9c; font-size: 14px;"
                                   " background: transparent; border: none;";
-constexpr const char* kHintQss = "color: #bdc3c7; font-size: 11px;"
+constexpr const char* kHintQss = "color: #bdc3c7; font-size: 13px;"
                                  " background: transparent; border: none;";
-constexpr const char* kRadioQss = "color: white; background: transparent; border: none;";
+constexpr const char* kRadioQss = "color: white; font-size: 14px;"
+                                  " background: transparent; border: none;";
 constexpr const char* kTabQss =
     "QTabWidget::pane { border: none; background: transparent; top: 0px; }"
-    "QTabBar::tab { background: #E5E1E8; color: #2C3E50; padding: 8px 20px;"
-    "  border-top-left-radius: 8px; border-top-right-radius: 8px; margin: 0 2px; }"
+    "QTabBar::tab { background: #E5E1E8; color: #2C3E50; padding: 10px 24px;"
+    "  font-size: 14px; border-top-left-radius: 8px; border-top-right-radius: 8px;"
+    "  margin: 0 2px; }"
     "QTabBar::tab::selected { background: #6750A4; color: white; }";
 
 /// @brief Writes one wallpaper config key (User layer, immediate notify).
@@ -364,9 +366,9 @@ QWidget* SettingsWindow::buildAboutTab() {
     auto* rich = new QLabel(card);
     rich->setTextFormat(Qt::RichText);
     rich->setOpenExternalLinks(true);
-    rich->setStyleSheet("color: white; font-size: 13px; background: transparent; border: none;");
+    rich->setStyleSheet("color: white; font-size: 15px; background: transparent; border: none;");
     rich->setText(QStringLiteral(
-        "<p style='font-size:18px; font-weight:600;'>CFDesktop</p>"
+        "<p style='font-size:22px; font-weight:600;'>CFDesktop</p>"
         "<p>Version 0.19.0</p>"
         "<p>Cross-platform Desktop Environment Framework<br>"
         "C++23 / Qt 6.8 / Material Design 3</p>"
