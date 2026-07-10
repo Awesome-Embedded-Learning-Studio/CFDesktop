@@ -31,6 +31,26 @@ inline constexpr std::size_t kDefaultTailLogLines{50};
 inline constexpr std::size_t kDefaultMaxReports{20};
 
 /**
+ * @brief  One symbol-resolved stack frame.
+ *
+ * Produced by the symbolizer (addr2line on Linux) from a bare address: the
+ * demangled function name, source file, and line. Holds "??"/"0" when the
+ * address could not be resolved.
+ *
+ * @ingroup crash
+ */
+struct ResolvedFrame {
+    /// @brief Demangled function name (or "??").
+    std::string function;
+
+    /// @brief Source file path (or "??").
+    std::string file;
+
+    /// @brief Source line number as a string (or "0").
+    std::string line;
+};
+
+/**
  * @brief  A finalized crash report.
  *
  * Aggregates the raw signal snapshot (timestamp/pid/signal/raw stack
@@ -54,8 +74,11 @@ struct CrashReport {
     /// @brief Human-readable signal name ("SIGSEGV", "SIGABRT", ...).
     std::string signal_name;
 
-    /// @brief Bare stack frame addresses as hex strings; resolved in Phase 2.
+    /// @brief Bare stack frame addresses as hex strings.
     std::vector<std::string> raw_frames;
+
+    /// @brief Symbol-resolved frames (function/file/line); empty until finalize.
+    std::vector<ResolvedFrame> resolved_frames;
 
     /// @brief Tail of the logger file captured at finalize time.
     std::vector<std::string> last_logs;

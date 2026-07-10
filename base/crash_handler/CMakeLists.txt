@@ -11,6 +11,7 @@ PRIVATE
     src/crash_handler.cpp
     src/crash_report.cpp
     src/crash_signal_handler.cpp
+    src/symbolizer.cpp
 )
 
 target_include_directories(cfcrash PUBLIC

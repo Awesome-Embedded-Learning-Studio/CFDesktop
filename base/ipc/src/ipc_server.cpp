@@ -30,6 +30,11 @@ IPCServer::IPCServer() {
     // by whoever registered them in the registry.
     IPCMessageRegistry::instance().registerHandler(
         "raise", [this](const QJsonObject&) { emit raiseRequested(); });
+    // "notify": a peer (external app) asks the shell to post a desktop
+    // notification. The payload (title/message/app_id/...) is forwarded as-is
+    // to the NotificationService via the desktop entity's signal wiring.
+    IPCMessageRegistry::instance().registerHandler(
+        "notify", [this](const QJsonObject& payload) { emit notifyReceived(payload); });
 }
 
 bool IPCServer::start(const QString& socket_path) {

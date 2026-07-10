@@ -89,7 +89,8 @@ class CrashHandler {
      * @ingroup    crash
      */
     std::size_t finalizePendingReports(const std::string& logger_path,
-                                       std::size_t tail_lines = kDefaultTailLogLines);
+                                       std::size_t tail_lines = kDefaultTailLogLines,
+                                       const std::string& exe_path = "");
 
     /**
      * @brief  Deletes oldest @c .json reports beyond the retention cap.

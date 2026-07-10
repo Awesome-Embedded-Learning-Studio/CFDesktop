@@ -5,7 +5,7 @@ description: "预计周期: 2~3 周，依赖阶段: Phase 6, Phase 10"
 
 # Phase 11: 通知与控制中心 TODO
 
-> **状态**: ⬜ 待开始
+> **状态**: 🚧 最小闭环已落地（2026-07-10）；完整版（持久化/分组/优先级/操作按钮/媒体卡片）仍待做
 > **预计周期**: 2~3 周
 > **依赖阶段**: Phase 6, Phase 10
 > **目标交付物**: NotificationService 通知服务、ControlCenter 控制中心
@@ -14,6 +14,10 @@ description: "预计周期: 2~3 周，依赖阶段: Phase 6, Phase 10"
 > - NotificationService 设计为**独立进程**，跨进程通信**强依赖 Phase A-A5 IPC（当前 0%，见 [06_infrastructure.md](06_infrastructure.md)）**，必须与 IPC 同批落地。
 > - 勿与本仓已有的 `desktop/base/config_manager/include/cfconfig_notify_policy.h` 混淆——后者是 ConfigStore 的**配置变更回调派发策略**（Manual/Immediate），与用户通知无关。
 > - 绝不引入 D-Bus；嵌入式走文件/socket IPC（可借鉴 CCIMXDesktop 的 toast 文件投递范式）。
+>
+> ✅ **最小闭环已落地（2026-07-10，feat/phase-f-control-center-notifications）**：`NotificationService`（**进程内单例**，内存模型，`ui/components/notification/`）+ `Notification`（id/title/message/app_id/timestamp）+ `NotificationBanner`（横幅，5s 自动消失）+ `NotificationCenterPanel`（通知中心，状态栏通知图标触发）+ `StatusBar::timeClicked/notifyIconClicked` + 矢量通知图标（铃铛 + 未读红点）+ IPC `notify` 消息（外部 app 发通知，cfipc）+ DND 持久化（ConfigStore `notification.dnd.enabled`）。
+>
+> ⚠️ **defer 项**：通知持久化（当前重启清空）、按应用分组、优先级分级（Critical/Normal/Low/Silent）、操作按钮、媒体控制卡片、`NotificationService` 独立进程（当前为 shell 进程内单例，跨进程经 cfipc `notify` 消息投递）、硬件后端真实接入（亮度/音量/WiFi/蓝牙，待 aels-power/network 建仓）。
 
 ---
 

@@ -3,9 +3,11 @@
  * @brief   Single-instance IPC server for the desktop shell.
  *
  * Listens on a QLocalServer socket so a second shell instance can signal
- * the running one. Uses a line-based protocol: each message is a
- * newline-terminated token. The only token defined in this phase is
- * "raise", which asks the running shell to come to the foreground.
+ * the running one. Uses a line-based JSON protocol: each message is a
+ * newline-terminated object carrying a type tag plus a payload. The shell
+ * routes incoming messages by type via IPCMessageRegistry. Types defined
+ * here are "raise" (bring the shell to the foreground) and "notify" (post a
+ * desktop notification whose payload carries title/message/app_id).
  *
  * The server is a process-wide singleton; the early-session boot chain
  * starts it, and the desktop entity connects to its signals.
@@ -19,6 +21,7 @@
 
 #pragma once
 
+#include <QJsonObject>
 #include <QLocalServer>
 #include <QObject>
 #include <QString>
@@ -101,6 +104,21 @@ class IPCServer : public QObject {
      * @ingroup    ipc
      */
     void raiseRequested();
+
+    /**
+     * @brief  Emitted when a peer sends a "notify" message.
+     *
+     * The shell should post a desktop notification from the carried payload
+     * (title / message / app_id, etc.).
+     *
+     * @param[in]  payload  The notification payload, forwarded verbatim.
+     * @throws     None
+     * @note       None
+     * @warning    None
+     * @since      0.19.0
+     * @ingroup    ipc
+     */
+    void notifyReceived(const QJsonObject& payload);
 
   private slots:
     /**

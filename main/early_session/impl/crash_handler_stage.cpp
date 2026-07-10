@@ -39,8 +39,10 @@ CrashHandlerStage::BootResult CrashHandlerStage::run_session() {
     }
 
     // Fold any .pending left by a previous crashed run into a finalized .json.
-    const auto finalized =
-        cf::crash::CrashHandler::instance().finalizePendingReports(logger_path.toStdString());
+    // Pass the executable path so frames are symbolized via addr2line (Phase 2).
+    const QString exe_path = QCoreApplication::applicationFilePath();
+    const auto finalized = cf::crash::CrashHandler::instance().finalizePendingReports(
+        logger_path.toStdString(), cf::crash::kDefaultTailLogLines, exe_path.toStdString());
     if (finalized > 0) {
         qInfo("CrashHandlerStage: finalized %lu crash report(s) from previous run",
               static_cast<unsigned long>(finalized));

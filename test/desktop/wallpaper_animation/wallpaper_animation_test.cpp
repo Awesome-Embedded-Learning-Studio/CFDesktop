@@ -20,6 +20,9 @@
 #include "wallpaper/WallPaperLayer.h"
 #include "wallpaper/WallPaperToken.h"
 
+#include "cfconfig.hpp"
+#include "mock_path_provider.h"
+
 #include <QColor>
 #include <QEasingCurve>
 #include <QGuiApplication>
@@ -240,6 +243,11 @@ TEST(WallPaperEngine, StartWithSingleWallpaperIsHarmless) {
 
 int main(int argc, char** argv) {
     QGuiApplication app(argc, argv);
+    // WallPaperEngine reads and watches the wallpaper ConfigStore domain; give
+    // the store a provider so queries return real defaults instead of UB on an
+    // uninitialized singleton.
+    cf::config::ConfigStore::instance().initialize(
+        std::make_shared<cf::config::test::MockPathProvider>());
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

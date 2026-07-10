@@ -5,7 +5,7 @@ description: "预计周期: 4~5 周，依赖阶段: Phase 6, Phase 10, Phase 11"
 
 # Phase 12: 主题、设置与锁屏 TODO
 
-> **状态**: ⬜ 待开始
+> **状态**: 🚧 设置窗口最小闭环已落地(2026-07-10);主题包/锁屏/其余 tab 待做
 > **预计周期**: 4~5 周
 > **依赖阶段**: Phase 6, Phase 10, Phase 11
 > **目标交付物**: ThemeStyleManager、iOS/Windows 主题包、系统设置 App、锁屏模块

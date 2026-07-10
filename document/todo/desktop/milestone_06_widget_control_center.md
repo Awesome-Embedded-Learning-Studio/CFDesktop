@@ -5,13 +5,13 @@ description: "预计周期: 7-10 天，前置依赖: Milestone 2: 状态栏 (下
 
 # Milestone 6: 小组件 + 控制中心
 
-> **状态**: 🚧 进行中（Step A ✅ 2026-07-08；Step B 控制中心待做）
+> **状态**: ✅ Step A + Step B 完成（2026-07-08 / 2026-07-10）
 > **预计周期**: 7-10 天
 > **前置依赖**: [Milestone 2: 状态栏](milestone_02_status_bar.md) (下拉触发点)
 > **可与 MS3/MS4/MS5 并行**
 > **目标**: 桌面上有时钟小组件，从状态栏下拉打开简易控制中心 (亮度/音量/主题切换)
 >
-> **Step A 已落地（2026-07-08，feat/shell-foundation）**：`WidgetBase`（可拖拽基类，press-drag-move + 阈值）+ `WidgetContainer`（QObject 注册表，mount 到 host widget）+ `ClockWidget`（Material 圆角卡片 `surfaceContainer` + `displayLarge` HH:mm + `bodyMedium` 日期，coarse 1s 刷新，`ThemeManager::themeChanged` 跟随），落 [`ui/components/desktop_widget/`](../../../ui/components/desktop_widget/)（target `cfdesktop_desktop_widget`，link `QuarkWidgets::quarkwidgets`），挂 `CFDesktopEntity` 桌面（icon_layer 之上）。**路径订正**：本文档原 `desktop/ui/widget/...` 已过时（07 月重组升顶层），实际落 `ui/components/`（与 statusbar/taskbar 同级独立 target）。**Step B 待做**：`ControlCenter` 下拉面板（Slider/Switch/Button + slide/fade 动画）+ `StatusBar` 新增 `timeClicked()` 信号 + mousePressEvent 命中。
+> **Step A 已落地（2026-07-08，feat/shell-foundation）**：`WidgetBase`（可拖拽基类，press-drag-move + 阈值）+ `WidgetContainer`（QObject 注册表，mount 到 host widget）+ `ClockWidget`（Material 圆角卡片 `surfaceContainer` + `displayLarge` HH:mm + `bodyMedium` 日期，coarse 1s 刷新，`ThemeManager::themeChanged` 跟随），落 [`ui/components/desktop_widget/`](../../../ui/components/desktop_widget/)（target `cfdesktop_desktop_widget`，link `QuarkWidgets::quarkwidgets`），挂 `CFDesktopEntity` 桌面（icon_layer 之上）。**路径订正**：本文档原 `desktop/ui/widget/...` 已过时（07 月重组升顶层），实际落 `ui/components/`（与 statusbar/taskbar 同级独立 target）。**Step B 已落地（2026-07-10，feat/phase-f-control-center-notifications）**：`ControlCenter`（`ui/components/control_center/`，target `cfdesktop_control_center`）— 亮度/音量 `Slider` + WiFi/蓝牙/DND `Switch` + 主题切换 `Button`（`setThemeTo` 真实生效）+ 圆角卡片 + MD3 fade/slide 动画；DND Switch 接 ConfigStore `notification.dnd.enabled`。硬件后端（真实亮度/音量/WiFi/蓝牙）defer 到 aels-power/network 建仓。`StatusBar` 加 `timeClicked()` / `notifyIconClicked()` 信号 + `mousePressEvent` 命中 + 矢量通知图标（铃铛 + 未读红点）。详见 [11_notification_control](11_notification_control.md)。
 >
 > 📌 **路径核对（2026-06-29）**：本文档中所有 bare `ui/...` 路径（ThemeManager / Material 控件 / 动画工厂 / 阴影系统）均已随 Phase 2 抽离迁移至 **QuarkWidgets 子模块** `third_party/QuarkWidgets/ui/...`（CMake 目标 `QuarkWidgets::quarkwidgets`）。`desktop/ui/...` 仍为本仓自有。
 

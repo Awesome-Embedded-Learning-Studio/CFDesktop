@@ -5,7 +5,7 @@
  * Migrated from CCIMXDesktop HomePage. Layout is rewritten as hand-coded
  * QLayout (CFDesktop uses no .ui files): left column holds the analog clock
  * (5/7) above the digital time (2/7); right column holds the CardStackWidget
- * (3/4) above a placeholder app-grid area (1/4, Step B).
+ * (3/4) above the NetStatus + LocalTemp gadget grid (1/4, Step C).
  *
  * @author  CFDesktop Team
  * @date    2026-07-08

@@ -13,6 +13,9 @@
 #include "components/WindowManager.h"
 #include "components/builtin_apps/about_panel.h"
 #include "components/builtin_apps/builtin_panel_registry.h"
+#include "components/control_center/control_center.h"
+#include "components/crash_reporter/crash_reporter_dialog.h"
+#include "components/crash_reporter/seen_marker.h"
 #include "components/desktop_icon_layer/desktop_icon_layer.h"
 #include "components/desktop_icon_layer/desktop_shortcut_store.h"
 #include "components/home_page/home_page.h"
@@ -21,23 +24,34 @@
 #include "components/launcher/app_launch_service.h"
 #include "components/launcher/app_launcher.h"
 #include "components/launcher/desktop_entry_index.h"
+#include "components/notification/notification_banner.h"
+#include "components/notification/notification_center_panel.h"
+#include "components/notification/notification_service.h"
+#include "components/settings/settings_window.h"
 #include "components/statusbar/status_bar.h"
 #include "components/taskbar/centered_taskbar.h"
 #include "components/window_placement/floating_policy.h"
 #include "components/window_placement/window_placement_policy.h"
+#include "core/theme_manager.h"
+#include "core/token/theme_name/material_theme_name.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include "platform/display_backend_helper.h"
 #include "platform/shell_layer_helper.h"
 #include "qt_format.h"
 #include "system/hardware_tier/hardware_tier.h"
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QGuiApplication>
 #include <QHash>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QPalette>
 #include <QScreen>
+#include <QTimer>
+#include <QWidget>
 #include <functional>
 #include <memory>
 
@@ -168,6 +182,41 @@ CFDesktopEntity::CFDesktopEntity()
                              desktop_entity_->activateWindow();
                          }
                      });
+
+    // Sync QGuiApplication's palette with the Material theme so plain Qt
+    // widgets (QScrollArea, QTabWidget pane, QLabel defaults, QTextEdit…)
+    // follow dark mode too. MD3 controls paint from theme tokens directly and
+    // are unaffected; this only covers Qt-native widgets.
+    using qw::core::ThemeManager;
+    const auto sync_palette = [this]() {
+        const bool dark = ThemeManager::instance().currentThemeName() ==
+                          qw::core::token::literals::MATERIAL_THEME_DARK;
+        QPalette p;
+        const QColor bg = dark ? QColor(0x1C, 0x1B, 0x1F) : QColor(0xF7, 0xF5, 0xF3);
+        const QColor fg = dark ? QColor(0xE6, 0xE1, 0xE5) : QColor(0x1C, 0x1B, 0x1F);
+        for (auto role : {QPalette::Window, QPalette::Base, QPalette::AlternateBase,
+                          QPalette::Button, QPalette::ToolTipBase}) {
+            p.setColor(role, bg);
+        }
+        for (auto role :
+             {QPalette::WindowText, QPalette::Text, QPalette::ButtonText, QPalette::ToolTipText}) {
+            p.setColor(role, fg);
+        }
+        QGuiApplication::setPalette(p);
+        // Existing widgets (QLabels especially) do not always re-render on an
+        // application-wide palette change, so push the palette onto every
+        // widget under the desktop too.
+        if (desktop_entity_ != nullptr) {
+            desktop_entity_->setPalette(p);
+            const auto widgets = desktop_entity_->findChildren<QWidget*>();
+            for (auto* w : widgets) {
+                w->setPalette(p);
+            }
+        }
+    };
+    QObject::connect(&ThemeManager::instance(), &ThemeManager::themeChanged, this,
+                     [sync_palette](const qw::core::ICFTheme&) { sync_palette(); });
+    sync_palette(); // initial: MaterialApplication setThemeTo(DEFAULT, false) did not emit
 }
 
 CFDesktopEntity::~CFDesktopEntity() {
@@ -530,6 +579,66 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
                              app_launcher->popup(panel_mgr->availableGeometry());
                          }
                      });
+    // ── Control center + notification system ──
+    // NotificationService is a process singleton; force its construction.
+    auto& notification_svc = cf::desktop::desktop_component::NotificationService::instance();
+    auto* control_center = new cf::desktop::desktop_component::ControlCenter(desktop_entity_);
+    auto* notif_center =
+        new cf::desktop::desktop_component::NotificationCenterPanel(desktop_entity_);
+    auto* notif_banner = new cf::desktop::desktop_component::NotificationBanner(desktop_entity_);
+
+    // Status bar entries: click the clock / notification icon to toggle.
+    QObject::connect(status_bar, &cf::desktop::desktop_component::StatusBar::timeClicked, this,
+                     [control_center, panel_mgr]() {
+                         if (control_center->isShowing()) {
+                             control_center->hidePanel();
+                         } else {
+                             control_center->popup(panel_mgr->availableGeometry());
+                         }
+                     });
+    QObject::connect(status_bar, &cf::desktop::desktop_component::StatusBar::notifyIconClicked,
+                     this, [notif_center, panel_mgr]() {
+                         if (notif_center->isShowing()) {
+                             notif_center->hidePanel();
+                         } else {
+                             notif_center->popup(panel_mgr->availableGeometry());
+                         }
+                     });
+
+    // Settings window, toggled from the control center's Settings button.
+    auto* settings_window = new cf::desktop::desktop_component::SettingsWindow(desktop_entity_);
+    QObject::connect(control_center,
+                     &cf::desktop::desktop_component::ControlCenter::settingsRequested, this,
+                     [settings_window, panel_mgr]() {
+                         if (settings_window->isShowing()) {
+                             settings_window->hidePanel();
+                         } else {
+                             settings_window->popup(panel_mgr->availableGeometry());
+                         }
+                     });
+
+    // Banner shows for every non-suppressed post (DND off).
+    QObject::connect(&notification_svc,
+                     &cf::desktop::desktop_component::NotificationService::notificationPosted, this,
+                     [notif_banner, panel_mgr](
+                         const cf::desktop::desktop_component::Notification& n, bool suppressed) {
+                         if (!suppressed) {
+                             notif_banner->showFor(n, panel_mgr->availableGeometry());
+                         }
+                     });
+
+    // External apps deliver notifications over IPC; payload -> service.
+    QObject::connect(&cf::ipc::IPCServer::instance(), &cf::ipc::IPCServer::notifyReceived, this,
+                     [&notification_svc](const QJsonObject& payload) {
+                         cf::desktop::desktop_component::Notification n;
+                         n.title = payload.value("title").toString();
+                         n.message = payload.value("message").toString();
+                         n.app_id = payload.value("app_id").toString();
+                         notification_svc.post(n);
+                     });
+    // Outside-click dismissal is deferred (matches AppLauncher, which relies on
+    // ESC + the toggle entry). ESC closes either popup.
+
     taskbar->show();
     panel_mgr->relayout();
 
@@ -561,6 +670,24 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
 
     // Show the desktop full-screen
     desktop_entity_->showFullScreen();
+
+    // Phase 2: surface the most recent unseen crash report (from a previous
+    // crashed run) shortly after boot, so the user sees the symbolized stack.
+    const QString crashes_dir = QCoreApplication::applicationDirPath() + "/crashes";
+    QTimer::singleShot(1500, this, [this, crashes_dir]() {
+        const QDir dir(crashes_dir);
+        const auto jsons = dir.entryInfoList(QStringList() << "*.json", QDir::Files, QDir::Time);
+        for (const QFileInfo& fi : jsons) {
+            const QString path = fi.absoluteFilePath();
+            if (cf::desktop::desktop_component::isCrashSeen(path)) {
+                continue;
+            }
+            auto* reporter =
+                new cf::desktop::desktop_component::CrashReporterDialog(path, desktop_entity_);
+            reporter->popup(desktop_entity_->rect());
+            break; // one report per boot; the next unseen one shows next time
+        }
+    });
 
     log::trace("Entity Init");
     return RunsSetupResult::OK;
