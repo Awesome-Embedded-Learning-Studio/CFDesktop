@@ -182,8 +182,11 @@ void ControlCenter::popup(const QRect& available) {
     const int y = avail.top() + kSideMargin;
     setGeometry(x, y, w, h);
 
-    // Refresh the DND toggle from the store in case it changed elsewhere.
+    // Refresh the DND toggle from the store. Block signals so the programmatic
+    // setChecked does not re-fire toggled -> setDndEnabled (echo write loop).
+    dnd_->blockSignals(true);
     dnd_->setChecked(NotificationService::instance().isDndEnabled());
+    dnd_->blockSignals(false);
 
     enter_slide_->start();
     enter_fade_->start();

@@ -12,7 +12,6 @@
 #include "notification_banner.h"
 
 #include "notification_card_widget.h"
-#include "notification_service.h"
 
 #include "components/material/cfmaterial_fade_animation.h"
 #include "components/material/cfmaterial_slide_animation.h"
@@ -67,10 +66,10 @@ void NotificationBanner::showFor(const Notification& notification, const QRect& 
         }
     }
 
-    // Anchor to the top-right of the available area, in desktop-local coords.
+    // Anchor to the top-center of the available area, in desktop-local coords.
     const int w = card_->sizeHint().width();
     const int h = card_->sizeHint().height();
-    const int x = avail.right() - w - kMargin;
+    const int x = avail.center().x() - w / 2;
     const int y = avail.top() + kMargin;
     setGeometry(x, y, w, h);
 
@@ -120,12 +119,12 @@ void NotificationBanner::setupAnimations() {
 
     enter_fade_ = new CFMaterialFadeAnimation(spec, this);
     enter_fade_->setRange(0.0f, 1.0f);
-    enter_fade_->setMotionToken("shortEnter");
+    enter_fade_->setMotionToken("mediumEnter");
     enter_fade_->setTargetWidget(this);
 
     enter_slide_ = new CFMaterialSlideAnimation(spec, SlideDirection::Up, this);
     enter_slide_->setRange(static_cast<float>(-kEnterSlidePx), 0.0f);
-    enter_slide_->setMotionToken("mediumEnter");
+    enter_slide_->setMotionToken("longEnter");
     enter_slide_->setTargetWidget(this);
 
     exit_fade_ = new CFMaterialFadeAnimation(spec, this);
