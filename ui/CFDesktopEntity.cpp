@@ -51,6 +51,7 @@
 #include <QPalette>
 #include <QScreen>
 #include <QTimer>
+#include <QWidget>
 #include <functional>
 #include <memory>
 
@@ -187,7 +188,7 @@ CFDesktopEntity::CFDesktopEntity()
     // follow dark mode too. MD3 controls paint from theme tokens directly and
     // are unaffected; this only covers Qt-native widgets.
     using qw::core::ThemeManager;
-    const auto sync_palette = []() {
+    const auto sync_palette = [this]() {
         const bool dark = ThemeManager::instance().currentThemeName() ==
                           qw::core::token::literals::MATERIAL_THEME_DARK;
         QPalette p;
@@ -202,6 +203,16 @@ CFDesktopEntity::CFDesktopEntity()
             p.setColor(role, fg);
         }
         QGuiApplication::setPalette(p);
+        // Existing widgets (QLabels especially) do not always re-render on an
+        // application-wide palette change, so push the palette onto every
+        // widget under the desktop too.
+        if (desktop_entity_ != nullptr) {
+            desktop_entity_->setPalette(p);
+            const auto widgets = desktop_entity_->findChildren<QWidget*>();
+            for (auto* w : widgets) {
+                w->setPalette(p);
+            }
+        }
     };
     QObject::connect(&ThemeManager::instance(), &ThemeManager::themeChanged, this,
                      [sync_palette](const qw::core::ICFTheme&) { sync_palette(); });
