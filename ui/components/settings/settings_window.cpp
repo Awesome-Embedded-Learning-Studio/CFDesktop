@@ -18,6 +18,7 @@
 #include "components/material/cfmaterial_slide_animation.h"
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
+#include "core/token/theme_name/material_theme_name.h"
 #include "ui/widget/material/widget/button/button.h"
 #include "ui/widget/material/widget/slider/slider.h"
 #include "ui/widget/material/widget/switch/switch.h"
@@ -314,7 +315,7 @@ QWidget* SettingsWindow::buildThemeTab() {
     } catch (...) {
         current_name = QStringLiteral("light");
     }
-    const bool dark = current_name == QStringLiteral("dark");
+    const bool dark = current_name == QString::fromLatin1(MATERIAL_THEME_DARK);
 
     auto* card = makeCard(QStringLiteral("Theme"),
                           QStringLiteral("Switch the active Material theme. The active one is "
@@ -340,12 +341,12 @@ QWidget* SettingsWindow::buildThemeTab() {
     layout->addWidget(card, 1);
 
     connect(light_btn, &QPushButton::clicked, tab, [light_btn, dark_btn]() {
-        qw::core::ThemeManager::instance().setThemeTo("light");
+        qw::core::ThemeManager::instance().setThemeTo(MATERIAL_THEME_LIGHT);
         light_btn->setVariant(Button::ButtonVariant::Filled);
         dark_btn->setVariant(Button::ButtonVariant::Tonal);
     });
     connect(dark_btn, &QPushButton::clicked, tab, [light_btn, dark_btn]() {
-        qw::core::ThemeManager::instance().setThemeTo("dark");
+        qw::core::ThemeManager::instance().setThemeTo(MATERIAL_THEME_DARK);
         dark_btn->setVariant(Button::ButtonVariant::Filled);
         light_btn->setVariant(Button::ButtonVariant::Tonal);
     });

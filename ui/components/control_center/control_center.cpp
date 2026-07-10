@@ -17,6 +17,7 @@
 #include "components/material/cfmaterial_slide_animation.h"
 #include "core/theme_manager.h"
 #include "core/token/material_scheme/cfmaterial_token_literals.h"
+#include "core/token/theme_name/material_theme_name.h"
 #include "ui/widget/material/widget/button/button.h"
 #include "ui/widget/material/widget/slider/slider.h"
 #include "ui/widget/material/widget/switch/switch.h"
@@ -140,8 +141,8 @@ void ControlCenter::setupUi() {
 
     connect(theme_btn_, &QPushButton::clicked, this, []() {
         auto& tm = qw::core::ThemeManager::instance();
-        const bool dark = tm.currentThemeName() == "dark";
-        tm.setThemeTo(dark ? "light" : "dark");
+        const bool dark = tm.currentThemeName() == MATERIAL_THEME_DARK;
+        tm.setThemeTo(dark ? MATERIAL_THEME_LIGHT : MATERIAL_THEME_DARK);
     });
     connect(screenshot_btn_, &QPushButton::clicked, this,
             []() { cf::log::infoftag(kLogTag, "screenshot requested (placeholder)"); });
