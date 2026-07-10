@@ -32,6 +32,8 @@
 #include "components/taskbar/centered_taskbar.h"
 #include "components/window_placement/floating_policy.h"
 #include "components/window_placement/window_placement_policy.h"
+#include "core/theme_manager.h"
+#include "core/token/theme_name/material_theme_name.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include "platform/display_backend_helper.h"
 #include "platform/shell_layer_helper.h"
@@ -46,6 +48,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QPalette>
 #include <QScreen>
 #include <QTimer>
 #include <functional>
@@ -178,6 +181,31 @@ CFDesktopEntity::CFDesktopEntity()
                              desktop_entity_->activateWindow();
                          }
                      });
+
+    // Sync QGuiApplication's palette with the Material theme so plain Qt
+    // widgets (QScrollArea, QTabWidget pane, QLabel defaults, QTextEdit…)
+    // follow dark mode too. MD3 controls paint from theme tokens directly and
+    // are unaffected; this only covers Qt-native widgets.
+    using qw::core::ThemeManager;
+    const auto sync_palette = []() {
+        const bool dark = ThemeManager::instance().currentThemeName() ==
+                          qw::core::token::literals::MATERIAL_THEME_DARK;
+        QPalette p;
+        const QColor bg = dark ? QColor(0x1C, 0x1B, 0x1F) : QColor(0xF7, 0xF5, 0xF3);
+        const QColor fg = dark ? QColor(0xE6, 0xE1, 0xE5) : QColor(0x1C, 0x1B, 0x1F);
+        for (auto role : {QPalette::Window, QPalette::Base, QPalette::AlternateBase,
+                          QPalette::Button, QPalette::ToolTipBase}) {
+            p.setColor(role, bg);
+        }
+        for (auto role :
+             {QPalette::WindowText, QPalette::Text, QPalette::ButtonText, QPalette::ToolTipText}) {
+            p.setColor(role, fg);
+        }
+        QGuiApplication::setPalette(p);
+    };
+    QObject::connect(&ThemeManager::instance(), &ThemeManager::themeChanged, this,
+                     [sync_palette](const qw::core::ICFTheme&) { sync_palette(); });
+    sync_palette(); // initial: MaterialApplication setThemeTo(DEFAULT, false) did not emit
 }
 
 CFDesktopEntity::~CFDesktopEntity() {
