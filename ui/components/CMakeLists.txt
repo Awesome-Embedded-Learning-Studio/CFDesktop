@@ -14,6 +14,7 @@ add_subdirectory(desktop_icon_layer)
 add_subdirectory(builtin_apps)
 add_subdirectory(desktop_widget)
 add_subdirectory(home_page)
+add_subdirectory(notification)
 
 # Create interface library for convenience
 add_library(cf_desktop_components STATIC)

@@ -58,6 +58,9 @@ add_subdirectory(crash)
 # Add desktop tests
 add_subdirectory(desktop)
 
+# Add notification tests subdirectory
+add_subdirectory(notification)
+
 # Add boot_test subdirectory (legacy tests)
 add_subdirectory(boot_test)
 
