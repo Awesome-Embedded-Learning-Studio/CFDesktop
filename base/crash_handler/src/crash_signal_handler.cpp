@@ -171,7 +171,9 @@ extern "C" void cfCrashHandleSignal(int signo) {
     appendChars(path, sizeof(path), i, ".pending");
     path[i] = '\0';
 
-    int fd = ::open(path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+    // 0644 (not 0600) so the dump is readable over NFS by the dev host for
+    // offline symbolication. Contains no secrets — just frames + /proc/maps.
+    int fd = ::open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd >= 0) {
         writeStr(fd, "CFDESKTOP_CRASH_V1\n");
 
@@ -207,6 +209,31 @@ extern "C" void cfCrashHandleSignal(int signo) {
         for (int k = 0; k < n; ++k) {
             writeHexPtr(fd, reinterpret_cast<std::uintptr_t>(frames[k]));
             writeStr(fd, "\n");
+        }
+
+        // Dump /proc/self/maps so the frame addresses above can be symbolicated
+        // offline: each line gives a shared object's [start] load address, so
+        // offset_in_lib = frame_addr - start, then addr2line resolves to the
+        // function/source line. Async-signal-safe (open/read/write/close only).
+        writeStr(fd, "maps=\n");
+        int mfd = ::open("/proc/self/maps", O_RDONLY | O_CLOEXEC);
+        if (mfd >= 0) {
+            char mbuf[768];
+            ssize_t got = 0;
+            while ((got = ::read(mfd, mbuf, sizeof(mbuf))) > 0) {
+                ssize_t put = 0;
+                while (put < got) {
+                    ssize_t w = ::write(fd, mbuf + put, static_cast<size_t>(got - put));
+                    if (w <= 0) {
+                        break;
+                    }
+                    put += w;
+                }
+                if (put < got) {
+                    break; // output file write error; stop copying
+                }
+            }
+            ::close(mfd);
         }
         ::close(fd);
     }

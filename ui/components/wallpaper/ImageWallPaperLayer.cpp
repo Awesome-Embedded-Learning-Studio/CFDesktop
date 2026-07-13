@@ -8,7 +8,12 @@ namespace cf::desktop::wallpaper {
 // ImageWallPaperLayer::Private
 // ============================================================
 struct ImageWallPaperLayer::Private {
-    std::unique_ptr<WallPaperAccessStorage> storage;
+    // Always non-null: tokenStorage() returns *storage by reference and cannot
+    // tolerate null. "No wallpapers" is represented as an empty storage, not a
+    // null pointer — otherwise WallPaperEngine::start()'s tokenStorage().size()
+    // guard dereferences null and crashes (SIGSEGV) on boards with no wallpaper
+    // assets configured.
+    std::unique_ptr<WallPaperAccessStorage> storage = std::make_unique<WallPaperAccessStorage>();
     QImage current_image;
     ScalingMode scaling_mode{ScalingMode::Fill};
     QColor background_color{0x1c, 0x1b, 0x1f};
@@ -27,11 +32,14 @@ ImageWallPaperLayer::ImageWallPaperLayer(ScalingMode mode, const QColor& bg)
 ImageWallPaperLayer::~ImageWallPaperLayer() = default;
 
 void ImageWallPaperLayer::setTokenStorage(std::unique_ptr<WallPaperAccessStorage> storage) {
-    d->storage = std::move(storage);
-    if (!d->storage) {
+    // Keep d->storage non-null: a null arg means "no wallpapers", represented
+    // as an empty storage so tokenStorage() (*d->storage) stays safe to deref.
+    if (!storage) {
+        d->storage = std::make_unique<WallPaperAccessStorage>();
         d->current_image = {};
         return;
     }
+    d->storage = std::move(storage);
     // Load the image at the current cursor position
     auto token = d->storage->current();
     if (token) {

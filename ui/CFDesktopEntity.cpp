@@ -34,6 +34,7 @@
 #include "components/window_placement/window_placement_policy.h"
 #include "core/theme_manager.h"
 #include "core/token/theme_name/material_theme_name.h"
+#include "widget/application_support/application.h"
 #include "platform/DesktopPropertyStrategyFactory.h"
 #include "platform/display_backend_helper.h"
 #include "platform/shell_layer_helper.h"
@@ -297,6 +298,7 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     // CardStackWidget (inside HomePage) keeps vertical card swipe.
     auto* home_page = new cf::desktop::desktop_component::HomePage();
     auto* page_stack = new cf::desktop::desktop_component::PageStackWidget(desktop_entity_);
+    page_stack->setBackgroundProvider([shell]() { return shell->currentBackgroundImage(); });
     page_stack->addWidget(home_page);
     page_stack->addWidget(icon_layer);
     page_stack->setGeometry(panel_mgr->availableGeometry());
@@ -435,6 +437,23 @@ CFDesktopEntity::RunsSetupResult CFDesktopEntity::run_init(RunsSetupMethod m) {
     if (auto res = cf::assessHardware(); res.has_value()) {
         if (auto caps = cf::getHardwareTierCapabilities(); caps.has_value()) {
             prefer_inprocess = caps->prefer_inprocess_apps;
+
+            // Low/Unknown tier (e.g. i.MX6ULL: single software-rendering A7):
+            // the animation factory defaults to 60fps, which this hardware can't
+            // sustain — the timer outruns rendering and frames pile up into
+            // jank. Cap to a cadence it can actually meet (30fps ≈ 33ms/frame)
+            // so motion stays smooth instead of stuttering; Mid (partial) and
+            // High (full) keep the 60fps default. Animations stay ON — only the
+            // frame rate is lowered to match the hardware's render budget.
+            const bool any_animation = caps->enable_animation || caps->enable_partial_animation;
+            if (!any_animation) {
+                if (auto* app = qw::widget::application_support::Application::instance()) {
+                    app->setAnimationFrameRate(30.0f);
+                    cf::log::infoftag("CFDesktopEntity",
+                                      "Hardware tier Low/Unknown: animation frame rate capped "
+                                      "to 30fps");
+                }
+            }
         }
     }
 
