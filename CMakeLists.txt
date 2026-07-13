@@ -12,7 +12,7 @@ message("Including Requested CMake Dependencies OK")
 include(cmake/check_toolchain.cmake)
 
 project(CFDesktop
-    VERSION 1.0.0
+    VERSION 1.0.1
     DESCRIPTION "CFDesktop: Given Your Device Portable Desktop Anywhere"
     HOMEPAGE_URL "https://github.com/Awesome-Embedded-Learning-Studio/CFDesktop"
     LANGUAGES CXX C
