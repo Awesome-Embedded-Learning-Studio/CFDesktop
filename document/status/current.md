@@ -1,12 +1,13 @@
+---
+title: CFDesktop 当前项目状态
+description: CFDesktop 项目进度的唯一事实来源与全局导航。
+---
+
 <!--
   真相源 (Single Source of Truth)：本文件是 CFDesktop 项目进度的唯一事实来源。
   项目源信息（架构 / 构建 / 规范）不在此写死，而是分发到分工明确的文件 —— 见「项目导航」。
   本文件由人工维护；用定性状态而非百分比（很多工程阶段难以精确量化）。
 -->
----
-title: CFDesktop 当前项目状态
-description: CFDesktop 项目进度的唯一事实来源与全局导航。
----
 
 # CFDesktop 当前项目状态
 

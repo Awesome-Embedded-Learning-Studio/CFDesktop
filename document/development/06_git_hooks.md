@@ -58,7 +58,7 @@ bash scripts/develop/remove_trailing_space.sh --staged
 
 # Windows (PowerShell)
 pwsh scripts/develop/remove_trailing_space.ps1 -Staged
-```text
+```
 
 ### 绕过 Pre-Commit 检查
 
@@ -66,7 +66,7 @@ pwsh scripts/develop/remove_trailing_space.ps1 -Staged
 
 ```bash
 git commit --no-verify -m "紧急修复"
-```text
+```
 
 ### 检查模式
 
@@ -84,7 +84,7 @@ bash scripts/develop/remove_trailing_space.sh --staged
 
 # 预览将要修改的内容
 bash scripts/develop/remove_trailing_space.sh --dry-run
-```cpp
+```
 
 ## Pre-Push Hook
 
@@ -121,7 +121,7 @@ Pre-push Hook 在推送前执行 Docker 构建验证，确保代码可以成功�
 
 ```cmake
 project(CFDesktop VERSION X.Y.Z LANGUAGES CXX)
-```text
+```
 
 如果版本号未变更，推送将被阻止，提示信息如下：
 
@@ -144,7 +144,7 @@ project(CFDesktop VERSION X.Y.Z LANGUAGES CXX)
   - Patch: 0.13.1 -> 0.13.2 (bug 修复、小改动)
   - Minor: 0.13.1 -> 0.14.0 (新功能)
   - Major: 0.13.1 -> 1.0.0 (破坏性变更)
-```text
+```
 
 ### 首次推送
 
@@ -156,7 +156,7 @@ project(CFDesktop VERSION X.Y.Z LANGUAGES CXX)
 
 ```bash
 git push --no-verify
-```bash
+```
 
 ### Docker 环境要求
 
@@ -199,7 +199,7 @@ PATCH=$(get_patch_version "$VERSION")  # 输出: 3
 
 # 确定验证级别
 LEVEL=$(determine_verify_level "1.2.3" "1.1.0")  # 输出: minor
-```text
+```
 
 ## 安装与卸载
 
@@ -209,7 +209,7 @@ LEVEL=$(determine_verify_level "1.2.3" "1.1.0")  # 输出: minor
 
 ```bash
 bash scripts/release/hooks/install_hooks.sh
-```text
+```
 
 安装过程：
 
@@ -225,7 +225,7 @@ bash scripts/release/hooks/install_hooks.sh
 
 ```bash
 ls -la .git/hooks/pre-commit .git/hooks/pre-push
-```text
+```
 
 ### 卸载 Hooks
 
@@ -233,7 +233,7 @@ ls -la .git/hooks/pre-commit .git/hooks/pre-push
 
 ```bash
 rm .git/hooks/pre-commit .git/hooks/pre-push
-```text
+```
 
 ### 备份机制
 
@@ -256,7 +256,7 @@ bash scripts/develop/remove_trailing_space.sh --staged
 
 # 或强制提交（不推荐）
 git commit --no-verify -m "message"
-```text
+```
 
 ### Pre-Push 验证失败
 
@@ -284,7 +284,7 @@ vim CMakeLists.txt  # 修改 VERSION x.y.z
 git add CMakeLists.txt
 git commit -m "chore: bump version to x.y.z"
 git push
-```text
+```
 
 ### Docker 未运行
 
@@ -298,7 +298,7 @@ git push
 ```bash
 # Linux
 sudo systemctl start docker
-```text
+```
 
 ### clang-format 未安装
 
@@ -315,7 +315,7 @@ brew install clang-format
 
 # Windows (使用 Chocolatey)
 choco install clang-format
-```text
+```
 
 ### ARM64 构建很慢
 

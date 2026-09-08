@@ -54,7 +54,7 @@ CFDesktop Build System
     ├── windows/gcc-toolchain.cmake
     ├── linux/ci-x86_64-toolchain.cmake
     └── linux/ci-aarch64-toolchain.cmake
-```yaml
+```
 
 ---
 
@@ -92,7 +92,7 @@ add_subdirectory(base)
 add_subdirectory(ui)
 add_subdirectory(example)
 add_subdirectory(test)
-```text
+```
 
 ### CMake 模块结构
 
@@ -105,7 +105,7 @@ cmake/
 ├── ExampleLauncher.cmake          # Windows launcher generation
 ├── QtDeployUtils.cmake            # Qt deployment utilities
 └── generate_develop_helpers.cmake # IDE configuration generation
-```bash
+```
 
 ---
 
@@ -139,7 +139,7 @@ base/
 └── system/
     ├── cpu/CMakeLists.txt      # CPU module
     └── memory/CMakeLists.txt   # Memory module
-```text
+```
 
 **统一 Base 库：**
 所有 base 组件链接为一个单独的共享库（Windows 上为 `cfbase.dll`，Linux 上为 `libcfbase.so`）。
@@ -152,7 +152,7 @@ target_sources(cfbase PRIVATE
     $<TARGET_OBJECTS:cfbase_memory>
 )
 target_link_libraries(cfbase PUBLIC Qt6::Core)
-```text
+```
 
 ### UI 模块
 
@@ -180,7 +180,7 @@ ui/
         ├── label/
         ├── textfield/
         └── ...
-```text
+```
 
 **统一 UI 库：**
 所有 UI 组件链接为一个单独的共享库（Windows 上为 `cfui.dll`，Linux 上为 `libcfui.so`）。
@@ -197,7 +197,7 @@ target_link_libraries(cfui PUBLIC
     Qt6::Core
     Qt6::Gui
 )
-```bash
+```
 
 ---
 
@@ -218,7 +218,7 @@ target_link_libraries(cfui PUBLIC
 ```ini
 [cmake]
 build_type=Debug    # or Release, RelWithDebInfo
-```bash
+```
 
 **配置文件：**
 
@@ -240,7 +240,7 @@ CFDesktop 支持工具链选择的简写表示法：
 cmake -DUSE_TOOLCHAIN=windows/llvm -S . -B build
 cmake -DUSE_TOOLCHAIN=windows/gcc -S . -B build
 cmake -DUSE_TOOLCHAIN=linux/ci-x86_64 -S . -B build
-```bash
+```
 
 ### 可用工具链
 
@@ -263,7 +263,7 @@ cmake/cmake_toolchain/
 └── linux/
     ├── ci-x86_64-toolchain.cmake
     └── ci-aarch64-toolchain.cmake
-```text
+```
 
 ### Windows LLVM-MinGW 工具链
 
@@ -272,7 +272,7 @@ cmake/cmake_toolchain/
 set(CMAKE_PREFIX_PATH "D:/QT/Qt6.6.0/6.8.3/llvm-mingw_64")
 set(CMAKE_C_COMPILER "D:/QT/Qt6.6.0/Tools/llvm-mingw1706_64/bin/gcc.exe")
 set(CMAKE_CXX_COMPILER "D:/QT/Qt6.6.0/Tools/llvm-mingw1706_64/bin/g++.exe")
-```text
+```
 
 ### Linux CI 工具链
 
@@ -282,7 +282,7 @@ set(CMAKE_SYSTEM_NAME Linux)
 set(QT6_BASE_DIR "/opt/Qt/6.8.1/gcc_64")
 set(Qt6_DIR "${QT6_BASE_DIR}/lib/cmake/Qt6")
 set(CMAKE_PREFIX_PATH "${QT6_BASE_DIR}")
-```yaml
+```
 
 ---
 
@@ -305,7 +305,7 @@ scripts/build_helpers/
 │   ├── linux_develop_build.sh
 │   └── linux_run_tests.sh
 └── docker_start.sh            # Docker wrapper script
-```text
+```
 
 ### Windows 构建脚本
 
@@ -314,7 +314,7 @@ scripts/build_helpers/
 ```powershell
 # Configure only (no build)
 .\scripts\build_helpers\windows_configure.ps1 [-Config <develop|deploy>]
-```text
+```
 
 **该脚本执行以下操作：**
 1. 从 `.ini` 文件加载配置
@@ -327,7 +327,7 @@ scripts/build_helpers/
 ```powershell
 # Fast incremental build
 .\scripts\build_helpers\windows_fast_develop_build.ps1
-```text
+```
 
 **该脚本执行以下操作：**
 1. 调用配置脚本
@@ -339,7 +339,7 @@ scripts/build_helpers/
 ```powershell
 # Full clean build
 .\scripts\build_helpers\windows_develop_build.ps1
-```text
+```
 
 **该脚本执行以下操作：**
 1. 清理构建目录
@@ -353,21 +353,21 @@ scripts/build_helpers/
 ```bash
 # Configure only
 bash scripts/build_helpers/linux_configure.sh [develop|deploy|ci] [-c <config_file>]
-```text
+```
 
 #### 快速构建脚本
 
 ```bash
 # Fast incremental build
 bash scripts/build_helpers/linux_fast_develop_build.sh [develop|deploy|ci]
-```text
+```
 
 #### 完整构建脚本
 
 ```bash
 # Full clean build
 bash scripts/build_helpers/linux_develop_build.sh [develop|deploy|ci]
-```text
+```
 
 ### Docker 构建脚本
 
@@ -389,7 +389,7 @@ bash scripts/build_helpers/docker_start.sh --verify
 
 # ARM64 build
 bash scripts/build_helpers/docker_start.sh --arch arm64 --verify
-```bash
+```
 
 **Docker 选项：**
 
@@ -438,7 +438,7 @@ out/build_{config}/
     ├── base_test
     ├── ui_test
     └── ...
-```text
+```
 
 ### 输出目录配置
 
@@ -456,7 +456,7 @@ function(cf_set_example_output_dir TARGET_NAME CATEGORY)
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples/${CATEGORY}"
     )
 endfunction()
-```yaml
+```
 
 ---
 
@@ -487,7 +487,7 @@ build_dir=out/build_develop
 [options]
 # Parallel jobs for compilation
 jobs=16
-```bash
+```
 
 ### CMake 选项
 
@@ -512,13 +512,13 @@ jobs=16
 
 ```bash
 cmake -DUSE_TOOLCHAIN=windows/mytoolchain -S . -B build
-```text
+```
 
 或使用完整路径：
 
 ```bash
 cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake -S . -B build
-```text
+```
 
 ### 增量构建
 
@@ -527,12 +527,12 @@ cmake -DCMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake -S . -B build
 **Linux：**
 ```bash
 bash scripts/build_helpers/linux_fast_develop_build.sh
-```text
+```
 
 **Windows：**
 ```powershell
 .\scripts\build_helpers\windows_fast_develop_build.ps1
-```text
+```
 
 ### 并行构建
 
@@ -541,13 +541,13 @@ bash scripts/build_helpers/linux_fast_develop_build.sh
 ```ini
 [options]
 jobs=8                          # Use 8 parallel jobs
-```text
+```
 
 或通过 CMake：
 
 ```bash
 cmake --build build --parallel 8
-```text
+```
 
 ### 构建特定目标
 
@@ -557,7 +557,7 @@ cmake --build build --parallel 8
 cmake --build build --target cfbase
 cmake --build build --target cfui
 cmake --build build --target material_gallery
-```text
+```
 
 ### 清理构建
 
@@ -566,12 +566,12 @@ cmake --build build --target material_gallery
 **Linux：**
 ```bash
 bash scripts/build_helpers/linux_develop_build.sh
-```text
+```
 
 **Windows：**
 ```powershell
 .\scripts\build_helpers\windows_develop_build.ps1
-```text
+```
 
 或手动执行：
 
@@ -579,7 +579,7 @@ bash scripts/build_helpers/linux_develop_build.sh
 rm -rf out/build_develop
 cmake -DUSE_TOOLCHAIN=windows/llvm -DCMAKE_BUILD_TYPE=Debug -S . -B out/build_develop
 cmake --build out/build_develop
-```cpp
+```
 
 ---
 
@@ -651,7 +651,7 @@ QtCreator 可以直接打开项目：
 ```ini
 [cmake]
 build_type=Debug
-```text
+```
 
 这将：
 - 禁用优化（`-O0`）
@@ -665,7 +665,7 @@ build_type=Debug
 ```ini
 [cmake]
 build_type=Release
-```yaml
+```
 
 这将：
 - 启用最大优化（`-O3`）
