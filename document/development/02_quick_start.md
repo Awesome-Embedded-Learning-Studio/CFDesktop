@@ -51,7 +51,7 @@ description: 30 分钟内搭建 CFDesktop 开发环境
 ```bash
 git clone https://github.com/Awesome-Embedded-Learning-Studio/CFDesktop.git
 cd CFDesktop
-```bash
+```
 
 ### 第 2 步：安装 VSCode 扩展
 
@@ -77,7 +77,7 @@ cd CFDesktop
 ```bash
 # Fast build (reuses existing image if available)
 bash scripts/build_helpers/docker_start.sh --fast-build --build-project-fast
-```bash
+```
 
 **此命令会执行以下操作：**
 1. 构建（或复用）包含所有依赖的 Docker 镜像
@@ -110,7 +110,7 @@ bash scripts/build_helpers/docker_start.sh --fast-build --build-project-fast
 
 # CPU Information Demo
 .\out\build_develop\examples\base\cpu_info.exe
-```text
+```
 
 **Linux：**
 ```bash
@@ -122,7 +122,7 @@ bash scripts/build_helpers/docker_start.sh --fast-build --build-project-fast
 
 # CPU Information Demo
 ./out/build_develop/examples/base/cpu_info
-```bash
+```
 
 **可用示例：**
 
@@ -139,17 +139,17 @@ bash scripts/build_helpers/docker_start.sh --fast-build --build-project-fast
 **Windows：**
 ```powershell
 .\scripts\build_helpers\windows_run_tests.ps1
-```text
+```
 
 **Linux：**
 ```bash
 bash scripts/build_helpers/linux_run_tests.sh
-```text
+```
 
 **Docker：**
 ```bash
 bash scripts/build_helpers/docker_start.sh --run-project-test
-```bash
+```
 
 ---
 
@@ -209,7 +209,7 @@ CFDesktop 的构建脚本为 Unix 风格的 shell 设计。在 Windows 上，请
 
 # Run tests
 .\scripts\build_helpers\windows_run_tests.ps1
-```yaml
+```
 
 ---
 
@@ -223,14 +223,14 @@ docker --version
 
 # Verify Docker daemon is running
 docker info
-```text
+```
 
 预期输出：
 ```text
 Docker version 20.10.x
 ...
 Server Version: 20.10.x
-```text
+```
 
 ### 检查构建是否成功
 
@@ -251,7 +251,7 @@ out/build_develop/
 │   └── gui/                # GUI examples
 ├── runtimes/               # Qt runtime DLLs (Windows)
 └── test/                   # Test executables
-```text
+```
 
 ### 检查构建日志
 
@@ -263,7 +263,7 @@ ls -lt scripts/docker/logger/
 
 # View the latest log
 cat scripts/docker/logger/ci_build_*.log | tail -50
-```bash
+```
 
 ---
 
@@ -336,7 +336,7 @@ bash scripts/build_helpers/docker_start.sh
 
 # Build specific architecture
 bash scripts/build_helpers/docker_start.sh --arch arm64 --verify
-```bash
+```
 
 ### 配置文件
 

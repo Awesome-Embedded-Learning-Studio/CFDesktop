@@ -143,7 +143,7 @@ sudo usermod -aG docker $USER
 # 8. 验证安装
 docker --version
 docker compose version
-```yaml
+```
 
 #### 配置建议
 
@@ -192,7 +192,7 @@ sudo apt install -y git
 
 # 验证安装
 git --version
-```text
+```
 
 #### 配置建议
 
@@ -207,7 +207,7 @@ git config --global core.autocrlf true
 
 # Linux/Mac 下配置行尾处理
 git config --global core.autocrlf input
-```yaml
+```
 
 ---
 
@@ -255,7 +255,7 @@ sudo snap install --classic code
 
 # 验证安装
 code --version
-```bash
+```
 
 #### 配置建议
 
@@ -323,7 +323,7 @@ pip install aqtinstall
 
 # 或使用 pipx（推荐）
 pipx install aqtinstall
-```text
+```
 
 **Windows 安装 Qt6**:
 
@@ -333,7 +333,7 @@ aqt install-qt windows desktop 6.8.3 mingw-win64-everywhere -O C:\Qt
 
 # 或安装 LLVM 编译器版本
 aqt install-qt windows desktop 6.8.3 llvm-mingw-win64-everywhere -O C:\Qt
-```text
+```
 
 **Linux 安装 Qt6**:
 
@@ -343,14 +343,14 @@ aqt install-qt linux desktop 6.8.3 gcc_64 -O ~/Qt
 
 # 安装到系统目录（需要 sudo）
 sudo aqt install-qt linux desktop 6.8.3 gcc_64 -O /opt/Qt
-```text
+```
 
 **ARM64 架构安装**:
 
 ```bash
 # Linux ARM64
 aqt install-qt linux desktop 6.8.3 linux_gcc_64 -O ~/Qt
-```text
+```
 
 #### 验证安装
 
@@ -361,7 +361,7 @@ C:\Qt\6.8.3\mingw_64\bin\qmake.exe --version
 
 # Linux
 ~/Qt/6.8.3/gcc_64/bin/qmake --version
-```text
+```
 
 #### 环境变量配置
 
@@ -373,7 +373,7 @@ C:\Qt\6.8.3\mingw_64\bin\qmake.exe --version
 QTDIR=C:\Qt\6.8.3\mingw_64
 QTDIR_BIN=C:\Qt\6.8.3\mingw_64\bin
 CMAKE_PREFIX_PATH=C:\Qt\6.8.3\mingw_64
-```text
+```
 
 并将 `%QTDIR_BIN%` 添加到 PATH。
 
@@ -386,7 +386,7 @@ export QTDIR=~/Qt/6.8.3/gcc_64
 export QTDIR_BIN=$QTDIR/bin
 export PATH=$QTDIR_BIN:$PATH
 export CMAKE_PREFIX_PATH=$QTDIR
-```yaml
+```
 
 然后执行 `source ~/.bashrc` 使配置生效。
 
@@ -401,12 +401,12 @@ CMake 用于构建项目，Docker 镜像中已包含。如需本地安装：
 **Windows**:
 ```powershell
 winget install Kitware.CMake
-```text
+```
 
 **Linux**:
 ```bash
 sudo apt install -y cmake
-```text
+```
 
 ### ccache
 
@@ -415,19 +415,19 @@ ccache 可以加速重复编译：
 **Windows**:
 ```powershell
 winget install ccache
-```text
+```
 
 **Linux**:
 ```bash
 sudo apt install -y ccache
-```text
+```
 
 配置 ccache（可选）：
 
 ```bash
 # 配置缓存目录
 ccache -M 10G  # 设置缓存大小为 10GB
-```text
+```
 
 ### Ninja
 
@@ -436,12 +436,12 @@ Ninja 是一个更快的构建工具：
 **Windows**:
 ```powershell
 winget install ninja
-```text
+```
 
 **Linux**:
 ```bash
 sudo apt install -y ninja-build
-```yaml
+```
 
 ---
 
@@ -509,7 +509,7 @@ Write-Host ""
 
 # 运行验证
 .\verify_env.ps1
-```text
+```
 
 ### Linux 验证脚本
 
@@ -564,7 +564,7 @@ echo -e "\033[33m请手动验证 Qt6 安装:\033[0m"
 echo "  运行: \`<Qt安装目录>/bin/qmake --version\`"
 echo "  应显示: Qt version 6.8.3"
 echo ""
-```yaml
+```
 
 ---
 
@@ -586,14 +586,14 @@ echo ""
 ```powershell
 # 检查虚拟化状态
 systeminfo | find "Virtualization"
-```text
+```
 
 **A (Linux)**: 确保 Docker 服务已启动。
 
 ```bash
 sudo systemctl start docker
 sudo systemctl enable docker
-```text
+```
 
 ### Q2: aqtinstall 下载速度太慢怎么办？
 
@@ -602,7 +602,7 @@ sudo systemctl enable docker
 ```bash
 # 使用清华大学镜像
 aqt install-qt windows desktop 6.8.3 mingw_64 -O C:\Qt -b https://mirrors.tuna.tsinghua.edu.cn/qt
-```text
+```
 
 ### Q3: Windows 下安装 Qt 时提示缺少运行库？
 
@@ -610,7 +610,7 @@ aqt install-qt windows desktop 6.8.3 mingw_64 -O C:\Qt -b https://mirrors.tuna.t
 
 ```text
 https://aka.ms/vs/17/release/vc_redist.x64.exe
-```text
+```
 
 ### Q4: 可以使用系统包管理器安装 Qt 吗？
 
@@ -619,7 +619,7 @@ https://aka.ms/vs/17/release/vc_redist.x64.exe
 ```bash
 # Ubuntu/Debian
 sudo apt install qt6-base-dev qt6-tools-dev
-```bash
+```
 
 建议使用 aqtinstall 安装特定版本的 Qt6。
 
