@@ -13,7 +13,7 @@ description: 是所有动画组件的抽象基类，定义了动画的生命周�
 
 ```cpp
 enum class State { Idle, Running, Paused, Finished };
-```text
+```
 
 - `Idle`：动画尚未启动或已停止，处于初始状态
 - `Running`：动画正在运行中
@@ -45,7 +45,7 @@ connect(anim, &ICFAbstractAnimation::progressChanged, [](float progress) {
 
 // 启动动画
 anim->start(ICFAbstractAnimation::Direction::Forward);
-```text
+```
 
 ## 方向控制
 
@@ -60,7 +60,7 @@ anim->start(ICFAbstractAnimation::Direction::Backward);
 
 // 翻转当前方向
 anim->reverse();  // 停止并以相反方向重新开始
-```text
+```
 
 ⚠️ `reverse()` 会停止当前动画并重新启动，而不是简单地改变播放方向。如果需要无缝反向，需要自己管理逻辑。
 
@@ -72,7 +72,7 @@ anim->pause();
 
 // 停止并重置到初始状态
 anim->stop();
-```text
+```
 
 `stop()` 和 `pause()` 的区别在于：`pause()` 可以恢复，而 `stop()` 会将动画重置回初始状态。
 
@@ -82,7 +82,7 @@ anim->stop();
 
 ```cpp
 cf::WeakPtr<ICFAbstractAnimation> weak = anim->GetWeakPtr();
-```text
+```
 
 ⚠️ 动画类本身不是线程安全的。如果需要在多线程环境下使用，外部需要自行加锁。
 

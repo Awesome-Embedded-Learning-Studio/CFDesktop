@@ -25,7 +25,7 @@ public:
     // 将主题序列化为 JSON
     QByteArray toJson(cf::ui::core::ICFTheme* raw_theme) override;
 };
-```text
+```
 
 注意返回类型是 `std::unique_ptr<ICFTheme>`，调用者获得主题的所有权。这个设计很自然——工厂负责生产，消费者负责销毁。
 
@@ -54,7 +54,7 @@ std::unique_ptr<cf::ui::core::ICFTheme> MyThemeFactory::fromName(const char* nam
 
     return theme;
 }
-```text
+```
 
 `name` 参数来自 `ThemeManager::insert_one` 时注册的名字，但工厂内部可以有自己的命名空间逻辑——你可以用同一个工厂支持多个主题变体，或者完全忽略名字只返回固定配置。
 
@@ -94,7 +94,7 @@ std::unique_ptr<cf::ui::core::ICFTheme> MyThemeFactory::fromJson(const QByteArra
 
     return theme;
 }
-```text
+```
 
 JSON 格式完全由你定义，只要工厂能解析就行。我们建议遵循一定的约定，比如 `colors` 对象包含颜色、`motion` 对象包含动画参数，这样不同主题的配置文件可以保持一致性。
 
@@ -127,7 +127,7 @@ QByteArray MyThemeFactory::toJson(cf::ui::core::ICFTheme* raw_theme) {
 
     return QJsonDocument(root).toJson(QJsonDocument::Compact);
 }
-```text
+```
 
 `raw_theme` 是裸指针而不是引用，这是为了兼容 Qt 的信号槽参数传递习惯。但在实际使用中，你传进来的应该总是一个有效的主题指针。
 
@@ -147,7 +147,7 @@ cf::ui::core::ThemeManager::instance().insert_one("builtin", []() {
 cf::ui::core::ThemeManager::instance().insert_one("custom", []() {
     return std::make_unique<JsonThemeFactory>();
 });
-```text
+```
 
 注意这里用的是 lambda 而不是直接传工厂实例。`ThemeManager` 会在需要时调用 lambda 来创建工厂，而不是在注册时就创建。这个延迟创建机制可以减少启动时的开销，特别是当你注册了很多插件主题但大部分都不会被使用时。
 
@@ -182,7 +182,7 @@ std::unique_ptr<cf::ui::core::ICFTheme> MyThemeFactory::fromJson(const QByteArra
 
     // ... 构造主题
 }
-```text
+```
 
 返回 `nullptr` 表示"无法创建"，`ThemeManager` 会把这个情况传达给调用方。我们不建议在工厂方法里抛异常，因为 Qt 的信号槽机制和异常配合得不太好，而且这也让错误处理逻辑更清晰。
 
@@ -254,7 +254,7 @@ public:
         return QJsonDocument(root).toJson();
     }
 };
-```text
+```
 
 ## 相关文档
 

@@ -32,7 +32,7 @@ private:
     EmbeddedTokenRegistry registry_;
     mutable std::unordered_map<std::string, QColor> color_cache_;
 };
-```text
+```
 
 注意这里有两个存储：`registry_` 存储原始的 CFColor（带 HCT 信息），`color_cache_` 存储转换为 QColor 的结果（用于查询缓存）。
 
@@ -56,7 +56,7 @@ QList<CFColor> tonalPalette(CFColor keyColor) {
     }
     return palette;
 }
-```text
+```
 
 这个算法我们在 Layer 1 里讲过，核心思想是固定 Hue 和 Chroma，只变 Tone。这样生成的 13 个颜色在视觉上是"同一个颜色的不同亮度版本"。
 
@@ -73,7 +73,7 @@ primary = primaryPalette[Tone 40];           // md.primary
 onPrimary = primaryPalette[Tone 100];        // md.onPrimary（白色）
 primaryContainer = primaryPalette[Tone 90];  // md.primaryContainer
 onPrimaryContainer = primaryPalette[Tone 10]; // md.onPrimaryContainer
-```text
+```
 
 这里有个设计选择：为什么 Primary 选 Tone 40，而 PrimaryContainer 选 Tone 90？
 
@@ -91,7 +91,7 @@ QList<CFColor> secondaryPalette = tonalPalette(secondarySeed);
 // Tertiary：从主种子颜色衍生（不同的衍生规则）
 CFColor tertiarySeed = deriveTertiary(seedColor);
 QList<CFColor> tertiaryPalette = tonalPalette(tertiarySeed);
-```text
+```
 
 衍生算法会调整 HCT 值，让 Secondary 和 Tertiary 与 Primary 形成视觉和谐。比如 Secondary 可能旋转色相 30 度，Tertiary 可能旋转 60 度。
 
@@ -107,7 +107,7 @@ onBackground = CFColor(hue, chroma, Tone 10);  // 深色文本
 // Dark 主题
 background = CFColor(hue, chroma, Tone 10);    // 接近黑色
 onBackground = CFColor(hue, chroma, Tone 90);  // 浅色文本
-```text
+```
 
 注意这里虽然用了相同的 `hue` 和 `chroma`，但 Tone 值差异很大。实际上，Surface 颜色通常会使用很低的 chroma（接近中性灰），以避免与内容颜色冲突。
 
@@ -118,7 +118,7 @@ Error 组使用固定的种子颜色（通常是红色），不随主题变化�
 ```cpp
 CFColor errorSeed("#B00020");  // Material 标准错误红
 QList<CFColor> errorPalette = tonalPalette(errorSeed);
-```text
+```
 
 ## onX 颜色的对比度要求
 
@@ -127,7 +127,7 @@ Material Design 3 要求 `onX` 颜色与 X 颜色之间满足 WCAG AA 对比度�
 ```cpp
 float ratio = contrastRatio(primary, onPrimary);
 // ratio >= 4.5 必须成立
-```text
+```
 
 如果 tonalPalette 生成的颜色不满足对比度要求，需要调整。通常的做法是：
 
@@ -162,7 +162,7 @@ QColor& MaterialColorScheme::queryExpectedColor(const char* name) {
     color_cache_[name] = color;
     return color_cache_[name];
 }
-```text
+```
 
 注意这里返回的是引用，意味着调用者不应该修改返回的颜色（否则会影响缓存）。如果需要修改，应该用 `queryColor` 返回副本。
 
@@ -190,7 +190,7 @@ QColor onPrimary = lightScheme.queryColor("md.onPrimary");
 // 验证对比度
 float ratio = contrastRatio(primary, onPrimary);
 // ratio 应该 >= 4.5
-```yaml
+```
 
 ## 总结
 

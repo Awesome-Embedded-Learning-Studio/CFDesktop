@@ -28,7 +28,7 @@ CFDesktop/
 ├── example/               # 示例程序
 ├── test/                  # GoogleTest单元测试
 └── scripts/               # 构建和工具脚本
-```bash
+```
 
 **技术栈：** Qt6 + C++23 + CMake + GoogleTest
 

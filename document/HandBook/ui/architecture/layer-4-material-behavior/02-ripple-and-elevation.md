@@ -34,7 +34,7 @@ struct MdRipple {
     bool releasing;    // 是否处于释放阶段
     float maxRadius;   // 最大半径
 };
-```text
+```
 
 ### 最大半径的计算
 
@@ -56,7 +56,7 @@ float RippleHelper::maxRadius(const QRectF& rect, const QPointF& center) const {
     float d4 = std::hypot(center.x() - rect.right(), center.y() - rect.bottom());
     return std::max({d1, d2, d3, d4});
 }
-```text
+```
 
 ### 多涟漪并存
 
@@ -64,7 +64,7 @@ float RippleHelper::maxRadius(const QRectF& rect, const QPointF& center) const {
 
 ```cpp
 QList<MdRipple> m_ripples;
-```text
+```
 
 每次 `paint()` 时，所有涟漪都被绘制。当涟漪的透明度降到 0 以下时，它被从列表中移除。
 
@@ -102,7 +102,7 @@ void RippleHelper::onPress(const QPoint& pos, const QRectF& widgetRect) {
         anim->start();
     }
 }
-```text
+```
 
 ### 涟漪颜色
 
@@ -112,14 +112,14 @@ void RippleHelper::onPress(const QPoint& pos, const QRectF& widgetRect) {
 void RippleHelper::setColor(const CFColor& color) {
     m_color = color;
 }
-```text
+```
 
 绘制时，使用这个颜色加上当前的透明度值：
 
 ```cpp
 QColor rippleColor = m_color.native_color;
 rippleColor.setAlphaF(m_ripples[i].opacity);
-```text
+```
 
 ### 涟漪绘制
 
@@ -139,7 +139,7 @@ void RippleHelper::paint(QPainter* painter, const QPainterPath& clipPath) {
 
     painter->restore();
 }
-```bash
+```
 
 ## MdElevationController：海拔阴影控制器
 
@@ -165,7 +165,7 @@ MdElevationController::ShadowParams MdElevationController::paramsForLevel(float 
     // 根据级别返回对应的 blur、offset、opacity
     // ...
 }
-```text
+```
 
 ### 阴影绘制
 
@@ -182,7 +182,7 @@ void MdElevationController::paintShadow(QPainter* painter, const QPainterPath& s
 
     // 第二层阴影（可选，更明显的海拔效果）
 }
-```text
+```
 
 实际实现中，Qt 的 QGraphicsDropShadowEffect 可以用来生成模糊阴影，但我们可能需要自定义绘制以获得更精确的控制。
 
@@ -199,7 +199,7 @@ void MdElevationController::setPressed(bool pressed) {
         // 恢复原始海拔
     }
 }
-```text
+```
 
 这个效果通过调整阴影偏移和透明度来实现。
 
@@ -213,7 +213,7 @@ float MdElevationController::pressOffset() const {
     // 海拔越高，按压时的偏移量越大
     return m_currentLevel * 2.0f;  // 简化的公式
 }
-```text
+```
 
 ### Dark Theme 的叠色表示
 
@@ -224,7 +224,7 @@ CFColor MdElevationController::tonalOverlay(CFColor surface, CFColor primary) co
     // 使用 elevationOverlay 函数计算叠色
     return elevationOverlay(surface, primary, static_cast<int>(m_currentLevel));
 }
-```yaml
+```
 
 `elevationOverlay` 函数我们在 Layer 1 讲过，它根据海拔级别选择不同的叠加透明度。
 

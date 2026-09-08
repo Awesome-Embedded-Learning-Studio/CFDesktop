@@ -12,7 +12,7 @@ description: "文档编写日期: 2026-03-20，删除项目中所有文本文件
 ### 基本语法
 ```bash
 ./scripts/develop/remove_trailing_space.sh [OPTIONS]
-```bash
+```
 
 ### 参数说明
 | 参数 | 说明 |
@@ -36,7 +36,7 @@ description: "文档编写日期: 2026-03-20，删除项目中所有文本文件
 
 # 检查模式（CI/CD场景）
 ./scripts/develop/remove_trailing_space.sh --check
-```bash
+```
 
 ## Scripts详解 (Detailed Explanation)
 
@@ -78,7 +78,7 @@ src/main.cpp:
 === Summary ===
 Processed: 150 files
 Fixed: 2 files
-```bash
+```
 
 ### 退出码
 | 退出码 | 说明 |

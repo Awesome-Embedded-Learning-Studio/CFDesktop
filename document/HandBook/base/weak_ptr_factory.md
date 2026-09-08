@@ -29,7 +29,7 @@ private:
     // 必须是最后一个成员变量
     cf::WeakPtrFactory<NetworkManager> weak_factory_{this};
 };
-```text
+```
 
 构造时传入 `this` 指针，工厂会记住对象的位置。每次调用 `GetWeakPtr()` 就会创建一个新的弱引用，指向同一个对象。
 
@@ -49,7 +49,7 @@ private:
     // 工厂最后销毁
     cf::WeakPtrFactory<MyClass> weak_factory_{this};
 };
-```text
+```
 
 如果把工厂放在中间，某些成员析构时可能仍然检测到弱引用"有效"，然后尝试访问已经被析构的部分对象，后果是未定义行为。
 
@@ -68,7 +68,7 @@ auto weak3 = obj.GetWeakPtr();
 // 所有弱引用都指向同一个对象
 assert(weak1.Get() == weak2.Get());
 assert(weak2.Get() == weak3.Get());
-```text
+```
 
 每次调用都创建一个新的 `WeakPtr` 对象，但它们共享同一个内部的"存活标志"。对象销毁或调用 `InvalidateWeakPtrs()` 后，所有弱引用同时失效。存活标志（`WeakReferenceFlag`）直接嵌入在 `WeakPtrFactory` 内部，不涉及任何堆分配。所有 `WeakPtr` 实例通过裸指针引用这个标志，因此 `WeakPtr` 的创建开销极小。
 
@@ -93,7 +93,7 @@ public:
 private:
     cf::WeakPtrFactory<ConfigManager> weak_factory_{this};
 };
-```text
+```
 
 `InvalidateWeakPtrs()` 会把内部的存活标志设为失效。失效前创建的所有弱引用都会变成无效。注意，与旧版实现不同，失效后**不能再创建新的弱引用**——后续调用 `GetWeakPtr()` 会触发断言失败。这是因为标志直接嵌入在工厂中，失效操作只是将 `std::atomic<bool>` 设为 `false`，不会分配新的标志。
 
@@ -112,7 +112,7 @@ private:
 MyClass a;
 MyClass b = a;  // 编译错误：WeakPtrFactory 不可复制
 MyClass c = std::move(a);  // 编译错误：WeakPtrFactory 不可移动
-```text
+```
 
 这个设计是有意为之的。工厂和对象的生命周期绑定在一起，复制或移动会破坏这个关系。如果你确实需要移动对象，得先清理所有弱引用，但这个场景在我们的使用中极少出现，干脆直接禁了。
 
@@ -140,7 +140,7 @@ private:
     std::vector<Callback> callbacks_;
     cf::WeakPtrFactory<AsyncWorker> weak_factory_{this};
 };
-```text
+```
 
 ### 观察者模式
 
@@ -169,7 +169,7 @@ private:
     std::vector<cf::WeakPtr<Observer>> observers_;
     cf::WeakPtrFactory<Subject> weak_factory_{this};
 };
-```text
+```
 
 ### 单次失效模式
 
@@ -194,7 +194,7 @@ public:
 private:
     cf::WeakPtrFactory<ResourceManager> weak_factory_{this};
 };
-```text
+```
 
 ## 注意事项
 

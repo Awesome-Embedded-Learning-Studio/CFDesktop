@@ -42,7 +42,7 @@ const char* bodySmall = TYPOGRAPHY_BODY_SMALL;        // 12sp, 辅助文字
 const char* labelLarge = TYPOGRAPHY_LABEL_LARGE;      // 14sp, 按钮文字
 const char* labelMedium = TYPOGRAPHY_LABEL_MEDIUM;    // 12sp, 标签
 const char* labelSmall = TYPOGRAPHY_LABEL_SMALL;      // 11sp, 小标签
-```bash
+```
 
 ## 字体属性说明
 
@@ -87,7 +87,7 @@ button.setFontWeight(buttonStyle.fontWeight);
 // 设置正文
 auto bodyStyle = theme.resolveTypography(TYPOGRAPHY_BODY_MEDIUM);
 textLabel.setTextStyle(bodyStyle);
-```text
+```
 
 ## 行高 Token
 
@@ -103,7 +103,7 @@ const char* lineHeightTitle = LINEHEIGHT_TITLE_LARGE; // "md.lineHeight.titleLar
 // 使用场景：某些框架需要分别设置
 theme.setTypography(TYPOGRAPHY_BODY_MEDIUM);
 theme.setLineHeight(LINEHEIGHT_BODY_MEDIUM);
-```text
+```
 
 不过在我们的推荐使用方式中，行高应该由 Typography Token 统一管理，单独使用行高 Token 是比较边缘的场景。
 
@@ -131,7 +131,7 @@ theme.setLineHeight(LINEHEIGHT_BODY_MEDIUM);
 // 场景 5：时间戳、元数据
 // 选 Label Small（11sp）或 Body Small（12sp）
 // Label Small 字重更重，适合标签；Body Small 更轻，适合辅助信息
-```text
+```
 
 ## 批量遍历
 
@@ -147,7 +147,7 @@ for (size_t i = 0; i < TYPOGRAPHY_TOKEN_COUNT; ++i) {
 for (size_t i = 0; i < LINEHEIGHT_TOKEN_COUNT; ++i) {
     printf("LineHeight Token %zu: %s\n", i, ALL_LINEHEIGHT_TOKENS[i]);
 }
-```text
+```
 
 ## 可访问性考虑
 

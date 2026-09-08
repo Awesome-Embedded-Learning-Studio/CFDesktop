@@ -12,7 +12,7 @@ description: "文档编写日期: 2026-03-20，Windows PowerShell版本的行尾
 ### 基本语法
 ```powershell
 .\scripts\develop\remove_trailing_space.ps1 [OPTIONS]
-```bash
+```
 
 ### 参数说明
 | 参数 | 说明 |
@@ -36,7 +36,7 @@ description: "文档编写日期: 2026-03-20，Windows PowerShell版本的行尾
 
 # 检查暂存文件（pre-commit钩子）
 .\scripts\develop\remove_trailing_space.ps1 -StagedCheck
-```powershell
+```
 
 ## Scripts详解 (Detailed Explanation)
 
@@ -83,7 +83,7 @@ src/main.cpp:
 === Summary ===
 Processed: 150 files
 Fixed: 2 files
-```bash
+```
 
 ### 退出码
 | 退出码 | 说明 |

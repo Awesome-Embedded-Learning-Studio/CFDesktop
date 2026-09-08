@@ -25,7 +25,7 @@ int easing = motion.queryEasing("md.motion.standard");         // 线性/缓入�
 
 // 查询动画延迟（毫秒）
 int delay = motion.queryDelay("md.motion.shortEnter");         // 通常为 0
-```text
+```
 
 这三个参数组合起来可以构造完整的动画配置：
 
@@ -39,7 +39,7 @@ animation->setEasingCurve(static_cast<QEasingCurve::Type>(
 animation->setStartValue(startRect);
 animation->setEndValue(endRect);
 animation->start();
-```text
+```
 
 ## Token 命名约定
 
@@ -58,7 +58,7 @@ animation->start();
 "md.motion.mediumDuration"  // 中等持续时间（250ms）
 "md.motion.longDuration"    // 长持续时间（350ms）
 "md.motion.extraLongDuration" // 超长持续时间（500ms+）
-```text
+```
 
 缓动类型返回的是整数值，需要映射到具体的缓动曲线枚举。Qt 的 `QEasingCurve::Type` 是一个常见的映射目标：
 
@@ -73,7 +73,7 @@ animation->start();
 // 33     -> OutCubic
 // 34     -> InOutCubic
 // ...
-```text
+```
 
 具体的映射关系由实现类决定，可以在文档中说明。
 
@@ -99,7 +99,7 @@ void fadeInWidget(QWidget* widget, const char* motionToken) {
 
 // 使用
 fadeInWidget(myWidget, "md.motion.shortEnter");  // 快速淡入
-```text
+```
 
 对于需要延迟的动画序列：
 
@@ -117,7 +117,7 @@ void staggeredShow(QList<QWidget*> widgets) {
         animation->start();
     }
 }
-```text
+```
 
 ## 缓动曲线映射
 
@@ -145,7 +145,7 @@ auto curve = EasingCurveMapper::fromMotionValue(
     motion.queryEasing("md.motion.standard")
 );
 animation->setEasingCurve(curve);
-```text
+```
 
 ## 实现要点
 

@@ -32,7 +32,7 @@ if (result.has_value()) {
 } else {
     // 根据 error() 的值决定怎么恢复
 }
-```text
+```
 
 ## 容器视图
 
@@ -48,7 +48,7 @@ int arr[] = {1, 2, 3};
 
 process(vec);  // OK
 process(arr);  // 也 OK
-```text
+```
 
 ## 资源管理
 
@@ -63,7 +63,7 @@ process(arr);  // 也 OK
 
     // 使用文件，无论中间发生什么，离开作用域都会自动关闭
 }
-```text
+```
 
 ## 懒加载初始化
 
@@ -83,7 +83,7 @@ protected:
 
 // 首次调用 get_resources() 时才执行初始化
 auto& info = cache.get_resources();
-```text
+```
 
 ⚠️ `force_reinit()` 不是线程安全的，如果需要在运行时重新初始化，记得自己加锁。
 
@@ -99,7 +99,7 @@ std::string_view model = cf::parse_cpuinfo_field(line, "model name");
 
 // 直接读单个数字值的文件
 auto freq = cf::read_uint32_file("/sys/devices/system/cpu/cpu0/cpufreq/max_freq");
-```text
+```
 
 ## 弱引用
 
@@ -123,7 +123,7 @@ auto weak = manager.GetWeakPtr();
 if (weak) {
     weak->ApplyTheme();  // 安全访问
 }
-```text
+```
 
 ## 平台检测
 
@@ -137,7 +137,7 @@ if (weak) {
 #elif defined(CFDESKTOP_OS_LINUX)
     // Linux 特定代码
 #endif
-```text
+```
 
 ## 相关文档
 

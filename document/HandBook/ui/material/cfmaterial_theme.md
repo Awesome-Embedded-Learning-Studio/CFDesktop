@@ -34,7 +34,7 @@ auto darkTheme = factory.fromName("theme.material.dark");
 // 从 JSON 创建
 QByteArray json = loadThemeJson();
 auto customTheme = factory.fromJson(json);
-```text
+```
 
 支持的预定义主题名称：
 - `theme.material.light`：默认浅色主题
@@ -62,7 +62,7 @@ float cardRadius = radiusScale->queryRadiusScale("md.shape.cornerMedium");
 // 访问动画
 auto* motion = static_cast<MaterialMotionScheme*>(theme->motion_spec());
 int duration = motion->queryDuration("shortEnter");
-```text
+```
 
 这里需要 `static_cast` 是因为 `ICFTheme` 接口返回的是基类指针。在实际使用中，既然我们明确知道是 Material 主题，这样转换是安全的。
 
@@ -90,7 +90,7 @@ void MyWidget::paintEvent(QPaintEvent*) {
     QColor backgroundColor = colors->queryExpectedColor("md.surface");
     // 使用背景色绘制...
 }
-```text
+```
 
 ## 组件协调性
 
@@ -108,7 +108,7 @@ MaterialTheme theme2 = std::move(theme1);
 
 // 正确做法：使用工厂创建新实例
 auto theme2 = factory.fromName("theme.material.light");
-```bash
+```
 
 ## Material Design 3 规范对应
 

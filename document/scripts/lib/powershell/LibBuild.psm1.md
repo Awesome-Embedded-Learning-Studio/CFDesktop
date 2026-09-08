@@ -15,14 +15,14 @@ description: "文档编写日期: 2026-03-20，描述: 确保构建目录存在�
 # LibBuild 依赖 LibCommon，需先加载
 Import-Module scripts/lib/powershell/LibCommon.psm1
 Import-Module scripts/lib/powershell/LibBuild.psm1
-```text
+```
 
 或者：
 
 ```powershell
 . "$PSScriptRoot\LibCommon.psm1"
 . "$PSScriptRoot\LibBuild.psm1"
-```bash
+```
 
 ## Scripts详解
 
@@ -61,7 +61,7 @@ Import-Module scripts/lib/powershell/LibBuild.psm1
 **示例**:
 ```powershell
 Clean-BuildDir "C:\Build\Output"
-```yaml
+```
 
 ---
 
@@ -77,7 +77,7 @@ Clean-BuildDir "C:\Build\Output"
 **示例**:
 ```powershell
 Ensure-BuildDir "C:\Build\Output"
-```yaml
+```
 
 ---
 
@@ -97,12 +97,12 @@ Ensure-BuildDir "C:\Build\Output"
 **示例**:
 ```powershell
 Invoke-CMakeConfigure -Generator "Ninja" -BuildType "Release" -SourceDir "." -BuildDir "build"
-```text
+```
 
 带额外参数：
 ```powershell
 Invoke-CMakeConfigure -Generator "Ninja" -BuildType "Release" -SourceDir "." -BuildDir "build" -ExtraArgs @("-DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
-```yaml
+```
 
 ---
 
@@ -124,7 +124,7 @@ Invoke-CMakeBuild -BuildDir "build"
 
 # 构建特定目标，指定并行数
 Invoke-CMakeBuild -BuildDir "build" -Target "myapp" -Parallel 4
-```yaml
+```
 
 ---
 
@@ -142,7 +142,7 @@ Invoke-CMakeBuild -BuildDir "build" -Target "myapp" -Parallel 4
 if (Test-CmakeCache "build") {
     Write-LogInfo "CMake cache exists"
 }
-```yaml
+```
 
 ---
 
@@ -160,7 +160,7 @@ if (Test-CmakeCache "build") {
 ```powershell
 $generator = Get-CmakeCacheVar -BuildDir "build" -VarName "CMAKE_GENERATOR"
 Write-LogInfo "Generator: $generator"
-```yaml
+```
 
 ---
 
@@ -176,7 +176,7 @@ Write-LogInfo "Generator: $generator"
 ```powershell
 $jobs = Get-ParallelJobCount
 Write-LogInfo "Using $jobs parallel jobs"
-```yaml
+```
 
 ---
 
@@ -193,7 +193,7 @@ Write-LogInfo "Using $jobs parallel jobs"
 Start-BuildTimer
 # ... 执行构建 ...
 Stop-BuildTimer
-```yaml
+```
 
 ---
 
@@ -211,7 +211,7 @@ Start-BuildTimer
 # ... 执行构建 ...
 Stop-BuildTimer
 # 输出示例: [2026-03-20 10:30:45] [INFO] Build time: 2m 15s
-```yaml
+```
 
 ---
 

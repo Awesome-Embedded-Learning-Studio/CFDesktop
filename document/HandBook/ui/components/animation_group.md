@@ -13,7 +13,7 @@ description: 是动画组合容器，用于将多个动画作为一个整体来�
 
 ```cpp
 enum class Mode { Parallel, Sequential };
-```text
+```
 
 `Parallel` 模式下，所有动画同时启动，适合处理多个属性的同步变化。`Sequential` 模式下，动画按添加顺序依次执行，前一个完成后才开始下一个。
 
@@ -37,7 +37,7 @@ group->addAnimation(scaleAnim->GetWeakPtr());
 
 // 启动整个组
 group->start(ICFAbstractAnimation::Direction::Forward);
-```text
+```
 
 ## 顺序执行
 
@@ -54,7 +54,7 @@ sequentialGroup->addAnimation(anim3->GetWeakPtr());
 
 // anim1 完成后执行 anim2，然后 anim3
 sequentialGroup->start();
-```text
+```
 
 ## 弱引用管理
 
@@ -71,7 +71,7 @@ delete anim;
 
 // 移除操作也是安全的
 group->removeAnimation(invalidWeakPtr);  // 无操作
-```text
+```
 
 ## 生命周期
 
@@ -81,7 +81,7 @@ group->removeAnimation(invalidWeakPtr);  // 无操作
 group->pause();   // 暂停组内所有动画
 group->stop();    // 停止并重置所有动画
 group->reverse(); // 翻转执行方向
-```text
+```
 
 `stop()` 会停止组内所有动画并将它们重置到初始状态，而 `pause()` 只是暂停，可以继续恢复。
 

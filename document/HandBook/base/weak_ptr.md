@@ -41,7 +41,7 @@ auto weak_ref = manager.GetWeakPtr();
 if (weak_ref) {  // 检查对象是否存活
     weak_ref->ApplyTheme();
 }
-```text
+```
 
 ⚠️ `WeakPtrFactory` 必须声明为类的最后一个成员。C++ 按声明顺序的逆序销毁成员，这样可以确保工厂先失效，其他成员的析构函数中如果持有弱引用也能正确检测到失效。
 
@@ -65,7 +65,7 @@ if (MyClass* ptr = weak.Get()) {
 // 方式三：直接解引用（会断言，仅确定对象存在时使用）
 *weak;  // 如果无效会触发 assert
 weak->Method();  // 同上
-```cpp
+```
 
 直接解引用会触发断言，这是有意为之的设计。如果你用了 `operator->` 或 `operator*`，说明你已经确定对象存在，不会再检查。如果你不敢确定，应该用 `Get()` 或 `IsValid()` 先检查。
 
@@ -85,7 +85,7 @@ weak->Method();  // 同上
 
 assert(!weak.IsValid());
 assert(weak.Get() == nullptr);
-```text
+```
 
 这个设计避免了 `shared_ptr` 的隐式生命周期延长问题。持有 `WeakPtr` 不会阻止对象被销毁，这也是它和 `std::weak_ptr` 的核心区别之一。同时需要注意的是，`WeakPtr` 内部持有的是指向工厂内嵌标志的裸指针（而非 `shared_ptr`），因此 `WeakPtr` 的生命周期**绝不能**超过工厂——工厂析构后再访问 `WeakPtr` 是未定义行为。
 
@@ -120,7 +120,7 @@ cf::WeakPtr<Derived> derived_again =
 if (derived_again) {
     derived_again->DerivedMethod();
 }
-```text
+```
 
 `DynamicCast` 会在运行时检查类型，如果转换失败返回无效的 `WeakPtr`。这个操作不是免费的，但比直接 `dynamic_cast` 原始指针要安全，因为转换失败得到的是空指针而不是未定义行为。
 
@@ -138,7 +138,7 @@ if (weak.IsValid()) {  // 检查通过
 
 // 正确做法：在单线程序列中使用
 // 或者用其他同步机制保护整个检查+访问过程
-```text
+```
 
 这个限制和 `std::weak_ptr::lock()` 不一样。标准库的 `lock()` 是原子的，可以返回一个 `shared_ptr` 保证对象在使用期间存活。我们选择不提供这个功能，是因为我们的设计中对象有唯一拥有者，不存在共享所有权。此外，标志直接嵌入在工厂中（无堆分配），`WeakPtr` 只持有裸指针，无法像 `shared_ptr` 那样延长对象生命周期。
 
@@ -175,7 +175,7 @@ assert(!weak2.IsValid());  // 失效
 
 // 注意：失效后不能再调用 GetWeakPtr()，会触发断言失败
 // auto weak3 = obj.GetWeakPtr();  // 断言失败！
-```text
+```
 
 这个功能在某些场景下很有用，比如你想显式通知所有观察者对象不再可用，但又不想真的销毁对象。与旧版实现不同，失效后**不能再创建新的弱引用**——`GetWeakPtr()` 会触发断言失败。这是因为存活标志直接嵌入在工厂中（使用 `std::atomic<bool>`），失效只是将标志设为 `false`，不会分配新的标志。如果你需要"重启"后继续创建弱引用，应该使用一个全新的工厂实例。
 
@@ -208,7 +208,7 @@ private:
 };
 
 // resource_ 的析构函数中，如果持有 Bad 的 WeakPtr，会看到失效
-```text
+```
 
 第二个陷阱是忘记检查有效性直接访问。这在异步代码里特别容易出现，因为回调执行时对象可能已经被销毁：
 
@@ -226,7 +226,7 @@ post_task([weak]() {
         weak->Method();
     }
 });
-```text
+```
 
 ## 相关文档
 

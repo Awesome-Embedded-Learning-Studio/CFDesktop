@@ -12,7 +12,7 @@ description: libconfig.sh 的详细文档
 ### 加载方式
 ```bash
 source scripts/lib/bash/lib_config.sh
-```bash
+```
 
 ## Scripts详解
 
@@ -63,14 +63,14 @@ build_type = Release
 [paths]
 build_dir = build
 output_dir = out
-```text
+```
 
 使用方式：
 ```bash
 eval "$(get_ini_config config.ini)"
 echo "$config_cmake_generator"    # 输出: Ninja
 echo "$config_paths_build_dir"    # 输出: build
-```text
+```
 
 ### get_ini_value(filepath, section, key)
 
@@ -88,7 +88,7 @@ echo "$config_paths_build_dir"    # 输出: build
 ```bash
 value=$(get_ini_value "config.ini" "cmake" "generator")
 echo "$value"    # 输出: Ninja
-```text
+```
 
 ### has_ini_value(filepath, section, key)
 
@@ -108,7 +108,7 @@ echo "$value"    # 输出: Ninja
 if has_ini_value "config.ini" "cmake" "generator"; then
     log_info "Generator 已配置"
 fi
-```bash
+```
 
 ### get_default_config_file(mode)
 
@@ -131,7 +131,7 @@ fi
 ```bash
 config_file=$(get_default_config_file "develop")
 eval "$(get_ini_config "$config_file")"
-```yaml
+```
 
 ---
 
@@ -161,7 +161,7 @@ if has_ini_value "$CONFIG_FILE" "cmake" "generator"; then
 else
     echo "使用默认生成器"
 fi
-```text
+```
 
 ### 条件配置示例
 
@@ -182,7 +182,7 @@ BUILD_TYPE="$config_cmake_build_type"
 log_info "配置模式: $MODE"
 log_info "构建目录: $BUILD_DIR"
 log_info "构建类型: $BUILD_TYPE"
-```text
+```
 
 ### INI 配置文件示例
 
@@ -203,4 +203,4 @@ install_dir = /usr/local
 parallel = true
 jobs = 8
 verbose = false
-```text
+```

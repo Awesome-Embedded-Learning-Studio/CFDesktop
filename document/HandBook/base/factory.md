@@ -33,7 +33,7 @@ cf::PlainFactory<Widget, int, int> factory;
 Widget* w = factory.make(10, 20);
 // 使用 w...
 delete w;  // 调用方负责删除
-```text
+```
 
 `PlainFactory` 的设计目标之一是跨 ABI 边界。动态库导出的接口通常不适合直接返回 `std::unique_ptr`（不同编译器/标准库的 `unique_ptr` 布局可能不同），但裸指针永远兼容。
 
@@ -49,7 +49,7 @@ using WidgetFactory = cf::StaticPlainFactory<Widget, int, int>;
 // 在任何地方
 auto& factory = WidgetFactory::instance();
 Widget* w = factory.make(10, 20);
-```text
+```
 
 `StaticPlainFactory` 继承了 `PlainFactory` 和 `SimpleSingleton`，线程安全的单例由 Meyer's Singleton 保证。
 
@@ -71,7 +71,7 @@ auto unique_svc = factory.make_unique("Logger");  // std::unique_ptr<Service>
 auto shared_svc = factory.make_shared("Config");  // std::shared_ptr<Service>
 
 // 不需要手动 delete
-```text
+```
 
 ### StaticSmartPtrPlainFactory - 单例版智能指针工厂
 
@@ -79,7 +79,7 @@ auto shared_svc = factory.make_shared("Config");  // std::shared_ptr<Service>
 using ServiceFactory = cf::StaticSmartPtrPlainFactory<Service, std::string>;
 
 auto svc = ServiceFactory::instance().make_unique("MyService");
-```text
+```
 
 ## RegisteredFactory - 注册式工厂
 
@@ -117,7 +117,7 @@ renderer_factory.register_creator([]() -> IRenderer* {
 // 创建
 auto renderer = renderer_factory.make_unique();
 renderer->draw();
-```text
+```
 
 ### 自定义删除器
 
@@ -128,7 +128,7 @@ renderer_factory.register_creator(
     []() -> IRenderer* { return new VulkanRenderer; },
     [](IRenderer* p) { /* 自定义清理逻辑 */ delete p; }
 );
-```text
+```
 
 ### StaticRegisteredFactory - 单例版注册式工厂
 
@@ -142,7 +142,7 @@ RendererFactory::instance().register_creator([]() -> IRenderer* {
 
 // 使用
 auto renderer = RendererFactory::instance().make_unique();
-```text
+```
 
 ### 检查注册状态
 
@@ -152,7 +152,7 @@ if (RendererFactory::instance().has_creator()) {
 } else {
     // 没有注册任何 creator，无法创建
 }
-```bash
+```
 
 ## 线程安全说明
 

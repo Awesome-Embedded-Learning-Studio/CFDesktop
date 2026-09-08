@@ -21,7 +21,7 @@ enum class State {
     StateChecked  = 0x10,  // 选中状态（如 ToggleButton）
     StateDragged  = 0x20,  // 拖拽状态
 };
-```bash
+```
 
 这些状态可以组合存在（比如同时有焦点和悬停），状态机内部通过位运算处理优先级。
 
@@ -70,7 +70,7 @@ public:
 private:
     base::StateMachine* m_stateMachine;
 };
-```text
+```
 
 ## 事件处理
 
@@ -112,7 +112,7 @@ void MyWidget::focusOutEvent(QFocusEvent* event) {
     m_stateMachine->onFocusOut();
     update();
 }
-```text
+```
 
 禁用状态的监听稍微特殊，因为它通过 `changeEvent` 触发：
 
@@ -128,7 +128,7 @@ void MyWidget::changeEvent(QEvent* event) {
         update();
     }
 }
-```text
+```
 
 ## 绘制状态层
 
@@ -153,7 +153,7 @@ void MyWidget::paintEvent(QPaintEvent* event) {
 
     // 再绘制其他内容...
 }
-```text
+```
 
 ## 选中状态
 
@@ -167,7 +167,7 @@ void MyWidget::setChecked(bool checked) {
         update();
     }
 }
-```text
+```
 
 ⚠️ 选中状态（Checked）只是一种"持久化"的悬停状态，它不应该阻止其他交互状态的叠加。
 
@@ -185,7 +185,7 @@ auto factory = Application::animationFactory();
 if (factory) {
     factory->setEnabledAll(false);
 }
-```text
+```
 
 ## 相关文档
 

@@ -12,13 +12,13 @@ description: "文档编写日期: 2026-03-20，本脚本执行完整的开发构
 ### 基本语法
 ```powershell
 .\scripts\build_helpers\windows_develop_build.ps1
-```text
+```
 
 ### 使用示例
 ```powershell
 # 执行完整的开发构建 (清理 + 配置 + 编译 + 测试)
 .\scripts\build_helpers\windows_develop_build.ps1
-```bash
+```
 
 ## Scripts详解
 

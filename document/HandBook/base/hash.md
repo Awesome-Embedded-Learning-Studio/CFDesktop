@@ -22,7 +22,7 @@ switch (fnv1a64(token)) {
     case fnv1a64("START"): /* ... */ break;
     case fnv1a64("STOP"):  /* ... */ break;
 }
-```text
+```
 
 编译器会在编译期算出 `fnv1a64("START")` 的值，switch 语句变成了一组整数比较，非常高效。
 
@@ -43,7 +43,7 @@ static_assert(h1 != h2, "Different strings must produce different hashes");
 // 运行时使用 std::string_view
 std::string_view sv = "some_string";
 uint64_t h3 = fnv1a64(sv);
-```text
+```
 
 ### 32 位哈希
 
@@ -53,7 +53,7 @@ constexpr uint32_t h32 = fnv1a32("TokenA");
 
 // 运行时
 uint32_t h = fnv1a32(std::string_view("dynamic"));
-```text
+```
 
 32 位版本适用于内存受限的场景，但碰撞概率比 64 位高。如果哈希表不大（几千个条目以内），32 位通常够用。
 
@@ -64,7 +64,7 @@ uint32_t h = fnv1a32(std::string_view("dynamic"));
 constexpr uint64_t h1 = fnv1a64("data");                        // 默认种子
 constexpr uint64_t h2 = fnv1a64("data", 12345678ULL);           // 自定义种子
 // h1 != h2，相同输入不同种子产生不同哈希
-```text
+```
 
 ### 用户自定义字面量
 
@@ -74,7 +74,7 @@ using namespace cf::hash;
 // "_hash" 后缀，编译期计算
 constexpr uint64_t h = "MyToken"_hash;
 static_assert(h == fnv1a64("MyToken"), "UDL must match function call");
-```text
+```
 
 `_hash` 字面量让代码更简洁，特别是在 switch-case 里：
 
@@ -86,7 +86,7 @@ switch (fnv1a64(cmd)) {
     case "save"_hash:   save_file();   break;
     default:            unknown_cmd(); break;
 }
-```text
+```
 
 ## FNV-1a 算法
 
@@ -98,7 +98,7 @@ for each byte in input:
     hash = hash XOR byte
     hash = hash * prime
 return hash
-```bash
+```
 
 参数值：
 
@@ -138,7 +138,7 @@ if (it != hashmap.end()) {
         // 确认是真正的匹配
     }
 }
-```text
+```
 
 3. **不要用于安全场景**：FNV-1a 不是加密哈希，不应该用于密码存储、完整性校验等安全场景。
 

@@ -12,7 +12,7 @@ description: "文档编写日期: 2026-03-20，LibGit.psm1 是一个 Git 辅助�
 ### 加载方式
 ```powershell
 Import-Module scripts/lib/powershell/LibGit.psm1
-```bash
+```
 
 ## Scripts详解
 
@@ -44,7 +44,7 @@ LibGit.psm1 是一个 Git 辅助函数库，提供版本号解析、Git 仓库�
 #### Determine-VerifyLevel
 ```powershell
 Determine-VerifyLevel [-LocalVersion] <string> [-RemoteVersion] <string>
-```text
+```
 根据本地版本和远程版本的差异，确定需要执行的验证级别：
 
 - **major**: 主版本号不同（1.x.x vs 2.x.x），需要 X64 + ARM64 完整构建 + 测试
@@ -54,7 +54,7 @@ Determine-VerifyLevel [-LocalVersion] <string> [-RemoteVersion] <string>
 #### Compare-Versions
 ```powershell
 Compare-Versions -Version1 <string> -Version2 <string>
-```text
+```
 比较两个语义化版本号的大小：
 
 - 返回 `-1`: Version1 < Version2
@@ -67,7 +67,7 @@ Compare-Versions -Version1 <string> -Version2 <string>
 ```powershell
 Get-LocalVersion
 Get-RemoteVersion
-```text
+```
 - `Get-LocalVersion`: 获取当前分支最近的 Git 标签，若无标签返回 `"0.0.0"`
 - `Get-RemoteVersion`: 自动执行 `git fetch` 获取最新远程信息，然后返回远程 main 分支的最新标签
 

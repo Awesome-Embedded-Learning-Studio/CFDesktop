@@ -13,13 +13,13 @@ description: "文档编写日期: 2026-03-20，描述: 写入 INFO 级别日志�
 
 ```powershell
 Import-Module scripts/lib/powershell/LibCommon.psm1
-```text
+```
 
 或者：
 
 ```powershell
 . "$PSScriptRoot\LibCommon.psm1"
-```bash
+```
 
 ## Scripts详解
 
@@ -50,7 +50,7 @@ Import-Module scripts/lib/powershell/LibCommon.psm1
 **示例**:
 ```powershell
 Write-Log -Message "Build completed" -Level "SUCCESS"
-```yaml
+```
 
 ---
 
@@ -67,7 +67,7 @@ Write-Log -Message "Build completed" -Level "SUCCESS"
 ```powershell
 Write-LogInfo "Starting build process"
 Write-LogInfo "Processing" "file" "1.txt"
-```yaml
+```
 
 ---
 
@@ -83,7 +83,7 @@ Write-LogInfo "Processing" "file" "1.txt"
 **示例**:
 ```powershell
 Write-LogSuccess "Build completed successfully"
-```yaml
+```
 
 ---
 
@@ -99,7 +99,7 @@ Write-LogSuccess "Build completed successfully"
 **示例**:
 ```powershell
 Write-LogWarning "Configuration file not found, using defaults"
-```yaml
+```
 
 ---
 
@@ -115,7 +115,7 @@ Write-LogWarning "Configuration file not found, using defaults"
 **示例**:
 ```powershell
 Write-LogError "Build failed with exit code: 1"
-```yaml
+```
 
 ---
 
@@ -133,7 +133,7 @@ Write-LogError "Build failed with exit code: 1"
 ```powershell
 Write-LogSeparator
 Write-LogSeparator -Char "-" -Width 60
-```yaml
+```
 
 ---
 
@@ -152,7 +152,7 @@ Write-LogSeparator -Char "-" -Width 60
 ```powershell
 Write-LogProgress -Current 5 -Total 10 -Message "Processing files"
 # 输出: [5/10] (50%) Processing files
-```bash
+```
 
 ---
 

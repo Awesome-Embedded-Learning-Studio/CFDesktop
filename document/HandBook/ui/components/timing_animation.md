@@ -14,7 +14,7 @@ description: 是基于时间的动画基类，使用固定的持续时间和缓�
 ```text
 progress = easing(elapsed / duration)
 value = from + progress * (to - from)
-```text
+```
 
 ## 创建动画
 
@@ -27,7 +27,7 @@ value = from + progress * (to - from)
 // 假设 theme->motionSpec() 返回有效的 IMotionSpec
 auto* motionSpec = theme->motionSpec();
 auto* anim = new CFTimingAnimation(motionSpec, this);
-```text
+```
 
 ⚠️ `IMotionSpec` 指针必须在动画的生命周期内保持有效。这个设计是经过权衡的——动画工厂创建动画时持有对主题的引用，而主题拥有 motion spec，所以生命周期是绑定的，不需要额外拷贝。
 
@@ -44,7 +44,7 @@ anim->setRange(0.0f, 255.0f);
 
 // 从位置 A 到位置 B
 anim->setRange(startX, endX);
-```text
+```
 
 `setRange()` 可以在动画运行时调用，会即时改变当前帧的计算基准，但通常建议在 `start()` 前设置好。
 
@@ -54,7 +54,7 @@ anim->setRange(startX, endX);
 
 ```cpp
 float current = anim->currentValue();
-```bash
+```
 
 ## 时间动画 vs 弹簧动画
 
@@ -89,7 +89,7 @@ connect(fadeIn, &ICFAbstractAnimation::finished, []() {
 
 // 启动
 fadeIn->start();
-```text
+```
 
 ## 线程安全
 

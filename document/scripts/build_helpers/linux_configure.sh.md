@@ -13,7 +13,7 @@ description: "文档编写日期: 2026-03-20，是专门用于执行CMake配置�
 
 ```bash
 ./scripts/build_helpers/linux_configure.sh [develop|deploy|ci] [-c|--config <config_file>]
-```bash
+```
 
 ### 参数说明
 
@@ -70,7 +70,7 @@ description: "文档编写日期: 2026-03-20，是专门用于执行CMake配置�
 
 # 使用自定义配置文件
 ./scripts/build_helpers/linux_configure.sh deploy -c my_config.ini
-```text
+```
 
 ### 执行流程
 
@@ -111,7 +111,7 @@ Running CMake configuration...
 CMake configuration completed successfully!
 To build the project, run: cmake --build build_develop
 ========================================
-```bash
+```
 
 ### 错误处理
 
@@ -131,7 +131,7 @@ cmake --build build_develop
 
 # 或使用构建脚本
 ./scripts/build_helpers/linux_fast_develop_build.sh
-```text
+```
 
 ### 注意事项
 

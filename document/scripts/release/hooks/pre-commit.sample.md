@@ -15,7 +15,7 @@ description: "文档编写日期: 2026-03-20，运行 installhooks.sh/installhoo
 ### 绕过方法
 ```bash
 git commit --no-verify -m "message"
-```text
+```
 
 ## Scripts详解
 

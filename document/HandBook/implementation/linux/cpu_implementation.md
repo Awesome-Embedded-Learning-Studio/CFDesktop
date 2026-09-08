@@ -40,7 +40,7 @@ cf::expected<void, cf::CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& h
 
     return {};
 }
-```text
+```
 
 架构信息用 `uname()` 而不是读文件，是因为某些嵌入式板子的 `/proc/cpuinfo` 可能不包含完整的架构字段。
 
@@ -71,7 +71,7 @@ float calculate_cpu_usage() {
     if (total_delta == 0) return 0.0f;
     return 100.0f * (1.0f - static_cast<float>(idle_delta) / total_delta);
 }
-```text
+```
 
 ⚠️ 首次调用会返回不准确的数据，因为需要上次采样的值作为基准。
 
@@ -89,7 +89,7 @@ CPU 特性标志在 `flags`（x86）或 `Features`（ARM）字段里，是个空
 // 读取缓存大小
 auto l1_size = cf::read_uint32_file("/sys/devices/system/cpu/cpu0/cache/index0/size");
 // 输出通常是 "32K"，parse_cache_size() 会处理单位转换
-```text
+```
 
 温度信息从 `/sys/class/thermal/thermal_zone*/temp` 读取，但不是所有设备都有温度传感器。返回值通常是 millidegree，需要除以 1000 转成摄氏度。
 
@@ -124,7 +124,7 @@ bool detect_big_little(cf::CPUBonusInfoHost& host) {
 
     return false;
 }
-```text
+```
 
 这个方法不是百分之百可靠——有些同频 CPU 也可能被误判为大小核——但在我们支持的设备上效果还可以。
 
@@ -145,7 +145,7 @@ std::string_view arm_implementer_to_vendor(uint32_t impl_val) {
         default:   return "Unknown";
     }
 }
-```text
+```
 
 ## 相关文档
 

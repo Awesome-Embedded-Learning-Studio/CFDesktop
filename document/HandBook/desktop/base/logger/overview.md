@@ -58,7 +58,7 @@ int main() {
     info("Hello, CFLogger!");
     return 0;
 }
-```text
+```
 
 ### 典型配置
 
@@ -79,7 +79,7 @@ void init_logger() {
 
     Logger::instance().setMininumLevel(level::INFO);
 }
-```text
+```
 
 ## 日志输出示例
 
@@ -89,7 +89,7 @@ void init_logger() {
 [14:23:45] [INFO] [CFLog] Application started
 [14:23:46] [WARNING] [Config] Config file not found
 [14:23:47] [ERROR] [Network] Connection failed
-```text
+```
 
 ### 彩色控制台输出
 
@@ -102,7 +102,7 @@ void init_logger() {
 
 [14:23:47] [ERROR] [Network] Connection failed
           ^^^^^ 红色
-```bash
+```
 
 ## 手册结构
 
@@ -131,7 +131,7 @@ overview → advanced_usage → formatters → sinks → configuration
 
 深入路径：
 overview → architecture → performance → troubleshooting
-```text
+```
 
 ## 相关资源
 

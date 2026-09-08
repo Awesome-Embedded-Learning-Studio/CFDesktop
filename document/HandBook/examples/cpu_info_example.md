@@ -87,7 +87,7 @@ int main() {
 
     return 0;
 }
-```text
+```
 
 ## 编译和运行
 
@@ -96,13 +96,13 @@ int main() {
 ```bash
 cd /home/charliechen/project/QtProjects/CFDesktop
 ./scripts/build_helpers/linux_fast_develop_build.sh
-```text
+```
 
 ### 运行
 
 ```bash
 ./out/build_develop/example/base/system/example_cpu_info
-```text
+```
 
 ## 示例输出
 
@@ -127,7 +127,7 @@ cd /home/charliechen/project/QtProjects/CFDesktop
   缓存: 32KB 256KB 12288KB
   大小核架构: 否
   温度: 不可用
-```text
+```
 
 在 ARM Linux 系统上的典型输出：
 
@@ -150,7 +150,7 @@ cd /home/charliechen/project/QtProjects/CFDesktop
   缓存: 64KB 512KB 4096KB
   大小核架构: 否
   温度: 45°C
-```text
+```
 
 ## 错误处理
 
@@ -173,7 +173,7 @@ if (!result.has_value()) {
 
 // 使用结果
 auto info = result.value();
-```cpp
+```
 
 ## 最佳实践
 
@@ -189,7 +189,7 @@ auto info1 = cf::getCPUInfo();
 
 // 稍后刷新查询
 auto info2 = cf::getCPUInfo(true);
-```text
+```
 
 ## 相关文档
 

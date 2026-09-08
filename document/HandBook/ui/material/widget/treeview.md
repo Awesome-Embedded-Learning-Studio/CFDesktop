@@ -19,7 +19,7 @@ class TreeView : public QTreeView {
     Q_PROPERTY(bool showTreeLines READ showTreeLines WRITE setShowTreeLines)
     Q_PROPERTY(bool rootIsDecorated READ rootIsDecorated WRITE setRootIsDecorated)
 };
-```text
+```
 
 头文件：`ui/widget/material/widget/treeview/treeview.h`
 
@@ -30,7 +30,7 @@ enum class TreeItemHeight {
     Compact,  // 48dp - 紧凑模式
     Standard  // 56dp - 标准模式（默认）
 };
-```text
+```
 
 ## 缩进样式
 
@@ -39,7 +39,7 @@ enum class TreeIndentStyle {
     Material, // 56dp 每级 + 引导线
     Classic   // 传统嵌套缩进
 };
-```text
+```
 
 ## 基本用法
 
@@ -69,7 +69,7 @@ tree->setModel(model);
 
 // 连接信号
 connect(tree, &QTreeView::clicked, this, &MyClass::onItemClicked);
-```text
+```
 
 ## 树连接线
 
@@ -79,7 +79,7 @@ tree->setShowTreeLines(true);
 
 // 连接线在父节点和子节点之间绘制
 // 使用 OutlineVariant 颜色
-```text
+```
 
 ## 展开/折叠
 
@@ -88,7 +88,7 @@ TreeView 使用 `TreeViewItemDelegate` 处理展开/折叠图标的渲染：
 ```cpp
 // drawBranches() 被重写为空实现
 // 所有展开/折叠图标由委托渲染，避免与默认 Qt 渲染冲突
-```text
+```
 
 ## 根节点装饰
 
@@ -98,7 +98,7 @@ tree->setRootIsDecorated(true);
 
 // 隐藏根节点装饰
 tree->setRootIsDecorated(false);
-```bash
+```
 
 ## 交互状态
 

@@ -27,7 +27,7 @@ qreal fontSize = helper.spToPx(14.0);     // 14sp -> 28px
 
 // 反向转换：物理像素转回设备无关像素
 qreal dpValue = helper.pxToDp(352.0);     // 352px -> 176dp
-```text
+```
 
 设备像素比通常从 Qt 的 `QWindow` 或 `QScreen` 获取：
 
@@ -35,7 +35,7 @@ qreal dpValue = helper.pxToDp(352.0);     // 352px -> 176dp
 // 在 Qt 窗口中获取当前 DPI
 qreal dpi = window()->devicePixelRatio();
 CanvasUnitHelper helper(dpi);
-```text
+```
 
 ## 单位类型
 
@@ -63,7 +63,7 @@ if (bp == CanvasUnitHelper::BreakPoint::Compact) {
     // 桌面布局：>= 840dp
     // 使用多列布局，显示完整导航
 }
-```text
+```
 
 断点判断使用的是 dp 值，而不是物理像素。这样不管屏幕 DPI 如何，布局行为保持一致。
 
@@ -83,7 +83,7 @@ int rounded = qRound(helper.dpToPx(16.0));
 
 // 错误的做法：直接截断
 int truncated = static_cast<int>(helper.dpToPx(16.0));
-```text
+```
 
 ## 性能考虑
 

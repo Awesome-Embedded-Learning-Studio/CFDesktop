@@ -44,7 +44,7 @@ protected:
     std::unique_ptr<IRadiusScale> radius_scale_;
     std::unique_ptr<IFontType> font_type_;
 };
-```text
+```
 
 设计成接口的原因是：我们可能有多种不同的主题实现（Material、Cupertino、Fluent），但它们都应该遵循同一个接口。控件只需要依赖 ICFTheme 接口，不需要知道具体是哪种主题。
 
@@ -61,7 +61,7 @@ public:
     virtual std::unique_ptr<ICFTheme> fromJson(const QByteArray& json) = 0;
     virtual QByteArray toJson(ICFTheme* raw_theme) = 0;
 };
-```text
+```
 
 `fromName()` 用于创建预定义的主题（比如 "light"、"dark"），`fromJson()` 用于从 Material Theme Builder 导出的 JSON 创建主题，`toJson()` 用于序列化。
 
@@ -93,7 +93,7 @@ public:
 signals:
     void themeChanged(const ICFTheme& new_theme);
 };
-```text
+```
 
 使用方式很直观：
 
@@ -108,7 +108,7 @@ ThemeManager::instance().install_widget(myButton);
 
 // 切换主题
 ThemeManager::instance().setThemeTo("material.light");
-```text
+```
 
 ## 为什么用接口 + 工厂？
 
@@ -129,7 +129,7 @@ static ThemeManager& instance() {
     static ThemeManager manager;
     return manager;
 }
-```text
+```
 
 C++11 保证局部静态变量的初始化是线程安全的，所以这个实现不需要额外的锁。
 
@@ -143,7 +143,7 @@ C++11 保证局部静态变量的初始化是线程安全的，所以这个实�
 // 在控件的构造函数中
 connect(&ThemeManager::instance(), &ThemeManager::themeChanged,
         this, [this](const ICFTheme&) { update(); });
-```text
+```
 
 这里有个设计细节：为什么用 `install_widget` 而不是让控件直接连接信号？
 
@@ -163,7 +163,7 @@ ThemeManager (owner)
             ├── unique_ptr<IMotionSpec> motion_spec_
             ├── unique_ptr<IRadiusScale> radius_scale_
             └── unique_ptr<IFontType> font_type_
-```yaml
+```
 
 控件只持有引用（通过 `themeChanged` 信号的参数），不拥有主题的所有权。这样当主题被销毁时，不会有 dangling pointer 的问题。
 

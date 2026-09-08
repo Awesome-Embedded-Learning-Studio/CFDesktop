@@ -104,7 +104,7 @@ build_dir=out/build_develop
 
 [options]
 jobs=12
-```text
+```
 
 **特点**：使用 Debug 模式，适合日常开发调试。
 
@@ -122,7 +122,7 @@ build_dir=out/build_deploy
 
 [options]
 jobs=16
-```text
+```
 
 **特点**：使用 Release 模式，最高优化级别，适合生产部署。
 
@@ -140,7 +140,7 @@ build_dir=out/build_ci
 
 [options]
 jobs=16
-```text
+```
 
 **特点**：用于 Docker CI 环境，x86_64 平台标准化构建。
 
@@ -158,7 +158,7 @@ build_dir=out/build_ci_aarch64
 
 [options]
 jobs=16
-```text
+```
 
 **特点**：在 x86_64 主机上交叉编译 ARM64 程序，使用 `aarch64-linux-gnu-gcc`。
 
@@ -176,6 +176,6 @@ build_dir=out/build_ci_armhf
 
 [options]
 jobs=16
-```text
+```
 
 **特点**：在 x86_64 主机上交叉编译 ARM32 HF 程序，使用 `arm-linux-gnueabihf-gcc`，目标平台包括 IMX6ULL (i.MX 6UltraLite) 等 ARM Cortex-A7 设备。

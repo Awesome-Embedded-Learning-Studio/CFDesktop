@@ -21,7 +21,7 @@ LogRecord (日志记录)
       Sink (输出目标)
          ↓
     实际存储位置
-```text
+```
 
 ### Sink 职责
 
@@ -44,7 +44,7 @@ auto console_sink = std::make_shared<ConsoleSink>();
 console_sink->setFormat(std::make_shared<AsciiColorFormatter>());
 
 Logger::instance().add_sink(console_sink);
-```text
+```
 
 **特点**：
 - 线程安全
@@ -72,7 +72,7 @@ auto file_sink = std::make_shared<FileSink>(
 file_sink->setFormat(std::make_shared<FileFormatter>());
 
 Logger::instance().add_sink(file_sink);
-```bash
+```
 
 **特点**：
 - 线程安全
@@ -113,7 +113,7 @@ void setup_logging() {
     file_sink->setFormat(factory.create("file"));
     Logger::instance().add_sink(file_sink);
 }
-```text
+```
 
 ### 分级输出（普通日志 vs 错误日志）
 
@@ -137,7 +137,7 @@ void setup_split_logging() {
     );
     // 实际使用需要自定义 Sink 来过滤 ERROR 级别
 }
-```text
+```
 
 ## 自定义 Sink
 
@@ -175,7 +175,7 @@ protected:
 
     std::shared_ptr<IFormatter> formatter_;
 };
-```text
+```
 
 ### 旋转文件 Sink
 
@@ -261,7 +261,7 @@ private:
     size_t file_index_;
     std::ofstream file_;
 };
-```text
+```
 
 ### 过滤 Sink
 
@@ -294,7 +294,7 @@ private:
     std::shared_ptr<ISink> wrapped_sink_;
     level min_level_;
 };
-```text
+```
 
 ### 统计 Sink
 
@@ -333,7 +333,7 @@ private:
     mutable std::mutex mutex_;
     std::map<level, size_t> counts_;
 };
-```text
+```
 
 ### 网络 Sink
 
@@ -449,7 +449,7 @@ private:
     std::string sending_;
     std::mutex queue_mutex_;
 };
-```text
+```
 
 ## Sink 最佳实践
 
@@ -469,7 +469,7 @@ public:
 private:
     std::mutex mutex_;
 };
-```text
+```
 
 ### 2. 错误处理
 
@@ -485,7 +485,7 @@ bool write(const LogRecord& record) override {
         return false;
     }
 }
-```text
+```
 
 ### 3. 资源清理
 
@@ -500,7 +500,7 @@ bool write(const LogRecord& record) override {
         socket_.close();
     }
 }
-```text
+```
 
 ## 使用示例
 
@@ -549,7 +549,7 @@ void setup_comprehensive_logging() {
 
     logger.setMininumLevel(level::INFO);
 }
-```text
+```
 
 ## 下一步
 

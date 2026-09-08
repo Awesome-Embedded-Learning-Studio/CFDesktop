@@ -13,7 +13,7 @@ description: "文档编写日期: 2026-03-20，是完整的部署构建脚本，
 
 ```bash
 ./scripts/build_helpers/linux_deploy_build.sh [develop|deploy|ci] [-c|--config <config_file>]
-```bash
+```
 
 ### 参数说明
 
@@ -52,7 +52,7 @@ description: "文档编写日期: 2026-03-20，是完整的部署构建脚本，
 
 ```bash
 Step 1: Cleaning build directory
-```text
+```
 
 使用 `lib_build.sh` 中的 `clean_build_dir` 函数清理构建目录。
 
@@ -60,7 +60,7 @@ Step 1: Cleaning build directory
 
 ```bash
 Step 2: Calling fast build script
-```text
+```
 
 调用 `linux_fast_deploy_build.sh` 执行实际的配置和构建。
 
@@ -68,7 +68,7 @@ Step 2: Calling fast build script
 
 ```bash
 Step 3: Running tests
-```text
+```
 
 调用 `linux_run_tests.sh` 运行所有测试。测试失败不会导致脚本退出（仅警告）。
 
@@ -86,7 +86,7 @@ Step 3: Running tests
 
 # 使用自定义配置文件
 ./scripts/build_helpers/linux_deploy_build.sh deploy -c my_deploy_config.ini
-```text
+```
 
 ### 输出示例
 
@@ -120,7 +120,7 @@ Executing: linux_run_tests.sh deploy
 ========================================
 All tests passed successfully!
 ========================================
-```text
+```
 
 ### 部署配置示例
 
@@ -138,7 +138,7 @@ build_dir = build_deploy
 
 [options]
 jobs = 4
-```bash
+```
 
 ### 使用场景
 
