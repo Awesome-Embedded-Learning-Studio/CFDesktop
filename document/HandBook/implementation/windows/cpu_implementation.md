@@ -18,7 +18,7 @@ cf::expected<void, CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostI
             // WMI 查询代码
         });
 }
-```text
+```
 
 这个封装确保 COM 正确初始化，线程退出时自动调用 `CoUninitialize()`，而且异常安全。
 
@@ -57,7 +57,7 @@ cf::expected<void, CPUInfoErrorType> query_cpu_basic_info(cf::CPUInfoHost& hostI
 
     return {};
 }
-```text
+```
 
 ⚠️ `CoSetProxyBlanket()` 调用是必须的，否则查询会返回 `E_ACCESSDENIED`。这个坑踩过一次。
 
@@ -79,7 +79,7 @@ std::string architectureToString(UINT16 archValue) {
         default: return "Unknown";
     }
 }
-```text
+```
 
 ## 性能信息
 
@@ -104,7 +104,7 @@ float get_cpu_usage() {
     PdhCloseQuery(query);
     return static_cast<float>(value.doubleValue);
 }
-```text
+```
 
 ⚠️ 两次 `PdhCollectQueryData()` 之间必须有延迟，否则返回的数据是 0 或无效值。这是因为性能计数器是基于时间差计算的。
 
@@ -141,7 +141,7 @@ bool detect_feature(const char* feature_name) {
     }
     return false;
 }
-```text
+```
 
 EAX=1 返回的是基本特性，EAX=7 返回的是扩展特性。不同特性位分布在不同的寄存器里，需要查 Intel 的手册确认。
 
@@ -158,7 +158,7 @@ std::optional<uint16_t> get_cpu_temperature() {
     }
     return std::nullopt;  // 大多数情况不可用
 }
-```text
+```
 
 所以我们的实现里，温度信息在 Windows 上基本总是 `std::nullopt`。这不是 bug，是 Windows 硬件生态的限制。
 
@@ -178,7 +178,7 @@ cf::ScopeGuard objGuard([&pclsObj]() { if (pclsObj) pclsObj->Release(); });
 cf::ScopeGuard varGuard([&vtProp]() { VariantClear(&vtProp); });
 
 // ... 复杂的查询逻辑，无论哪里返回，资源都会被释放
-```text
+```
 
 ## 相关文档
 

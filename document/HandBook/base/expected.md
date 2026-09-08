@@ -42,7 +42,7 @@ cf::expected<std::ifstream, std::string> open_file(const std::string& path) {
     }
     return file;
 }
-```text
+```
 
 `expected` 强制调用者处理错误——你想拿到值，就必须先检查有没有错误。而且类型系统会帮你看住：一个 `expected<int, ErrorCode>` 要么包含 `int`，要么包含 `ErrorCode`，不可能同时存在或都不存在。
 
@@ -66,7 +66,7 @@ cf::expected<int, ParseError> parse_number(std::string_view str) {
         return cf::unexpected(ParseError::Overflow);
     }
 }
-```text
+```
 
 调用方需要检查结果：
 
@@ -85,7 +85,7 @@ if (result.has_value()) {
             break;
     }
 }
-```text
+```
 
 ⚠️ 如果不检查直接调用 `value()`，会抛出 `bad_expected_access` 异常。但这个异常是你在"错误地使用 expected"时才抛出的，和业务逻辑异常是两码事。正常流程下，`expected` 的使用是不抛异常的。
 
@@ -107,7 +107,7 @@ int value = result.value_or(-1);  // 如果是错误状态，返回 -1
 
 // 方式三：直接访问（如果确实是错误状态，会抛异常）
 int value = result.value();  // 可能抛 bad_expected_access
-```cpp
+```
 
 `operator*` 和 `operator->` 的行为类似指针，但不做边界检查——如果 `expected` 处于错误状态，调用它们的后果是未定义行为。这和原生指针的越界访问一样，性能优先，安全你自己负责。
 
@@ -130,7 +130,7 @@ auto result = save_config("config.txt");
 if (!result) {
     std::cerr << "保存失败: " << result.error() << std::endl;
 }
-```text
+```
 
 `expected<void, E>` 的"值"是虚拟的，成功状态下没有实际数据存储，只有一个标志位。这意味着它的内存开销比 `expected<T, E>` 小——只需要存一个 `bool` 和可能的 `E`。
 
@@ -170,7 +170,7 @@ cf::expected<int, std::string> result =
         .transform_error([](ParseError err) {
             return "解析错误: " + std::to_string(static_cast<int>(err));
         });
-```text
+```
 
 这些操作的组合可以实现复杂的错误处理逻辑，而且代码是线性的，不是嵌套的：
 
@@ -194,7 +194,7 @@ return result3;
 return parse_number(input)
     .and_then(fetch_user)
     .and_then(calculate_score);
-```text
+```
 
 ## 与异常的对比
 
@@ -220,7 +220,7 @@ union {
     E error;
 } storage_;
 bool has_value_;
-```cpp
+```
 
 大小是 `max(sizeof(T), sizeof(E)) + sizeof(bool)`，对齐后可能会有一点 padding。如果你在意内存占用，可以让错误类型尽量小——比如用 `enum` 代替 `std::string`。
 
@@ -257,7 +257,7 @@ namespace std {
 // 类型别名可以帮助过渡
 template <typename T, typename E>
 using expected = std::expected<T, E>;
-```text
+```
 
 当然，我们还是建议直接用 `cf::expected`，这样可以保持代码的跨平台兼容性，而且我们可以根据自己的需求定制实现。
 

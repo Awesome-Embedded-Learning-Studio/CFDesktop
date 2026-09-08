@@ -32,7 +32,7 @@ struct AnimationDescriptor {
     float toValue;             // 结束值
     int delayMs = 0;           // 延迟时间（毫秒）
 };
-```text
+```
 
 策略可以修改其中任何一个字段。比如你可以把一个 `slideUp` 改成 `fadeIn`，或者把 `mediumEnter` 时长替换为 `shortEnter`。
 
@@ -53,7 +53,7 @@ public:
         return desc;
     }
 };
-```text
+```
 
 这个实现其实就是 `DefaultAnimationStrategy` 的做法——当你不设置策略时，工厂默认使用的就是这个。
 
@@ -81,7 +81,7 @@ public:
         return adjusted;
     }
 };
-```text
+```
 
 Material Design 3 的时长标准是：shortEnter=200ms、mediumEnter=300ms、longEnter=400ms，对应的 exit 时长稍短一些。
 
@@ -106,7 +106,7 @@ public:
         return globalEnabled_;
     }
 };
-```text
+```
 
 `shouldEnable()` 返回 false 时，工厂的 `getAnimation()` 和 `createAnimation()` 会返回无效的 WeakPtr。
 
@@ -159,7 +159,7 @@ private:
         return desc;
     }
 };
-```text
+```
 
 ## 全局启用状态
 
@@ -167,7 +167,7 @@ private:
 
 ```cpp
 strategy->setGlobalEnabled(false);  // 禁用所有使用此策略的动画
-```text
+```
 
 这个设置不会影响 `shouldEnable()` 的其他逻辑——你的实现仍然可以在 `globalEnabled_` 为 false 时返回 true。
 

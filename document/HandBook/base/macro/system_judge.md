@@ -21,7 +21,7 @@ description: 定义了平台和架构检测的底层宏，是整个项目跨平�
 #if defined(__linux__)
 #    define CFDESKTOP_OS_LINUX
 #endif
-```text
+```
 
 Windows 的检测用了两个宏是因为 `_WIN32` 在 64 位 Windows 上也会被定义，而 `_WIN64` 只在 64 位上定义。用 `||` 连接可以覆盖所有情况。Linux 的 `__linux__` 则是所有类 Linux 系统通用的宏，如果你需要区分发行版，得在运行时检查 `/etc/os-release`。
 
@@ -44,7 +44,7 @@ CPU 架构检测主要服务于性能优化和 SIMD 指令使用：
 #if defined(__arm__) || defined(_M_ARM)
 #    define CFDESKTOP_ARCH_ARM32
 #endif
-```text
+```
 
 这里的 `__x86_64__` 和 `__aarch64__` 是 GCC/Clang 的约定，`_M_X64`、`_M_ARM64`、`_M_ARM` 是 MSVC 的约定。用多个宏检查是因为不同编译器的命名习惯不一样。
 
@@ -56,7 +56,7 @@ CPU 架构检测主要服务于性能优化和 SIMD 指令使用：
 #if defined(<compiler_macro>)
 #    define CFDESKTOP_<CATEGORY>_<NAME>
 #endif
-```text
+```
 
 不带值的设计是有意为之的。我们只需要知道"是不是这个平台"，不需要传递额外信息。如果需要细分版本（比如 Windows 10 vs Windows 11），应该在运行时检测，而不是用编译时宏。
 
@@ -80,7 +80,7 @@ CPU 架构检测主要服务于性能优化和 SIMD 指令使用：
 #elif defined(CFDESKTOP_ARCH_ARM64)
     // 使用 NEON 指令集
 #endif
-```bash
+```
 
 ⚠️ 记得在 `#else` 或 `#elif` 分支加上 `#error`，避免在不支持的平台上静默编译通过，结果运行时出错。
 
@@ -111,7 +111,7 @@ CPU 架构检测主要服务于性能优化和 SIMD 指令使用：
 #if defined(CFDESKTOP_OS_NEW_OS)
     // 新平台实现
 #endif
-```text
+```
 
 记得同步更新文档和测试，确保 CI 环境能在新平台上正常运行。
 

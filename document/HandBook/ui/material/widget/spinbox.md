@@ -15,7 +15,7 @@ namespace cf::ui::widget::material;
 class SpinBox : public QSpinBox {
     Q_OBJECT
 };
-```text
+```
 
 头文件：`ui/widget/material/widget/spinbox/spinbox.h`
 
@@ -39,7 +39,7 @@ spin->setSuffix(" px");
 // 连接信号（与 QSpinBox 兼容）
 connect(spin, QOverload<int>::of(&QSpinBox::valueChanged),
         this, &MyClass::onValueChanged);
-```text
+```
 
 ## 增减按钮
 
@@ -49,7 +49,7 @@ SpinBox 在控件右侧提供增减按钮：
 // 增加按钮（incrementButtonRect）
 // 减少按钮（decrementButtonRect）
 // 鼠标悬停在按钮上时有独立的 hover 状态
-```bash
+```
 
 每个按钮有独立的悬停和按压状态追踪：
 
@@ -88,7 +88,7 @@ SpinBox 重写了 `resizeEvent` 以约束内部 LineEdit：
 ```cpp
 // resizeEvent() 将内部 lineEdit 限制在文本区域
 // 避免输入框覆盖增减按钮区域
-```bash
+```
 
 ## 颜色系统
 

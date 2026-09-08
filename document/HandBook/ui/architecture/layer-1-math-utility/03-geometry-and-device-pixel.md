@@ -36,7 +36,7 @@ struct CanvasUnitHelper {
 private:
     qreal devicePixelRatio;
 };
-```text
+```
 
 转换逻辑很简单：
 
@@ -51,7 +51,7 @@ qreal spToPx(qreal sp) const {
     qreal fontScale = font.pointSizeF() / 10.0; // 假设默认 10pt
     return sp * devicePixelRatio * fontScale;
 }
-```text
+```
 
 这里有个坑：Windows 上获取 devicePixelRatio 的方式经历了多次变迁。早期版本用 `QScreen::devicePixelRatio()`，但这个值在 Windows 10 1709 之后的"缩放与布局"设置下可能不准确。现在推荐用 `QScreen::logicalDotsPerInch()` 除以 96 来计算。
 
@@ -65,7 +65,7 @@ enum class BreakPoint {
     Medium,   // 600dp - 839dp
     Expanded  // >= 840dp
 };
-```text
+```
 
 这个设计很有意思：Material 不是针对具体设备（手机/平板/桌面）分类，而是针对"可用宽度"分类。一个桌面窗口如果缩得很窄，也应该用 Compact 布局。
 
@@ -79,7 +79,7 @@ BreakPoint breakPoint(qreal widthDp) {
         return BreakPoint::Expanded;
     }
 }
-```text
+```
 
 ## 圆角矩形工具
 
@@ -97,7 +97,7 @@ QPainterPath roundedRect(const QRectF& rect, float radius);
 // 每个角单独指定
 QPainterPath roundedRect(const QRectF& rect, float topLeft, float topRight,
                          float bottomLeft, float bottomRight);
-```text
+```
 
 ShapeScale 枚举对应 Material 的标准圆角尺寸：
 
@@ -111,7 +111,7 @@ enum class ShapeScale {
     ShapeExtraLarge, // 28dp
     ShapeFull        // 50% of size
 };
-```text
+```
 
 这里有个需要注意的地方：ShapeFull 是"完全圆角"，也就是变成一个胶囊或圆形。这种情况下圆角半径是矩形短边的一半。我们在实现时需要特殊处理：
 
@@ -119,7 +119,7 @@ enum class ShapeScale {
 if (scale == ShapeScale::ShapeFull) {
     radius = std::min(rect.width(), rect.height()) / 2.0f;
 }
-```text
+```
 
 ## 为什么不直接用 QSS？
 
@@ -150,7 +150,7 @@ void Button::paintEvent(QPaintEvent* event) {
     // 圆角半径
     qreal radius = helper.dpToPx(cornerRadius());
 }
-```yaml
+```
 
 这样无论在什么 DPI 的屏幕上，按钮的视觉大小都是一致的。
 

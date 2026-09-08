@@ -30,7 +30,7 @@ scripts/
 └── build_helpers/
     ├── docker_start.sh           # Linux 启动脚本
     └── docker_start.ps1          # Windows 启动脚本
-```text
+```
 
 ## Docker 镜像
 
@@ -53,7 +53,7 @@ ARG QT_VERSION=6.8.1            # Qt 版本
 ARG QT_ARCH=linux_gcc_64        # Qt 架构 (gcc_64/gcc_arm64)
 ARG QT_MIRROR=                  # Qt 镜像源
 ARG INSTALL_DEPS=1              # 是否安装依赖
-```text
+```
 
 **构建镜像**:
 ```bash
@@ -67,7 +67,7 @@ docker build --platform linux/arm64 \
   -f scripts/docker/Dockerfile.build \
   --build-arg QT_ARCH=linux_gcc_arm64 \
   -t cfdesktop-build:arm64 .
-```text
+```
 
 ## Docker Compose 配置
 
@@ -79,7 +79,7 @@ services:
   build-amd64:   # AMD64 构建环境
   build-arm64:   # ARM64 构建环境
   verify:        # 快速验证服务
-```text
+```
 
 **使用方式**:
 ```bash
@@ -94,7 +94,7 @@ docker-compose -f scripts/docker/docker-compose.yml run build-arm64
 
 # 运行验证
 docker-compose -f scripts/docker/docker-compose.yml run verify
-```text
+```
 
 ## 启动脚本
 
@@ -117,7 +117,7 @@ docker-compose -f scripts/docker/docker-compose.yml run verify
 --verify              # 运行 CI 构建验证
 --no-log              # 禁用文件日志
 --help                # 显示帮助信息
-```text
+```
 
 **使用示例**:
 ```bash
@@ -132,7 +132,7 @@ bash scripts/build_helpers/docker_start.sh --verify
 
 # ARM64 构建
 bash scripts/build_helpers/docker_start.sh --arch arm64
-```bash
+```
 
 ### Windows: docker_start.ps1
 
@@ -177,7 +177,7 @@ MOUNT_PATH="$(pwd | sed 's|^\([A-Za-z]\):|/\1|' | sed 's|\\|/|g')"
 
 # Linux / macOS
 MOUNT_PATH="$PROJECT_ROOT"
-```text
+```
 
 ## 验证方法
 
@@ -194,7 +194,7 @@ docker build --platform linux/arm64 \
   -f scripts/docker/Dockerfile.build \
   --build-arg QT_ARCH=linux_gcc_arm64 \
   -t cfdesktop-build:arm64 .
-```text
+```
 
 ### 2. 验证环境
 
@@ -208,7 +208,7 @@ docker run --rm --platform linux/amd64 \
 which cmake      # /usr/bin/cmake
 which qmake6     # /opt/Qt/6.8.1/gcc_64/bin/qmake6
 gcc --version    # Ubuntu GCC
-```text
+```
 
 ### 3. 运行构建
 
@@ -221,7 +221,7 @@ docker run --rm --platform linux/amd64 \
   -v $(pwd):/project \
   cfdesktop-build \
   bash scripts/build_helpers/ci_build_entry.sh ci
-```text
+```
 
 ## 日志系统
 
@@ -239,7 +239,7 @@ docker run --rm --platform linux/amd64 \
 ```text
 错误: Docker 未安装或未运行
 请安装 Docker Desktop: https://www.docker.com/products/docker-desktop
-```text
+```
 
 ### ARM64 在 x86_64 主机上无法运行
 
@@ -247,7 +247,7 @@ docker run --rm --platform linux/amd64 \
 ```bash
 # 安装 QEMU
 docker run --privileged --rm tonistiigi/binfmt --install all
-```yaml
+```
 
 ### Windows 路径问题
 

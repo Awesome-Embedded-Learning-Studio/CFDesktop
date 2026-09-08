@@ -16,7 +16,7 @@ bash scripts/release/hooks/install_hooks.sh
 
 # Windows PowerShell
 .\scripts\release\hooks\install_hooks.ps1
-```bash
+```
 
 ## Scripts详解
 
@@ -54,7 +54,7 @@ rm .git/hooks/pre-commit .git/hooks/pre-push
 
 # Windows PowerShell
 Remove-Item .git\hooks\pre-commit, .git\hooks\pre-push
-```text
+```
 
 ### 验证安装
 ```bash
@@ -63,7 +63,7 @@ ls -la .git/hooks/pre-commit .git/hooks/pre-push
 
 # Windows PowerShell
 dir .git\hooks\pre-*
-```text
+```
 
 ### 相关文件
 - `/home/charliechen/CFDesktop/scripts/release/hooks/install_hooks.sh`

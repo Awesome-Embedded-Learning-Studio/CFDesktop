@@ -76,7 +76,7 @@ QList<CFColor> palette = tonalPalette(brandColor);
 
 // palette[0] 是最接近品牌色的 tone 值
 // palette[1] 到 palette[13] 是从 Tone 0 到 Tone 100 的 13 个等级
-```yaml
+```
 
 如果你打印出这些颜色的 RGB 值，你会发现它们的色相和色度基本保持一致，只有亮度在变化——这正是 HCT 空间的优势。
 

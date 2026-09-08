@@ -13,7 +13,7 @@ description: "文档编写日期: 2026-03-20，是测试运行脚本，使用CTe
 
 ```bash
 ./scripts/build_helpers/linux_run_tests.sh [develop|deploy|ci] [-c|--config <config_file>]
-```bash
+```
 
 ### 参数说明
 
@@ -50,7 +50,7 @@ description: "文档编写日期: 2026-03-20，是测试运行脚本，使用CTe
 
 ```text
 <build_dir>/test/
-```text
+```
 
 例如，如果 `build_dir = build_develop`，则测试目录为 `build_develop/test/`。
 
@@ -68,7 +68,7 @@ description: "文档编写日期: 2026-03-20，是测试运行脚本，使用CTe
 
 # 使用自定义配置文件
 ./scripts/build_helpers/linux_run_tests.sh develop -c my_config.ini
-```text
+```
 
 ### 输出示例
 
@@ -99,7 +99,7 @@ Total Test time (real) =   0.25 sec
 ========================================
 All tests passed successfully!
 ========================================
-```text
+```
 
 #### 测试失败
 
@@ -114,7 +114,7 @@ Running Tests (Config: develop)
 ========================================
 Some tests failed with exit code: 8
 ========================================
-```bash
+```
 
 ### 错误处理
 
@@ -166,4 +166,4 @@ Some tests failed with exit code: 8
 
 # 或仅运行测试（假设已构建）
 ./scripts/build_helpers/linux_run_tests.sh ci
-```text
+```

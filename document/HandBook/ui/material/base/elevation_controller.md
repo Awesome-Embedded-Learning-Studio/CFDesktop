@@ -48,7 +48,7 @@ public:
 private:
     base::MdElevationController* m_elevation;
 };
-```text
+```
 
 ## 设置高程级别
 
@@ -59,7 +59,7 @@ private:
 m_elevation->setElevation(0);  // 无阴影
 m_elevation->setElevation(3);  // 中等阴影
 m_elevation->setElevation(5);  // 最强阴影
-```text
+```
 
 高程值会被 clamp 在 [0, 5] 范围内，超出范围的值会自动截断。
 
@@ -86,7 +86,7 @@ void MyWidget::mouseReleaseEvent(QMouseEvent* event) {
     m_elevation->setPressed(false);
     m_elevation->animateTo(2, core::MotionSpec::standard());
 }
-```text
+```
 
 `MotionSpec` 定义了动画的缓动曲线和时长，使用 Material 标准值可确保动画感觉一致。
 
@@ -108,7 +108,7 @@ void MyWidget::paintEvent(QPaintEvent* event) {
 
     // 其他绘制...
 }
-```text
+```
 
 ⚠️ 阴影必须先绘制，否则会覆盖控件内容。绘制顺序错了视觉效果会很奇怪。
 
@@ -125,7 +125,7 @@ m_elevation->setLightSourceAngle(0.0f);
 
 // 光源来自右侧
 m_elevation->setLightSourceAngle(-30.0f);
-```text
+```
 
 角度正值表示光源从左侧来，阴影向右投射；负值表示光源从右侧来。这个参数影响阴影的水平偏移量。
 
@@ -148,7 +148,7 @@ void MyWidget::paintEvent(QPaintEvent* event) {
 
     // 正常绘制...
 }
-```text
+```
 
 按压时阴影会缩小并靠近控件（约 50%），同时控件向下移动，产生"按下"的视觉反馈。
 
@@ -160,7 +160,7 @@ void MyWidget::paintEvent(QPaintEvent* event) {
 CFColor MdElevationController::tonalOverlay(CFColor surface, CFColor primary) const {
     // 返回混合后的表面颜色
 }
-```text
+```
 
 使用方式：
 
@@ -176,7 +176,7 @@ if (isDark) {
     // 亮色主题使用阴影
     backgroundColor = surfaceColor;
 }
-```bash
+```
 
 色调叠加量与高程级别成正比，级别越高叠加越多。
 

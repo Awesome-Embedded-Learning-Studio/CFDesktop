@@ -40,7 +40,7 @@ private:
     float m_progress = 0.0f;  // 0 = 隐藏，1 = 完全显示
     cf::WeakPtr<components::material::CFMaterialAnimationFactory> m_animator;
 };
-```text
+```
 
 ## 焦点进入/离开
 
@@ -73,7 +73,7 @@ void MdFocusIndicator::onFocusOut() {
         m_progress = 0.0f;
     }
 }
-```text
+```
 
 注意淡出动画使用的是 `1.0f - progress`，因为我们希望透明度从 1 变到 0。
 
@@ -112,7 +112,7 @@ void MdFocusIndicator::paint(QPainter* painter, const QRectF& widgetRect,
     painter->drawPath(ringPath);
     painter->restore();
 }
-```text
+```
 
 ## 与控件的集成
 
@@ -135,7 +135,7 @@ void Button::paintEvent(QPaintEvent* event) {
     // 最后绘制焦点环
     m_focusIndicator->paint(&painter, rect(), cornerRadius());
 }
-```yaml
+```
 
 ## 无障碍考虑
 

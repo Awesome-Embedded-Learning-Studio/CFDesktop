@@ -21,7 +21,7 @@ auto& colors = theme.color_scheme();  // ICFColorScheme&
 auto& motion = theme.motion_spec();   // IMotionSpec&
 auto& radius = theme.radius_scale();  // IRadiusScale&
 auto& fonts = theme.font_type();      // IFontType&
-```text
+```
 
 所有访问器都返回引用，这是因为子组件的生命周期由 `ICFTheme` 的实现类管理，调用方不需要关心所有权问题。
 
@@ -42,7 +42,7 @@ auto custom_theme = factory->fromJson(json);
 
 // 序列化主题
 QByteArray serialized = factory->toJson(theme.get());
-```text
+```
 
 使用工厂模式的好处是可以在运行时动态切换主题实现，比如从文件加载的 JSON 主题和硬编码的默认主题可以共存。
 
@@ -64,7 +64,7 @@ float corner = theme.radius_scale().queryRadiusScale("cornerSmall");
 
 // 获取字体
 QFont body_font = theme.font_type().queryTargetFont("bodyLarge");
-```text
+```
 
 注意这里每个子组件都有自己的查询语法——这是为兼容 Material Design 3 的 token 命名设计的。具体的 token 名称由各个子组件的实现决定，`ICFTheme` 不做统一规定。
 

@@ -85,7 +85,7 @@ CFDesktop 是一个基于 **Qt 6.8.3+ / C++23** 开发的**嵌入式桌面 UI �
     ├── Wayland Client    → 跑在现有 Wayland 合成器之上
     ├── X11               → 旧版 Linux 桌面兼容
     └── Windows (Win32)   → 开发调试等价环境
-```yaml
+```
 
 > 不自研 Wayland Compositor，优先保证嵌入式 EGLFS 直驱路径的稳定性。
 
@@ -122,7 +122,7 @@ CFDesktop Shell
 ├── 文件管理器（File Manager App）
 ├── 媒体控制服务（Media Control Service）
 └── 硬件性能自适应引擎（HWTier Adaptive Engine）
-```bash
+```
 
 ### 3.2 双主题风格系统（核心特色）
 
@@ -164,7 +164,7 @@ ThemeStyleManager
     ├── 注入 AnimationPolicy（动效策略）
     ├── 注入 LayoutPolicy（圆角/间距/字体）
     └── 触发 Shell 重新布局
-```text
+```
 
 > 主题包切换是**运行时热切换**，无需重启桌面进程。
 
@@ -185,7 +185,7 @@ ThemeStyleManager
 NavigationPolicy Interface
     ├── iOS Policy   → BottomGestureBar + BottomTabBar
     └── Windows Policy → CenteredTaskbar + SystemTray
-```text
+```
 
 公共元素（跨主题）：
 - 顶部状态栏（时间、网络、电量、通知角标）
@@ -205,7 +205,7 @@ NotificationService（独立进程）
     ├── 通知中心面板（下拉/侧滑展开，可清除）
     ├── 角标计数（状态栏图标角标）
     └── 勿扰模式（Do Not Disturb）
-```bash
+```
 
 ### 3.6 快捷控制中心
 
@@ -307,7 +307,7 @@ NotificationService（独立进程）
 │               Layer 0: Already Completed                 │
 │   ThemeEngine / AnimationManager / DPI / P0 Controls     │
 └─────────────────────────────────────────────────────────┘
-```bash
+```
 
 **设计原则**：
 - 每层只依赖下层，严禁跨层调用
@@ -641,7 +641,7 @@ Phase A（基础设施）
                                             ├──→ Phase K（文件管理器）
                                             └──→ Phase L（媒体服务）
                                                       └──→ Phase M（SDK + P2 控件）
-```bash
+```
 
 **可并行开发的模块**：
 - Phase C（P1 控件）可与 Phase A/B 全程并行

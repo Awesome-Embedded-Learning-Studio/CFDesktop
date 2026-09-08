@@ -16,7 +16,7 @@ class Separator : public QFrame {
     Q_OBJECT
     Q_PROPERTY(SeparatorMode mode READ mode WRITE setMode)
 };
-```text
+```
 
 头文件：`ui/widget/material/widget/separator/separator.h`
 
@@ -30,7 +30,7 @@ enum class SeparatorMode {
     Inset,      // 两侧各缩进 16dp
     MiddleInset // 仅在起始侧缩进 16dp
 };
-```text
+```
 
 ## 基本用法
 
@@ -52,7 +52,7 @@ inset->setMode(SeparatorMode::Inset);
 // 中内缩模式（起始侧 16dp 边距）
 auto* middleInset = new Separator(Qt::Horizontal, this);
 middleInset->setMode(SeparatorMode::MiddleInset);
-```text
+```
 
 ## 方向控制
 
@@ -63,7 +63,7 @@ separator->setOrientation(Qt::Vertical);    // 垂直分隔线
 
 // 获取当前方向
 Qt::Orientation orient = separator->orientation();
-```bash
+```
 
 ## 视觉规格
 
@@ -98,7 +98,7 @@ auto* hLayout = new QHBoxLayout();
 hLayout->addWidget(sidebar);
 hLayout->addWidget(new Separator(Qt::Vertical));
 hLayout->addWidget(content);
-```bash
+```
 
 ## 绘制
 

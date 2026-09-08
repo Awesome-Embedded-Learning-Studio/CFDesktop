@@ -37,7 +37,7 @@ cmake/
     └── linux/                          # 扩展
         ├── ci-x86_64-toolchain.cmake   # AMD64 CI 工具链
         └── ci-aarch64-toolchain.cmake  # ARM64 CI 工具链
-```text
+```
 
 ## 工具链文件说明
 
@@ -50,7 +50,7 @@ cmake/
 **使用方式**:
 ```bash
 cmake -DUSE_TOOLCHAIN=linux/ci-x86_64 -S . -B build
-```text
+```
 
 ### ci-aarch64-toolchain.cmake
 
@@ -61,7 +61,7 @@ cmake -DUSE_TOOLCHAIN=linux/ci-x86_64 -S . -B build
 **使用方式**:
 ```bash
 cmake -DUSE_TOOLCHAIN=linux/ci-aarch64 -S . -B build
-```text
+```
 
 ## 工具链文件内容
 
@@ -108,7 +108,7 @@ if(CCACHE_PROGRAM)
     set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}" CACHE FILEPATH "C compiler launcher")
     set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}" CACHE FILEPATH "CXX compiler launcher")
 endif()
-```text
+```
 
 ## ccache 支持
 
@@ -122,7 +122,7 @@ ccache 是一个编译缓存工具，可以显著加速重复构建：
 ```bash
 # 在 Dockerfile 中配置
 ccache --max-size=5G --set-config=compiler_check=%compiler%2S -s
-```text
+```
 
 ## 多架构支持
 
@@ -138,7 +138,7 @@ ccache --max-size=5G --set-config=compiler_check=%compiler%2S -s
 │  Qt路径: gcc_64          │  Qt路径: gcc_arm64           │
 │  编译器: x86_64-gcc      │  编译器: aarch64-gcc         │
 └──────────────────────────┴──────────────────────────────┘
-```text
+```
 
 CI 构建脚本会自动检测容器架构并选择对应的工具链。
 
@@ -158,7 +158,7 @@ file out/build_ci/bin/*
 
 # AMD64 预期输出:
 # ELF 64-bit LSB executable, x86-64, ...
-```text
+```
 
 ### Docker 容器验证
 
@@ -170,7 +170,7 @@ bash scripts/build_helpers/docker_start.sh --arch amd64 --mode build
 
 # 测试 ARM64
 bash scripts/build_helpers/docker_start.sh --arch arm64 --mode build
-```bash
+```
 
 ## 预期结果
 
@@ -198,7 +198,7 @@ ls cmake/cmake_toolchain/linux/ci-aarch64-toolchain.cmake
 # 确认使用正确的简写格式
 cmake -DUSE_TOOLCHAIN=linux/ci-x86_64 -S . -B build
 cmake -DUSE_TOOLCHAIN=linux/ci-aarch64 -S . -B build
-```text
+```
 
 ### Q: Qt6 not found
 
@@ -211,7 +211,7 @@ find /opt/Qt -name "Qt6Config.cmake" 2>/dev/null
 
 # 在容器内安装 Qt6（使用 aqtinstall）
 python3 -m aqt install-qt --outputdir /opt/Qt 6.8.1 linux desktop gcc_64
-```text
+```
 
 ### Q: ccache 未启用
 
@@ -221,7 +221,7 @@ python3 -m aqt install-qt --outputdir /opt/Qt 6.8.1 linux desktop gcc_64
 ```bash
 # 在 Dockerfile 中添加
 RUN apt-get install -y ccache
-```text
+```
 
 ## 与现有系统集成
 
@@ -239,7 +239,7 @@ check_toolchain.cmake 解析
 查找对应的工具链文件
     ↓
 设置: CMAKE_TOOLCHAIN_FILE
-```text
+```
 
 ### 配置文件示例
 
@@ -249,7 +249,7 @@ check_toolchain.cmake 解析
 generator=Ninja
 toolchain=linux/ci-x86_64
 build_type=Release
-```text
+```
 
 ```ini
 # scripts/build_helpers/build_ci_aarch64_config.ini (ARM64)
@@ -257,7 +257,7 @@ build_type=Release
 generator=Ninja
 toolchain=linux/ci-aarch64
 build_type=Release
-```yaml
+```
 
 ## 后续步骤
 

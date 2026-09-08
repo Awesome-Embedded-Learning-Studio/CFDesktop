@@ -18,7 +18,7 @@ class ScrollView : public QScrollArea {
     Q_PROPERTY(int scrollbarFadeDelay READ scrollbarFadeDelay WRITE setScrollbarFadeDelay)
     Q_PROPERTY(bool scrollbarHoverExpansion READ scrollbarHoverExpansion WRITE setScrollbarHoverExpansion)
 };
-```text
+```
 
 头文件：`ui/widget/material/widget/scrollview/scrollview.h`
 
@@ -32,7 +32,7 @@ enum class ScrollbarState {
     Hovered, // 悬停 - 100% 透明度，16dp 宽度
     Dragged  // 拖拽 - 100% 透明度，16dp 宽度，状态层叠加
 };
-```text
+```
 
 ## 基本用法
 
@@ -56,7 +56,7 @@ scroll->setScrollbarFadeDelay(500);  // 500ms 后淡出
 
 // 启用悬停扩展
 scroll->setScrollbarHoverExpansion(true);
-```text
+```
 
 ## 自定义滚动条
 
@@ -72,7 +72,7 @@ ScrollView 完全重写了默认滚动条渲染，使用自定义绘制：
 // ANIMATION_FRAME_MS = 16ms (~60fps)
 // ANIMATION_SPEED_WIDTH = 0.3f
 // ANIMATION_SPEED_OPACITY = 0.2f
-```text
+```
 
 ## 淡入淡出效果
 
@@ -86,7 +86,7 @@ scroll->setScrollbarFadeDelay(500);
 // 滚动时自动显示滚动条
 // 停止滚动后延迟隐藏
 // 鼠标悬停时保持显示
-```text
+```
 
 ## 悬停扩展
 
@@ -97,7 +97,7 @@ scroll->setScrollbarHoverExpansion(true);
 // 悬停时：
 // 1. 宽度从 12dp 平滑过渡到 16dp
 // 2. 透明度从 40% 过渡到 100%
-```text
+```
 
 ## 滑块拖动
 
@@ -113,7 +113,7 @@ ScrollView 支持直接拖动滚动条滑块：
 // isPointOverHorizontalThumb()
 // isPointOverVerticalTrack()
 // isPointOverHorizontalTrack()
-```text
+```
 
 ## 滚动条覆盖层
 
@@ -123,7 +123,7 @@ ScrollView 使用内部 `ScrollbarOverlay` 小部件在视口上绘制滚动条�
 // ScrollbarOverlay 是内部实现，定义在 .cpp 中
 // 通过 eventFilter 跟踪视口几何变化
 // 保持滚动条与视口同步
-```bash
+```
 
 ## 绘制流程
 

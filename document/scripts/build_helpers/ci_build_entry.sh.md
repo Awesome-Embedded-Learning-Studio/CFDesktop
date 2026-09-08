@@ -13,7 +13,7 @@ description: "文档编写日期: 2026-03-20，是CI（持续集成）环境下�
 
 ```bash
 ./scripts/build_helpers/ci_build_entry.sh [ci|test]
-```bash
+```
 
 ## Scripts详解
 
@@ -41,7 +41,7 @@ description: "文档编写日期: 2026-03-20，是CI（持续集成）环境下�
 
 ```bash
 ./scripts/build_helpers/ci_build_entry.sh ci
-```text
+```
 
 该模式会执行：
 1. 调用 `linux_develop_build.sh` 进行配置和构建
@@ -54,7 +54,7 @@ description: "文档编写日期: 2026-03-20，是CI（持续集成）环境下�
 
 ```bash
 ./scripts/build_helpers/ci_build_entry.sh test
-```text
+```
 
 该模式会调用 `linux_run_tests.sh` 运行已有构建的测试。
 
@@ -86,7 +86,7 @@ docker run --rm cfdesktop-build bash scripts/build_helpers/ci_build_entry.sh ci
 
 # 仅运行测试
 docker run --rm cfdesktop-build bash scripts/build_helpers/ci_build_entry.sh test
-```text
+```
 
 ### 错误处理
 
@@ -95,7 +95,7 @@ docker run --rm cfdesktop-build bash scripts/build_helpers/ci_build_entry.sh tes
 ```text
 ERROR: Unknown architecture: <架构名>
 Supported: x86_64, aarch64, armv7l
-```text
+```
 
 ### 注意事项
 

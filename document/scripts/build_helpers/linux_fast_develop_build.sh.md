@@ -13,7 +13,7 @@ description: "文档编写日期: 2026-03-20，是快速开发构建脚本，执
 
 ```bash
 ./scripts/build_helpers/linux_fast_develop_build.sh [develop|deploy|ci] [-c|--config <config_file>]
-```bash
+```
 
 ### 参数说明
 
@@ -42,7 +42,7 @@ description: "文档编写日期: 2026-03-20，是快速开发构建脚本，执
 
 ```bash
 Step 1: Configuring with CMake
-```text
+```
 
 调用 `linux_configure.sh` 执行CMake配置。如果构建目录已存在且有有效配置，此步骤会很快完成。
 
@@ -50,7 +50,7 @@ Step 1: Configuring with CMake
 
 ```bash
 Step 2: Building project
-```text
+```
 
 使用CMake构建项目。如果配置了并行任务数，会使用 `--parallel` 参数加速编译。
 
@@ -68,7 +68,7 @@ Step 2: Building project
 
 # 使用自定义配置文件
 ./scripts/build_helpers/linux_fast_develop_build.sh develop -c my_config.ini
-```text
+```
 
 ### 输出示例
 
@@ -88,7 +88,7 @@ Step 2: Building project
 ========================================
 Command: cmake --build build_develop --parallel 4
 ...
-```text
+```
 
 ### 配置参数
 
@@ -97,7 +97,7 @@ Command: cmake --build build_develop --parallel 4
 ```ini
 [options]
 jobs=4
-```bash
+```
 
 如果未设置，则不使用并行参数。
 
@@ -145,4 +145,4 @@ jobs=4
 
 # 需要测试时
 ./scripts/build_helpers/linux_run_tests.sh
-```text
+```

@@ -17,7 +17,7 @@ class RadioButton : public QRadioButton {
     Q_PROPERTY(bool error READ hasError WRITE setError)
     Q_PROPERTY(bool pressEffectEnabled READ pressEffectEnabled WRITE setPressEffectEnabled)
 };
-```text
+```
 
 头文件：`ui/widget/material/widget/radiobutton/radiobutton.h`
 
@@ -44,7 +44,7 @@ option1->setChecked(true);
 
 // 连接信号
 connect(group, &QButtonGroup::idClicked, this, &MyClass::onOptionSelected);
-```text
+```
 
 ## 错误状态
 
@@ -56,7 +56,7 @@ if (!group->checkedButton()) {
     option2->setError(true);
     option3->setError(true);
 }
-```text
+```
 
 错误状态下，外环和内部圆使用 error 颜色。
 
@@ -67,7 +67,7 @@ if (!group->checkedButton()) {
 ```cpp
 // 禁用按压效果
 radioButton->setPressEffectEnabled(false);
-```bash
+```
 
 禁用后，点击时不会触发水波纹动画，但状态层仍然正常工作。
 
@@ -90,7 +90,7 @@ radioButton->setPressEffectEnabled(false);
 // setChecked 会同步内部圆的缩放状态
 radioButton->setChecked(true);  // 内部圆从 0 缩放到目标尺寸
 radioButton->setChecked(false); // 内部圆从目标尺寸缩放到 0
-```bash
+```
 
 ## 尺寸规范
 

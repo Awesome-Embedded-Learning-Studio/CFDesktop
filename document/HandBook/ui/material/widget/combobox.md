@@ -15,7 +15,7 @@ namespace cf::ui::widget::material;
 class ComboBox : public QComboBox {
     Q_OBJECT
 };
-```text
+```
 
 头文件：`ui/widget/material/widget/comboBox/combobox.h`
 
@@ -26,7 +26,7 @@ enum class ComboBoxVariant {
     Filled,    // 填充背景 + 边框
     Outlined   // 仅描边边框
 };
-```text
+```
 
 ## 基本用法
 
@@ -50,7 +50,7 @@ outlined->setVariant(ComboBoxVariant::Outlined);
 // 连接信号（与 QComboBox 兼容）
 connect(combo, QOverload<int>::of(&QComboBox::currentIndexChanged),
         this, &MyClass::onSelectionChanged);
-```text
+```
 
 ## 下拉箭头动画
 
@@ -63,7 +63,7 @@ ComboBox 的下拉箭头有旋转动画：
 // 箭头旋转由 m_arrowRotation 控制
 // showPopup() 触发箭头旋转到 180 度
 // hidePopup() 触发箭头旋转回 0 度
-```text
+```
 
 ## 自定义弹出列表
 
@@ -79,7 +79,7 @@ ComboBox 的下拉箭头有旋转动画：
 // hidePopup() 内部：
 // 1. 箭头旋转回下方
 // 2. 关闭弹出容器
-```bash
+```
 
 ## 交互状态
 

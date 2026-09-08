@@ -16,7 +16,7 @@ class CheckBox : public QCheckBox {
     Q_OBJECT
     Q_PROPERTY(bool error READ hasError WRITE setError NOTIFY errorChanged)
 };
-```text
+```
 
 头文件：`ui/widget/material/widget/checkbox/checkbox.h`
 
@@ -41,7 +41,7 @@ cb2->setCheckState(Qt::PartiallyChecked);
 
 // 连接信号（与 QCheckBox 兼容）
 connect(cb2, &QCheckBox::stateChanged, this, &MyClass::onStateChanged);
-```text
+```
 
 ## 错误状态
 
@@ -53,7 +53,7 @@ if (!agreedToTerms) {
 } else {
     checkBox->setError(false);
 }
-```bash
+```
 
 错误状态下，复选框边框使用 error 颜色，提供明确的视觉反馈。
 

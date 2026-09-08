@@ -31,7 +31,7 @@ ConfigStore 采用四层优先级架构，实现了配置的层次化管理和�
 |  - 系统级配置，{app_dir}/system.ini (CFDesktop 自管理目录) |
 |  - 全局默认配置，只读或需要特权写入               |
 +-----------------------------------------------+
-```cpp
+```
 
 **查询顺序（优先级从高到低）**：Temp -> App -> User -> System
 
@@ -55,7 +55,7 @@ ConfigStore 使用 Pimpl（Pointer to Implementation）模式实现接口与实�
 | - 单例继承        |           | - Watcher 机制         |
 |                  |           | - 线程同步              |
 +------------------+           +------------------------+
-```text
+```
 
 **优势**：
 1. **ABI 稳定性**：实现变更不影响公共头文件，无需重新编译依赖代码
@@ -76,7 +76,7 @@ class SimpleSingleton {
         return target;
     }
 };
-```text
+```
 
 **特点**：
 - **线程安全**：C++11 标准保证静态局部变量初始化的线程安全性
@@ -113,7 +113,7 @@ template <typename Value>
 [[nodiscard]] RegisterResult register_key(const Key& key, const Value& init_value,
                                           Layer layer = Layer::App,
                                           NotifyPolicy notify_policy = NotifyPolicy::Immediate);
-```text
+```
 
 **类型转换机制**（`detail::any_cast`）：
 - 直接类型匹配：`std::any` 直接包含目标类型
@@ -155,7 +155,7 @@ private:
     std::vector<PendingChange> pending_changes_;
     std::vector<DeferredWatcherEvent> deferred_events_;
 };
-```text
+```
 
 **内部方法架构**：
 
@@ -170,7 +170,7 @@ private:
 | clear()          |         | clear_impl()           |
 | clear_layer()    |         | clear_layer_impl()     |
 +------------------+         +------------------------+
-```text
+```
 
 这种设计避免了在已持锁场景下的重复加锁，提高了效率。
 
@@ -190,7 +190,7 @@ public:
     virtual QString app_filename() const = 0;
     virtual bool is_layer_enabled(int layer_index) const = 0;
 };
-```bash
+```
 
 **默认实现**：`DesktopConfigStorePathProvider`
 
@@ -217,7 +217,7 @@ struct Key {
     std::string full_key;         // 完整键，如 "app.theme.name"
     std::string full_description; // 完整描述
 };
-```text
+```
 
 **转换逻辑**：
 
@@ -227,7 +227,7 @@ struct Key {
 
 // Key -> KeyView
 "app.theme.name" => group="app.theme", key="name"
-```text
+```
 
 **验证规则**（`default_policy`）：
 - 只允许字母、数字、下划线和点号
@@ -275,7 +275,7 @@ struct Key {
            |
            v
     返回给用户
-```text
+```
 
 ### 3.2 写入流程
 
@@ -321,7 +321,7 @@ struct Key {
            |
            v
     返回结果
-```text
+```
 
 ### 3.3 Watcher 触发机制
 
@@ -353,7 +353,7 @@ struct Key {
            |
            v
     完成
-```text
+```
 
 **延迟回调机制的关键**：
 1. 在主锁内收集事件（避免回调中死锁）
@@ -381,7 +381,7 @@ struct Key {
     |              |               |              |
     v              v               v              v
  返回值    -------> 下层 ---------> 下层 --------> 默认值
-```text
+```
 
 ## 4. 线程安全
 
@@ -397,7 +397,7 @@ std::shared_lock lock(mutex_);  // query(), has_key()
 
 // 写操作：独占锁，独占访问
 std::unique_lock lock(mutex_);  // set(), register_key(), etc.
-```bash
+```
 
 **并发场景分析**：
 
@@ -444,7 +444,7 @@ void execute_deferred_watchers() {
         event.callback(...);  // 安全执行，无主锁
     }
 }
-```text
+```
 
 **锁分离设计**：
 - `mutex_`：保护配置数据和 watcher 列表
@@ -456,7 +456,7 @@ void execute_deferred_watchers() {
 ```cpp
 std::atomic<WatcherHandle> next_handle_{1};
 // WatcherHandle 分配无需加锁
-```text
+```
 
 **内存序保证**：
 - 默认使用 `memory_order_seq_cst`
@@ -497,7 +497,7 @@ class ConfigStore {
 public:
     void set_key_helper(std::unique_ptr<KeyHelper> helper);
 };
-```text
+```
 
 ### 5.2 自定义路径提供者
 
@@ -543,13 +543,13 @@ public:
 private:
     QString base_dir_;
 };
-```text
+```
 
 **使用方式**：
 ```cpp
 auto test_provider = std::make_shared<TestPathProvider>("/tmp/test_config");
 cf::config::ConfigStore::instance().initialize(test_provider);
-```text
+```
 
 ### 5.3 扩展存储后端
 
@@ -588,7 +588,7 @@ class ConfigStoreImpl {
     void unwatch(WatcherHandle handle);
     NotifyResult notify();
 };
-```text
+```
 
 **注意事项**：
 1. 保持与现有 ConfigStoreImpl 相同的接口签名
@@ -693,7 +693,7 @@ bool exists = ConfigStore::instance().has_key(key_view);
 
 // 检查特定层
 bool exists_in_app = ConfigStore::instance().has_key(key_view, Layer::App);
-```text
+```
 
 ### 8.2 日志建议
 
@@ -747,7 +747,7 @@ private:
 // 使用方式
 auto mock_provider = std::make_shared<MockPathProvider>("/tmp/test_config");
 cf::config::ConfigStore::instance().initialize(mock_provider);
-```yaml
+```
 
 **单元测试**：参考 `test/config_manager/config_store_test.cpp`
 

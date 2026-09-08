@@ -18,7 +18,7 @@ class Label : public QLabel {
     Q_PROPERTY(LabelColorVariant colorVariant READ colorVariant WRITE setColorVariant)
     Q_PROPERTY(bool autoHiding READ autoHiding WRITE setAutoHiding)
 };
-```text
+```
 
 头文件：`ui/widget/material/widget/label/label.h`
 
@@ -43,7 +43,7 @@ enum class TypographyStyle {
     // 标签样式（14sp, 12sp, 11sp）- 用于辅助信息
     LabelLarge, LabelMedium, LabelSmall
 };
-```text
+```
 
 ## 颜色变体
 
@@ -62,7 +62,7 @@ enum class LabelColorVariant {
     InverseSurface,   // 反转表面颜色
     InverseOnSurface  // 反转表面上的文本
 };
-```text
+```
 
 ## 基本用法
 
@@ -82,7 +82,7 @@ title->setColorVariant(LabelColorVariant::Primary);
 
 // 创建展示文本
 auto* hero = new Label("Welcome", TypographyStyle::DisplayLarge, this);
-```bash
+```
 
 ## 排版样式选择指南
 
@@ -105,7 +105,7 @@ label->setAutoHiding(true);
 
 // 当 text 为空时，label->hide() 自动调用
 // 当 text 非空时，label->show() 自动调用
-```text
+```
 
 这在动态内容的场景下很有用，比如错误提示标签在没有错误时不占用布局空间。
 
@@ -119,7 +119,7 @@ Label 从当前主题中自动获取颜色和字体：
 
 // 字体根据 typographyStyle 从主题获取对应的排版令牌
 // 查询通过 typographyTokenName() 转换样式为令牌名称
-```bash
+```
 
 为了优化性能，Label 缓存了最近查询的颜色值（`cachedColor_`），避免重复的主题查询。
 

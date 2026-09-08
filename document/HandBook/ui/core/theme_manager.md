@@ -15,7 +15,7 @@ description: 是整个 UI 主题系统的入口，负责注册主题工厂、管
 #include "ui/core/theme_manager.h"
 
 auto& manager = cf::ui::core::ThemeManager::instance();
-```text
+```
 
 单例的初始化是线程安全的（C++11 魔法静态变量保证），不用担心多线程竞态。但我们只在 UI 线程里使用它，Qt 的信号机制本身就要求如此。
 
@@ -33,7 +33,7 @@ manager.insert_one("default", []() {
 manager.insert_one("dark_blue", []() {
     return std::make_unique<DarkBlueFactory>();
 });
-```text
+```
 
 `insert_one` 返回 `bool`，如果名字已经存在会返回 `false`。这个设计挺实用，可以用来检测插件冲突——同一主题被两个插件注册时，至少有一个会失败。
 
@@ -49,7 +49,7 @@ manager.setThemeTo("dark_blue");
 
 // 切换时可以选择不广播（特殊场景下使用）
 manager.setThemeTo("default", false);
-```text
+```
 
 默认情况下，切换主题会广播 `themeChanged` 信号到所有通过 `install_widget` 注册的 widget。`doBroadcast` 参数设为 `false` 会跳过广播，这主要用于批量操作时避免重复通知——比如你要连续切换三个主题，中间的两次就不需要广播。
 
@@ -85,7 +85,7 @@ private slots:
                           .arg(colors.background().name()));
     }
 };
-```text
+```
 
 管理器持有的是 `QWidget` 的裸指针观察者，不负责生命周期。widget 析构时必须调用 `remove_widget`，否则管理器里会留下悬空指针。这个设计有点不安全，但 Qt 的对象树机制使得在 widget 析构时自动清理变得复杂，我们选择了简单粗暴的显式管理方式。
 
@@ -103,7 +103,7 @@ const cf::ui::core::ICFTheme& theme = manager.theme("default");
 // 读取颜色配置
 const auto& colors = theme.color_scheme();
 QColor bg = colors.background();
-```text
+```
 
 `theme()` 方法返回的是常量引用，主题实例会被缓存起来，后续访问直接从缓存取。第一次访问时才会调用工厂创建，所以第一次可能会有轻微延迟。
 
@@ -113,7 +113,7 @@ QColor bg = colors.background();
 
 ```cpp
 manager.remove_one("old_theme");
-```text
+```
 
 移除操作不会影响当前正在使用的主题——即使你移除的是当前主题，管理器里仍然保留着它的实例，直到切换到另一个主题。这个行为可能是 feature 也可能是 bug，取决于你从哪个角度看，但它确实避免了一些诡妙的崩溃。
 
@@ -183,7 +183,7 @@ void MyWidget::setupThemeConnection() {
 void SettingsDialog::onThemeSelected(const QString& name) {
     cf::ui::core::ThemeManager::instance().setThemeTo(name.toStdString());
 }
-```text
+```
 
 ## 相关文档
 

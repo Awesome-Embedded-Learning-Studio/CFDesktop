@@ -15,7 +15,7 @@ namespace cf::ui::widget::material;
 class Slider : public QSlider {
     Q_OBJECT
 };
-```text
+```
 
 头文件：`ui/widget/material/widget/slider/slider.h`
 
@@ -37,7 +37,7 @@ vSlider->setRange(0, 100);
 
 // 连接信号（与 QSlider 兼容）
 connect(slider, &QSlider::valueChanged, this, &MyClass::onValueChanged);
-```text
+```
 
 ## 方向
 
@@ -49,7 +49,7 @@ auto* horizontal = new Slider(Qt::Horizontal, this);
 
 // 垂直方向
 auto* vertical = new Slider(Qt::Vertical, this);
-```text
+```
 
 ## 轨道绘制
 
@@ -61,7 +61,7 @@ auto* vertical = new Slider(Qt::Vertical, this);
 ```cpp
 // 轨道高度遵循 Material Design 规范
 // 滑块半径遵循 Material Design 规范
-```text
+```
 
 ## 滑块与海拔
 
@@ -78,7 +78,7 @@ Slider 支持刻度标记（Tick Marks）绘制：
 // 通过 QSlider 的标准属性控制刻度
 slider->setTickPosition(QSlider::TicksBelow);
 slider->setTickInterval(10);
-```bash
+```
 
 刻度标记会沿着轨道均匀分布，使用 `inactiveTrackColor` 绘制。
 

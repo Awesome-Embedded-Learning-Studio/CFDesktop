@@ -12,12 +12,12 @@ description: "文档编写日期: 2026-03-20，- 递归扫描指定目录（默�
 ### 基本语法
 ```bash
 python3 scripts/doxygen/lint.py
-```text
+```
 
 ### 指定目录检查
 ```bash
 python3 scripts/doxygen/lint.py /path/to/directory
-```text
+```
 
 ### 工作模式
 - 递归扫描指定目录（默认为项目根目录）
@@ -67,7 +67,7 @@ python3 scripts/doxygen/lint.py /path/to/directory
 #### 成功输出
 ```text
 All Doxygen checks passed
-```text
+```
 - 返回码: `0`
 - 删除已存在的 `FAILED_DOXYGEN.md` 文件
 
@@ -75,7 +75,7 @@ All Doxygen checks passed
 ```text
 FAILED: N violations
 See: /path/to/FAILED_DOXYGEN.md
-```bash
+```
 - 返回码: `1`
 - 生成 `FAILED_DOXYGEN.md` 详细报告，包含：
   - 违规总数
@@ -100,7 +100,7 @@ See: /path/to/FAILED_DOXYGEN.md
 ```bash
 # .git/hooks/pre-commit
 python3 scripts/doxygen/lint.py || exit 1
-```text
+```
 
 #### CMake集成
 ```cmake
@@ -109,7 +109,7 @@ add_custom_target(doxygen_lint
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Checking Doxygen compliance..."
 )
-```text
+```
 
 ### 注意事项
 - 仅检查 `.h` 和 `.hpp` 头文件

@@ -14,7 +14,7 @@ pnpm install
 pnpm dev
 pnpm build
 pnpm preview
-```bash
+```
 
 ## 配置文件
 

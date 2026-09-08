@@ -12,7 +12,7 @@ description: "文档编写日期: 2026-03-20，LibArgs.psm1 提供命令行参�
 ### 加载方式
 ```powershell
 Import-Module scripts/lib/powershell/LibArgs.psm1
-```bash
+```
 
 ## Scripts详解
 
@@ -36,7 +36,7 @@ LibArgs.psm1 提供命令行参数解析和用户帮助信息显示功能。该�
 #### Parse-ConfigMode
 ```powershell
 Parse-ConfigMode [-Mode] <string>
-```text
+```
 解析并验证配置模式参数。
 
 **有效模式：**
@@ -51,12 +51,12 @@ Parse-ConfigMode [-Mode] <string>
 ```powershell
 $mode = Parse-ConfigMode "develop"  # 返回 "develop"
 $mode = Parse-ConfigMode "invalid"  # 返回 $null
-```text
+```
 
 #### Show-DetailedUsage
 ```powershell
 Show-DetailedUsage [[-ScriptName] <string>] [[-Description] <string>]
-```text
+```
 显示格式化的详细帮助信息，包括：
 - 脚本名称（带边框）
 - 脚本描述（如果提供）
@@ -88,12 +88,12 @@ Options:
 Examples:
   .\build.ps1 develop
   .\build.ps1 deploy -c custom_config.ini
-```text
+```
 
 #### Test-HelpArg
 ```powershell
 Test-HelpArg [-Arg] <string>
-```text
+```
 检查参数是否为帮助请求。
 
 **识别的帮助参数：**
@@ -106,7 +106,7 @@ if (Test-HelpArg $args[0]) {
     Show-DetailedUsage
     exit
 }
-```text
+```
 
 ### 标准命令行接口
 
@@ -114,7 +114,7 @@ if (Test-HelpArg $args[0]) {
 
 ```text
 script.ps1 [develop|deploy|ci] [-c|--config <config_file>] [-h|--help]
-```cmake
+```
 
 **参数说明：**
 | 位置参数 | 说明 |

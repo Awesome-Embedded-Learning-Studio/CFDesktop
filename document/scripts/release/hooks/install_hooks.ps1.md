@@ -13,7 +13,7 @@ description: "文档编写日期: 2026-03-20，Windows PowerShell版本的Git钩
 ```powershell
 # Windows PowerShell
 .\scripts\release\hooks\install_hooks.ps1
-```text
+```
 
 ## Scripts详解
 
@@ -23,7 +23,7 @@ Windows PowerShell版本的Git钩子安装脚本，自动安装Git钩子到.git/
 ### 依赖模块
 ```text
 scripts\lib\powershell\LibPaths.psm1
-```bash
+```
 提供路径解析功能模块。
 
 ### 安装的钩子
@@ -63,12 +63,12 @@ scripts\lib\powershell\LibPaths.psm1
 ### 卸载方法
 ```powershell
 Remove-Item .git\hooks\pre-commit, .git\hooks\pre-push
-```text
+```
 
 ### 验证安装
 ```powershell
 dir .git\hooks\pre-*
-```text
+```
 
 ### 相关文件
 - `/home/charliechen/CFDesktop/scripts/release/hooks/install_hooks.ps1`

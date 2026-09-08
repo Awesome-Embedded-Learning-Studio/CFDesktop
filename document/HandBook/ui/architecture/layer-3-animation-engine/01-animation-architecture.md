@@ -48,7 +48,7 @@ protected:
     float m_progress = 0.0f;
     State m_state = State::Idle;
 };
-```text
+```
 
 这里有个关键设计：`GetWeakPtr()` 返回的是弱引用。原因我们后面会讲，但核心思想是：动画由工厂拥有所有权，用户只持有弱引用。
 
@@ -69,7 +69,7 @@ Running → Paused (pause)
 Paused → Running (start)
 Running/Paused → Idle (stop)
 Running → Finished (自然结束)
-```text
+```
 
 ## Direction 方向控制
 
@@ -101,7 +101,7 @@ CFMaterialAnimationFactory (owner)
 
 Controls
   └── WeakPtr<ICFAbstractAnimation>
-```text
+```
 
 工厂拥有动画的所有权（`unique_ptr`），控件只持有弱引用（`WeakPtr`）。这样设计的好处是：
 
@@ -120,7 +120,7 @@ if (anim) {  // 检查 WeakPtr 是否有效
             });
     anim->start();
 }
-```text
+```
 
 ## progressChanged 信号
 
@@ -139,7 +139,7 @@ ICFAnimationManagerFactory 提供了全局开关：
 ```cpp
 factory->setEnabledAll(false);  // 禁用所有动画
 factory->setEnabledAll(true);   // 启用所有动画
-```text
+```
 
 禁用时，`getAnimation()` 会返回无效的 WeakPtr，这样就不会创建新动画。已有的正在运行的动画不受影响，会自然完成。
 
@@ -155,7 +155,7 @@ factory->setEnabledAll(true);   // 启用所有动画
 
 ```cpp
 factory->setTargetFps(60.0f);  // 60 FPS
-```yaml
+```
 
 这会影响动画的定时器间隔。更高的 FPS 意味着更平滑的动画，但也意味着更多的 CPU 开销。
 
